@@ -1,0 +1,42 @@
+
+.bannerZoomSlider {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    
+  }
+  
+  .bannerZoomSlider img {
+    position: absolute;
+    top: -100px;
+    transition: 0.8s;
+  }
+  
+  .bannerZoomSlider img.inActive {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  
+  .bannerZoomSlider img.active {
+    opacity: 1;
+    transform: scale(0.8);
+  }
+
+
+  @media screen and (max-width: 600px) {
+    .zoomImageSlider {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 450px;
+      }
+
+  }
+  @media screen and (max-width: 400px) {
+    .zoomImageSlider {
+      height: 400px;
+    }
+  }

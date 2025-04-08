@@ -1,0 +1,44 @@
+.BannerBox {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    overflow: hidden;
+  }
+  
+  .BannerBox img {
+    position: absolute;
+    top: 0;
+    width: 400px;
+    transition: transform 0.8s, opacity 0.8s;
+  }
+  
+  .BannerBox img.inActive {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  
+  .BannerBox img.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .BannerBox img.nextActive {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  .animatedimage {
+    animation: upAndDown 4s infinite;
+  }
+  @media screen and (max-width: 600px) {
+    .slickmainholder {
+      height: 450px;
+    }
+  }
+  @media screen and (max-width: 400px) {
+    .slickmainholder {
+      height: 400px;
+    }
+  }
+  

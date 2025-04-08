@@ -1,0 +1,24 @@
+/* .packagesfeature ul li::before {
+  content: "";
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: red;
+  background-image: url("../img/check.png");
+  background-size: cover;
+  display: inline-block;
+  margin-right: 5px;
+} */
+
+.packagesfeature ul li {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  /* background-color: red; */
+}
+
+.packagesfeature ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
