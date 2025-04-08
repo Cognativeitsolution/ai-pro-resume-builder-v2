@@ -1,17 +1,20 @@
-import { FaStar } from 'react-icons/fa'
+import starBg from "media/builderIcons/bg-star.svg"
 
 const AddSectionClipPath = () => {
     return (
-        <div
-            className="absolute -right-[60px] top-[-3px] z-50 w-[150px] h-9 bg-[#9885FF] rotate-45 flex items-center justify-center transition-all duration-700"
-            style={{
-                clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)',
-            }}
-        >
-            <span className="text-white text-sm flex items-center justify-center">
-                <FaStar />
-            </span>
-        </div>
+        <>
+            <div
+                className="absolute right-[-6px] top-[-3px] w-[60px] h-[55px] flex items-center justify-center transition-all duration-700"
+                style={{
+                    backgroundImage: `url(${starBg.src})`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                }}
+            >
+
+            </div>
+        </>
     )
 }
 
