@@ -1,6 +1,7 @@
 "use client"
 import { useDispatch, useSelector } from 'react-redux';
 import { removeSection } from '@/redux/slices/addSectionSlice';
+import ResumeTemplateNew from '../Template/ResumeTemplate';
 
 // Define the shape of the `currentState` object
 type CurrentState = {
@@ -42,7 +43,7 @@ const ResumePreview = (props: ResumePreviewProps) => {
   }
   return (
     <div className="bg-[#ffffff] border border-gray-300 rounded-md h-full p-5">
-      {
+      {/* {
         addedSections?.map((data: any, index: any) => (
           <div key={index}>
             <textarea
@@ -67,7 +68,10 @@ const ResumePreview = (props: ResumePreviewProps) => {
             </button>
           </div>
         ))
-      }
+      } */}
+
+      <ResumeTemplateNew currentState={currentState}
+        updateState={updateState} />
     </div>
   );
 };

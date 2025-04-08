@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ResumePreview, TextEditor, UserHeader } from "@/components";
+import { ResumePreview, Template, TextEditor, UserHeader } from "@/components";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-
 export default function Page() {
     const { availableSections } = useSelector((state: RootState) => state.addSection);
 
