@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { usePathname } from "next/navigation";
-import { Footer, Header, SpinnerLoader } from "@/components";
+import { Footer, Header } from "@/components";
 
 const ConditionalLayout = ({ children }: any) => {
   const pathname = usePathname();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   // useEffect(() => {
   //   setLoading(true);
@@ -22,7 +22,8 @@ const ConditionalLayout = ({ children }: any) => {
           }`}
       >
         {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <Header />}
-        {loading ? <SpinnerLoader /> : children}
+        {/* {loading ? <SpinnerLoader /> : children} */}
+        {children}
         {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <Footer />}
       </div>
     </>
