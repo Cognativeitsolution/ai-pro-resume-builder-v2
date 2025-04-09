@@ -14,6 +14,7 @@ import improve from 'media/builderIcons/improve.svg';
 import ats from 'media/builderIcons/ats.svg';
 import robot from 'media/builderIcons/robot.svg';
 import rearrange from 'media/builderIcons/rearrange.svg';
+import ReArrange from "../rearrange/rearrange";
 
 type TextEditorProps = {
   currentState: {
@@ -136,7 +137,7 @@ const TextEditor = (props: TextEditorProps) => {
           {/* ===== Add Sections ===== */}
           {activeTab === "AI Assistant" && <div>AI Assistant Content</div>}
           {/* ===== Add Sections ===== */}
-          {activeTab === "Rearrange" && <div>Rearrange Content</div>}
+          {activeTab === "Rearrange" && <ReArrange />}
         </div>
       </div>
     </>
