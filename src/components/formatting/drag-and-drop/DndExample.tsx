@@ -1,105 +1,175 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import LoadingSkeleton from "@/components/loadingSkeleton/loadingSkeleton";
-import { cardsData } from "./CardsData";
-import { Lock } from 'lucide-react';
+import { reorderSections } from "@/redux/slices/addSectionSlice";
+import { Lock } from "lucide-react";
 import Image from "next/image";
-import Add from "media/builderIcons/add.svg"
+import Add from "media/builderIcons/add.svg";
 import { CgClose } from "react-icons/cg";
-
-
-const STORAGE_KEY = "dragAndDropData";
+import LoadingSkeleton from "@/components/loadingSkeleton/loadingSkeleton";
 
 type propsType = {
-  doubleColumn?: boolean | string
-}
+  doubleColumn?: boolean | string;
+};
 
-const DndExample = (props: propsType) => {
-  const { doubleColumn } = props
-  const [data, setData] = useState(cardsData);
+const DndExample = ({ doubleColumn }: propsType) => {
+  const dispatch = useDispatch();
+  const addedSections = useSelector(
+    (state: any) => state.addSection.addedSections
+  );
 
-  // useEffect(() => {
-  //   const savedData = localStorage.getItem(STORAGE_KEY);
-  //   if (savedData) {
-  //     setData(JSON.parse(savedData));
-  //   }
-  // }, []);
+  // new selected section work start
+  // const rightNames = ["Contact", "Technical Skill", "Soft Skill", "Languages"];
+  // const leftSections = addedSections.filter(
+  //   (item: any) => !rightNames.includes(item.name)
+  // );
+  // const rightSections = addedSections.filter(
+  //   (item: any) => rightNames.includes(item.name)
+  // );
+  // // Split only for rendering purposes
 
-  // const saveToLocalStorage = (updatedData: any) => {
-  //   localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
+  // const cards = [
+  //   { id: "left", components: leftSections },
+  //   { id: "right", components: rightSections },
+  // ];
+
+  // const onDragEnd = (result: DropResult) => {
+  //   const { source, destination } = result;
+  //   if (!destination) return;
+
+  //   const rightNames = ["Contact", "Technical Skill", "Soft Skill", "Languages"];
+
+  //   const leftSections = addedSections.filter(
+  //     (item: any) => !rightNames.includes(item.name)
+  //   );
+  //   const rightSections = addedSections.filter(
+  //     (item: any) => rightNames.includes(item.name)
+  //   );
+
+  //   const sourceList = source.droppableId === "left" ? leftSections : rightSections;
+  //   const destList = destination.droppableId === "left" ? leftSections : rightSections;
+
+  //   const movedItem = sourceList[source.index];
+
+  //   // Prevent dragging locked items
+  //   if (movedItem.locked) return;
+
+  //   // Prevent dropping at index 0 if locked
+  //   if (destination.index === 0 && destList[0]?.locked) return;
+
+  //   // Remove from source
+  //   const updatedSource = [...sourceList];
+  //   updatedSource.splice(source.index, 1);
+
+  //   // Add to destination
+  //   const updatedDest = [...destList];
+  //   updatedDest.splice(destination.index, 0, movedItem);
+
+  //   // Merge back to full list
+  //   const finalSections: any =
+  //     destination.droppableId === "left"
+  //       ? [...updatedDest, ...rightSections.filter((s: any) => s.id !== movedItem.id)]
+  //       : [...leftSections.filter((s: any) => s.id !== movedItem.id), ...updatedDest];
+
+  //   dispatch(reorderSections(finalSections));
   // };
+  // new selected section work end
+
+  // old middle work start
+  const mid = Math.ceil(addedSections.length / 2);
+  const cards = [
+    { id: "left", components: addedSections.slice(0, mid) },
+    { id: "right", components: addedSections.slice(mid) },
+  ];
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
     if (!destination) return;
 
-    let newData = [...data];
-    const sourceColIndex = newData.findIndex(col => col.id.toString() === source.droppableId);
-    const destColIndex = newData.findIndex(col => col.id.toString() === destination.droppableId);
+    // Flattened source index in addedSections
+    const startIdx =
+      source.droppableId === "left" ? 0 : mid;
+    const endIdx =
+      destination.droppableId === "left" ? 0 : mid;
 
-    if (sourceColIndex === -1 || destColIndex === -1) return;
+    const reordered: any = Array.from(addedSections);
+    const [movedItem]: any = reordered.splice(startIdx + source.index, 1);
 
-    const sourceComponents = newData[sourceColIndex].components;
-    const destComponents = newData[destColIndex].components;
+    // Prevent dragging locked items
+    if (movedItem.locked) return;
 
-    // Get the item being moved
-    const [movedItem] = sourceComponents.splice(source.index, 1);
-
-    // 1. Prevent moving a locked item from its position
-    if (movedItem.locked) {
-      sourceComponents.splice(source.index, 0, movedItem); // Put it back
+    // Prevent dropping into index 0 if locked
+    if (
+      destination.index === 0 &&
+      addedSections[endIdx]?.locked
+    )
       return;
-    }
 
-    // 2. Prevent dropping any item at index 0 if it's locked (like "Summary")
-    if (destination.index === 0 && destComponents[0]?.locked) {
-      sourceComponents.splice(source.index, 0, movedItem); // Put it back
-      return;
-    }
-
-    // Move the item
-    destComponents.splice(destination.index, 0, movedItem);
-    setData(newData);
+    reordered.splice(endIdx + destination.index, 0, movedItem);
+    dispatch(reorderSections(reordered));
   };
+  // old middle work end
 
 
 
-  if (!data.length) return <LoadingSkeleton />;
+  if (!addedSections.length) return <LoadingSkeleton />;
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className={`grid  ${doubleColumn ? 'grid-cols-2 gap-4 transition-all duration-300' : 'grid-cols-1 transition-all duration-300 '}`}>
-        {data.map((col) => (
-          <Droppable key={col.id} droppableId={col.id.toString()} type="ITEM">
+      <div
+        className={`grid ${doubleColumn
+          ? "grid-cols-2 gap-4"
+          : "grid-cols-1"
+          }`}
+      >
+        {cards.map((col) => (
+          <Droppable
+            key={col.id}
+            droppableId={col.id}
+            type="ITEM"
+          >
             {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={doubleColumn ? "" : ""}>
-                {col.components.map((component, index) => (
-                  <Draggable key={component.id} draggableId={component.id.toString()} index={index}>
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {col.components.map((component: any, index: any) => (
+                  <Draggable
+                    key={component.id.toString()}
+                    draggableId={component.id.toString()}
+                    index={index}
+                  >
                     {(provided) => (
                       <div
-                        className={`bg-gray-200 border rounded-lg p-3 my-2 text-center text-[14px] flex items-center justify-between transition-colors duration-300  ${component.locked && index === 0 ? 'opacity-50 cursor-not-allowed ' : 'cursor-pointer hover:bg-[#9885FF] hover:text-white'}`}
-                        {...(component.locked && index === 0 ? {} : { ...provided.dragHandleProps, ...provided.draggableProps })}
                         ref={provided.innerRef}
+                        {...(!component.locked
+                          ? {
+                            ...provided.draggableProps,
+                            ...provided.dragHandleProps,
+                          }
+                          : {})}
+                        className={`bg-gray-200 border rounded-lg p-3 my-2 text-center text-[14px] flex items-center justify-between ${component.locked
+                          ? "opacity-50 cursor-not-allowed"
+                          : "cursor-pointer hover:bg-[#9885FF] hover:text-white"
+                          }`}
                       >
-                        {(component.locked && index === 0) && <div className="">
-                          <Lock size={18} className="text-slate-800 " />
-                        </div>}
-                        {/* <IoIosLock size={18} className="inline ml-2 text-slate-800" /> */}
-                        {(component.locked && index === 0) ? null : <div className="">
-                          <Image src={Add} alt="Add" width={16} />
-                        </div>}
+                        {component.locked ? (
+                          <Lock size={18} className="text-slate-800" />
+                        ) : (
+                          <Image
+                            src={Add}
+                            alt="Add"
+                            width={16}
+                          />
+                        )}
                         {component.name}
-                        {(component.locked && index === 0) ? null : <div className="">
-                          {/* <Lock size={18} className="text-slate-800 hover:text-white" /> */}
-                          <CgClose />
-                        </div>}
+                        {!component.locked && <CgClose />}
                       </div>
                     )}
                   </Draggable>
@@ -113,4 +183,5 @@ const DndExample = (props: propsType) => {
     </DragDropContext>
   );
 };
+
 export default DndExample;

@@ -33,15 +33,15 @@ export default function ImproveText() {
                 <div className='flex pb-6 items-center justify-between '>
                     <p className='capitalize'>Tailored Suggessions</p>
                     <CustomSwitch
-                        checked={grammarCheck}
-                        onChange={handleGrammarCheck}
+                    // checked={grammarCheck}
+                    // onChange={handleGrammarCheck}
 
                     />
                 </div>
                 <div className='flex pb-6 items-center justify-between '>
                     <p className='capitalize'>Spell Check </p>
                     <div className='flex justify-center items-center gap-2'>
-                        <Lock size={16} className="text-gray-600" />
+                        {/* <Lock size={16} className="text-gray-600" /> */}
                         <CustomSwitch
                             checked={spellCheck}
                             onChange={handleSpellCheck}
@@ -53,8 +53,9 @@ export default function ImproveText() {
                     <div className='flex justify-center items-center gap-2'>
                         <Lock size={16} className="text-gray-600" />
                         <CustomSwitch
-                            checked={spellCheck}
-                            onChange={handleSpellCheck}
+                            checked={grammarCheck}
+                            onChange={handleGrammarCheck}
+                            disabled={true}
                         />
                     </div>
                 </div>
@@ -63,8 +64,9 @@ export default function ImproveText() {
                     <div className='flex justify-center items-center gap-2'>
                         <Lock size={16} className="text-gray-600" />
                         <CustomSwitch
-                            checked={spellCheck}
-                            onChange={handleSpellCheck}
+                            disabled={true}
+                        // checked={spellCheck}
+                        // onChange={handleSpellCheck}
                         />
                     </div>
                 </div>
@@ -73,8 +75,9 @@ export default function ImproveText() {
                     <div className='flex justify-center items-center gap-2'>
                         <Lock size={16} className="text-gray-600" />
                         <CustomSwitch
-                            checked={spellCheck}
-                            onChange={handleSpellCheck}
+                            disabled={true}
+                        // checked={spellCheck}
+                        // onChange={handleSpellCheck}
                         />
                     </div>
                 </div>
