@@ -19,7 +19,6 @@ const initialState: AddSectionState = {
       id: 3,
       name: "Experience",
       description: "",
-      height: "h-[80px]",
       locked: true,
     },
     {
@@ -45,7 +44,6 @@ const initialState: AddSectionState = {
       id: 2,
       name: "Certificate",
       description: "",
-      height: "h-[80px]",
     },
   ],
 };
