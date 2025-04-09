@@ -1,16 +1,15 @@
 "use client";
 
 import DndExample from "../drag-and-drop/DndExample";
-import { Lock } from 'lucide-react';
+import { IoIosLock } from "react-icons/io";
 
-
-const ReArrange = () => {
+const ReArrangeSection = () => {
     return (
-        <div className=" mt-4">
-            <div className="bg-gray-200 hover:bg-gray-300 rounded-lg px-4 py-3 mb-2 flex items-center justify-center text-center relative opacity-50 cursor-not-allowed">
+        <div className="px-4 py-8 border-2 border-gray-200 border-dashed rounded-lg bg-white">
+            <div className="bg-gray-200/50 border-2 border-dashed rounded-lg px-4 py-3 mb-5 flex items-center justify-center text-center relative">
                 Header
-                <div className="absolute top-3 left-4">
-                    <Lock size={22} className="text-slate-800" />
+                <div className="absolute top-0 left-0">
+                    <IoIosLock size={24} className="text-slate-800" />
                 </div>
             </div>
             <DndExample doubleColumn={true} />
@@ -18,4 +17,4 @@ const ReArrange = () => {
     );
 };
 
-export default ReArrange;
+export default ReArrangeSection;

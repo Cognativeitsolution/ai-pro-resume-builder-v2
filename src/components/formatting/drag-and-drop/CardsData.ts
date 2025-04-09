@@ -14,8 +14,8 @@ export const cardsData: Cards[] = [
     id: 0,
     components: [
       { id: 101, name: "Summary", locked: true },
-      { id: 102, name: "Experience" },
-      { id: 103, name: "Education" },
+      { id: 102, name: "Experience", height: "h-[90px]" },
+      { id: 103, name: "Education", height: "h-[90px]" },
       { id: 104, name: "Language" },
     ],
   },
