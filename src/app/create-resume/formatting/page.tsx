@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ResumePreview, Template, TextEditor, UserHeader } from "@/components";
+import { ResumeActiveTemplate, Template, TextEditor, UserHeader } from "@/components";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 export default function Page() {
@@ -73,7 +73,7 @@ export default function Page() {
                         />
                     </div>
                     <div className="col-span-8">
-                        <ResumePreview
+                        <ResumeActiveTemplate
                             currentState={currentState}
                             updateState={updateState}
                         />

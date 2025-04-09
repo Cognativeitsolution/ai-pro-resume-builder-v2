@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Skills from './sections/Skills'
 import Certificate from './sections/Certificate'
 import Experience from './sections/Experience'
@@ -13,11 +13,13 @@ const AllSections = () => {
   console.log(availableSections, "aaaa");
   const dispatch = useDispatch()
 
+  const [showData, setShowData] = useState(false)
   const handleAdd = (section: any) => {
     dispatch(addNewSection(section))
   }
 
   return (
+
     <div className='grid gap-4 max-h-[650px] overflow-auto p-2 mt-4'>
       {
         availableSections?.map((section: any) => {
@@ -28,7 +30,6 @@ const AllSections = () => {
           if (section.name === 'Projects') return <Projects key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           return null;
         })
-
       }
     </div>
   )

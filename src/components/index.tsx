@@ -10,7 +10,7 @@ const DndContext = dynamic(() => import("./formatting/drag-and-drop/DndContext")
 const DndExample = dynamic(() => import("./formatting/drag-and-drop/DndExample"));
 const ImproveText = dynamic(() => import("./formatting/improveText/improveText"));
 const NewSection = dynamic(() => import("./formatting/NewSection/NewSection"));
-const ResumePreview = dynamic(() => import("./formatting/ResumePreview/ResumePreview"));
+const ResumeActiveTemplate = dynamic(() => import("./formatting/ResumeActiveTemplate/ResumeActiveTemplate"));
 const AutoPlaySlider = dynamic(() => import("./slider/AutoPlaySlider"));
 const AutoScrollSlider = dynamic(() => import("./slider/AutoScrollSlider"));
 const Ads = dynamic(() => import("./ads/Ads"));
@@ -67,7 +67,7 @@ export {
   AutoScrollSlider,
   TextEditor,
   NewSection,
-  ResumePreview,
+  ResumeActiveTemplate,
   Ads,
   mainBanner,
   Clients,
