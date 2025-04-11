@@ -41,10 +41,7 @@ type userSectionDetailData = Skill | Education | Experience | Certificate | Proj
 type SectionType = {
   id?: number;
   name?: string;
-  description?: string;
   locked?: boolean;
-  height?: string;
-  userData?: Skill[] | Education[] | Experience[] | Certificate[] | Projects[];
 };
 
 type AddSectionState = {
@@ -55,6 +52,9 @@ type AddSectionState = {
   userExperiences: any;
   userEducation: any;
   userCertificates: any;
+
+  userHeader: any;
+  userSummary: any;
 };
 
 const initialState: AddSectionState = {
@@ -63,27 +63,28 @@ const initialState: AddSectionState = {
       id: 3,
       name: "Experience",
       locked: true,
-      userData: [],
     },
     {
       id: 4,
       name: "Education",
-      userData: [],
     },
     {
       id: 5,
       name: "Projects",
       locked: true,
-      userData: [],
     },
     
   ],
   addedSections: [
     {
+      id: 5,
+      name: "Summary",
+      locked: true,
+    },
+    {
       id: 1,
       name: "Skills",
       locked: true,
-      userData: [],
     },
     {
       id: 2,
@@ -95,6 +96,8 @@ const initialState: AddSectionState = {
   userExperiences: [],
   userEducation: [],
   userCertificates: [],
+  userHeader: [],
+  userSummary: [],
 };
 
 export const addSectionSlice = createSlice({
@@ -116,7 +119,16 @@ export const addSectionSlice = createSlice({
         state.availableSections.push(section);
       }
     },
-    
+    addUserHeader: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userHeader");
+      state.userHeader.push(detail);
+    },
+    addUserSummary: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userSummary");
+      state.userSummary.push(detail);
+    },
     addUserSkills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
       console.log(sectionId, detail, "userSkills");
@@ -153,6 +165,7 @@ export const addSectionSlice = createSlice({
 
 export const { addNewSection, removeSection,reorderSections, 
   addUserSkills, addUserProjects, addUserEducation, addUserExperience, addUserCertificates,
+  addUserHeader, addUserSummary
 } = 
   addSectionSlice.actions;
 export default addSectionSlice.reducer;
