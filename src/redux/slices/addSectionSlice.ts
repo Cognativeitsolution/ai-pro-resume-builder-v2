@@ -39,9 +39,9 @@ type Projects = {
 type userSectionDetailData = Skill | Education | Experience | Certificate | Projects;
 
 type SectionType = {
-  id: number;
-  name: string;
-  description: string;
+  id?: number;
+  name?: string;
+  description?: string;
   locked?: boolean;
   height?: string;
   userData?: Skill[] | Education[] | Experience[] | Certificate[] | Projects[];
@@ -62,20 +62,17 @@ const initialState: AddSectionState = {
     {
       id: 3,
       name: "Experience",
-      description: "",
       locked: true,
       userData: [],
     },
     {
       id: 4,
       name: "Education",
-      description: "",
       userData: [],
     },
     {
       id: 5,
       name: "Projects",
-      description: "",
       locked: true,
       userData: [],
     },
@@ -85,9 +82,12 @@ const initialState: AddSectionState = {
     {
       id: 1,
       name: "Skills",
-      description: "",
       locked: true,
       userData: [],
+    },
+    {
+      id: 2,
+      name: "Certificate"
     },
   ],
   userSkills: [],
@@ -148,7 +148,6 @@ export const addSectionSlice = createSlice({
       state.addedSections = action.payload;
     }
     
-
   },
 });
 

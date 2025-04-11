@@ -1,5 +1,5 @@
 "use client";
-import { addUserProjects, addUserSkills, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserProjects, removeSection } from '@/redux/slices/addSectionSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaPen, FaTrash } from 'react-icons/fa';
