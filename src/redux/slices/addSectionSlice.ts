@@ -36,8 +36,7 @@ type Projects = {
   issuer: string;
   date: string;
 };
-type userSectionDetailData = Skill | Education | Experience | Certificate;
-
+type userSectionDetailData = Skill | Education | Experience | Certificate | Projects;
 
 type SectionType = {
   id: number;
@@ -45,12 +44,17 @@ type SectionType = {
   description: string;
   locked?: boolean;
   height?: string;
-  userData?: Skill[] | Education[] | Experience[] | Certificate[];
+  userData?: Skill[] | Education[] | Experience[] | Certificate[] | Projects[];
 };
 
 type AddSectionState = {
   availableSections: SectionType[];
   addedSections: SectionType[]; 
+  userSkills : any;
+  userProjects: any;
+  userExperiences: any;
+  userEducation: any;
+  userCertificates: any;
 };
 
 const initialState: AddSectionState = {
@@ -75,6 +79,7 @@ const initialState: AddSectionState = {
       locked: true,
       userData: [],
     },
+    
   ],
   addedSections: [
     {
@@ -84,13 +89,12 @@ const initialState: AddSectionState = {
       locked: true,
       userData: [],
     },
-    {
-      id: 2,
-      name: "Certificate",
-      description: "",
-      userData: [],
-    },
   ],
+  userSkills: [],
+  userProjects: [],
+  userExperiences: [],
+  userEducation: [],
+  userCertificates: [],
 };
 
 export const addSectionSlice = createSlice({
@@ -112,19 +116,33 @@ export const addSectionSlice = createSlice({
         state.availableSections.push(section);
       }
     },
-
-    addUserSectionDetail: ( state, action: PayloadAction<{ sectionId: number; detail: userSectionDetailData }> ) => {
+    
+    addUserSkills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      const section = state.addedSections.find((s) => s.id === sectionId);
-      if (section) {
-        if (!section.userData) {
-          section.userData = [];
-        }
-        // section.userData.push(detail);
-      }
+      console.log(sectionId, detail, "userSkills");
+      state.userSkills.push(detail);
     },
-
-
+    addUserProjects: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userProjects");
+      state.userProjects.push(detail);
+    },
+    addUserEducation: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userEducation");
+      state.userEducation.push(detail);
+    },
+    addUserExperience: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userExperiences");
+      state.userExperiences.push(detail);
+    },
+    addUserCertificates: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userCertificates");
+      state.userCertificates.push(detail);
+    },
+    
     reorderSections: (state, action: any) => {
       // Reorder the addedSections array based on drag-and-drop actions
       state.addedSections = action.payload;
@@ -134,5 +152,8 @@ export const addSectionSlice = createSlice({
   },
 });
 
-export const { addNewSection, removeSection, addUserSectionDetail , reorderSections} = addSectionSlice.actions;
+export const { addNewSection, removeSection,reorderSections, 
+  addUserSkills, addUserProjects, addUserEducation, addUserExperience, addUserCertificates,
+} = 
+  addSectionSlice.actions;
 export default addSectionSlice.reducer;

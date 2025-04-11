@@ -32,23 +32,23 @@ const ResumeTemplateNew = (props: ResumePreviewProps) => {
     console.log(textValue, "textValue", addedSections);
 
     return (
-        <div className='border flex flex-col h-[600px]'>
+        <div className='border flex flex-col h-[600px] bg-gray-100'>
             <h1 className='text-center mx-auto flex justify-center'>Template 1</h1>
 
             <div className='items-start grid  grid-cols-12 gap-4'>
                 {addedSections?.length && addedSections?.map((data: any, index: any) => (
                     <div className='col-span-12 border m-5'>
-                        <h2>{data?.name}</h2>
 
                         {data && data.name === "Skills" && <AllSkills textValue={data.name} data={data} />}
 
-                        {/* {data?.name === "Certificate" && (<AllCertificates textValue={data?.name} />)}
+                        {data?.name === "Projects" && (<AllProjects textValue={data?.name} data={data} />)}
 
-                        {data?.name === "Education" && (<AllEducations textValue={data?.name} />)}
+                        {/* {data?.name === "Certificate" && (<AllCertificates textValue={data?.name} data={data} />)}
 
-                        {data?.name === "Experience" && (<AllExperiences textValue={data?.name} />)}
+                        {data?.name === "Education" && (<AllEducations textValue={data?.name} data={data} />)}
 
-                        {data?.name === "Projects" && (<AllProjects textValue={data?.name} />)} */}
+                        {data?.name === "Experience" && (<AllExperiences textValue={data?.name} data={data} />)} */}
+
 
                     </div>
                 ))}
