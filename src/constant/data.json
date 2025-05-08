@@ -1,0 +1,111 @@
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "johndoe@example.com",
+  "job_position": "Software Engineer",
+  "phone": "03456789012",
+  "contact_number": "03456789012",
+  "web_site": "https://johndoeportfolio.com",
+  "country": "United States",
+  "state": "California",
+  "city": "San Francisco",
+  "street_address": "123 Main St",
+  "postal_code": "94107",
+  "summary": "Experienced software engineer with a passion for developing innovative programs. Skilled in full-stack development and cloud technologies.",
+  "experience": [
+    {
+      "job_position": "Software Engineer",
+      "company_name": "TechCorp",
+      "job_description": "Developed scalable web applications using modern frameworks and cloud infrastructure.",
+      "location": {
+        "country": "United States",
+        "state": "California",
+        "city": "San Francisco"
+      },
+      "start_date": "2018-06-01",
+      "end_date": "2022-05-31",
+      "status": "completed"
+    },
+    {
+      "job_position": "Junior Developer",
+      "company_name": "CodeWave",
+      "job_description": "Assisted in building front-end interfaces and back-end APIs for various projects.",
+      "location": {
+        "country": "United States",
+        "state": "Texas",
+        "city": "Austin"
+      },
+      "start_date": "2016-08-01",
+      "end_date": "2018-05-31",
+      "status": "completed"
+    }
+  ],
+  "education": [
+    {
+      "institute": "Stanford University",
+      "degree": "Bachelor of Science",
+      "field_of_study": "Computer Science",
+      "grade": {
+        "type": "cgpa",
+        "value": "3.8/4.0"
+      },
+      "start_date": "2012-09-01",
+      "end_date": "2016-06-30",
+      "status": "completed"
+    }
+  ],
+  "technical_skills": ["Python", "React", "Node.js", "AWS", "Docker"],
+  "soft_skills": [
+    "Problem Solving",
+    "Teamwork",
+    "Communication",
+    "Adaptability"
+  ],
+  "certifications": [
+    {
+      "title": "AWS Certified Solutions Architect",
+      "authorization_body": "Amazon Web Services",
+      "issue_date": "2021-03-15",
+      "description": "Certified to design and deploy scalable systems on AWS."
+    },
+    {
+      "title": "Certified Kubernetes Administrator",
+      "authorization_body": "Cloud Native Computing Foundation",
+      "issue_date": "2020-07-20",
+      "description": "Certified to manage production-grade Kubernetes clusters."
+    }
+  ],
+  "awards": [
+    {
+      "title": "Best Innovator Award",
+      "authorization_body": "TechCorp",
+      "issue_date": "2021-12-01",
+      "description": "Awarded for outstanding contribution to innovation in software development."
+    },
+    {
+      "title": "Top Performer",
+      "authorization_body": "CodeWave",
+      "issue_date": "2017-12-01",
+      "description": "Recognized for exceptional performance and dedication to project success."
+    }
+  ],
+  "Language": [
+    {
+      "name": "English",
+      "level": "Native"
+    },
+    {
+      "name": "Urdu",
+      "level": "Native"
+    }
+  ],
+  "Reference": [
+    {
+      "name": "Hamza",
+      "designation": "abc",
+      "company": "xyz",
+      "email": "abc@xyz.com",
+      "contact": "0123456789"
+    }
+  ]
+}
