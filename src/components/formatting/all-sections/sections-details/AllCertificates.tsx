@@ -5,11 +5,10 @@ import { useDispatch } from 'react-redux';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
 type AllCertificatesType = {
-  textValue: string;
   data?: any;
 };
 
-const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => {
+const AllCertificates = ({ data = {} }: AllCertificatesType) => {
   const dispatch = useDispatch();
 
   const [inputCertificate, setInputCertificate] = useState<string>('');
@@ -92,7 +91,7 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
     <div ref={containerRef}
       className={`border p-4 relative flex flex-col gap-4 ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
 
-      <h1>{textValue}</h1>
+      <h1>{data?.name}</h1>
       {/* Buttons */}
       {showBtns && <div className="flex gap-3 absolute top-2 right-2">
         {!showInput && (

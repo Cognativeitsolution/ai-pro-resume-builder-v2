@@ -1,14 +1,14 @@
 import { CustomButton } from '@/components';
 import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
 
-const Skills = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
+const TechnicalSkills = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
 
   const skillsList = ["ReactJS", "MongoDB", "Angular", "NextJS", "Typescript", "NodeJs", "ExpressJs"];
 
   const handleAddSection = () => {
     handleAddSec({
-      id: 1,
-      name: "Skills",
+      id: 7,
+      name: "Technical_Skills",
       description: "",
       locked: false
     })
@@ -17,7 +17,7 @@ const Skills = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec:
   return (
     <div className="group p-5 shadow-md bg-white relative cursor-pointer border border-[#CECECE] overflow-hidden h-56 hover:bg-primary2 rounded-[10px] transition-all">
       <div className="text-start space-y-1">
-        <h1 className="border-black border-b-2 mb-2 text-lg font-semibold">Skills</h1>
+        <h1 className="border-black border-b-2 mb-2 text-lg font-semibold">Technical Skills</h1>
         <p className="text-xs text-gray-500">Frontend Developer</p>
         <div className='grid grid-cols-4 gap-x-2'>
           {
@@ -40,4 +40,4 @@ const Skills = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec:
   )
 }
 
-export default Skills
+export default TechnicalSkills

@@ -1,18 +1,18 @@
 "use client";
-import { addUserExperience, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserSoft_Skills, removeSection } from '@/redux/slices/addSectionSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
-type AllExperienceType = {
+type AllSoftSkillsType = {
   data?: any;
 };
 
-const AllExperiences = ({ data = {} }: AllExperienceType) => {
+const AllSoftSkills = ({ data = {} }: AllSoftSkillsType) => {
   const dispatch = useDispatch();
 
   const [inputSkill, setInputSkill] = useState<string>('');
-  const [allExperienceData, setAllExperienceData] = useState<string[]>([]);
+  const [allSkillsData, setAllSkillsData] = useState<string[]>([]);
   const [showInput, setShowInput] = useState<boolean>(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editedSkill, setEditedSkill] = useState<string>('');
@@ -26,15 +26,15 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
         setShowBtns(false);
 
         // Dispatch to Redux when clicking outside
-        if (allExperienceData.length > 0 && data?.id) {
-          const ExperiencePayload = allExperienceData.map(skill => ({
+        if (allSkillsData.length > 0 && data?.id) {
+          const skillsPayload = allSkillsData.map(skill => ({
             type: "skill",
             name: skill
           }));
 
-          dispatch(addUserExperience({
+          dispatch(addUserSoft_Skills({
             sectionId: data.id,
-            detail: ExperiencePayload
+            detail: skillsPayload
           }));
         }
       }
@@ -44,11 +44,11 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [allExperienceData, data?.id, dispatch]);
+  }, [allSkillsData, data?.id, dispatch]);
 
   const handleAddSkill = () => {
     if (inputSkill.trim() !== '') {
-      setAllExperienceData([...allExperienceData, inputSkill.trim()]);
+      setAllSkillsData([...allSkillsData, inputSkill.trim()]);
       setInputSkill('');
       setShowInput(false);
     }
@@ -65,20 +65,20 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
   };
 
   const handleDeleteSkill = (index: number) => {
-    const updated = allExperienceData.filter((_, i) => i !== index);
-    setAllExperienceData(updated);
+    const updated = allSkillsData.filter((_, i) => i !== index);
+    setAllSkillsData(updated);
   };
 
   const handleEditSkill = (index: number) => {
     setEditingIndex(index);
-    setEditedSkill(allExperienceData[index]);
+    setEditedSkill(allSkillsData[index]);
   };
 
   const handleSaveEdit = () => {
     if (editingIndex !== null && editedSkill.trim() !== '') {
-      const updated = [...allExperienceData];
+      const updated = [...allSkillsData];
       updated[editingIndex] = editedSkill.trim();
-      setAllExperienceData(updated);
+      setAllSkillsData(updated);
       setEditingIndex(null);
       setEditedSkill('');
     }
@@ -89,8 +89,7 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
   return (
 
     <div ref={containerRef}
-      className={`border p-4 relative flex flex-col gap-4 
-      ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
+      className={`border p-4 relative flex flex-col gap-4 ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
 
       <h1>{data?.name}</h1>
       {/* Buttons */}
@@ -100,7 +99,7 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
             className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
             onClick={handleShowInput}
           >
-            + Experience
+            + Skill
           </button>
         )}
         <button
@@ -111,9 +110,9 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
         </button>
       </div>}
 
-      {/* Experience List */}
+      {/* Skills List */}
       <div className="mt-1 flex flex-wrap gap-2">
-        {allExperienceData?.length ? allExperienceData.map((skill, index) => (
+        {allSkillsData?.length ? allSkillsData.map((skill, index) => (
           <div
             key={index}
             className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${showBtns && 'bg-gray-100'}`}
@@ -150,7 +149,7 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
             )}
           </div>
         )) :
-          <span onClick={handleShowInput} className='text-gray-300'>Add Experience</span>
+          <span onClick={handleShowInput} className='text-gray-300'>Add Skill</span>
         }
       </div>
 
@@ -179,4 +178,4 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
   );
 };
 
-export default AllExperiences;
+export default AllSoftSkills;

@@ -1,53 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type Skill = {
-  type: "skill";
-  name: string;
-  level?: string;
-};
-
-type Education = {
-  type: "education";
-  school: string;
-  degree: string;
-  field: string;
-  startYear: string;
-  endYear?: string;
-};
-
-type Experience = {
-  type: "experience";
-  company: string;
-  title: string;
-  startDate: string;
-  endDate?: string;
-  description?: string;
-};
-
-type Certificate = {
-  type: "certificate";
-  title: string;
-  issuer: string;
-  date: string;
-};
-type Projects = {
-  type: "projects";
-  title: string;
-  issuer: string;
-  date: string;
-};
-type userSectionDetailData = Skill | Education | Experience | Certificate | Projects;
 
 type SectionType = {
   id?: number;
   name?: string;
   locked?: boolean;
+  description?: string;
 };
 
 type AddSectionState = {
   availableSections: SectionType[];
   addedSections: SectionType[]; 
-  userSkills : any;
+  userSoft_Skills : any;
+  userTechnical_Skills : any;
   userProjects: any;
   userExperiences: any;
   userEducation: any;
@@ -55,49 +20,90 @@ type AddSectionState = {
 
   userHeader: any;
   userSummary: any;
+  userAwards: any;
+  userReferences: any;
+  userCustomSections: any;
+  userLanguages: any;
 };
 
 const initialState: AddSectionState = {
   availableSections: [
-    {
+   {
       id: 3,
-      name: "Experience",
-      locked: true,
+      name: "Education",
     },
     {
       id: 4,
-      name: "Education",
+      name: "Experience",
+      locked: true,
     },
     {
       id: 5,
       name: "Projects",
       locked: true,
     },
-    
-  ],
-  addedSections: [
     {
-      id: 5,
-      name: "Summary",
+      id: 6,
+      name: "Soft_Skills",
       locked: true,
     },
     {
+      id: 7,
+      name: "Technical_Skills",
+      locked: true,
+    },
+     {
+      id:8,
+      name: "Certificate"
+    },
+    {
+      id: 9,
+      name: "Awards",
+      locked: true,
+    },
+    {
+      id: 10,
+      name: "Languages",
+      locked: true,
+    },
+    {
+      id: 11,
+      name: "References",
+      locked: true,
+    },
+     {
+      id:12,
+      name: "Custom_Section"
+    },
+  ],
+  addedSections: [
+    {
       id: 1,
-      name: "Skills",
+      name: "Header",
+      description: "Engr. Rimsha Naeem",
       locked: true,
     },
     {
       id: 2,
-      name: "Certificate"
+      name: "Summary",
+      description: "Developed scalable web applications using modern frameworks and cloud infrastructure",
+      locked: true,
     },
+
   ],
-  userSkills: [],
+  userSoft_Skills: [],
+  userTechnical_Skills: [],
   userProjects: [],
   userExperiences: [],
   userEducation: [],
   userCertificates: [],
-  userHeader: [],
-  userSummary: [],
+  userHeader: "",
+  userSummary: "",
+
+  userAwards: [],
+  userReferences: [],
+  userLanguages: [],
+  userCustomSections: [],
 };
 
 export const addSectionSlice = createSlice({
@@ -121,18 +127,30 @@ export const addSectionSlice = createSlice({
     },
     addUserHeader: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userHeader");
-      state.userHeader.push(detail);
+      console.log(sectionId, detail, "===>userHeader");
+      const section = state.addedSections.find(sec => sec.id === sectionId);
+      if (section) {
+        section.description = detail;
+      }
     },
     addUserSummary: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userSummary");
-      state.userSummary.push(detail);
+      console.log(sectionId, detail, "=======userSummary");
+      const section = state.addedSections.find(sec => sec.id === sectionId);
+      if (section) {
+        section.description = detail;
+      }
+      
     },
-    addUserSkills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+    addUserSoft_Skills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userSkills");
-      state.userSkills.push(detail);
+      console.log(sectionId, detail, "userSoft_Skills");
+      state.userSoft_Skills.push(detail);
+    },
+    addUserTechnical_Skills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userTechnical_Skills");
+      state.userTechnical_Skills.push(detail);
     },
     addUserProjects: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
@@ -154,6 +172,27 @@ export const addSectionSlice = createSlice({
       console.log(sectionId, detail, "userCertificates");
       state.userCertificates.push(detail);
     },
+
+    AddUserReferences: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userReferences");
+      state.userReferences.push(detail);
+    },
+    addUserLanguages: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userLanguages");
+      state.userLanguages.push(detail);
+    },
+    addUserCustomSection: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userCustomSections");
+      state.userCustomSections.push(detail);
+    },
+    addUserAwards: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
+      const { sectionId, detail } = action.payload;
+      console.log(sectionId, detail, "userAwards");
+      state.userAwards.push(detail);
+    },
     
     reorderSections: (state, action: any) => {
       // Reorder the addedSections array based on drag-and-drop actions
@@ -163,8 +202,8 @@ export const addSectionSlice = createSlice({
   },
 });
 
-export const { addNewSection, removeSection,reorderSections, 
-  addUserSkills, addUserProjects, addUserEducation, addUserExperience, addUserCertificates,
+export const {addUserAwards,addUserCustomSection, addUserLanguages,AddUserReferences, addNewSection, removeSection,reorderSections, 
+  addUserSoft_Skills, addUserTechnical_Skills, addUserProjects, addUserEducation, addUserExperience, addUserCertificates,
   addUserHeader, addUserSummary
 } = 
   addSectionSlice.actions;

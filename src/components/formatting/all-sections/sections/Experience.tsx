@@ -6,10 +6,9 @@ const Experience = ({ sectionData, handleAddSec }: { sectionData: any, handleAdd
 
   const handleAddSection = () => {
     handleAddSec({
-      id: 3,
+      id: 4,
       name: "Experience",
       description: "",
-      height: "h-[80px]",
     })
   };
 

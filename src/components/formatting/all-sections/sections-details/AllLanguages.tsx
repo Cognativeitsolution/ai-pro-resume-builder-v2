@@ -1,21 +1,22 @@
 "use client";
-import { addUserExperience, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserCertificates, removeSection } from '@/redux/slices/addSectionSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
-type AllExperienceType = {
+type AllCertificatesType = {
+  textValue: string;
   data?: any;
 };
 
-const AllExperiences = ({ data = {} }: AllExperienceType) => {
+const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => {
   const dispatch = useDispatch();
 
-  const [inputSkill, setInputSkill] = useState<string>('');
-  const [allExperienceData, setAllExperienceData] = useState<string[]>([]);
+  const [inputCertificate, setInputCertificate] = useState<string>('');
+  const [allCertificatesData, setAllCertificatesData] = useState<string[]>([]);
   const [showInput, setShowInput] = useState<boolean>(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editedSkill, setEditedSkill] = useState<string>('');
+  const [editedCertificate, setEditedCertificate] = useState<string>('');
   const [showBtns, setShowBtns] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,15 +27,15 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
         setShowBtns(false);
 
         // Dispatch to Redux when clicking outside
-        if (allExperienceData.length > 0 && data?.id) {
-          const ExperiencePayload = allExperienceData.map(skill => ({
-            type: "skill",
-            name: skill
+        if (allCertificatesData.length > 0 && data?.id) {
+          const CertificatesPayload = allCertificatesData.map(Certificate => ({
+            type: "Certificate",
+            name: Certificate
           }));
 
-          dispatch(addUserExperience({
+          dispatch(addUserCertificates({
             sectionId: data.id,
-            detail: ExperiencePayload
+            detail: CertificatesPayload
           }));
         }
       }
@@ -44,12 +45,12 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [allExperienceData, data?.id, dispatch]);
+  }, [allCertificatesData, data?.id, dispatch]);
 
-  const handleAddSkill = () => {
-    if (inputSkill.trim() !== '') {
-      setAllExperienceData([...allExperienceData, inputSkill.trim()]);
-      setInputSkill('');
+  const handleAddCertificate = () => {
+    if (inputCertificate.trim() !== '') {
+      setAllCertificatesData([...allCertificatesData, inputCertificate.trim()]);
+      setInputCertificate('');
       setShowInput(false);
     }
   };
@@ -64,23 +65,23 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
     }
   };
 
-  const handleDeleteSkill = (index: number) => {
-    const updated = allExperienceData.filter((_, i) => i !== index);
-    setAllExperienceData(updated);
+  const handleDeleteCertificate = (index: number) => {
+    const updated = allCertificatesData.filter((_, i) => i !== index);
+    setAllCertificatesData(updated);
   };
 
-  const handleEditSkill = (index: number) => {
+  const handleEditCertificate = (index: number) => {
     setEditingIndex(index);
-    setEditedSkill(allExperienceData[index]);
+    setEditedCertificate(allCertificatesData[index]);
   };
 
   const handleSaveEdit = () => {
-    if (editingIndex !== null && editedSkill.trim() !== '') {
-      const updated = [...allExperienceData];
-      updated[editingIndex] = editedSkill.trim();
-      setAllExperienceData(updated);
+    if (editingIndex !== null && editedCertificate.trim() !== '') {
+      const updated = [...allCertificatesData];
+      updated[editingIndex] = editedCertificate.trim();
+      setAllCertificatesData(updated);
       setEditingIndex(null);
-      setEditedSkill('');
+      setEditedCertificate('');
     }
   };
   const handleShowEditBtn = () => {
@@ -89,10 +90,9 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
   return (
 
     <div ref={containerRef}
-      className={`border p-4 relative flex flex-col gap-4 
-      ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
+      className={`border p-4 relative flex flex-col gap-4 ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
 
-      <h1>{data?.name}</h1>
+      <h1>{textValue}</h1>
       {/* Buttons */}
       {showBtns && <div className="flex gap-3 absolute top-2 right-2">
         {!showInput && (
@@ -100,7 +100,7 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
             className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
             onClick={handleShowInput}
           >
-            + Experience
+            + Certificate
           </button>
         )}
         <button
@@ -111,9 +111,9 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
         </button>
       </div>}
 
-      {/* Experience List */}
+      {/* Certificates List */}
       <div className="mt-1 flex flex-wrap gap-2">
-        {allExperienceData?.length ? allExperienceData.map((skill, index) => (
+        {allCertificatesData?.length ? allCertificatesData.map((Certificate, index) => (
           <div
             key={index}
             className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${showBtns && 'bg-gray-100'}`}
@@ -122,8 +122,8 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
               <>
                 <input
                   className="px-2 py-1 text-sm border rounded"
-                  value={editedSkill}
-                  onChange={(e) => setEditedSkill(e.target.value)}
+                  value={editedCertificate}
+                  onChange={(e) => setEditedCertificate(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
                   autoFocus
                 />
@@ -134,14 +134,14 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
             ) : (
               <>
                 <ul className='list-disc ps-2'>
-                  <li>{skill}</li>
+                  <li>{Certificate}</li>
                 </ul>
                 {showBtns &&
                   <>
-                    <button onClick={() => handleEditSkill(index)} className="text-blue-400 text-xs">
+                    <button onClick={() => handleEditCertificate(index)} className="text-blue-400 text-xs">
                       <FaPen />
                     </button>
-                    <button onClick={() => handleDeleteSkill(index)} className="text-red-400 text-xs">
+                    <button onClick={() => handleDeleteCertificate(index)} className="text-red-400 text-xs">
                       <FaTrash />
                     </button>
                   </>
@@ -150,7 +150,7 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
             )}
           </div>
         )) :
-          <span onClick={handleShowInput} className='text-gray-300'>Add Experience</span>
+          <span onClick={handleShowInput} className='text-gray-300'>Add Certificate</span>
         }
       </div>
 
@@ -159,15 +159,15 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
         <div className="flex gap-2">
           <input
             type="text"
-            value={inputSkill}
-            onChange={(e) => setInputSkill(e.target.value)}
-            placeholder="Enter a skill"
+            value={inputCertificate}
+            onChange={(e) => setInputCertificate(e.target.value)}
+            placeholder="Enter a Certificate"
             className="border px-3 py-1 rounded-md w-full"
-            onKeyDown={(e) => e.key === 'Enter' && handleAddSkill()}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddCertificate()}
             autoFocus
           />
           <button
-            onClick={handleAddSkill}
+            onClick={handleAddCertificate}
             className="border px-4 py-1 rounded-md bg-green-200"
           >
             Add
@@ -179,4 +179,4 @@ const AllExperiences = ({ data = {} }: AllExperienceType) => {
   );
 };
 
-export default AllExperiences;
+export default AllCertificates;

@@ -5,11 +5,10 @@ import { useDispatch } from 'react-redux';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
 type AllEducationType = {
-  textValue: string;
   data?: any;
 };
 
-const AllEducations = ({ textValue = '', data = {} }: AllEducationType) => {
+const AllEducations = ({ data = {} }: AllEducationType) => {
   const dispatch = useDispatch();
 
   const [inputSkill, setInputSkill] = useState<string>('');
@@ -92,7 +91,7 @@ const AllEducations = ({ textValue = '', data = {} }: AllEducationType) => {
     <div ref={containerRef}
       className={`border p-4 relative flex flex-col gap-4 ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
 
-      <h1>{textValue}</h1>
+      <h1>{data?.name}</h1>
       {/* Buttons */}
       {showBtns && <div className="flex gap-3 absolute top-2 right-2">
         {!showInput && (

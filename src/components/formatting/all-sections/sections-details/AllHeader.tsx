@@ -1,13 +1,13 @@
 "use client";
-import { addUserSummary } from '@/redux/slices/addSectionSlice';
+import { addUserHeader } from '@/redux/slices/addSectionSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-type AllSummaryType = {
+type AllHeaderType = {
     data?: any;
 };
 
-const AllSummary = ({ data = {} }: AllSummaryType) => {
+const AllHeader = ({ data = {} }: AllHeaderType) => {
     const dispatch = useDispatch();
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -26,7 +26,7 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setEditable(false);
 
-                dispatch(addUserSummary({
+                dispatch(addUserHeader({
                     sectionId: data.id,
                     detail: inputData
                 }));
@@ -45,13 +45,17 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
     }, [data?.description]);
 
     return (
-        <div ref={containerRef} className={`border p-4 relative flex flex-col gap-4 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+        <div ref={containerRef}
+            className={`border p-4 relative flex flex-col gap-4 
+            ${editable && 'bg-white'}`} onClick={handleEditableSection}
+        >
             <h1>{data?.name}</h1>
 
             <div className="mt-1 flex flex-wrap gap-2">
-                <textarea
+                <input
                     value={inputData}
                     className='border w-full'
+                    type='text'
                     onChange={handleDataChange}
                     placeholder='Full Name'
                 />
@@ -61,4 +65,4 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
     );
 };
 
-export default AllSummary;
+export default AllHeader;

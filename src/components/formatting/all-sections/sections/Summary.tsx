@@ -1,12 +1,13 @@
 import { CustomButton } from '@/components';
 import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
 
-const Certificate = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
+const Summary = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
 
   const handleAddSection = () => {
     handleAddSec({
-      id: 8,
-      name: "Certificate",
+      id: 2,
+      name: "Summary",
+      description: "",
     })
   };
 
@@ -14,7 +15,7 @@ const Certificate = ({ sectionData, handleAddSec }: { sectionData: any, handleAd
     <div className="group rounded-[10px] p-5 shadow-md border border-[#CECECE] bg-white relative h-56 hover:bg-primary2 overflow-hidden">
 
       <div className="text-start space-y-1">
-        <h1 className="border-black border-b-2 mb-2 text-lg font-semibold">Certification</h1>
+        <h1 className="border-black border-b-2 mb-2 text-lg font-semibold">Summary</h1>
         <p className="text-xs text-gray-700">Lorem ipsum dolor, sit amet cons</p>
         <p className="text-xs text-gray-700">Consectetur</p>
         <hr className="border-gray-300" />
@@ -32,8 +33,7 @@ const Certificate = ({ sectionData, handleAddSec }: { sectionData: any, handleAd
       />
 
     </div>
-
   )
 }
 
-export default Certificate
+export default Summary

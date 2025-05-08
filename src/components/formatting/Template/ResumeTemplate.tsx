@@ -1,10 +1,17 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
-import AllSkills from '../all-sections/sections-details/AllSkills';
 import AllCertificates from '../all-sections/sections-details/AllCertificates';
 import AllEducations from '../all-sections/sections-details/AllEducations';
 import AllExperiences from '../all-sections/sections-details/AllExperiences';
 import AllProjects from '../all-sections/sections-details/AllProjects';
+import AllSummary from '../all-sections/sections-details/AllSummary';
+import AllSoftSkills from '../all-sections/sections-details/AllSoftSkills';
+import AllTechnialSkills from '../all-sections/sections-details/AllTechnicalSkills';
+import AllHeader from '../all-sections/sections-details/AllHeader';
+import AllLanguages from '../all-sections/sections-details/AllAwards';
+import AllCustomSections from '../all-sections/sections-details/AllReferences';
+import AllReferences from '../all-sections/sections-details/AllReferences';
+import AllAwards from '../all-sections/sections-details/AllAwards';
 
 type CurrentState = {
     fontSize: string;
@@ -29,7 +36,7 @@ const ResumeTemplateNew = (props: ResumePreviewProps) => {
         setTextValue(data.target.value)
     }
 
-    console.log(textValue, "textValue", addedSections);
+    console.log(addedSections, "addedSectionsaddedSections", textValue, "textValue", addedSections);
 
     return (
         <div className='border flex flex-col h-[600px] overflow-auto bg-gray-100'>
@@ -37,20 +44,28 @@ const ResumeTemplateNew = (props: ResumePreviewProps) => {
 
             <div className='items-start grid  grid-cols-12 gap-4'>
                 {addedSections?.length && addedSections?.map((data: any, index: any) => (
-                    <div className='col-span-12 border m-5'>
+                    <div key={index} className='col-span-12 border m-5'>
 
-                        {data && data.name === "Skills" && <AllSkills textValue={data.name} data={data} />}
+                        {data && data.name === "Header" && <AllHeader data={data} />}
 
-                        {data?.name === "Projects" && (<AllProjects textValue={data?.name} data={data} />)}
+                        {data && data.name === "Summary" && <AllSummary data={data} />}
 
-                        {data?.name === "Experience" && (<AllExperiences textValue={data?.name} data={data} />)}
+                        {data?.name === "Experience" && (<AllExperiences data={data} />)}
 
-                        {data?.name === "Education" && (<AllEducations textValue={data?.name} data={data} />)}
+                        {data?.name === "Education" && (<AllEducations data={data} />)}
 
-                        {data?.name === "Certificate" && (<AllCertificates textValue={data?.name} data={data} />)}
+                        {data && data.name === "Soft_Skills" && <AllSoftSkills data={data} />}
 
+                        {data && data.name === "Technical_Skills" && <AllTechnialSkills data={data} />}
 
+                        {data?.name === "Projects" && (<AllProjects data={data} />)}
 
+                        {data?.name === "Certificate" && (<AllCertificates data={data} />)}
+
+                        {data?.name === "Awards" && (<AllAwards data={data} />)}
+                        {data?.name === "Languages" && (<AllLanguages data={data} />)}
+                        {data?.name === "References" && (<AllReferences data={data} />)}
+                        {data?.name === "Custom_Section" && (<AllCustomSections data={data} />)}
 
                     </div>
                 ))}

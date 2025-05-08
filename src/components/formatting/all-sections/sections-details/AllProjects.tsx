@@ -5,11 +5,10 @@ import { useDispatch } from 'react-redux';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
 type AllProjectsType = {
-  textValue: string;
   data?: any;
 };
 
-const AllProjects = ({ textValue = '', data = {} }: AllProjectsType) => {
+const AllProjects = ({ data = {} }: AllProjectsType) => {
   const dispatch = useDispatch();
 
   const [inputProject, setInputProject] = useState<string>('');
@@ -92,7 +91,7 @@ const AllProjects = ({ textValue = '', data = {} }: AllProjectsType) => {
     <div ref={containerRef}
       className={`border p-4 relative flex flex-col gap-4 ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
 
-      <h1>{textValue}</h1>
+      <h1>{data?.name}</h1>
       {/* Buttons */}
       {showBtns && <div className="flex gap-3 absolute top-2 right-2">
         {!showInput && (
@@ -111,7 +110,7 @@ const AllProjects = ({ textValue = '', data = {} }: AllProjectsType) => {
         </button>
       </div>}
 
-      {/* Skills List */}
+      {/* Projects List */}
       <div className="mt-1 flex flex-wrap gap-2">
         {allProjectsData?.length ? allProjectsData.map((project, index) => (
           <div
