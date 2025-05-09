@@ -28,7 +28,7 @@ export default function IconDropdown() {
         <div className='flex'>
             <button
                 onClick={handleClick}
-                className='w-[30px] flex justify-center items-center'
+                className='w-[30px] flex justify-center items-start pt-1'
             >
                 {selectedIcon ? React.createElement(FaIcons[selectedIcon as keyof typeof FaIcons]) : <IoMdAddCircle size={18} />}
             </button>

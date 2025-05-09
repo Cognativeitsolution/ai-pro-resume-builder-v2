@@ -1,6 +1,8 @@
 import dynamic from "next/dynamic";
 
 const UserHeader = dynamic(() => import("./Layout/user-header/userHeader"));
+const NewHeader = dynamic(() => import("./Layout/newHeader/NewHeader"));
+const NewFooter = dynamic(() => import("./Layout/newFooter/NewFooter"));
 const Header = dynamic(() => import("./Layout/header/Header"));
 const Footer = dynamic(() => import("./Layout/footer/Footer"));
 const TextEditor = dynamic(() => import("./formatting/TextEditor/TextEditor"));
@@ -47,6 +49,11 @@ const profileSection = dynamic(() => import("./profile/profileSection/profileSec
 const loadingSkeleton = dynamic(() => import("./loadingSkeleton/loadingSkeleton"));
 const AllSections = dynamic(() => import("./formatting/all-sections/AllSections"));
 const TemplateSwitch = dynamic(() => import("./formatting/template-switch/TemplateSwitch"));
+const Register = dynamic(() => import("./auth/Register"));
+const LogIn = dynamic(() => import("./auth/LogIn"));
+const ForgetPassword = dynamic(() => import("./auth/ForgetPassword"));
+const ResetPassword = dynamic(() => import("./auth/ResetPassword"));
+const VerifyUser = dynamic(() => import("./auth/VerifyUser"));
 
 export {
   CustomAlert,
@@ -93,7 +100,14 @@ export {
   ImproveText,
   AllSections,
   UserHeader,
+  NewHeader,
+  NewFooter,
   Header,
   Footer,
-  TemplateSwitch
+  TemplateSwitch,
+  Register,
+  LogIn,
+  ForgetPassword,
+  ResetPassword,
+  VerifyUser,
 }

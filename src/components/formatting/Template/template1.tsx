@@ -156,7 +156,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 <div className="flex flex-col">
                     <input
                         placeholder="Name"
-                        className="outline-none font-semibold"
+                        className="outline-none focus:bg-transparent font-semibold"
                         style={{
                             fontSize: scaleFont(30, currentState.fontSize),
                             fontFamily: currentState.fontFamily,
@@ -165,7 +165,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
                     <input
                         placeholder="Designation"
-                        className="outline-none font-semibold"
+                        className="outline-none focus:bg-transparent font-semibold"
                         style={{
                             fontSize: scaleFont(18, currentState.fontSize),
                             fontFamily: currentState.fontFamily,
@@ -204,15 +204,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         </div>
                         <div className="flex gap-2 text-white">
                             <IconDropdown />
-                            <input placeholder="Phone" className="w-full placeholder-white outline-none bg-transparent" />
+                            <input placeholder="Phone" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
                         </div>
                         <div className="flex gap-2 text-white">
                             <IconDropdown />
-                            <input placeholder="Email" className="w-full placeholder-white outline-none bg-transparent" />
+                            <input placeholder="Email" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
                         </div>
                         <div className="flex gap-2 text-white">
                             <IconDropdown />
-                            <input placeholder="Address" className="w-full placeholder-white outline-none bg-transparent" />
+                            <textarea placeholder="Address" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
                         </div>
 
                     </div>

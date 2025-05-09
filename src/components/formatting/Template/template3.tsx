@@ -29,7 +29,6 @@ type ResumePreviewProps = {
 
 const Template3 = (props: ResumePreviewProps) => {
     const addedSections = useSelector((state: any) => state.addSection.addedSections)
-
     const [textValue, setTextValue] = useState([]);
 
     const handleTextareaChange = (data: any) => {
@@ -55,13 +54,9 @@ const Template3 = (props: ResumePreviewProps) => {
                         {data?.name === "Education" && (<AllEducations data={data} />)}
 
                         {data && data.name === "Soft_Skills" && <AllSoftSkills data={data} />}
-
                         {data && data.name === "Technical_Skills" && <AllTechnialSkills data={data} />}
-
                         {data?.name === "Projects" && (<AllProjects data={data} />)}
-
                         {data?.name === "Certificate" && (<AllCertificates data={data} />)}
-
                         {data?.name === "Awards" && (<AllAwards data={data} />)}
                         {data?.name === "Languages" && (<AllLanguages data={data} />)}
                         {data?.name === "References" && (<AllReferences data={data} />)}

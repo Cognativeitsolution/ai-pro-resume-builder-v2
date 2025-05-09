@@ -55,7 +55,7 @@ export default function Banner(props: BannerProps) {
   const typedText = useTypedText(subtitle);
 
   return (
-    <section className={`container md:px-4 mx-auto relative overflow-hidden`}>
+    <section className={`container md:px-4 mx-auto relative overflow-hidden h-dvh flex items-center`}>
       <div
         className={
           isGradient === false

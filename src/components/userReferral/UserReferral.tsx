@@ -1,3 +1,5 @@
+"use client"
+// =============
 import React, { useState, useEffect } from 'react';
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import { RxCross1 } from 'react-icons/rx';
