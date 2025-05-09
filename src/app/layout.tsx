@@ -15,15 +15,15 @@ const lexend = Lexend({
 
 export const metadata: Metadata = {
   // Title & Descriptions
-  title: "",
-  description: "",
+  title: "AI Pro Resume Builder",
+  description: "AI Pro Resume Builder",
   // Canonical
-  alternates: { canonical: 'https://ai-pro-resume-next.vercel.app/' },
+  alternates: { canonical: 'https://ai-pro-resume-builder-v2.vercel.app/' },
   // OG Metas
   openGraph: {
-    title: "",
-    description: "",
-    url: 'https://ai-pro-resume-next.vercel.app/',
+    title: "AI Pro Resume Builder",
+    description: "AI Pro Resume Builder",
+    url: 'https://ai-pro-resume-builder-v2.vercel.app/',
     siteName: 'Ai Pro Resume',
     locale: 'en_US',
     type: 'website',
