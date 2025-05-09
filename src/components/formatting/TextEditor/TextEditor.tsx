@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 // ===============
-import { ImproveText, AllSections } from "@/components";
+import { ImproveText, AllSections, TemplateSwitch } from "@/components";
 // import { addSection } from '../../../redux/slices/fontSlice';
 // ===============
 import DesignFont from "../DesignFont/DesignFont";
@@ -121,7 +121,9 @@ const TextEditor = (props: TextEditorProps) => {
             <AllSections />
           )}
           {/* ===== Add Sections ===== */}
-          {activeTab === "Templates" && <div>Templates Content</div>}
+          {activeTab === "Templates" && <div>
+            <TemplateSwitch />
+          </div>}
           {/* ===== Add Sections ===== */}
           {activeTab === "Design & Font" && (
             <DesignFont

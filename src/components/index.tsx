@@ -46,6 +46,7 @@ const ServicesSection = dynamic(() => import("./services/ServicesSection"));
 const profileSection = dynamic(() => import("./profile/profileSection/profileSection"));
 const loadingSkeleton = dynamic(() => import("./loadingSkeleton/loadingSkeleton"));
 const AllSections = dynamic(() => import("./formatting/all-sections/AllSections"));
+const TemplateSwitch = dynamic(() => import("./formatting/template-switch/TemplateSwitch"));
 
 export {
   CustomAlert,
@@ -93,5 +94,6 @@ export {
   AllSections,
   UserHeader,
   Header,
-  Footer
+  Footer,
+  TemplateSwitch
 }

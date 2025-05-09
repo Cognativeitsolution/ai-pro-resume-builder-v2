@@ -5,6 +5,7 @@ import reuseableReducer from "@/redux/slices/reuseableSlice";
 import fontReducer from "@/redux/slices/fontSlice";
 import ImproveTextReducer from "@/redux/slices/improveTextSlice";
 import addSectionReducer from "@/redux/slices/addSectionSlice";
+import templateReducer from "@/redux/slices/template";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         font: fontReducer,
         ImproveText: ImproveTextReducer,
         addSection: addSectionReducer,
+        template: templateReducer,
     },
 });
 

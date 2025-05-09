@@ -12,6 +12,9 @@ import {
   Volkhov,
 } from "next/font/google";
 // ===============
+import { useDispatch, useSelector } from "react-redux";
+import { setColor, setFontFamily, setFontSize } from "@/redux/slices/fontSlice";
+import { RootState } from "@/redux/store";
 
 const rubik = Rubik({ subsets: ["latin"], weight: ["400", "700"] });
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600"] });
@@ -58,7 +61,10 @@ const DesignFont = ({ currentState, updateState, }: DesignFontProps) => {
   useEffect(() => {
     setSelectedColor(currentState.color);
   }, [currentState.color]);
+  const dispatch = useDispatch();
+  const globalColor = useSelector((state: RootState) => state.font.color)
 
+  console.log(globalColor, "globalColor============>")
 
   // Define font family
   const fontStyles: { [key: string]: string } = {
@@ -85,10 +91,17 @@ const DesignFont = ({ currentState, updateState, }: DesignFontProps) => {
                 className={`w-10 h-10 rounded-full flex items-center justify-center relative ${selectedColor === color.hex ? 'ring-2 ring-purple-500 ring-offset-2' : ''
                   }`}
                 style={{ backgroundColor: color.hex }}
+                // onClick={() => {
+                //   if (!color.locked) {
+                //     setSelectedColor(color.hex);
+                //     updateState({ ...currentState, color: color.hex });
+                //   }
+                // }}
                 onClick={() => {
                   if (!color.locked) {
                     setSelectedColor(color.hex);
                     updateState({ ...currentState, color: color.hex });
+                    dispatch(setColor(color.hex)); // <-- update redux
                   }
                 }}
 
@@ -126,8 +139,14 @@ const DesignFont = ({ currentState, updateState, }: DesignFontProps) => {
         <div className="flex flex-col items-start justify-start gap-2">
           <label className="text-[14px] text-[#707275] font-bold">Font Style</label>
           <select
+            // value={currentState.fontFamily}
+            // onChange={(e) => updateState({ ...currentState, fontFamily: e.target.value })}
             value={currentState.fontFamily}
-            onChange={(e) => updateState({ ...currentState, fontFamily: e.target.value })}
+            onChange={(e) => {
+              const newFont = e.target.value;
+              updateState({ ...currentState, fontFamily: newFont });
+              dispatch(setFontFamily(newFont)); // Dispatch to Redux
+            }}
             className="p-2 border border-[#CECECE] rounded-md focus:outline-none w-full"
           >
             <option value="Arial">Arial</option>
@@ -152,9 +171,14 @@ const DesignFont = ({ currentState, updateState, }: DesignFontProps) => {
                 type="radio"
                 name="fontSize"
                 className="cursor-pointer"
-                value="16px"
-                checked={currentState.fontSize === "16px"}
-                onChange={() => updateState({ ...currentState, fontSize: "16px" })}
+                value="small"
+                // checked={currentState.fontSize === "16px"}
+                // onChange={() => updateState({ ...currentState, fontSize: "16px" })}
+                checked={currentState.fontSize === "small"}
+                onChange={() => {
+                  updateState({ ...currentState, fontSize: "small" });
+                  dispatch(setFontSize("small")); // Dispatch to Redux
+                }}
               />
               <span className={`text-[14px] text-[#000000] font-medium ${currentState.fontSize === "16px" ? "text-blue-500" : ""}`}>Small</span>
             </div>
@@ -163,9 +187,14 @@ const DesignFont = ({ currentState, updateState, }: DesignFontProps) => {
                 type="radio"
                 name="fontSize"
                 className="cursor-pointer"
-                value="20px"
-                checked={currentState.fontSize === "20px"}
-                onChange={() => updateState({ ...currentState, fontSize: "20px" })}
+                value="medium"
+                checked={currentState.fontSize === "medium"}
+                onChange={() => {
+                  updateState({ ...currentState, fontSize: "medium" });
+                  dispatch(setFontSize("medium")); // Dispatch to Redux
+                }}
+              // checked={currentState.fontSize === "20px"}
+              // onChange={() => updateState({ ...currentState, fontSize: "20px" })}
               />
               <span className={`text-[14px] text-[#000000] font-medium ${currentState.fontSize === "20px" ? "text-blue-500" : ""}`}>Medium</span>
             </div>
@@ -174,9 +203,14 @@ const DesignFont = ({ currentState, updateState, }: DesignFontProps) => {
                 type="radio"
                 name="fontSize"
                 className="cursor-pointer"
-                value="24px"
-                checked={currentState.fontSize === "24px"}
-                onChange={() => updateState({ ...currentState, fontSize: "24px" })}
+                value="large"
+                checked={currentState.fontSize === "large"}
+                onChange={() => {
+                  updateState({ ...currentState, fontSize: "large" });
+                  dispatch(setFontSize("large")); // Dispatch to Redux
+                }}
+              // checked={currentState.fontSize === "24px"}
+              // onChange={() => updateState({ ...currentState, fontSize: "24px" })}
               />
               <span className={`text-[14px] text-[#000000] font-medium ${currentState.fontSize === "24px" ? "text-blue-500" : ""}`}>Large</span>
             </div>
