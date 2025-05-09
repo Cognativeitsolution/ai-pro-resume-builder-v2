@@ -1,22 +1,22 @@
 "use client";
-import { addUserCertificates, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserLanguages, removeSection } from '@/redux/slices/addSectionSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
-type AllCertificatesType = {
+type AllLanguagesType = {
   textValue: string;
   data?: any;
 };
 
-const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => {
+const AllLanguages = ({ textValue = '', data = {} }: AllLanguagesType) => {
   const dispatch = useDispatch();
 
-  const [inputCertificate, setInputCertificate] = useState<string>('');
-  const [allCertificatesData, setAllCertificatesData] = useState<string[]>([]);
+  const [inputLanguage, setInputLanguage] = useState<string>('');
+  const [allLanguagesData, setAllLanguagesData] = useState<string[]>([]);
   const [showInput, setShowInput] = useState<boolean>(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editedCertificate, setEditedCertificate] = useState<string>('');
+  const [editedLanguage, setEditedLanguage] = useState<string>('');
   const [showBtns, setShowBtns] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,15 +27,15 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
         setShowBtns(false);
 
         // Dispatch to Redux when clicking outside
-        if (allCertificatesData.length > 0 && data?.id) {
-          const CertificatesPayload = allCertificatesData.map(Certificate => ({
-            type: "Certificate",
-            name: Certificate
+        if (allLanguagesData.length > 0 && data?.id) {
+          const LanguagesPayload = allLanguagesData.map(Language => ({
+            type: "Language",
+            name: Language
           }));
 
-          dispatch(addUserCertificates({
+          dispatch(addUserLanguages({
             sectionId: data.id,
-            detail: CertificatesPayload
+            detail: LanguagesPayload
           }));
         }
       }
@@ -45,12 +45,12 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [allCertificatesData, data?.id, dispatch]);
+  }, [allLanguagesData, data?.id, dispatch]);
 
-  const handleAddCertificate = () => {
-    if (inputCertificate.trim() !== '') {
-      setAllCertificatesData([...allCertificatesData, inputCertificate.trim()]);
-      setInputCertificate('');
+  const handleAddLanguage = () => {
+    if (inputLanguage.trim() !== '') {
+      setAllLanguagesData([...allLanguagesData, inputLanguage.trim()]);
+      setInputLanguage('');
       setShowInput(false);
     }
   };
@@ -65,23 +65,23 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
     }
   };
 
-  const handleDeleteCertificate = (index: number) => {
-    const updated = allCertificatesData.filter((_, i) => i !== index);
-    setAllCertificatesData(updated);
+  const handleDeleteLanguage = (index: number) => {
+    const updated = allLanguagesData.filter((_, i) => i !== index);
+    setAllLanguagesData(updated);
   };
 
-  const handleEditCertificate = (index: number) => {
+  const handleEditLanguage = (index: number) => {
     setEditingIndex(index);
-    setEditedCertificate(allCertificatesData[index]);
+    setEditedLanguage(allLanguagesData[index]);
   };
 
   const handleSaveEdit = () => {
-    if (editingIndex !== null && editedCertificate.trim() !== '') {
-      const updated = [...allCertificatesData];
-      updated[editingIndex] = editedCertificate.trim();
-      setAllCertificatesData(updated);
+    if (editingIndex !== null && editedLanguage.trim() !== '') {
+      const updated = [...allLanguagesData];
+      updated[editingIndex] = editedLanguage.trim();
+      setAllLanguagesData(updated);
       setEditingIndex(null);
-      setEditedCertificate('');
+      setEditedLanguage('');
     }
   };
   const handleShowEditBtn = () => {
@@ -100,7 +100,7 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
             className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
             onClick={handleShowInput}
           >
-            + Certificate
+            + Language
           </button>
         )}
         <button
@@ -111,9 +111,9 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
         </button>
       </div>}
 
-      {/* Certificates List */}
+      {/* Languages List */}
       <div className="mt-1 flex flex-wrap gap-2">
-        {allCertificatesData?.length ? allCertificatesData.map((Certificate, index) => (
+        {allLanguagesData?.length ? allLanguagesData.map((Language, index) => (
           <div
             key={index}
             className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${showBtns && 'bg-gray-100'}`}
@@ -122,8 +122,8 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
               <>
                 <input
                   className="px-2 py-1 text-sm border rounded"
-                  value={editedCertificate}
-                  onChange={(e) => setEditedCertificate(e.target.value)}
+                  value={editedLanguage}
+                  onChange={(e) => setEditedLanguage(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
                   autoFocus
                 />
@@ -134,14 +134,14 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
             ) : (
               <>
                 <ul className='list-disc ps-2'>
-                  <li>{Certificate}</li>
+                  <li>{Language}</li>
                 </ul>
                 {showBtns &&
                   <>
-                    <button onClick={() => handleEditCertificate(index)} className="text-blue-400 text-xs">
+                    <button onClick={() => handleEditLanguage(index)} className="text-blue-400 text-xs">
                       <FaPen />
                     </button>
-                    <button onClick={() => handleDeleteCertificate(index)} className="text-red-400 text-xs">
+                    <button onClick={() => handleDeleteLanguage(index)} className="text-red-400 text-xs">
                       <FaTrash />
                     </button>
                   </>
@@ -150,7 +150,7 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
             )}
           </div>
         )) :
-          <span onClick={handleShowInput} className='text-gray-300'>Add Certificate</span>
+          <span onClick={handleShowInput} className='text-gray-300'>Add Language</span>
         }
       </div>
 
@@ -159,15 +159,15 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
         <div className="flex gap-2">
           <input
             type="text"
-            value={inputCertificate}
-            onChange={(e) => setInputCertificate(e.target.value)}
-            placeholder="Enter a Certificate"
+            value={inputLanguage}
+            onChange={(e) => setInputLanguage(e.target.value)}
+            placeholder="Enter a Language"
             className="border px-3 py-1 rounded-md w-full"
-            onKeyDown={(e) => e.key === 'Enter' && handleAddCertificate()}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddLanguage()}
             autoFocus
           />
           <button
-            onClick={handleAddCertificate}
+            onClick={handleAddLanguage}
             className="border px-4 py-1 rounded-md bg-green-200"
           >
             Add
@@ -179,4 +179,4 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
   );
 };
 
-export default AllCertificates;
+export default AllLanguages;
