@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 // Import all the reusable section components
-import AllSkills from "../all-sections/sections-details/AllSkills";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
 import AllEducations from "../all-sections/sections-details/AllEducations";
 import AllExperiences from "../all-sections/sections-details/AllExperiences";
 import AllProjects from "../all-sections/sections-details/AllProjects";
 import Image from "next/image";
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp"
+import AllSoftSkills from "../all-sections/sections-details/AllSoftSkills";
 
 type CurrentState = {
     fontSize: string;
@@ -110,15 +110,15 @@ const Template1 = (props: ResumePreviewProps) => {
     const renderSection = (section: any) => {
         switch (section?.name) {
             case "Skills":
-                return <AllSkills textValue={highlightWords(section.name)} data={section} />;
+                return <AllSoftSkills data={section} />;
             case "Certificate":
-                return <AllCertificates textValue={highlightWords(section.name)} data={section} />;
+                return <AllCertificates data={section} />;
             case "Education":
-                return <AllEducations textValue={highlightWords(section.name)} data={section} />;
+                return <AllEducations data={section} />;
             case "Experience":
-                return <AllExperiences textValue={highlightWords(section.name)} data={section} />;
+                return <AllExperiences data={section} />;
             case "Projects":
-                return <AllProjects textValue={highlightWords(section.name)} data={section} />;
+                return <AllProjects data={section} />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }

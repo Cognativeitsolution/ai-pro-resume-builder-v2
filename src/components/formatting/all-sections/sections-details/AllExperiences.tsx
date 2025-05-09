@@ -3,7 +3,6 @@ import {
   addUserExperience,
   removeSection,
 } from "@/redux/slices/addSectionSlice";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { format } from "date-fns";
