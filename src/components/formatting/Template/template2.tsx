@@ -28,7 +28,7 @@ type ResumePreviewProps = {
     updateState: (newState: CurrentState) => void;
 }
 
-const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
+const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
     const addedSections = useSelector((state: any) => state.addSection.addedSections);
     console.log(addedSections, "addedSections===========>")
 
@@ -234,4 +234,4 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     );
 };
 
-export default Template1;
+export default Template2;
