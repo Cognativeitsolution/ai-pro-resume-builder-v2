@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { IoIosStarOutline } from "react-icons/io";
 import { MdOutlineStar } from "react-icons/md";
 

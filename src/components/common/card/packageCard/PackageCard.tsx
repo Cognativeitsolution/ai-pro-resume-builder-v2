@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import check from "media/assets/check.webp";
 import styles from "./PackageCard.module.css";
