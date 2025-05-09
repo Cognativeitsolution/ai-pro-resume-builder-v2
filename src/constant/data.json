@@ -107,5 +107,12 @@
       "email": "abc@xyz.com",
       "contact": "0123456789"
     }
+  ],
+  "Projects": [
+    {
+      "name": "Hamza",
+      "description": "abc",
+      "url": "xyz"
+    }
   ]
 }

@@ -1,3 +1,5 @@
+"use client"
+// =============
 import React, { useState } from 'react'
 import Skills from './sections/SoftSkills'
 import Certificate from './sections/Certificate'

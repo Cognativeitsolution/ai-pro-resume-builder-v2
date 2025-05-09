@@ -1,3 +1,5 @@
+"use client"
+// =============
 import React, { useEffect, useState } from "react";
 import PosterBanner from "./PosterBanner";
 import arrow_design_7 from "media/assets/arrow_design_7.webp";

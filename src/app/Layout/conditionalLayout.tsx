@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { Footer, Header } from "@/components";
+import { NewFooter, NewHeader } from "@/components";
 
 const ConditionalLayout = ({ children }: any) => {
   const pathname = usePathname();
@@ -17,15 +17,10 @@ const ConditionalLayout = ({ children }: any) => {
 
   return (
     <>
-      <div
-        className={`${pathname === "/create-resume/formatting" ? "bg-[#f3f4f6] min-h-[100vh]" : null
-          }`}
-      >
-        {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <Header />}
-        {/* {loading ? <SpinnerLoader /> : children} */}
-        {children}
-        {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <Footer />}
-      </div>
+      {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <NewHeader />}
+      {/* {loading ? <SpinnerLoader /> : children} */}
+      {children}
+      <NewFooter />
     </>
   );
 };
