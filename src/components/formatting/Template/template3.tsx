@@ -27,7 +27,7 @@ type ResumePreviewProps = {
     updateState: (newState: CurrentState) => void;
 }
 
-const ResumeTemplateNew = (props: ResumePreviewProps) => {
+const Template3 = (props: ResumePreviewProps) => {
     const addedSections = useSelector((state: any) => state.addSection.addedSections)
 
     const [textValue, setTextValue] = useState([]);
@@ -74,7 +74,7 @@ const ResumeTemplateNew = (props: ResumePreviewProps) => {
     )
 }
 
-export default ResumeTemplateNew
+export default Template3
 
 
 

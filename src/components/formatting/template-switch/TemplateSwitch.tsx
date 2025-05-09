@@ -7,6 +7,7 @@ function TemplateSwitch() {
     return (
         <div className="flex gap-4">
             <button onClick={() => dispatch(setSelectedTemplate("template1"))}>Template 1</button>
+            <button onClick={() => dispatch(setSelectedTemplate("template3"))}>Template 3</button>
             <button onClick={() => dispatch(setSelectedTemplate("template10"))}>Template 10</button>
         </div>
     );

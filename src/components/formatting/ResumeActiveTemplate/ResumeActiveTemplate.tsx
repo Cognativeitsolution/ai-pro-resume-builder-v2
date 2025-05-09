@@ -1,6 +1,7 @@
 "use client";
 import { useSelector } from "react-redux";
 import Template1 from "../Template/template1";
+import Template3 from "../Template/template3";
 import Template10 from "../Template/template10";
 import { useEffect } from "react";
 
@@ -28,6 +29,8 @@ const ResumeActiveTemplate = ({ currentState, updateState }: ResumePreviewProps)
     switch (selectedTemplate) {
       case "template1":
         return <Template1 currentState={currentState} updateState={updateState} />;
+      case "template3":
+        return <Template3 currentState={currentState} updateState={updateState} />;
       case "template10":
         return <Template10 currentState={currentState} updateState={updateState} />;
       default:
