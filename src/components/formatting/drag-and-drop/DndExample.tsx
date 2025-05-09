@@ -18,101 +18,51 @@ type propsType = {
   doubleColumn?: boolean | string;
 };
 
+
 const DndExample = ({ doubleColumn }: propsType) => {
   const dispatch = useDispatch();
   const addedSections = useSelector(
     (state: any) => state.addSection.addedSections
   );
 
-  // new selected section work start
-  // const rightNames = ["Contact", "Technical Skill", "Soft Skill", "Languages"];
-  // const leftSections = addedSections.filter(
-  //   (item: any) => !rightNames.includes(item.name)
-  // );
-  // const rightSections = addedSections.filter(
-  //   (item: any) => rightNames.includes(item.name)
-  // );
-  // // Split only for rendering purposes
+  const rightSideSections = ["Technical_Skills", "Soft_Skills", "Languages", "References"];
+  const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
+  const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 
-  // const cards = [
-  //   { id: "left", components: leftSections },
-  //   { id: "right", components: rightSections },
-  // ];
 
-  // const onDragEnd = (result: DropResult) => {
-  //   const { source, destination } = result;
-  //   if (!destination) return;
-
-  //   const rightNames = ["Contact", "Technical Skill", "Soft Skill", "Languages"];
-
-  //   const leftSections = addedSections.filter(
-  //     (item: any) => !rightNames.includes(item.name)
-  //   );
-  //   const rightSections = addedSections.filter(
-  //     (item: any) => rightNames.includes(item.name)
-  //   );
-
-  //   const sourceList = source.droppableId === "left" ? leftSections : rightSections;
-  //   const destList = destination.droppableId === "left" ? leftSections : rightSections;
-
-  //   const movedItem = sourceList[source.index];
-
-  //   // Prevent dragging locked items
-  //   if (movedItem.locked) return;
-
-  //   // Prevent dropping at index 0 if locked
-  //   if (destination.index === 0 && destList[0]?.locked) return;
-
-  //   // Remove from source
-  //   const updatedSource = [...sourceList];
-  //   updatedSource.splice(source.index, 1);
-
-  //   // Add to destination
-  //   const updatedDest = [...destList];
-  //   updatedDest.splice(destination.index, 0, movedItem);
-
-  //   // Merge back to full list
-  //   const finalSections: any =
-  //     destination.droppableId === "left"
-  //       ? [...updatedDest, ...rightSections.filter((s: any) => s.id !== movedItem.id)]
-  //       : [...leftSections.filter((s: any) => s.id !== movedItem.id), ...updatedDest];
-
-  //   dispatch(reorderSections(finalSections));
-  // };
-  // new selected section work end
-
-  // old middle work start
   const mid = Math.ceil(addedSections.length / 2);
   const cards = [
-    { id: "left", components: addedSections.slice(0, mid) },
-    { id: "right", components: addedSections.slice(mid) },
+    { id: "left", components: leftSections },
+    { id: "right", components: rightSections },
   ];
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
     if (!destination) return;
 
-    // Flattened source index in addedSections
-    const startIdx =
-      source.droppableId === "left" ? 0 : mid;
-    const endIdx =
-      destination.droppableId === "left" ? 0 : mid;
+    const sourceCol = source.droppableId;
+    const destCol = destination.droppableId;
 
-    const reordered: any = Array.from(addedSections);
-    const [movedItem]: any = reordered.splice(startIdx + source.index, 1);
+    // Prevent moving between left/right columns
+    if (sourceCol !== destCol) return;
 
-    // Prevent dragging locked items
-    if (movedItem.locked) return;
+    const updatedSections = [...addedSections];
 
-    // Prevent dropping into index 0 if locked
-    if (
-      destination.index === 0 &&
-      addedSections[endIdx]?.locked
-    )
-      return;
+    // Get actual section arrays based on column
+    const targetGroup =
+      sourceCol === "left"
+        ? addedSections.filter((section: any) => !rightSideSections.includes(section.name))
+        : addedSections.filter((section: any) => rightSideSections.includes(section.name));
 
-    reordered.splice(endIdx + destination.index, 0, movedItem);
-    dispatch(reorderSections(reordered));
+    const startIdx = addedSections.findIndex((s) => s.id === targetGroup[source.index]?.id);
+    const endIdx = addedSections.findIndex((s) => s.id === targetGroup[destination.index]?.id);
+
+    if (startIdx === -1 || endIdx === -1) return;
+
+    const [removed] = updatedSections.splice(startIdx, 1);
+    updatedSections.splice(endIdx, 0, removed);
+
+    dispatch(reorderSections(updatedSections));
   };
   // old middle work end
 

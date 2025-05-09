@@ -16,7 +16,7 @@ const initialState: FontState = {
   fontSize: 'medium', // NEW
   margin: 10,
   padding: 10,
-  color: '#000000',
+  color: "#294452",
   sections: [], // This stores the sections of the font
 };
 

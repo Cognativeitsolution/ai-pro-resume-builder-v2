@@ -4,6 +4,7 @@ import Template1 from "../Template/template1";
 import Template3 from "../Template/template3";
 import Template10 from "../Template/template10";
 import { useEffect } from "react";
+import Template2 from "../Template/template2";
 
 type CurrentState = {
   fontSize: string;
@@ -22,13 +23,15 @@ type ResumePreviewProps = {
 
 const ResumeActiveTemplate = ({ currentState, updateState }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
-
   console.log(selectedTemplate, "selectedTemplate===========>")
+
 
   const renderTemplate = () => {
     switch (selectedTemplate) {
       case "template1":
         return <Template1 currentState={currentState} updateState={updateState} />;
+      case "template2":
+        return <Template2 currentState={currentState} updateState={updateState} />;
       case "template3":
         return <Template3 currentState={currentState} updateState={updateState} />;
       case "template10":
