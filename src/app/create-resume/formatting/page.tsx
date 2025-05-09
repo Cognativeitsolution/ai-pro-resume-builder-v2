@@ -5,15 +5,17 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 export default function Page() {
     const { availableSections } = useSelector((state: RootState) => state.addSection);
+    const { fontFamily, fontSize, color } = useSelector((state: any) => state.font)
+
 
 
     const [currentState, setCurrentState] = useState<any>({
-        fontSize: "20px",
+        fontSize: fontSize,
         fontWeight: "normal",
-        color: "#294452",
+        color: color,
         selectedIndex: 0,
         text: [],
-        fontFamily: "Arial",
+        fontFamily: fontFamily,
         margin: 0,
         padding: "8px",
     });
@@ -55,31 +57,33 @@ export default function Page() {
         }));
     }, [availableSections]);
 
+
+
     return (
         <>
-            <div className="text-center">
-                <UserHeader
-                    currentState={currentState}
-                    handleUndo={handleUndo}
-                    handleRedo={handleRedo}
-                    history={history}
-                    future={future}
-                />
-                <div className="grid grid-cols-12 px-5">
-                    <div className="col-span-4">
-                        <TextEditor
-                            currentState={currentState}
-                            updateState={updateState}
-                        />
-                    </div>
-                    <div className="col-span-8">
-                        <ResumeActiveTemplate
-                            currentState={currentState}
-                            updateState={updateState}
-                        />
-                    </div>
+
+            <UserHeader
+                currentState={currentState}
+                handleUndo={handleUndo}
+                handleRedo={handleRedo}
+                history={history}
+                future={future}
+            />
+            <div className="grid grid-cols-12 px-5 mt-28 mb-10">
+                <div className="col-span-4">
+                    <TextEditor
+                        currentState={currentState}
+                        updateState={updateState}
+                    />
+                </div>
+                <div className="col-span-8">
+                    <ResumeActiveTemplate
+                        currentState={currentState}
+                        updateState={updateState}
+                    />
                 </div>
             </div>
+
         </>
     );
 }

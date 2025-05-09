@@ -28,7 +28,7 @@ type ResumePreviewProps = {
     updateState: (newState: CurrentState) => void;
 }
 
-const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
+const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
     const addedSections = useSelector((state: any) => state.addSection.addedSections);
     console.log(addedSections, "addedSections===========>")
 
@@ -156,7 +156,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 <div className="flex flex-col">
                     <input
                         placeholder="Name"
-                        className="outline-none focus:bg-transparent font-semibold"
+                        className="outline-none font-semibold"
                         style={{
                             fontSize: scaleFont(30, currentState.fontSize),
                             fontFamily: currentState.fontFamily,
@@ -165,7 +165,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
                     <input
                         placeholder="Designation"
-                        className="outline-none focus:bg-transparent font-semibold"
+                        className="outline-none font-semibold"
                         style={{
                             fontSize: scaleFont(18, currentState.fontSize),
                             fontFamily: currentState.fontFamily,
@@ -204,15 +204,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         </div>
                         <div className="flex gap-2 text-white">
                             <IconDropdown />
-                            <input placeholder="Phone" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                            <input placeholder="Phone" className="w-full placeholder-white outline-none bg-transparent" />
                         </div>
                         <div className="flex gap-2 text-white">
                             <IconDropdown />
-                            <input placeholder="Email" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                            <input placeholder="Email" className="w-full placeholder-white outline-none bg-transparent" />
                         </div>
                         <div className="flex gap-2 text-white">
                             <IconDropdown />
-                            <textarea placeholder="Address" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                            <input placeholder="Address" className="w-full placeholder-white outline-none bg-transparent" />
                         </div>
 
                     </div>
@@ -234,4 +234,4 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     );
 };
 
-export default Template1;
+export default Template2;
