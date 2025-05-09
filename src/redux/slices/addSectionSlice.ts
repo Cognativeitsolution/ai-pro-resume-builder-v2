@@ -164,8 +164,8 @@ export const addSectionSlice = createSlice({
     },
     addUserExperience: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userExperiences");
-      state.userExperiences.push(detail);
+      console.log(sectionId, detail, "===>userExperiences");
+      state.userExperiences = detail;
     },
     addUserCertificates: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;

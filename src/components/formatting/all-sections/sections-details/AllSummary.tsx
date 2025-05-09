@@ -58,7 +58,7 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
             </div>
 
         </div>
-    );
+    )
 };
 
 export default AllSummary;
