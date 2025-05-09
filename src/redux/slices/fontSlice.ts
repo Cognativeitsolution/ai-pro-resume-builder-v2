@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // Define the type for the state
 type FontState = {
   fontFamily: string;
-  fontSize: number;
+  fontSize: 'small' | 'medium' | 'large';
   margin: number;
   padding: number;
   color: string;
@@ -13,7 +13,7 @@ type FontState = {
 // Initial state of the font with typed values
 const initialState: FontState = {
   fontFamily: 'Arial',
-  fontSize: 16,
+  fontSize: 'medium', // NEW
   margin: 10,
   padding: 10,
   color: '#000000',
@@ -27,7 +27,7 @@ const fontSlice = createSlice({
     setFontFamily: (state, action: PayloadAction<string>) => {
       state.fontFamily = action.payload;
     },
-    setFontSize: (state, action: PayloadAction<number>) => {
+    setFontSize: (state, action: PayloadAction<'small' | 'medium' | 'large'>) => {
       state.fontSize = action.payload;
     },
     setMargin: (state, action: PayloadAction<number>) => {
