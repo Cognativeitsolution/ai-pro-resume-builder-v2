@@ -1,7 +1,7 @@
 import { CustomButton } from '@/components';
 import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
 import React from 'react'
-import { FaCalendar, FaGift } from 'react-icons/fa'
+import { FaCalendar, FaConnectdevelop, FaEdit, FaGift } from 'react-icons/fa'
 import { FaGlobe } from 'react-icons/fa6';
 
 const Awards = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
@@ -17,15 +17,15 @@ const Awards = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec:
   const ProjectsList = [
     {
       name: "Developer",
-      details: "But I must explaken",
+      details: "Certified developer",
       date: "2019",
-      icon: <FaGlobe />
+      icon: <FaConnectdevelop />
     },
     {
       name: "Writer",
-      details: "explain to you",
+      details: "Certified writer",
       date: "2020",
-      icon: <FaGift />
+      icon: <FaEdit />
 
     }
   ];
@@ -38,7 +38,7 @@ const Awards = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec:
           {
             ProjectsList?.map((skill: any, index: any) => (
               <div key={index} className='flex justify-between'>
-                <div className="mt-[1px]">
+                <div className="mt-[1px] text-sm">
                   {skill?.icon}
                 </div>
                 <div className="ms-1">
