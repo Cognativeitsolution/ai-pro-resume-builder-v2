@@ -11,6 +11,7 @@ import Image from "next/image";
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp"
 import AllSoftSkills from "../all-sections/sections-details/AllSoftSkills";
 import IconDropdown from "../icon-dropdown/IconDropdown";
+import AllLanguages from "../all-sections/sections-details/AllLanguages";
 
 type CurrentState = {
     fontSize: any;
@@ -112,8 +113,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
     const renderSection = (section: any) => {
         switch (section?.name) {
-            case "Skills":
-                return <AllSoftSkills data={section} />;
+            case "Soft_Skills":
+                return <AllSoftSkills data={section} color="#fff" templateColor="#3358c5" />;
             case "Certificate":
                 return <AllCertificates data={section} />;
             case "Education":
@@ -122,6 +123,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 return <AllExperiences data={section} />;
             case "Projects":
                 return <AllProjects data={section} />;
+            case "Languages":
+                return <AllLanguages data={section} color="#fff" templateColor="#3358c5" />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
@@ -143,7 +146,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     return (
         <div className="h-screen border border-gray-300 flex relative"
             style={{
-                margin: `${currentState.margin || 0}px`,
                 padding: `${currentState.padding || 0}px`,
             }}
         >
@@ -176,9 +178,12 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 {/* Left Sections */}
                 {leftSections?.length > 0 ? (
                     leftSections.map((section: any, index: number) => (
-                        <div key={index} className="border-b py-4">
-                            <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
-                            {renderSection(section)}
+                        <div className="py-4 relative">
+                            <div key={index} className="border-b text-black">
+                                <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
+                            </div>
+                            <div className="mt-2">{renderSection(section)}
+                            </div>
                         </div>
                     ))
                 ) : (
@@ -222,9 +227,12 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 <div className="p-3">
                     {rightSections?.length > 0 &&
                         rightSections.map((section: any, index: number) => (
-                            <div key={index} className="border-b py-4 text-white">
-                                <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
-                                {renderSection(section)}
+                            <div className="py-4 relative">
+                                <div key={index} className="border-b text-white">
+                                    <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
+                                </div>
+                                <div className="mt-2">{renderSection(section)}
+                                </div>
                             </div>
                         ))
                     }

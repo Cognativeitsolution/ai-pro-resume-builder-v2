@@ -3,12 +3,16 @@ import { addUserSoft_Skills, removeSection } from '@/redux/slices/addSectionSlic
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaPen, FaTrash } from 'react-icons/fa';
+import { RiAddCircleFill } from 'react-icons/ri';
+import { TiDelete } from 'react-icons/ti';
 
 type AllSoftSkillsType = {
   data?: any;
+  color?: string;
+  templateColor: string
 };
 
-const AllSoftSkills = ({ data = {} }: AllSoftSkillsType) => {
+const AllSoftSkills = ({ data = {}, color = "#fff", templateColor }: AllSoftSkillsType) => {
   const dispatch = useDispatch();
 
   const [inputSkill, setInputSkill] = useState<string>('');
@@ -26,17 +30,17 @@ const AllSoftSkills = ({ data = {} }: AllSoftSkillsType) => {
         setShowBtns(false);
 
         // Dispatch to Redux when clicking outside
-        if (allSkillsData.length > 0 && data?.id) {
-          const skillsPayload = allSkillsData.map(skill => ({
-            type: "skill",
-            name: skill
-          }));
+        // if (allSkillsData.length > 0 && data?.id) {
+        //   const skillsPayload = allSkillsData.map(skill => ({
+        //     type: "skill",
+        //     name: skill
+        //   }));
 
-          dispatch(addUserSoft_Skills({
-            sectionId: data.id,
-            detail: skillsPayload
-          }));
-        }
+        //   dispatch(addUserSoft_Skills({
+        //     sectionId: data.id,
+        //     detail: skillsPayload
+        //   }));
+        // }
       }
     };
 
@@ -89,11 +93,10 @@ const AllSoftSkills = ({ data = {} }: AllSoftSkillsType) => {
   return (
 
     <div ref={containerRef}
-      className={`border p-4 relative flex flex-col gap-4 ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
-
-      <h1>{data?.name}</h1>
+      onClick={handleShowEditBtn}
+    >
       {/* Buttons */}
-      {showBtns && <div className="flex gap-3 absolute top-2 right-2">
+      {/* {showBtns && <div className="flex gap-3 absolute top-2 right-2">
         {!showInput && (
           <button
             className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
@@ -108,7 +111,17 @@ const AllSoftSkills = ({ data = {} }: AllSoftSkillsType) => {
         >
           Delete
         </button>
-      </div>}
+      </div>} */}
+
+      {showBtns &&
+        <div className={`flex gap-1 absolute top-5 right-0`}>
+          <button className="cursor-pointer " style={{ color }} onClick={handleShowInput}>
+            <RiAddCircleFill size={24} />
+          </button>
+          <button className="cursor-pointer " style={{ color }} onClick={handleRemoveSection}>
+            <TiDelete size={30} />
+          </button>
+        </div>}
 
       {/* Skills List */}
       <div className="mt-1 flex flex-wrap gap-2">
@@ -154,7 +167,7 @@ const AllSoftSkills = ({ data = {} }: AllSoftSkillsType) => {
       </div>
 
       {/* Conditional Input Field */}
-      {showBtns && showInput && (
+      {/* {showBtns && showInput && (
         <div className="flex gap-2">
           <input
             type="text"
@@ -172,7 +185,7 @@ const AllSoftSkills = ({ data = {} }: AllSoftSkillsType) => {
             Add
           </button>
         </div>
-      )}
+      )} */}
 
     </div>
   );

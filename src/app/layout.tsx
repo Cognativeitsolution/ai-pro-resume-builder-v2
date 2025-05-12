@@ -46,7 +46,7 @@ export default function RootLayout({ children }: any) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={lexend.className}>
+      <body className={lexend.className} cz-shortcut-listen="true">
         <ReduxProvider>
           <Suspense>
             <ConditionalLayout>

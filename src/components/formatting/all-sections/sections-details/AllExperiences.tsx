@@ -97,7 +97,8 @@ const AllExperiences = ({ data = {} }: AllSummaryType) => {
   console.log(userExperiences, "userExperiencesuserExperiences");
 
   return (
-    <div ref={containerRef} className={`border p-4 relative flex flex-col gap-4 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`border p-4 relative flex flex-col gap-4 ${editable && 'bg-white'}`}
+      onClick={handleEditableSection}>
       <h1>{data?.name}</h1>
 
       <div className="flex gap-3 absolute top-2 right-2">

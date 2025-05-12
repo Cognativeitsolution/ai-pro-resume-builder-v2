@@ -1,77 +1,60 @@
-// IconDropdown.tsx
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa';
-import { Button, Menu, MenuItem, ListItemIcon, Typography, Box } from '@mui/material';
-import { IoMdAddCircle } from "react-icons/io";
+import { IoMdAddCircle } from 'react-icons/io';
 
-// Type assertion to define FaIcons as having keys of string type
 const iconList = Object.keys(FaIcons).slice(0, 30);
 
 export default function IconDropdown() {
     const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setIsOpen(false);
+        }
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleSelect = (iconKey: string) => {
         setSelectedIcon(iconKey);
-        handleClose();
+        setIsOpen(false);
     };
 
     return (
-        <div className='flex'>
+        <div className="relative" ref={dropdownRef}>
             <button
-                onClick={handleClick}
-                className='w-[30px] flex justify-center items-start pt-1'
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-[30px] flex justify-center items-start pt-1"
             >
-                {selectedIcon ? React.createElement(FaIcons[selectedIcon as keyof typeof FaIcons]) : <IoMdAddCircle size={18} />}
+                {selectedIcon
+                    ? React.createElement(FaIcons[selectedIcon as keyof typeof FaIcons])
+                    : <IoMdAddCircle size={18} />
+                }
             </button>
 
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                sx={{ maxHeight: 300 }}
-            >
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(4, 1fr)', // 4 icons per row
-                        gap: 2,
-                        padding: 2,
-                    }}
-                >
-                    {iconList.map((iconKey) => {
-                        const IconComponent = FaIcons[iconKey as keyof typeof FaIcons];
-                        return (
-                            <Box
-                                key={iconKey}
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    cursor: 'pointer',
-                                    padding: 1,
-                                    '&:hover': {
-                                        backgroundColor: '#f0f0f0',
-                                        borderRadius: 1,
-                                    },
-                                }}
-                                onClick={() => handleSelect(iconKey)}
-                            >
-                                <IconComponent size={24} />
-                            </Box>
-                        );
-                    })}
-                </Box>
-
-            </Menu>
+            {isOpen && (
+                <div className="absolute z-10 mt-2 bg-white shadow-md border rounded-md p-2 w-60 max-h-72 overflow-y-auto">
+                    <div className="grid grid-cols-4 gap-2">
+                        {iconList.map((iconKey) => {
+                            const IconComponent = FaIcons[iconKey as keyof typeof FaIcons];
+                            return (
+                                <div
+                                    key={iconKey}
+                                    onClick={() => handleSelect(iconKey)}
+                                    className="flex flex-col items-center p-2 cursor-pointer hover:bg-gray-100 rounded text-black"
+                                >
+                                    <IconComponent size={24} />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
