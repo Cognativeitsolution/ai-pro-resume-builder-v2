@@ -12,7 +12,7 @@ type AllSoftSkillsType = {
   templateColor: string
 };
 
-const AllSoftSkills = ({ data = {}, color = "#fff", templateColor }: AllSoftSkillsType) => {
+const AllSoftSkills = ({ data = {}, color = "#fff", templateColor }: any) => {
   const dispatch = useDispatch();
 
   const [inputSkill, setInputSkill] = useState<string>('');
