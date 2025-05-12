@@ -77,12 +77,12 @@ const initialState: AddSectionState = {
     },
   ],
   addedSections: [
-    {
-      id: 1,
-      name: "Header",
-      description: "Engr. Rimsha Naeem",
-      locked: true,
-    },
+    // {
+    //   id: 1,
+    //   name: "Header",
+    //   description: "Engr. Rimsha Naeem",
+    //   locked: true,
+    // },
     {
       id: 2,
       name: "Summary",
@@ -99,7 +99,6 @@ const initialState: AddSectionState = {
   userCertificates: [],
   userHeader: "",
   userSummary: "",
-
   userAwards: [],
   userReferences: [],
   userLanguages: [],
@@ -127,7 +126,7 @@ export const addSectionSlice = createSlice({
     },
     addUserHeader: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "===>userHeader");
+      // console.log(sectionId, detail, "===>userHeader");
       const section = state.addedSections.find(sec => sec.id === sectionId);
       if (section) {
         section.description = detail;
@@ -135,7 +134,7 @@ export const addSectionSlice = createSlice({
     },
     addUserSummary: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "=======userSummary");
+      // console.log(sectionId, detail, "=======userSummary");
       const section = state.addedSections.find(sec => sec.id === sectionId);
       if (section) {
         section.description = detail;
@@ -144,53 +143,53 @@ export const addSectionSlice = createSlice({
     },
     addUserSoft_Skills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userSoft_Skills");
+      // console.log(sectionId, detail, "userSoft_Skills");
       state.userSoft_Skills.push(detail);
     },
     addUserTechnical_Skills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userTechnical_Skills");
+      // console.log(sectionId, detail, "userTechnical_Skills");
       state.userTechnical_Skills.push(detail);
     },
     addUserProjects: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userProjects");
+      // console.log(sectionId, detail, "userProjects");
       state.userProjects.push(detail);
     },
     addUserEducation: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userEducation");
+      // console.log(sectionId, detail, "userEducation");
       state.userEducation.push(detail);
     },
     addUserExperience: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "===>userExperiences");
+      // console.log(sectionId, detail, "===>userExperiences");
       state.userExperiences = detail;
     },
     addUserCertificates: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userCertificates");
+      // console.log(sectionId, detail, "userCertificates");
       state.userCertificates.push(detail);
     },
 
     AddUserReferences: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userReferences");
+      // console.log(sectionId, detail, "userReferences");
       state.userReferences.push(detail);
     },
     addUserLanguages: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userLanguages");
+      // console.log(sectionId, detail, "userLanguages");
       state.userLanguages.push(detail);
     },
     addUserCustomSection: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userCustomSections");
+      // console.log(sectionId, detail, "userCustomSections");
       state.userCustomSections.push(detail);
     },
     addUserAwards: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      console.log(sectionId, detail, "userAwards");
+      // console.log(sectionId, detail, "userAwards");
       state.userAwards.push(detail);
     },
     
