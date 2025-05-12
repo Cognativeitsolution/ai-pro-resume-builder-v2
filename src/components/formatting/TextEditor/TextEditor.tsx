@@ -35,7 +35,7 @@ const TextEditor = (props: TextEditorProps) => {
   const { currentState, updateState, lockedColors = [] } = props;
   const dispatch = useDispatch();
 
-  const [activeTab, setActiveTab] = useState<string>("Design & Font");
+  const [activeTab, setActiveTab] = useState<string>("Add Section");
 
   const handleTabChange = (tab: string): void => {
     setActiveTab(tab);
