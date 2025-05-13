@@ -144,22 +144,22 @@ export const addSectionSlice = createSlice({
     addUserSoft_Skills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
       // console.log(sectionId, detail, "userSoft_Skills");
-      state.userSoft_Skills.push(detail);
+      state.userSoft_Skills = detail;
     },
     addUserTechnical_Skills: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
       // console.log(sectionId, detail, "userTechnical_Skills");
-      state.userTechnical_Skills.push(detail);
+      state.userTechnical_Skills = detail;
     },
     addUserProjects: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
       // console.log(sectionId, detail, "userProjects");
-      state.userProjects.push(detail);
+     state.userProjects = detail;
     },
     addUserEducation: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
       // console.log(sectionId, detail, "userEducation");
-      state.userEducation.push(detail);
+       state.userEducation = detail;
     },
     addUserExperience: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
