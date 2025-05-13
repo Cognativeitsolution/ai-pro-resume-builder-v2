@@ -15,6 +15,7 @@ import ats from 'media/builderIcons/ats.svg';
 import robot from 'media/builderIcons/robot.svg';
 import rearrange from 'media/builderIcons/rearrange.svg';
 import ReArrange from "../rearrange/rearrange";
+import AtsCheck from "../AtsCheck/AtsCheck";
 
 type TextEditorProps = {
   currentState: {
@@ -144,7 +145,7 @@ const TextEditor = (props: TextEditorProps) => {
           {/* ===== Add Sections ===== */}
           {activeTab === "Improve Text" && <ImproveText />}
           {/* ===== Add Sections ===== */}
-          {activeTab === "ATS Check" && <div>ATS Check Content</div>}
+          {activeTab === "ATS Check" && <AtsCheck/>}
           {/* ===== Add Sections ===== */}
           {activeTab === "AI Assistant" && <div>AI Assistant Content</div>}
           {/* ===== Add Sections ===== */}
