@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TiDelete } from 'react-icons/ti';
@@ -27,11 +26,9 @@ const AllLanguages = ({
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userLanguages } = useSelector((state: RootState) => state.addSection);
-
   const [editable, setEditable] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [languages, setLanguages] = useState<LanguageType[]>([]);
-  const [showInput, setShowInput] = useState(false);
 
   useEffect(() => {
     if (Array.isArray(userLanguages) && userLanguages.length > 0) {
@@ -85,8 +82,12 @@ const AllLanguages = ({
     dispatch(addUserLanguages({ sectionId: data.id, detail: [] }));
   };
 
-  const handleShowInput = () => {
-    setShowInput(true);
+  const handleAddFirstLanguage = (value: any) => {
+    const newLang = { title: value, level: 0 };
+    if (value.trim() !== "") {
+      setLanguages([newLang]);
+      setEditingIndex(0); // so delete and percentage show
+    }
   };
 
   return (
@@ -147,10 +148,32 @@ const AllLanguages = ({
               </div>
             ))
           ) : (
-            <span onClick={handleShowInput} className="text-base bg-transparent text-white opacity-50">
-              Language
-            </span>
+            <div>
+              <div className="flex items-center justify-between">
+                <input
+                  value={""}
+                  onChange={(e) => handleAddFirstLanguage(e.target.value)}
+                  placeholder="Language"
+                  className="text-base placeholder:text-base focus:outline-none bg-transparent focus:border-b-[0.8px]"
+                  style={{ color }}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-3 mt-1">
+                <div className="overflow-hidden h-[8px] flex items-center w-80">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={0}
+                    onChange={() => { }} // can be no-op
+                    className="w-full opacity-80"
+                    style={{ accentColor: templateColor }}
+                  />
+                </div>
+              </div>
+            </div>
           )}
+
         </div>
       </div>
     </div>
@@ -158,162 +181,3 @@ const AllLanguages = ({
 };
 
 export default AllLanguages;
-
-// 'use client';
-
-// import React, { useEffect, useRef, useState } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { TiDelete } from 'react-icons/ti';
-// import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
-// import { RootState } from '@/redux/store';
-// import { addUserLanguages, removeSection } from '@/redux/slices/addSectionSlice';
-
-// type LanguageType = {
-//   title: string;
-//   level?: number;
-// };
-
-// type AllLanguagesProps = {
-//   data?: { id: any };
-//   color?: string;
-//   templateColor: string;
-// };
-
-// const AllLanguages = ({
-//   data = { id: '' },
-//   color = '#fff',
-//   templateColor,
-// }: AllLanguagesProps) => {
-//   const dispatch = useDispatch();
-//   const containerRef = useRef<HTMLDivElement>(null);
-//   const { userLanguages } = useSelector((state: RootState) => state.addSection);
-
-//   const [editable, setEditable] = useState(false);
-//   const [languages, setLanguages] = useState<LanguageType[]>([{ title: '', level: 0 }]); // always start with one
-
-//   // Load from Redux
-//   useEffect(() => {
-//     if (Array.isArray(userLanguages) && userLanguages.length > 0) {
-//       const normalized = userLanguages.map(lang => ({
-//         title: lang.title ?? '',
-//         level: lang.level ?? 0,
-//       }));
-//       setLanguages([...normalized, { title: '', level: 0 }]); // ensure extra input at bottom
-//     }
-//   }, [userLanguages]);
-
-//   // Hide on click outside
-//   useEffect(() => {
-//     const handleClickOutside = (event: MouseEvent) => {
-//       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-//         setEditable(false);
-//         const cleaned = languages.filter(lang => lang.title.trim() !== '');
-//         if (cleaned.length === 0) {
-//           setLanguages([{ title: '', level: 0 }]);
-//         } else {
-//           setLanguages([...cleaned, { title: '', level: 0 }]);
-//         }
-//         dispatch(addUserLanguages({ sectionId: data.id, detail: cleaned }));
-//       }
-//     };
-//     document.addEventListener('mousedown', handleClickOutside);
-//     return () => document.removeEventListener('mousedown', handleClickOutside);
-//   }, [languages, dispatch, data.id]);
-
-//   const handleEditableSection = () => setEditable(true);
-
-//   const handleInputChange = (index: number, value: string) => {
-//     const updated = [...languages];
-//     updated[index].title = value;
-//     setLanguages(updated);
-
-//     // If editing last and not empty, add another empty input
-//     if (index === languages.length - 1 && value.trim() !== '') {
-//       setLanguages([...updated, { title: '', level: 0 }]);
-//     }
-//   };
-
-//   const handleLevelChange = (index: number, value: number) => {
-//     const updated = [...languages];
-//     updated[index].level = value;
-//     setLanguages(updated);
-//   };
-
-//   const handleDeleteLanguage = (index: number) => {
-//     const updated = languages.filter((_, i) => i !== index);
-//     setLanguages(updated.length ? updated : [{ title: '', level: 0 }]);
-//   };
-
-//   const handleRemoveSection = () => {
-//     dispatch(removeSection(data));
-//     dispatch(addUserLanguages({ sectionId: data.id, detail: [] }));
-//   };
-
-//   return (
-//     <div ref={containerRef} onClick={handleEditableSection}>
-//       {editable && (
-//         <div className="flex gap-1 absolute top-5 right-0">
-//           <button
-//             className="cursor-pointer"
-//             style={{ color }}
-//             onClick={() => setLanguages([...languages, { title: '', level: 0 }])}
-//           >
-//             <RiAddCircleFill size={24} />
-//           </button>
-//           <button className="cursor-pointer" style={{ color }} onClick={handleRemoveSection}>
-//             <TiDelete size={30} />
-//           </button>
-//         </div>
-//       )}
-
-//       <div className="px-1 flex flex-col gap-4 relative">
-//         <div className="flex flex-col gap-3">
-//           {languages.map((lang, index) => (
-//             <div key={index}>
-//               <div className="flex items-center justify-between">
-//                 <input
-//                   value={lang.title}
-//                   onChange={(e) => handleInputChange(index, e.target.value)}
-//                   placeholder="Language"
-//                   className="text-base placeholder:text-base focus:outline-none bg-transparent focus:border-b-[0.8px]"
-//                   style={{ color }}
-//                 />
-//                 {editable && lang.title.trim() && (
-//                   <div className="flex gap-2">
-//                     <div className="text-sm opacity-65" style={{ color }}>{lang.level ?? 0}%</div>
-//                     <button
-//                       onClick={() => handleDeleteLanguage(index)}
-//                       className="opacity-65 hover:opacity-100"
-//                       style={{ color }}
-//                     >
-//                       <RiDeleteBin6Line size={20} />
-//                     </button>
-//                   </div>
-//                 )}
-//               </div>
-
-//               {lang.title.trim() && (
-//                 <div className="flex items-center justify-between gap-3 mt-1">
-//                   <div className="overflow-hidden h-[8px] flex items-center w-80">
-//                     <input
-//                       type="range"
-//                       min="0"
-//                       max="100"
-//                       value={lang.level ?? 0}
-//                       onChange={(e) => handleLevelChange(index, Number(e.target.value))}
-//                       className="w-full opacity-80"
-//                       style={{ accentColor: templateColor }}
-//                     />
-//                   </div>
-//                 </div>
-//               )}
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AllLanguages;
-
