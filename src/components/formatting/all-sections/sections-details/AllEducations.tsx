@@ -13,21 +13,18 @@ import { TiDelete } from 'react-icons/ti';
 
 
 type EducationType = {
-  title: string;
-  description: string;
-  companyName: string;
+  degree: string;
+  schoolName: string;
   location?: string;
-  startDate?: string;
-  endDate?: string;
 };
 
-type AllSummaryType = {
+type AllEducationType = {
   data?: any;
   color?: string;
   templateColor: string;
 };
 
-const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllSummaryType) => {
+const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userEducation } = useSelector((state: RootState) => state.addSection);
@@ -51,7 +48,7 @@ const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllSummaryT
 
   // Add a new blank education entry
   const handleAddEducation = () => {
-    setEducations([...educations, { title: '', description: '', companyName: '' }]);
+    setEducations([...educations, { degree: '', location: '', schoolName: '' }]);
   };
 
   // Remove the entire education section and reset its Redux data
@@ -113,10 +110,10 @@ const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllSummaryT
               <div className="flex items-center justify-between">
                 <div className='w-full'>
                   <input
-                    value={exp.title}
+                    value={exp.degree}
                     placeholder="Degree and Field of Study"
-                    onChange={(e) => handleInputChange(index, 'title', e.target.value)}
-                    className="w-full text-[18px] rounded placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0"
+                    onChange={(e) => handleInputChange(index, 'degree', e.target.value)}
+                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -127,10 +124,10 @@ const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllSummaryT
                 <div className='w-full'>
                   <input
                     type="text"
-                    value={exp.companyName}
+                    value={exp.schoolName}
                     placeholder="School or University"
-                    onChange={(e) => handleInputChange(index, 'companyName', e.target.value)}
-                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
+                    onChange={(e) => handleInputChange(index, 'schoolName', e.target.value)}
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
                   />
                 </div>
                 {/* ====== Location ====== */}

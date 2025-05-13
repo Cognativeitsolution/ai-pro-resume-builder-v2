@@ -11,22 +11,21 @@ import { addUserExperience, removeSection } from '@/redux/slices/addSectionSlice
 import { RiAddCircleFill } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 
+
 type ExperienceType = {
   title: string;
   description: string;
   companyName: string;
   location?: string;
-  startDate?: string;
-  endDate?: string;
 };
 
-type AllSummaryType = {
+type AllExperienceType = {
   data?: any;
   color?: string;
   templateColor: string;
 };
 
-const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllSummaryType) => {
+const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userExperiences } = useSelector((state: RootState) => state.addSection);
@@ -50,7 +49,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllSummar
 
   // Add a new blank experience entry
   const handleAddExperience = () => {
-    setExperiences([...experiences, { title: '', description: '', companyName: '' }]);
+    setExperiences([...experiences, { title: '', description: '', companyName: '', location: '' }]);
   };
 
   // Remove the entire section and reset associated experiences in the Redux store
@@ -115,7 +114,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllSummar
                     value={exp.title}
                     placeholder="Title"
                     onChange={(e) => handleInputChange(index, 'title', e.target.value)}
-                    className="w-full text-[18px] rounded placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0"
+                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -129,7 +128,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllSummar
                     value={exp.companyName}
                     placeholder="Company Name"
                     onChange={(e) => handleInputChange(index, 'companyName', e.target.value)}
-                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
                   />
                 </div>
                 {/* ====== Location ====== */}
@@ -152,7 +151,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllSummar
                   onChange={(e) => handleInputChange(index, 'description', e.target.value)}
                   placeholder="Description"
                   rows={2}
-                  className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                 ></textarea>
               </div>
             </div>
