@@ -123,7 +123,7 @@ const AllLanguages = ({
                     className="text-base placeholder:text-base focus:outline-none bg-transparent focus:border-b-[0.8px]"
                     style={{ color }}
                   />
-                  {editingIndex === index && (
+                  {editingIndex === index && lang.title.trim() !== "" && (
                     <div className="flex gap-2">
                       <div className="text-sm opacity-65" style={{ color }}>
                         {lang.level ?? 0}%
@@ -139,19 +139,21 @@ const AllLanguages = ({
                   )}
                 </div>
 
-                <div className="flex items-center justify-between gap-3 mt-1">
-                  <div className="overflow-hidden h-[8px] flex items-center w-80">
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={lang.level ?? 0}
-                      onChange={(e) => handleLevelChange(index, Number(e.target.value))}
-                      className="w-full opacity-80"
-                      style={{ accentColor: templateColor }}
-                    />
+                {lang.title.trim() !== "" && (
+                  <div className="flex items-center justify-between gap-3 mt-1">
+                    <div className="overflow-hidden h-[8px] flex items-center w-80">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={lang.level ?? 0}
+                        onChange={(e) => handleLevelChange(index, Number(e.target.value))}
+                        className="w-full opacity-80"
+                        style={{ accentColor: templateColor }}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             ))
           ) : (

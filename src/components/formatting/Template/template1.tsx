@@ -12,6 +12,7 @@ import placeHolderImg from "media/assets/reusme_placeholder_image.webp"
 import AllSoftSkills from "../all-sections/sections-details/AllSoftSkills";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllLanguages from "../all-sections/sections-details/AllLanguages";
+import AllTechnicalSkills from "../all-sections/sections-details/AllTechnicalSkills";
 
 type CurrentState = {
     fontSize: any;
@@ -114,7 +115,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const renderSection = (section: any) => {
         switch (section?.name) {
             case "Soft_Skills":
-                return <AllSoftSkills data={section} color="#fff" templateColor="#3358c5" />;
+                return <AllSoftSkills data={section} color="#000" templateColor="#fff" />;
+            case "Technical_Skills":
+                return <AllTechnicalSkills data={section} color="#000" templateColor="#fff" />;
             case "Certificate":
                 return <AllCertificates data={section} />;
             case "Education":

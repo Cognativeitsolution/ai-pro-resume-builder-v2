@@ -1,192 +1,167 @@
-"use client";
-import { addUserSoft_Skills, removeSection } from '@/redux/slices/addSectionSlice';
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { FaPen, FaTrash } from 'react-icons/fa';
-import { RiAddCircleFill } from 'react-icons/ri';
+import { useDispatch, useSelector } from 'react-redux';
 import { TiDelete } from 'react-icons/ti';
+import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
+import { RootState } from '@/redux/store';
+import { addUserSoft_Skills, removeSection } from '@/redux/slices/addSectionSlice';
 
-type AllSoftSkillsType = {
-  data?: any;
-  color?: string;
-  templateColor: string
+type SoftSkillType = {
+  title: string;
+  level?: number;
 };
 
-const AllSoftSkills = ({ data = {}, color = "#fff", templateColor }: any) => {
+type AllSoftSkillsProps = {
+  data?: { id: any };
+  color?: string;
+  templateColor: string;
+};
+
+const AllSoftSkills = ({
+  data = { id: '' },
+  color = '#fff',
+  templateColor,
+}: AllSoftSkillsProps) => {
   const dispatch = useDispatch();
-
-  const [inputSkill, setInputSkill] = useState<string>('');
-  const [allSkillsData, setAllSkillsData] = useState<string[]>([]);
-  const [showInput, setShowInput] = useState<boolean>(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editedSkill, setEditedSkill] = useState<string>('');
-  const [showBtns, setShowBtns] = useState<boolean>(false);
-
   const containerRef = useRef<HTMLDivElement>(null);
+  const { userSoft_Skills } = useSelector((state: RootState) => state.addSection);
+  const [editable, setEditable] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [softskills, setSoftSkills] = useState<SoftSkillType[]>([]);
+
+  useEffect(() => {
+    if (Array.isArray(userSoft_Skills) && userSoft_Skills.length > 0) {
+      const normalizedSoftSkills = userSoft_Skills.map(skill => ({
+        title: skill.title ?? '',
+        level: skill.level ?? 0,
+      }));
+      setSoftSkills(normalizedSoftSkills);
+    }
+  }, [userSoft_Skills]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setShowBtns(false);
-
-        // Dispatch to Redux when clicking outside
-        // if (allSkillsData.length > 0 && data?.id) {
-        //   const skillsPayload = allSkillsData.map(skill => ({
-        //     type: "skill",
-        //     name: skill
-        //   }));
-
-        //   dispatch(addUserSoft_Skills({
-        //     sectionId: data.id,
-        //     detail: skillsPayload
-        //   }));
-        // }
+        setEditable(false);
+        const validSoftSkills = softskills.filter(skill => skill.title.trim() !== '');
+        dispatch(addUserSoft_Skills({
+          sectionId: data.id,
+          detail: validSoftSkills
+        }));
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [allSkillsData, data?.id, dispatch]);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [softskills, dispatch, data.id]);
 
-  const handleAddSkill = () => {
-    if (inputSkill.trim() !== '') {
-      setAllSkillsData([...allSkillsData, inputSkill.trim()]);
-      setInputSkill('');
-      setShowInput(false);
-    }
+  const handleEditableSection = () => setEditable(true);
+
+  const handleAddSoftSkill = () => {
+    setSoftSkills([...softskills, { title: '', level: 0 }]);
   };
 
-  const handleShowInput = () => {
-    setShowInput(true);
+  const handleDeleteSoftSkill = (index: number) => {
+    const updated = softskills.filter((_, i) => i !== index);
+    setSoftSkills(updated);
+  };
+
+  const handleInputChange = (index: number, value: string) => {
+    const updated = [...softskills];
+    updated[index].title = value;
+    setSoftSkills(updated);
   };
 
   const handleRemoveSection = () => {
-    if (data) {
-      dispatch(removeSection(data));
+    dispatch(removeSection(data));
+    dispatch(addUserSoft_Skills({ sectionId: data.id, detail: [] }));
+  };
+
+  const handleAddFirstSoftSkill = (value: string) => {
+    const newSkill = { title: value.trim(), level: 0 };
+    if (newSkill.title !== '') {
+      setSoftSkills([newSkill]);
     }
   };
 
-  const handleDeleteSkill = (index: number) => {
-    const updated = allSkillsData.filter((_, i) => i !== index);
-    setAllSkillsData(updated);
-  };
-
-  const handleEditSkill = (index: number) => {
-    setEditingIndex(index);
-    setEditedSkill(allSkillsData[index]);
-  };
-
-  const handleSaveEdit = () => {
-    if (editingIndex !== null && editedSkill.trim() !== '') {
-      const updated = [...allSkillsData];
-      updated[editingIndex] = editedSkill.trim();
-      setAllSkillsData(updated);
-      setEditingIndex(null);
-      setEditedSkill('');
+  const handleBlur = (index: number) => {
+    if (softskills[index]?.title.trim() === '') {
+      const updated = softskills.filter((_, i) => i !== index);
+      setSoftSkills(updated);
     }
   };
-  const handleShowEditBtn = () => {
-    setShowBtns(true);
-  }
+
   return (
-
-    <div ref={containerRef}
-      onClick={handleShowEditBtn}
-    >
-      {/* Buttons */}
-      {/* {showBtns && <div className="flex gap-3 absolute top-2 right-2">
-        {!showInput && (
-          <button
-            className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
-            onClick={handleShowInput}
-          >
-            + Skill
-          </button>
-        )}
-        <button
-          onClick={handleRemoveSection}
-          className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
-        >
-          Delete
-        </button>
-      </div>} */}
-
-      {showBtns &&
-        <div className={`flex gap-1 absolute top-5 right-0`}>
-          <button className="cursor-pointer " style={{ color }} onClick={handleShowInput}>
+    <div ref={containerRef} onClick={handleEditableSection}>
+      {editable && (
+        <div className="flex gap-1 absolute top-5 right-0">
+          <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleAddSoftSkill}>
             <RiAddCircleFill size={24} />
           </button>
-          <button className="cursor-pointer " style={{ color }} onClick={handleRemoveSection}>
+          <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleRemoveSection}>
             <TiDelete size={30} />
           </button>
-        </div>}
-
-      {/* Skills List */}
-      <div className="mt-1 flex flex-wrap gap-2">
-        {allSkillsData?.length ? allSkillsData.map((skill, index) => (
-          <div
-            key={index}
-            className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${showBtns && 'bg-gray-100'}`}
-          >
-            {editingIndex === index ? (
-              <>
-                <input
-                  className="px-2 py-1 text-sm border rounded"
-                  value={editedSkill}
-                  onChange={(e) => setEditedSkill(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
-                  autoFocus
-                />
-                <button onClick={handleSaveEdit} className="text-green-600 text-xs">
-                  Save
-                </button>
-              </>
-            ) : (
-              <>
-                <ul className='list-disc ps-2'>
-                  <li>{skill}</li>
-                </ul>
-                {showBtns &&
-                  <>
-                    <button onClick={() => handleEditSkill(index)} className="text-blue-400 text-xs">
-                      <FaPen />
-                    </button>
-                    <button onClick={() => handleDeleteSkill(index)} className="text-red-400 text-xs">
-                      <FaTrash />
-                    </button>
-                  </>
-                }
-              </>
-            )}
-          </div>
-        )) :
-          <span onClick={handleShowInput} className='text-gray-300'>Add Skill</span>
-        }
-      </div>
-
-      {/* Conditional Input Field */}
-      {/* {showBtns && showInput && (
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputSkill}
-            onChange={(e) => setInputSkill(e.target.value)}
-            placeholder="Enter a skill"
-            className="border px-3 py-1 rounded-md w-full"
-            onKeyDown={(e) => e.key === 'Enter' && handleAddSkill()}
-            autoFocus
-          />
-          <button
-            onClick={handleAddSkill}
-            className="border px-4 py-1 rounded-md bg-green-200"
-          >
-            Add
-          </button>
         </div>
-      )} */}
-
+      )}
+      <div className="flex flex-wrap gap-2 mt-1 ">
+        {softskills.length > 0 ?
+          softskills.map((skill, index) => (
+            <div
+              key={index}
+              className={`flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium px-3 py-1 transition-all duration-500 ease-in-out ${hoveredIndex === index ? 'pr-5' : ''
+                }`}
+              style={{
+                color,
+                background: templateColor,
+                border: `1px solid ${templateColor}`,
+              }}
+              onMouseOver={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setHoveredIndex(index);
+                }
+              }}
+              onMouseOut={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setHoveredIndex(null);
+                }
+              }}
+            >
+              <input
+                value={skill.title}
+                onChange={(e) => handleInputChange(index, e.target.value)}
+                onBlur={() => handleBlur(index)}
+                placeholder="Soft Skill"
+                className="bg-transparent text-sm truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70 "
+                style={{ color }}
+                autoFocus
+              />
+              {hoveredIndex === index && (
+                <button onClick={() => handleDeleteSoftSkill(index)} className="opacity-70 hover:opacity-100">
+                  <RiDeleteBin6Line size={18} style={{ color }} />
+                </button>
+              )}
+            </div>
+          ))
+          : (
+            <div
+              className="flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium  px-3 py-1"
+              style={{
+                color,
+                background: templateColor,
+                border: `1px solid ${templateColor}`,
+              }}
+            >
+              <input
+                value={''}
+                onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                placeholder="Soft Skill"
+                className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
+                style={{ color }}
+                autoFocus
+              />
+            </div>
+          )}
+      </div>
     </div>
   );
 };
