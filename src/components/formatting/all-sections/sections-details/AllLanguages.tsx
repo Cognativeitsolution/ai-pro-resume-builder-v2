@@ -45,12 +45,17 @@ const AllLanguages = ({
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setEditable(false);
         setEditingIndex(null);
+
+        dispatch(addUserLanguages({
+          sectionId: data?.id,
+          detail: languages
+        }))
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [languages, dispatch, data?.id]);
 
   const handleEditableSection = () => setEditable(true);
 
@@ -86,12 +91,14 @@ const AllLanguages = ({
     const newLang = { title: value, level: 0 };
     if (value.trim() !== "") {
       setLanguages([newLang]);
-      setEditingIndex(0); // so delete and percentage show
+      setEditingIndex(0);
     }
   };
 
   return (
-    <div ref={containerRef} onClick={handleEditableSection}>
+    <div ref={containerRef} onClick={handleEditableSection}
+
+    >
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button className="cursor-pointer" style={{ color }} onClick={handleAddLanguage}>
