@@ -8,6 +8,8 @@ import CustomDatePicker from '../../custom/CustomDatePicker';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUserEducation, removeSection } from '@/redux/slices/addSectionSlice';
+import { RiAddCircleFill } from 'react-icons/ri';
+import { TiDelete } from 'react-icons/ti';
 
 
 type EducationType = {
@@ -21,9 +23,11 @@ type EducationType = {
 
 type AllSummaryType = {
   data?: any;
+  color?: string;
+  templateColor: string;
 };
 
-const AllEducation = ({ data = {} }: AllSummaryType) => {
+const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllSummaryType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userEducation } = useSelector((state: RootState) => state.addSection);
@@ -87,21 +91,20 @@ const AllEducation = ({ data = {} }: AllSummaryType) => {
 
 
   return (
-    <div ref={containerRef} className={`border p-4 relative flex flex-col gap-4 ${editable && 'bg-white'}`}
+    <div ref={containerRef} className={`border p-4 flex flex-col gap-4 ${editable && templateColor}`}
       onClick={handleEditableSection}>
-      <h1>{data?.name}</h1>
       {/* ====== Add and Delete Section Buttons ====== */}
-      <div className="flex gap-3 absolute top-2 right-2">
-        <button className="text-[14px] border px-2 rounded-md bg-gray-200 cursor-pointer"
-          onClick={handleAddEducation}>
-          + Add
-        </button>
-        <button className="text-[14px] border px-2 rounded-md bg-gray-200 cursor-pointer"
-          onClick={handleRemoveSection}>
-          Delete
-        </button>
-      </div>
-
+      {editable && (
+        <div className="flex gap-1 absolute top-5 right-0">
+          <button className="cursor-pointer" style={{ color }} onClick={handleAddEducation}>
+            <RiAddCircleFill size={24} />
+          </button>
+          <button className="cursor-pointer" style={{ color }} onClick={handleRemoveSection}>
+            <TiDelete size={30} />
+          </button>
+        </div>
+      )}
+      {/* ===== Education Box ===== */}
       <div className="flex flex-col gap-3">
         {educations.map((exp, index) => (
           <div key={index}>
