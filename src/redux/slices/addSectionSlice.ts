@@ -175,7 +175,7 @@ export const addSectionSlice = createSlice({
     AddUserReferences: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
       // console.log(sectionId, detail, "userReferences");
-      state.userReferences.push(detail);
+      state.userReferences=detail;
     },
 
     addUserLanguages: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
@@ -191,8 +191,8 @@ export const addSectionSlice = createSlice({
     
     addUserAwards: ( state, action: PayloadAction<{ sectionId: number; detail: any }> ) => {
       const { sectionId, detail } = action.payload;
-      // console.log(sectionId, detail, "userAwards");
-      state.userAwards.push(detail);
+      // console.log(sectionId, detail, "1111=userAwards");
+      state.userAwards = detail;
     },
     
     reorderSections: (state, action: any) => {
