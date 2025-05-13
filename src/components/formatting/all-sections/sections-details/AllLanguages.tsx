@@ -95,6 +95,13 @@ const AllLanguages = ({
     }
   };
 
+  const handleBlur = (index: number) => {
+    if (languages[index]?.title.trim() === '') {
+      const updated = languages.filter((_, i) => i !== index);
+      setLanguages(updated);
+    }
+  };
+
   return (
     <div ref={containerRef} onClick={handleEditableSection}
 
@@ -119,9 +126,11 @@ const AllLanguages = ({
                   <input
                     value={lang.title}
                     onChange={(e) => handleInputChange(index, e.target.value)}
+                    onBlur={() => handleBlur(index)}
                     placeholder="Language"
-                    className="text-base placeholder:text-base focus:outline-none bg-transparent focus:border-b-[0.8px]"
+                    className="text-base placeholder:text-base focus:outline-none bg-transparent "
                     style={{ color }}
+                    autoFocus
                   />
                   {editingIndex === index && lang.title.trim() !== "" && (
                     <div className="flex gap-2">
@@ -139,21 +148,21 @@ const AllLanguages = ({
                   )}
                 </div>
 
-                {lang.title.trim() !== "" && (
-                  <div className="flex items-center justify-between gap-3 mt-1">
-                    <div className="overflow-hidden h-[8px] flex items-center w-80">
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={lang.level ?? 0}
-                        onChange={(e) => handleLevelChange(index, Number(e.target.value))}
-                        className="w-full opacity-80"
-                        style={{ accentColor: templateColor }}
-                      />
-                    </div>
+                <div className="flex items-center justify-between gap-3 mt-1">
+                  <div className="overflow-hidden h-[8px] flex items-center w-80">
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={lang.level ?? 0}
+                      disabled={lang.title.trim() !== "" ? false : true}
+                      onChange={(e) => handleLevelChange(index, Number(e.target.value))}
+                      className="w-full opacity-80"
+                      style={{ accentColor: templateColor }}
+
+                    />
                   </div>
-                )}
+                </div>
               </div>
             ))
           ) : (
@@ -163,8 +172,9 @@ const AllLanguages = ({
                   value={""}
                   onChange={(e) => handleAddFirstLanguage(e.target.value)}
                   placeholder="Language"
-                  className="text-base placeholder:text-base focus:outline-none bg-transparent focus:border-b-[0.8px]"
+                  className="text-base placeholder:text-base focus:outline-none bg-transparent "
                   style={{ color }}
+                  autoFocus
                 />
               </div>
               <div className="flex items-center justify-between gap-3 mt-1">
@@ -173,10 +183,11 @@ const AllLanguages = ({
                     type="range"
                     min="0"
                     max="100"
-                    value={0}
-                    onChange={() => { }} // can be no-op
+                    value=""
+                    disabled={true}
                     className="w-full opacity-80"
                     style={{ accentColor: templateColor }}
+
                   />
                 </div>
               </div>

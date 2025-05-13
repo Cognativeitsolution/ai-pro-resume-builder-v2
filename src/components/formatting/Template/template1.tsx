@@ -13,6 +13,8 @@ import AllSoftSkills from "../all-sections/sections-details/AllSoftSkills";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllLanguages from "../all-sections/sections-details/AllLanguages";
 import AllTechnicalSkills from "../all-sections/sections-details/AllTechnicalSkills";
+import AllAwards from "../all-sections/sections-details/AllAwards";
+import AllReferences from "../all-sections/sections-details/AllReferences";
 
 type CurrentState = {
     fontSize: any;
@@ -119,13 +121,17 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Technical_Skills":
                 return <AllTechnicalSkills data={section} color="#000" templateColor="#fff" />;
             case "Certificate":
-                return <AllCertificates data={section} />;
+                return <AllCertificates data={section} color="#000" templateColor="#fff" />;
             case "Education":
-                return <AllEducations data={section} />;
+                return <AllEducations data={section} color="#000" templateColor="#fff" />;
             case "Experience":
-                return <AllExperiences data={section} />;
+                return <AllExperiences data={section} color="#000" templateColor="#fff" />;
             case "Projects":
-                return <AllProjects data={section} />;
+                return <AllProjects data={section} color="#000" templateColor="#fff" />;
+            case "Awards":
+                return <AllAwards data={section} color="#000" templateColor="#fff" />;
+            case "Reference":
+                return <AllReferences data={section} color="#000" templateColor="#fff" />;
             case "Languages":
                 return <AllLanguages data={section} color="#fff" templateColor="#3358c5" />;
             default:
@@ -181,8 +187,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 {/* Left Sections */}
                 {leftSections?.length > 0 ? (
                     leftSections.map((section: any, index: number) => (
-                        <div className="py-4 relative">
-                            <div key={index} className="border-b text-black">
+                        <div key={index} className="py-4 relative">
+                            <div className="border-b text-black">
                                 <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
                             </div>
                             <div className="mt-2">{renderSection(section)}
@@ -230,8 +236,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 <div className="p-3">
                     {rightSections?.length > 0 &&
                         rightSections.map((section: any, index: number) => (
-                            <div className="py-4 relative">
-                                <div key={index} className="border-b text-white">
+                            <div key={index} className="py-4 relative">
+                                <div className="border-b text-white">
                                     <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
                                 </div>
                                 <div className="mt-2">{renderSection(section)}

@@ -1,180 +1,199 @@
-"use client";
-import { addUserCertificates, removeSection } from '@/redux/slices/addSectionSlice';
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { FaPen, FaTrash } from 'react-icons/fa';
+'use client';
 
-type AllCertificatesType = {
-  data?: any;
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { addUserCertificates, removeSection } from '@/redux/slices/addSectionSlice';
+import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
+import { TiDelete } from 'react-icons/ti';
+import CustomDatePicker from '../../custom/CustomDatePicker';
+
+type CertificateType = {
+  title: string;
+  description: string;
+  institutionName: string;
 };
 
-const AllCertificates = ({ data = {} }: AllCertificatesType) => {
+type AllSummaryType = {
+  data?: any;
+  color?: string;
+  templateColor: string;
+};
+
+const AllCertificates = ({
+  data = {},
+  color = '#fff',
+  templateColor
+}: AllSummaryType) => {
   const dispatch = useDispatch();
-
-  const [inputCertificate, setInputCertificate] = useState<string>('');
-  const [allCertificatesData, setAllCertificatesData] = useState<string[]>([]);
-  const [showInput, setShowInput] = useState<boolean>(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editedCertificate, setEditedCertificate] = useState<string>('');
-  const [showBtns, setShowBtns] = useState<boolean>(false);
-
   const containerRef = useRef<HTMLDivElement>(null);
+  const { userCertificates } = useSelector((state: RootState) => state.addSection);
+  const [editable, setEditable] = useState(false);
+  const [certificates, setCertificates] = useState<CertificateType[]>([]);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setShowBtns(false);
+    if (Array.isArray(userCertificates) && userCertificates.length > 0) {
+      const normalizedCertificates = userCertificates.map(Certificate => ({
+        title: Certificate.title ?? '',
+        description: Certificate.description ?? '',
+        institutionName: Certificate.institutionName ?? '',
+      }));
+      setCertificates(normalizedCertificates);
+    }
+  }, [userCertificates]);
 
-        // Dispatch to Redux when clicking outside
-        if (allCertificatesData.length > 0 && data?.id) {
-          const CertificatesPayload = allCertificatesData.map(Certificate => ({
-            type: "Certificate",
-            name: Certificate
-          }));
+  const handleClickOutside = (event: MouseEvent) => {
+    if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      setEditable(false);
+      const validCertificates = certificates.filter(
+        certificate => certificate.title.trim() && certificate.institutionName.trim()
+      );
 
-          dispatch(addUserCertificates({
-            sectionId: data.id,
-            detail: CertificatesPayload
-          }));
-        }
+      // Only dispatch if something actually changed or is valid
+      if (validCertificates.length > 0) {
+        dispatch(addUserCertificates({
+          sectionId: data.id,
+          detail: validCertificates
+        }));
       }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [allCertificatesData, data?.id, dispatch]);
-
-  const handleAddCertificate = () => {
-    if (inputCertificate.trim() !== '') {
-      setAllCertificatesData([...allCertificatesData, inputCertificate.trim()]);
-      setInputCertificate('');
-      setShowInput(false);
     }
   };
 
-  const handleShowInput = () => {
-    setShowInput(true);
+  const handleEditableSection = () => setEditable(true);
+
+  const handleAddCertificate = () => {
+    setCertificates([...certificates, { title: '', description: '', institutionName: '' }]);
   };
 
   const handleRemoveSection = () => {
     if (data) {
       dispatch(removeSection(data));
+      dispatch(addUserCertificates({ sectionId: data.id, detail: [] }));
     }
   };
 
-  const handleDeleteCertificate = (index: number) => {
-    const updated = allCertificatesData.filter((_, i) => i !== index);
-    setAllCertificatesData(updated);
+  const handleInputChange = (index: number, field: keyof CertificateType, value: string) => {
+    const updated = [...certificates];
+    updated[index] = { ...updated[index], [field]: value };
+    setCertificates(updated);
   };
 
-  const handleEditCertificate = (index: number) => {
-    setEditingIndex(index);
-    setEditedCertificate(allCertificatesData[index]);
+  const handleDelete = (index: number) => {
+    const updated = certificates.filter((_, i) => i !== index);
+    setCertificates(updated);
   };
 
-  const handleSaveEdit = () => {
-    if (editingIndex !== null && editedCertificate.trim() !== '') {
-      const updated = [...allCertificatesData];
-      updated[editingIndex] = editedCertificate.trim();
-      setAllCertificatesData(updated);
-      setEditingIndex(null);
-      setEditedCertificate('');
+  const handleBlur = (index: number) => {
+    if (certificates[index]?.title.trim() === '') {
+      const updated = certificates.filter((_, i) => i !== index);
+      setCertificates(updated);
     }
   };
-  const handleShowEditBtn = () => {
-    setShowBtns(true);
-  }
+
+  const handleAddFirstCertificate = (value: string) => {
+    const trimmedValue = value.trim();
+    if (trimmedValue !== '') {
+      setCertificates([{ title: trimmedValue, description: '', institutionName: '' }]);
+    }
+  };
+
+
+
   return (
-
-    <div ref={containerRef}
-      className={`border p-4 relative flex flex-col gap-4 ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
-
-      <h1>{data?.name}</h1>
-      {/* Buttons */}
-      {showBtns && <div className="flex gap-3 absolute top-2 right-2">
-        {!showInput && (
-          <button
-            className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
-            onClick={handleShowInput}
-          >
-            + Certificate
+    <div ref={containerRef} className={`flex flex-col gap-4 bg-white `} onClick={handleEditableSection}>
+      {editable && (
+        <div className="flex gap-1 absolute top-5 right-0">
+          <button style={{ color }} onClick={handleAddCertificate}>
+            <RiAddCircleFill size={24} />
           </button>
-        )}
-        <button
-          onClick={handleRemoveSection}
-          className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
-        >
-          Delete
-        </button>
-      </div>}
-
-      {/* Certificates List */}
-      <div className="mt-1 flex flex-wrap gap-2">
-        {allCertificatesData?.length ? allCertificatesData.map((Certificate, index) => (
-          <div
-            key={index}
-            className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${showBtns && 'bg-gray-100'}`}
-          >
-            {editingIndex === index ? (
-              <>
-                <input
-                  className="px-2 py-1 text-sm border rounded"
-                  value={editedCertificate}
-                  onChange={(e) => setEditedCertificate(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
-                  autoFocus
-                />
-                <button onClick={handleSaveEdit} className="text-green-600 text-xs">
-                  Save
-                </button>
-              </>
-            ) : (
-              <>
-                <ul className='list-disc ps-2'>
-                  <li>{Certificate}</li>
-                </ul>
-                {showBtns &&
-                  <>
-                    <button onClick={() => handleEditCertificate(index)} className="text-blue-400 text-xs">
-                      <FaPen />
-                    </button>
-                    <button onClick={() => handleDeleteCertificate(index)} className="text-red-400 text-xs">
-                      <FaTrash />
-                    </button>
-                  </>
-                }
-              </>
-            )}
-          </div>
-        )) :
-          <span onClick={handleShowInput} className='text-gray-300'>Add Certificate</span>
-        }
-      </div>
-
-      {/* Conditional Input Field */}
-      {showBtns && showInput && (
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputCertificate}
-            onChange={(e) => setInputCertificate(e.target.value)}
-            placeholder="Enter a Certificate"
-            className="border px-3 py-1 rounded-md w-full"
-            onKeyDown={(e) => e.key === 'Enter' && handleAddCertificate()}
-            autoFocus
-          />
-          <button
-            onClick={handleAddCertificate}
-            className="border px-4 py-1 rounded-md bg-green-200"
-          >
-            Add
+          <button style={{ color }} onClick={handleRemoveSection}>
+            <TiDelete size={30} />
           </button>
         </div>
       )}
 
-    </div>
+      <div className="flex flex-col gap-3 ">
+        {certificates.length > 0 ? (
+          certificates.map((cert, index) => (
+            <div key={index} className='relative border p-4'>
+              {/* ====== Job Title ====== */}
+              <div className="flex items-center justify-between">
+                <div className='w-full'>
+                  <input
+                    value={cert.title}
+                    onChange={(e) => handleInputChange(index, 'title', e.target.value)}
+                    onBlur={() => handleBlur(index)}
+                    placeholder="Title"
+                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0" />
+                </div>
+                {/* ====== Date Picker ====== */}
+                <CustomDatePicker onChange={(dates) => console.log(dates)} />
+              </div>
+              {/* ====== Company Name ====== */}
+              <div className='w-full'>
+                <input
+                  type="text"
+                  value={cert.institutionName}
+                  placeholder="Institution Name"
+                  onBlur={() => handleBlur(index)}
+                  onChange={(e) => handleInputChange(index, 'institutionName', e.target.value)}
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-indigo-400"
+                />
+              </div>
+              <div>
+                <textarea
+                  value={cert.description}
+                  disabled={!editable}
+                  onBlur={() => handleBlur(index)}
+                  onChange={(e) => handleInputChange(index, 'description', e.target.value)}
+                  placeholder="Description"
+                  rows={2}
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                />
+              </div>
+              <div className="absolute bottom-2 right-2">
+                <button
+                  onClick={() => handleDelete(index)}
+                  className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                >
+                  <RiDeleteBin6Line size={16} />
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div>
+            <div>
+              <input
+                value=""
+                onChange={(e) => handleAddFirstCertificate(e.target.value)}
+                placeholder="Title"
+                className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="Institution Name"
+                value=""
+                onChange={(e) => handleAddFirstCertificate(e.target.value)}
+                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-indigo-400"
+              />
+            </div>
+            <div>
+              <textarea
+                disabled={!editable}
+                value=""
+                onChange={(e) => handleAddFirstCertificate(e.target.value)}
+                placeholder="Description"
+                rows={2}
+                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </div >
   );
 };
 

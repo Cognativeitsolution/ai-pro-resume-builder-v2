@@ -61,9 +61,9 @@ const AllSoftSkills = ({
     setSoftSkills([...softskills, { title: '', level: 0 }]);
   };
 
-  const handleDeleteSoftSkill = (index: number) => {
-    const updated = softskills.filter((_, i) => i !== index);
-    setSoftSkills(updated);
+  const handleRemoveSection = () => {
+    dispatch(removeSection(data));
+    dispatch(addUserSoft_Skills({ sectionId: data.id, detail: [] }));
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -72,9 +72,16 @@ const AllSoftSkills = ({
     setSoftSkills(updated);
   };
 
-  const handleRemoveSection = () => {
-    dispatch(removeSection(data));
-    dispatch(addUserSoft_Skills({ sectionId: data.id, detail: [] }));
+  const handleDeleteSoftSkill = (index: number) => {
+    const updated = softskills.filter((_, i) => i !== index);
+    setSoftSkills(updated);
+  };
+
+  const handleBlur = (index: number) => {
+    if (softskills[index]?.title.trim() === '') {
+      const updated = softskills.filter((_, i) => i !== index);
+      setSoftSkills(updated);
+    }
   };
 
   const handleAddFirstSoftSkill = (value: string) => {
@@ -84,12 +91,7 @@ const AllSoftSkills = ({
     }
   };
 
-  const handleBlur = (index: number) => {
-    if (softskills[index]?.title.trim() === '') {
-      const updated = softskills.filter((_, i) => i !== index);
-      setSoftSkills(updated);
-    }
-  };
+
 
   return (
     <div ref={containerRef} onClick={handleEditableSection}>
@@ -157,7 +159,6 @@ const AllSoftSkills = ({
                 placeholder="Soft Skill"
                 className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
                 style={{ color }}
-                autoFocus
               />
             </div>
           )}
