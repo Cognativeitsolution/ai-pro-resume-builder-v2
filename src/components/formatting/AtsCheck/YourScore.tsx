@@ -122,7 +122,7 @@ const YourScore = () => {
 
   return (
     <>
-      <div className="w-full h-full xl:w-1/4 border-2 border-white bg-indigo-200/40 rounded-xl p-4 mt-[110px] xl:mt-0 static xl:sticky overflow-y-auto top-32 z-0">
+      <div className="w-full h-full xl:w-1/4 border-2 border-white bg-indigo-200/40 rounded-xl p-4 mt-[110px] xl:mt-0 static xl:sticky overflow-y-auto top-11 z-0">
         <h2 className="text-center text-lg font-semibold mb-4">Your Score</h2>
         {/* Pie Chart */}
         <div className="flex justify-center mb-6">
@@ -137,10 +137,10 @@ const YourScore = () => {
                 className="flex justify-between items-center cursor-pointer"
                 onClick={() => toggleSection(section.id)}
               >
-                <div className="font-medium">{section.title}</div>
+                <div className="font-normal">{section.title}</div>
                 <div className="font-medium flex items-center justify-center gap-2">
                   <span
-                    className={`${section.scoreColor} text-[14px] px-[4px] rounded-xl`}
+                    className={`${section.scoreColor} text-[14px] px-[8px] rounded-xl`}
                   >
                     {section.score}
                   </span>
