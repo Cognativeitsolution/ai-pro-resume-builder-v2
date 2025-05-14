@@ -1,7 +1,8 @@
 import { CustomButton } from '@/components';
 import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
 import React from 'react'
-import { FaCalendar, FaLock } from 'react-icons/fa'
+import { FaCalendar, FaEdit, FaLock } from 'react-icons/fa'
+import { FaConnectdevelop } from 'react-icons/fa6';
 
 const References = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
 
@@ -13,11 +14,14 @@ const References = ({ sectionData, handleAddSec }: { sectionData: any, handleAdd
     })
   };
 
-  const ProjectsList = [
+  const ReferencesList = [
     {
-      name: "Software Engineering",
-      details: ["But I must explain to you how all this mistahow all this mistaken", "How all this mistahow all this mistaken", "There are many reg rtg de reg rtg de reg rtg denounce with righteous."],
-      date: "2019"
+      name: "Rimsha Naeem",
+      referContact: "Developer at Cognitive It Solution",
+    },
+    {
+      name: "Rabia Shahwaiz",
+      referContact: "Mern Developer at Cognitive It Solution",
     }
   ];
 
@@ -25,20 +29,12 @@ const References = ({ sectionData, handleAddSec }: { sectionData: any, handleAdd
     <div className="group rounded-[10px] p-5 shadow-md border border-[#CECECE] bg-white relative h-56 hover:bg-primary2 overflow-hidden">
       <div className="text-start space-y-1">
         <h1 className="border-black border-b-2 mb-2 text-lg font-semibold">References</h1>
-        <div className='flex flex-col items-start'>
+        <div className='flex justify-between'>
           {
-            ProjectsList?.map((skill: any, index: any) => (
-              <div key={index} className='text-start mt-2 text-xs items-start'>
-                <h1 className="text-xs font-medium">{skill?.name}</h1>
-                <p className="text-[10px] flex items-center gap-1">
-                  <span><FaCalendar className='text-[10px]' /></span>
-                  <span>{skill?.date}</span>
-                </p>
-                <ul className="list-disc ms-4">
-                  {skill?.details?.map((data: any, index: number) => (
-                    <li className='text-[10px]' key={index}>{data}</li>
-                  ))}
-                </ul>
+            ReferencesList?.map((skill: any, index: any) => (
+              <div key={index} className='flex flex-col'>
+                <h2 className="text-xs font-medium text-indigo-700">{skill?.name}</h2>
+                <p className='text-[10px]' key={index}>{skill?.referContact}</p>
               </div>
             ))
           }

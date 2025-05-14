@@ -14,7 +14,7 @@ const Awards = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec:
     })
   };
 
-  const ProjectsList = [
+  const AwardsList = [
     {
       name: "Developer",
       details: "Certified developer",
@@ -26,7 +26,6 @@ const Awards = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec:
       details: "Certified writer",
       date: "2020",
       icon: <FaEdit />
-
     }
   ];
 
@@ -36,13 +35,13 @@ const Awards = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec:
         <h1 className="border-black border-b-2 mb-2 text-lg font-semibold">Awards</h1>
         <div className='flex items-start gap-10'>
           {
-            ProjectsList?.map((skill: any, index: any) => (
+            AwardsList?.map((skill: any, index: any) => (
               <div key={index} className='flex justify-between'>
-                <div className="mt-[1px] text-sm">
+                <div className="mt-[1px] text-sm  text-indigo-700">
                   {skill?.icon}
                 </div>
                 <div className="ms-1">
-                  <h1 className="text-xs font-medium">{skill?.name}</h1>
+                  <h1 className="text-xs font-medium  text-indigo-700">{skill?.name}</h1>
                   <p className="text-[10px] flex items-center gap-1 mt-1">
                     <FaCalendar className='text-[10px]' />
                     <span>{skill?.date}</span>

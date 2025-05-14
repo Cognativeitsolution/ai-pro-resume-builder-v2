@@ -29,7 +29,7 @@ const Experience = ({ sectionData, handleAddSec }: { sectionData: any, handleAdd
           {
             ExperienceList?.map((skill: any, index: any) => (
               <div key={index} className='text-start mt-2 text-xs items-start'>
-                <h1 className="text-xs font-medium">{skill?.name}</h1>
+                <h1 className="text-xs font-medium  text-indigo-700">{skill?.name}</h1>
                 <p className="text-[10px] flex items-center gap-1">
                   <span><FaCalendar className='text-[10px]' /></span>
                   <span>{skill?.date}</span>

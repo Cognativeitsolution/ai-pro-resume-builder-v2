@@ -15,9 +15,9 @@ const Projects = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSe
 
   const ProjectsList = [
     {
-      name: "Software Engineering",
+      name: "Ai Pro Resume",
       details: ["But I must explain to you how all this mistahow all this mistaken", "How all this mistahow all this mistaken", "There are many reg rtg de reg rtg de reg rtg denounce with righteous."],
-      date: "2019"
+      date: "2024 - 2025"
     }
   ];
 
@@ -29,7 +29,7 @@ const Projects = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSe
           {
             ProjectsList?.map((skill: any, index: any) => (
               <div key={index} className='text-start mt-2 text-xs items-start'>
-                <h1 className="text-xs font-medium">{skill?.name}</h1>
+                <h1 className="text-xs font-medium  text-indigo-700">{skill?.name}</h1>
                 <p className="text-[10px] flex items-center gap-1">
                   <span><FaCalendar className='text-[10px]' /></span>
                   <span>{skill?.date}</span>

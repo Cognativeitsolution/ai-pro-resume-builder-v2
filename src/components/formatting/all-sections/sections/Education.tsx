@@ -34,7 +34,7 @@ const Education = ({ sectionData, handleAddSec }: { sectionData: any, handleAddS
           {
             educationList?.map((skill: any, index: any) => (
               <div key={index} className='text-start mt-2 text-xs items-start'>
-                <h1 className="text-xs font-medium">{skill?.institute}</h1>
+                <h1 className="text-xs font-medium  text-indigo-700">{skill?.institute}</h1>
                 <p className="text-[10px]">{skill.location}</p>
                 <p className="text-[10px] flex items-center gap-1">
                   <span><FaCalendar className='text-[10px]' /></span>

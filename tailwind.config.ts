@@ -8,6 +8,21 @@ export default {
   ],
   theme: {
     extend: {
+      container: {
+        center: true,
+        padding: "1rem",
+      },
+      screens: {
+        xs: { max: "576px" },
+        sm: "576px",
+        md: "768px",
+        lg: "992px",
+        xl: "1200px",
+        "2xl": "1400px",
+      },
+      fontFamily: {
+        primary: ["var(--font-primary),sans-serif"],
+      },
       width: {
         a4: '794px',
       },
@@ -46,14 +61,14 @@ export default {
       animation: {
         fadeInUp: "fadeInUp 0.5s ease-out forwards",
         "bounce-in-up": "bounce-in-up 0.8s ease-out forwards",
-        rotate: "rotate 50s cubic-bezier(0.8, 0.2, 0.2, 0.8) infinite alternate",
-
+        rotate:
+          "rotate 50s cubic-bezier(0.8, 0.2, 0.2, 0.8) infinite alternate",
       },
       backgroundImage: {
-        'primary': 'linear-gradient(to right, #F8F8F8, #E9E9E9)',
-        'secondary': 'linear-gradient(to right, #9885FF, #79A9FF)',
-        'primary2': 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.7) 100%)',
-        'primary3': 'linear-gradient(to right, #9885FF,#79A9FF)',
+        primary: "linear-gradient(to right, #F8F8F8, #E9E9E9)",
+        secondary: "linear-gradient(to right, #9885FF, #79A9FF)",
+        primary2: "linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.7) 100%)",
+        primary3: "linear-gradient(to right, #9885FF,#79A9FF)",
       },
     },
   },
