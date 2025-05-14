@@ -141,7 +141,7 @@ const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
 
 
     return (
-        <div className="h-screen border border-gray-300 flex relative"
+        <div className="w-a4 h-a4 flex relative"
             style={{
                 margin: `${currentState.margin || 0}px`,
                 padding: `${currentState.padding || 0}px`,

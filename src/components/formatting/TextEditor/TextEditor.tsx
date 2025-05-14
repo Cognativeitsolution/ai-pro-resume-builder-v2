@@ -44,7 +44,7 @@ const TextEditor = (props: TextEditorProps) => {
 
   return (
     <>
-      <div className="flex gap-2">
+      <div className="flex gap-2 sticky top-[11%]">
         <div className="w-[18%] py-4 bg-[#ffffff] border border-gray-300 rounded-md">
           <ul className="flex flex-col gap-8">
             <li

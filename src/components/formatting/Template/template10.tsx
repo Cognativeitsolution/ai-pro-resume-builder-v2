@@ -135,7 +135,7 @@ const Template10 = (props: ResumePreviewProps) => {
     const descFontSize = getFontSize(18, fontSize); // base is 18px
 
     return (
-        <div className=" h-screen border border-gray-300 grid grid-cols-12">
+        <div className="w-a4 h-a4 grid grid-cols-12">
             <div className="col-span-12 p-6" >
                 {/* Header Left Start*/}
                 <div className="flex flex-col items-center gap-2 p-3" style={{ background: color }}>

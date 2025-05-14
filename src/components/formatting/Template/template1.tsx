@@ -1,20 +1,22 @@
 "use client";
+//=============
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import axios from "axios";
-// Import all the reusable section components
+import Image from "next/image";
+import { useSelector } from "react-redux";
+import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
+//===== Section Components =====
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
 import AllEducations from "../all-sections/sections-details/AllEducations";
 import AllExperiences from "../all-sections/sections-details/AllExperiences";
 import AllProjects from "../all-sections/sections-details/AllProjects";
-import Image from "next/image";
-import placeHolderImg from "media/assets/reusme_placeholder_image.webp"
 import AllSoftSkills from "../all-sections/sections-details/AllSoftSkills";
-import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllLanguages from "../all-sections/sections-details/AllLanguages";
 import AllTechnicalSkills from "../all-sections/sections-details/AllTechnicalSkills";
 import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
+import IconDropdown from "../icon-dropdown/IconDropdown";
+import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 
 type CurrentState = {
     fontSize: any;
@@ -25,7 +27,6 @@ type CurrentState = {
     padding: number;
     text: any;
 }
-
 
 type ResumePreviewProps = {
     currentState: CurrentState;
@@ -41,7 +42,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
-    //all sections
+    //============= all sections
     const getAllText = () => {
         return addedSections?.map((section: any) => {
             if (typeof section?.content === "string") return section.content;
@@ -54,7 +55,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
     const fullText = getAllText();
 
-    // improve text logic
+    //============= improve text logic
     useEffect(() => {
         const fetchCorrections = async () => {
             if (!spellCheck && !grammarCheck) return;
@@ -93,7 +94,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         fetchCorrections();
     }, [spellCheck, grammarCheck, fullText]);
 
-    // Highlight function
+    //============= Highlight function
     const highlightWords = (text: string) => {
         return text.split(/\s+/).map((word, index) => {
             const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
@@ -129,11 +130,13 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Projects":
                 return <AllProjects data={section} color="#000" templateColor="#fff" />;
             case "Awards":
-                return <AllAwards data={section} color="#000" templateColor="#fff" />;
+                return <AllAwards data={section} color="#000" templateColor="#000" />;
             case "Reference":
-                return <AllReferences data={section} color="#000" templateColor="#fff" />;
+                return <AllReferences data={section} color="#000" templateColor="#000" />;
             case "Languages":
                 return <AllLanguages data={section} color="#fff" templateColor="#3358c5" />;
+            case "Custom_Section":
+                return <AllCustomSection data={section} color="#000" templateColor="#fff" />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
@@ -147,23 +150,16 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         };
         return `${base * (scaleMap[size] || 1)}px`;
     };
-    const rightSideSections = ["Technical_Skills", "Soft_Skills", "Languages", "References"];
+    const rightSideSections = ["Technical_Skills", "Soft_Skills", "Languages"];
     const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
     const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 
 
     return (
-        <div className="h-screen border border-gray-300 flex relative"
-            style={{
-                padding: `${currentState.padding || 0}px`,
-            }}
-        >
-            <div
-                className="absolute right-0 top-0 h-full w-[35%] z-0"
-                style={{ backgroundColor: currentState.color }}
-            />
+        <div className="w-a4 h-a4 flex relative" style={{ padding: `${currentState.padding || 0}px`, }} >
+            <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
             <div className="w-[65%] z-10 p-6">
-                {/* Header Left Start*/}
+                {/*====== Header Left ======*/}
                 <div className="flex flex-col">
                     <input
                         placeholder="Name"
@@ -173,7 +169,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                             fontFamily: currentState.fontFamily,
                         }}
                     />
-
                     <input
                         placeholder="Designation"
                         className="outline-none focus:bg-transparent font-semibold"
@@ -183,16 +178,14 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         }}
                     />
                 </div>
-                {/* Header Left End*/}
-                {/* Left Sections */}
+                {/*====== Left Sections ======*/}
                 {leftSections?.length > 0 ? (
                     leftSections.map((section: any, index: number) => (
                         <div key={index} className="py-4 relative">
                             <div className="border-b text-black">
                                 <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
                             </div>
-                            <div className="mt-2">{renderSection(section)}
-                            </div>
+                            <div className="mt-2">{renderSection(section)}</div>
                         </div>
                     ))
                 ) : (
@@ -202,9 +195,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 {loading && <p className="text-gray-500 mt-4">Checking for spelling/grammar errors...</p>}
             </div>
             <div className={`w-[35%] z-10`} >
-                {/* conact info */}
+                {/*====== conact info ======*/}
                 <div className="p-3">
-
                     <div className="flex justify-center mb-2">
                         <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
                     </div>
@@ -228,11 +220,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                             <IconDropdown />
                             <textarea placeholder="Address" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
                         </div>
-
                     </div>
                 </div>
 
-                {/* Right Sections */}
+                {/*====== Right Sections ======*/}
                 <div className="p-3">
                     {rightSections?.length > 0 &&
                         rightSections.map((section: any, index: number) => (

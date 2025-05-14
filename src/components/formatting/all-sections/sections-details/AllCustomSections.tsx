@@ -1,43 +1,83 @@
-"use client";
-import { addUserCertificates, removeSection } from '@/redux/slices/addSectionSlice';
+'use client';
+// ==============
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { FaPen, FaTrash } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
+// ==============
+import CustomDatePicker from '../../custom/CustomDatePicker';
+// ==============
+import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeSection, addUserCustomSection } from '@/redux/slices/addSectionSlice';
+import { RiAddCircleFill } from 'react-icons/ri';
+import { TiDelete } from 'react-icons/ti';
 
-type AllCertificatesType = {
-  textValue: string;
-  data?: any;
+
+type CustomSectionType = {
+  title: string;
+  description: string;
+  companyName: string;
+  location?: string;
 };
 
-const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => {
+type AllCustomSectionType = {
+  data?: any;
+  color?: string;
+  templateColor: string;
+};
+
+const AllCustomSection = ({ data = {}, color = '#000', templateColor, }: AllCustomSectionType) => {
   const dispatch = useDispatch();
-
-  const [inputCertificate, setInputCertificate] = useState<string>('');
-  const [allCertificatesData, setAllCertificatesData] = useState<string[]>([]);
-  const [showInput, setShowInput] = useState<boolean>(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editedCertificate, setEditedCertificate] = useState<string>('');
-  const [showBtns, setShowBtns] = useState<boolean>(false);
-
   const containerRef = useRef<HTMLDivElement>(null);
+  const { userCustomSections } = useSelector((state: RootState) => state.addSection);
+  const [editable, setEditable] = useState<boolean>(false);
+  const [customSections, setCustomSection] = useState<CustomSectionType[]>([]);
+  const handleEditableSection = () => setEditable(true);
 
+  // Sync local state with Redux store whenever userCustomSections changes
+  useEffect(() => {
+    if (Array.isArray(userCustomSections) && userCustomSections.length > 0) {
+      setCustomSection(userCustomSections);
+    }
+  }, [userCustomSections]);
+
+  // Handle input changes for each field in an customSections entry
+  const handleInputChange = (index: number, field: keyof CustomSectionType, value: string) => {
+    const updated = [...customSections];
+    updated[index] = { ...updated[index], [field]: value };
+    setCustomSection(updated);
+  };
+
+  // Add a new blank customSections entry
+  const handleAddCustomSection = () => {
+    setCustomSection([...customSections, { title: '', description: '', companyName: '', location: '' }]);
+  };
+
+  // Remove the entire section and reset associated customSections in the Redux store
+  const handleRemoveSection = () => {
+    if (data) {
+      dispatch(removeSection(data));
+      dispatch(addUserCustomSection({
+        sectionId: data.id,
+        detail: []
+      }));
+    }
+  };
+
+  // Delete a specific customSections entry by index
+  const handleDelete = (index: number) => {
+    const updated = customSections.filter((_, i) => i !== index);
+    setCustomSection(updated);
+  };
+
+  // Detect click outside the component to disable editing and save data to Redux
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setShowBtns(false);
-
-        // Dispatch to Redux when clicking outside
-        if (allCertificatesData.length > 0 && data?.id) {
-          const CertificatesPayload = allCertificatesData.map(Certificate => ({
-            type: "Certificate",
-            name: Certificate
-          }));
-
-          dispatch(addUserCertificates({
-            sectionId: data.id,
-            detail: CertificatesPayload
-          }));
-        }
+        setEditable(false);
+        dispatch(addUserCustomSection({
+          sectionId: data.id,
+          detail: customSections
+        }));
       }
     };
 
@@ -45,138 +85,76 @@ const AllCertificates = ({ textValue = '', data = {} }: AllCertificatesType) => 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [allCertificatesData, data?.id, dispatch]);
+  }, [customSections, dispatch, data?.id]);
 
-  const handleAddCertificate = () => {
-    if (inputCertificate.trim() !== '') {
-      setAllCertificatesData([...allCertificatesData, inputCertificate.trim()]);
-      setInputCertificate('');
-      setShowInput(false);
-    }
-  };
 
-  const handleShowInput = () => {
-    setShowInput(true);
-  };
-
-  const handleRemoveSection = () => {
-    if (data) {
-      dispatch(removeSection(data));
-    }
-  };
-
-  const handleDeleteCertificate = (index: number) => {
-    const updated = allCertificatesData.filter((_, i) => i !== index);
-    setAllCertificatesData(updated);
-  };
-
-  const handleEditCertificate = (index: number) => {
-    setEditingIndex(index);
-    setEditedCertificate(allCertificatesData[index]);
-  };
-
-  const handleSaveEdit = () => {
-    if (editingIndex !== null && editedCertificate.trim() !== '') {
-      const updated = [...allCertificatesData];
-      updated[editingIndex] = editedCertificate.trim();
-      setAllCertificatesData(updated);
-      setEditingIndex(null);
-      setEditedCertificate('');
-    }
-  };
-  const handleShowEditBtn = () => {
-    setShowBtns(true);
-  }
   return (
-
-    <div ref={containerRef}
-      className={`border p-4 relative flex flex-col gap-4 ${showBtns && 'bg-white'}`} onClick={handleShowEditBtn}>
-
-      <h1>{textValue}</h1>
-      {/* Buttons */}
-      {showBtns && <div className="flex gap-3 absolute top-2 right-2">
-        {!showInput && (
-          <button
-            className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
-            onClick={handleShowInput}
-          >
-            + Certificate
+    <div ref={containerRef} className={`border p-4 flex flex-col gap-4 ${editable && templateColor}}`}
+      onClick={handleEditableSection}>
+      {/* ====== Add and Delete Section Buttons ====== */}
+      {editable && (
+        <div className="flex gap-1 absolute top-5 right-0">
+          <button className="cursor-pointer" style={{ color }} onClick={handleAddCustomSection}>
+            <RiAddCircleFill size={24} />
           </button>
-        )}
-        <button
-          onClick={handleRemoveSection}
-          className="border px-3 py-1 rounded-md bg-gray-200 cursor-pointer"
-        >
-          Delete
-        </button>
-      </div>}
-
-      {/* Certificates List */}
-      <div className="mt-1 flex flex-wrap gap-2">
-        {allCertificatesData?.length ? allCertificatesData.map((Certificate, index) => (
-          <div
-            key={index}
-            className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${showBtns && 'bg-gray-100'}`}
-          >
-            {editingIndex === index ? (
-              <>
-                <input
-                  className="px-2 py-1 text-sm border rounded"
-                  value={editedCertificate}
-                  onChange={(e) => setEditedCertificate(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
-                  autoFocus
-                />
-                <button onClick={handleSaveEdit} className="text-green-600 text-xs">
-                  Save
-                </button>
-              </>
-            ) : (
-              <>
-                <ul className='list-disc ps-2'>
-                  <li>{Certificate}</li>
-                </ul>
-                {showBtns &&
-                  <>
-                    <button onClick={() => handleEditCertificate(index)} className="text-blue-400 text-xs">
-                      <FaPen />
-                    </button>
-                    <button onClick={() => handleDeleteCertificate(index)} className="text-red-400 text-xs">
-                      <FaTrash />
-                    </button>
-                  </>
-                }
-              </>
-            )}
-          </div>
-        )) :
-          <span onClick={handleShowInput} className='text-gray-300'>Add Certificate</span>
-        }
-      </div>
-
-      {/* Conditional Input Field */}
-      {showBtns && showInput && (
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputCertificate}
-            onChange={(e) => setInputCertificate(e.target.value)}
-            placeholder="Enter a Certificate"
-            className="border px-3 py-1 rounded-md w-full"
-            onKeyDown={(e) => e.key === 'Enter' && handleAddCertificate()}
-            autoFocus
-          />
-          <button
-            onClick={handleAddCertificate}
-            className="border px-4 py-1 rounded-md bg-green-200"
-          >
-            Add
+          <button className="cursor-pointer" style={{ color }} onClick={handleRemoveSection}>
+            <TiDelete size={30} />
           </button>
         </div>
       )}
-
+      {/* ===== Education Box ===== */}
+      <div className="flex flex-col gap-3">
+        {customSections.map((exp, index) => (
+          <div key={index}>
+            <div className="flex flex-col">
+              {/* ====== Job Title ====== */}
+              <div className="flex items-center justify-between">
+                <div className='w-full'>
+                  <input
+                    value={exp.title}
+                    placeholder="Title"
+                    onChange={(e) => handleInputChange(index, 'title', e.target.value)}
+                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                  />
+                </div>
+                {/* ====== Date Picker ====== */}
+                <CustomDatePicker onChange={(dates) => console.log(dates)} />
+              </div>
+              {/* ====== Location ====== */}
+              <div className='w-full'>
+                <input
+                  type="text"
+                  value={exp.location || ''}
+                  disabled={!editable}
+                  onChange={(e) => handleInputChange(index, 'location', e.target.value)}
+                  placeholder="Location"
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                />
+              </div>
+              {/* ====== Description ====== */}
+              <div>
+                <textarea
+                  value={exp.description}
+                  disabled={!editable}
+                  onChange={(e) => handleInputChange(index, 'description', e.target.value)}
+                  placeholder="Description"
+                  rows={2}
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                ></textarea>
+              </div>
+            </div>
+            {/* ====== Delete Button ====== */}
+            <div className="flex justify-end mt-5">
+              <button className="text-red-600 text-sm flex items-center gap-1" onClick={() => handleDelete(index)}>
+                <FaTrashAlt />
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default AllCertificates;
+export default AllCustomSection;

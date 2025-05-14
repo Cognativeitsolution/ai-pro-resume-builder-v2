@@ -1,7 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { NewFooter, NewHeader } from "@/components";
+import { PopupProvider } from "../configs/store/Popup"
+import Popup from "@/components/popup/Popup";
 
 const ConditionalLayout = ({ children }: any) => {
   const pathname = usePathname();
@@ -15,12 +17,22 @@ const ConditionalLayout = ({ children }: any) => {
   //   });
   // }, []);
 
+  const [popup, setPopup] = useState(false);
+  const togglePopup = (e: any) => {
+    setPopup(!e)
+  }
+
   return (
     <>
-      {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <NewHeader />}
-      {/* {loading ? <SpinnerLoader /> : children} */}
-      {children}
-      <NewFooter />
+      <PopupProvider value={{ popup, togglePopup }}>
+        <>
+          <Popup />
+          {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <NewHeader />}
+          {/* {loading ? <SpinnerLoader /> : children} */}
+          {children}
+          <NewFooter />
+        </>
+      </PopupProvider>
     </>
   );
 };

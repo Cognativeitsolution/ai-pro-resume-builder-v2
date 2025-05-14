@@ -42,7 +42,7 @@ const UserHeader = (props: HeaderProps) => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-[#ffffff] py-4 px-5 border-b border-[#CECECE] fixed top-0 left-0 w-full z-50">
+    <div className="flex items-center justify-between bg-[#ffffff] py-4 px-5 border-b border-[#CECECE] fixed top-0 left-0 w-full z-40">
       <div className="flex items-center gap-12">
         <div>
           <Image src={logo} alt="Logo" />

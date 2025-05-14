@@ -1,9 +1,17 @@
-import { CustomButton } from '@/components';
-import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
 import React from 'react'
-import { FaCalendar, FaLock } from 'react-icons/fa'
+// ===========
+import { FaCalendar } from 'react-icons/fa'
+// ===========
+import { CustomButton } from '@/components';
+import usePopup from '@/app/configs/store/Popup'
+import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
 
 const CustomSections = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
+
+  const { popup, togglePopup } = usePopup();
+  const popupHandle = () => {
+    togglePopup(popup);
+  }
 
   const handleAddSection = () => {
     handleAddSec({
@@ -50,7 +58,7 @@ const CustomSections = ({ sectionData, handleAddSec }: { sectionData: any, handl
       <CustomButton className="absolute bottom-4 left-1/2 transform -translate-x-1/2  -translate-y-1/2 bg-primary3 w-48 px-3 py-2 rounded-[5px] opacity-0 group-hover:opacity-100 transition-all"
         title='+ Add to Resume'
         altColor='text-white'
-        onClick={handleAddSection}
+         onClick={popupHandle}
       />
     </div>
   )

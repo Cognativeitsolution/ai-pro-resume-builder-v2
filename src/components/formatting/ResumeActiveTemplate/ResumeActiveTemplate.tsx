@@ -1,10 +1,13 @@
 "use client";
+// ==============
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
+// ==============
 import Template1 from "../Template/template1";
+import Template2 from "../Template/template2";
 import Template3 from "../Template/template3";
 import Template10 from "../Template/template10";
-import { useEffect } from "react";
-import Template2 from "../Template/template2";
+
 
 type CurrentState = {
   fontSize: string;
@@ -24,7 +27,6 @@ type ResumePreviewProps = {
 const ResumeActiveTemplate = ({ currentState, updateState }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
   console.log(selectedTemplate, "selectedTemplate===========>")
-
 
   const renderTemplate = () => {
     switch (selectedTemplate) {
@@ -46,7 +48,7 @@ const ResumeActiveTemplate = ({ currentState, updateState }: ResumePreviewProps)
   }, [selectedTemplate]);
 
   return (
-    <div className="bg-[#ffffff] border border-gray-300 rounded-md min-h-full max-w-[1000px] mx-auto">
+    <div className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto">
       {renderTemplate()}
     </div>
   );

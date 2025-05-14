@@ -1,14 +1,15 @@
 "use client";
+// ==============
 import React, { useEffect, useState } from "react";
-import { ResumeActiveTemplate, Template, TextEditor, UserHeader } from "@/components";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+// ==============
+import { ResumeActiveTemplate, TextEditor, UserHeader } from "@/components";
+
+
 export default function Page() {
     const { availableSections } = useSelector((state: RootState) => state.addSection);
     const { fontFamily, fontSize, color } = useSelector((state: any) => state.font)
-
-
-
     const [currentState, setCurrentState] = useState<any>({
         fontSize: fontSize,
         fontWeight: "normal",
@@ -50,18 +51,16 @@ export default function Page() {
     };
     useEffect(() => {
         // Ensure text is an array of strings
-        const newText = availableSections.map((section: any) => section.text || ''); // Adjust field name if necessary
+        const newText = availableSections.map((section: any) => section.text || '');
         setCurrentState((prevState: any) => ({
             ...prevState,
-            text: newText, // populate text with an array of strings
+            text: newText,
         }));
     }, [availableSections]);
 
 
-
     return (
         <>
-
             <UserHeader
                 currentState={currentState}
                 handleUndo={handleUndo}
@@ -83,7 +82,6 @@ export default function Page() {
                     />
                 </div>
             </div>
-
         </>
     );
 }

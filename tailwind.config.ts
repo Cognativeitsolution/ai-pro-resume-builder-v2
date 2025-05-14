@@ -8,6 +8,12 @@ export default {
   ],
   theme: {
     extend: {
+      width: {
+        a4: '794px',
+      },
+      height: {
+        a4: '1123px',
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -36,8 +42,6 @@ export default {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
-
-
       },
       animation: {
         fadeInUp: "fadeInUp 0.5s ease-out forwards",
@@ -50,7 +54,6 @@ export default {
         'secondary': 'linear-gradient(to right, #9885FF, #79A9FF)',
         'primary2': 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.7) 100%)',
         'primary3': 'linear-gradient(to right, #9885FF,#79A9FF)',
-
       },
     },
   },
