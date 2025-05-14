@@ -97,7 +97,7 @@ const AllAwards = ({
   };
 
   return (
-    <div ref={containerRef} onClick={handleEditableSection} >
+    <div ref={containerRef} className={`py-4 flex bg-white flex-col gap-4 ${editable && templateColor && 'bg-slate-300/30'}`} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleAddAward}>
@@ -120,7 +120,6 @@ const AllAwards = ({
                 color,
                 border: hoveredIndex === index ? `1px solid ${templateColor}` : 'none',
               }}
-
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
                   setHoveredIndex(index);

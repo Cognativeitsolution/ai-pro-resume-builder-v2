@@ -96,7 +96,7 @@ const AllReferences = ({
   };
 
   return (
-    <div ref={containerRef} onClick={handleEditableSection} >
+    <div ref={containerRef} className={`py-4 flex bg-white flex-col gap-4 ${editable && templateColor && 'bg-slate-300/30'}`} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleAddReference}>
@@ -107,12 +107,12 @@ const AllReferences = ({
           </button>
         </div>
       )}
-      <div className="flex flex-wrap gap-2 mt-1 ">
+      <div className="flex flex-wrap gap-2 mt-1">
         {references.length > 0 ?
           references.map((award, index) => (
             <div
               key={index}
-              className={` flex items-center gap-2 rounded-lg opacity-75 backdrop-blur-[40px] 
+              className={`flex w-full justify-between items-center gap-2 rounded-lg opacity-75 backdrop-blur-[40px] 
                 font-medium px-3 py-1 transition-all duration-500 ease-in-out ${hoveredIndex === index ? 'pr-5' : ''
                 }`}
               style={{

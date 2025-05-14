@@ -18,7 +18,7 @@ const TechnicalSkills = ({ sectionData, handleAddSec }: { sectionData: any, hand
     <div className="group p-5 shadow-md bg-white relative cursor-pointer border border-[#CECECE] overflow-hidden h-56 hover:bg-primary2 rounded-[10px] transition-all">
       <div className="text-start space-y-1">
         <h1 className="border-black border-b-2 mb-2 text-lg font-semibold">Technical Skills</h1>
-        <p className="text-xs text-gray-500">Frontend Developer</p>
+        <p className="text-xs  text-indigo-700">Frontend Developer</p>
         <div className='grid grid-cols-4 gap-x-2'>
           {
             skillsList?.map((skill: any, index: any) => (
