@@ -6,10 +6,10 @@ import { FaCheck, FaPlus } from 'react-icons/fa6';
 // =============
 import { CustomButton } from '@/components';
 import usePopup from '@/app/configs/store/Popup';
-import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
+import AddSectionClipPath from '../common/clipPath/addSectionClipPath';
 
-// { sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }
-const Popup = () => {
+
+const Popup = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
     const [selectedFields, setSelectedFields] = useState<string[]>(['Title']);
     const { popup, togglePopup } = usePopup();
 
@@ -17,7 +17,6 @@ const Popup = () => {
     const popupHandle = () => {
         togglePopup(popup);
     };
-
     if (!popup) return null;
 
     // ===== CheckBox
@@ -27,14 +26,16 @@ const Popup = () => {
         );
     };
 
-    // ===== Add Section
-    // const handleAddSection = () => {
-    //     handleAddSec({
-    //         id: 12,
-    //         name: "Custom_Section",
-    //         description: ""
-    //     })
-    // };
+    const handleAddSection = () => {
+        handleAddSec({
+            id: 12,
+            name: "Custom_Section",
+            description: "",
+        });
+
+        // Optionally close popup after adding
+        togglePopup(true); // or false depending on your logic
+    };
 
     return (
         <div className="popup fixed inset-0 z-50">
@@ -83,14 +84,14 @@ const Popup = () => {
                             </div>
                         </div>
 
-                        {/* {sectionData?.locked && <AddSectionClipPath />} */}
+                        {sectionData?.locked && <AddSectionClipPath />}
 
                         {/*===== Add section =====*/}
                         <div className="flex items-center justify-center mt-8">
                             <CustomButton className="bg-primary3 w-max px-3 py-2 rounded-[4px]"
                                 title='Add Section'
                                 altColor='text-white'
-                                // onClick={handleAddSection}
+                                onClick={handleAddSection}
                             />
                         </div>
                     </div>

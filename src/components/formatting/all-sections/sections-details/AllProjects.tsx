@@ -103,7 +103,7 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
       <div className="flex flex-col gap-3">
         {projects.map((project, index) => (
           <div key={index}>
-            <div className="flex gap-1 flex-col">
+            <div className="flex flex-col">
               {/* ====== Degree and Field of Study ====== */}
               <div className="flex items-center justify-between">
                 <div className='w-full'>
