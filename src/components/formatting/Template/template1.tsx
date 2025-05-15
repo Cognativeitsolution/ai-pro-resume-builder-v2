@@ -17,6 +17,7 @@ import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
+import * as FaIcons from 'react-icons/fa';
 
 type CurrentState = {
     fontSize: any;
@@ -205,19 +206,19 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                             fontSize: scaleFont(24, currentState.fontSize),
                             fontFamily: currentState.fontFamily,
                         }}>
-                            <IconDropdown />
+                            <IconDropdown icons={FaIcons} />
                             <span>Contact Info</span>
                         </div>
                         <div className="flex gap-2 text-white">
-                            <IconDropdown />
+                            <IconDropdown icons={FaIcons} />
                             <input placeholder="Phone" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
                         </div>
                         <div className="flex gap-2 text-white">
-                            <IconDropdown />
+                            <IconDropdown icons={FaIcons} />
                             <input placeholder="Email" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
                         </div>
                         <div className="flex gap-2 text-white">
-                            <IconDropdown />
+                            <IconDropdown icons={FaIcons} />
                             <textarea placeholder="Address" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
                         </div>
                     </div>

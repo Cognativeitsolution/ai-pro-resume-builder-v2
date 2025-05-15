@@ -1,175 +1,168 @@
 'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TiDelete } from 'react-icons/ti';
-import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
 import { AddUserReferences, removeSection } from '@/redux/slices/addSectionSlice';
-import { FaAward, FaDiamond } from 'react-icons/fa6';
+import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
+import { TiDelete } from 'react-icons/ti';
 
 type ReferenceType = {
-  title: string;
-  // icon?: number;
+  name: string;
+  contact: string;
 };
 
-type AllReferencesProps = {
-  data?: { id: any };
+type AllSummaryType = {
+  data?: any;
   color?: string;
   templateColor: string;
 };
 
 const AllReferences = ({
-  data = { id: '' },
+  data = {},
   color = '#fff',
-  templateColor,
-}: any) => {
+  templateColor
+}: AllSummaryType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userReferences } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [references, setReferences] = useState<ReferenceType[]>([]);
 
   useEffect(() => {
     if (Array.isArray(userReferences) && userReferences.length > 0) {
-      const normalizedReferences = userReferences.map(award => ({
-        title: award.title ?? '',
-        // level: award.level ?? 0,
+      const normalizedReferences = userReferences.map(Reference => ({
+        name: Reference.name ?? '',
+        description: Reference.description ?? '',
+        contact: Reference.contact ?? '',
       }));
       setReferences(normalizedReferences);
     }
   }, [userReferences]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setEditable(false);
-        const validReferences = references.filter(award => award.title.trim() !== '');
-
-        console.log(validReferences, "1111==validReferences");
-
-        dispatch(AddUserReferences({
-          sectionId: data.id,
-          detail: validReferences
-        }));
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [references, dispatch, data.id]);
 
   const handleEditableSection = () => setEditable(true);
 
   const handleAddReference = () => {
-    setReferences([...references, { title: '' }]);
+    setReferences([...references, { name: '', contact: '' }]);
   };
 
-  const handleDeleteReference = (index: number) => {
+  const handleRemoveSection = () => {
+    if (data) {
+      dispatch(removeSection(data));
+      dispatch(AddUserReferences({ sectionId: data.id, detail: [] }));
+    }
+  };
+
+  const handleInputChange = (index: number, field: keyof ReferenceType, value: string) => {
+    const updated = [...references];
+    updated[index] = { ...updated[index], [field]: value };
+    setReferences(updated);
+  };
+
+  const handleDelete = (index: number) => {
     const updated = references.filter((_, i) => i !== index);
     setReferences(updated);
   };
 
-  const handleInputChange = (index: number, value: string) => {
-    const updated = [...references];
-    updated[index].title = value;
-    setReferences(updated);
-  };
-
-  const handleRemoveSection = () => {
-    dispatch(removeSection(data));
-    dispatch(AddUserReferences({ sectionId: data.id, detail: [] }));
-  };
-
-  const handleAddFirstReference = (value: string) => {
-    const newSkill = { title: value.trim() };
-    if (newSkill.title !== '') {
-      setReferences([newSkill]);
-    }
-  };
-
   const handleBlur = (index: number) => {
-    if (references[index]?.title.trim() === '') {
+    if (references[index]?.name.trim() === '') {
       const updated = references.filter((_, i) => i !== index);
       setReferences(updated);
     }
   };
 
+  const handleAddFirstReference = (value: string) => {
+    const trimmedValue = value.trim();
+    if (trimmedValue !== '') {
+      setReferences([{ name: trimmedValue, contact: '' }]);
+    }
+  };
+
+
+
   return (
-    <div ref={containerRef} className={`py-4 flex bg-white flex-col gap-4 ${editable && templateColor && 'bg-slate-300/30'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col gap-4 bg-white `} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleAddReference}>
+          <button style={{ color }} onClick={handleAddReference}>
             <RiAddCircleFill size={24} />
           </button>
-          <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleRemoveSection}>
+          <button style={{ color }} onClick={handleRemoveSection}>
             <TiDelete size={30} />
           </button>
         </div>
       )}
-      <div className="flex flex-wrap gap-2 mt-1">
-        {references.length > 0 ?
-          references.map((award, index) => (
-            <div
-              key={index}
-              className={`flex w-full justify-between items-center gap-2 rounded-lg opacity-75 backdrop-blur-[40px] 
-                font-medium px-3 py-1 transition-all duration-500 ease-in-out ${hoveredIndex === index ? 'pr-5' : ''
-                }`}
-              style={{
-                color,
-                border: hoveredIndex === index ? `1px solid ${templateColor}` : 'none',
-              }}
 
-              onMouseOver={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                  setHoveredIndex(index);
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                  setHoveredIndex(null);
-                }
-              }}
-            >
-              {/* <span> <FaAward /></span> */}
-              <input
-                value={award.title}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                onBlur={() => handleBlur(index)}
-                placeholder="Reference Name"
-                className="bg-transparent text-sm truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out opacity-70 "
-                style={{ color }}
-                autoFocus
-              />
-              {hoveredIndex === index && (
-                <button onClick={() => handleDeleteReference(index)} className="text-red-600 opacity-70 hover:opacity-100">
-                  <RiDeleteBin6Line size={18} />
+      <div className="flex flex-col gap-3 ">
+        {references.length > 0 ? (
+          references.map((cert, index) => (
+            <div key={index} className='relative py-4'>
+              {/* ====== Job Name ====== */}
+              <div className="flex items-center gap-4 border border-indigo-300 rounded-sm px-2">
+                <div className='relative mr-5'>
+                  <input
+                    value={cert.name}
+                    onChange={(e) => handleInputChange(index, 'name', e.target.value)}
+                    onBlur={() => handleBlur(index)}
+                    placeholder="Reference Name"
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                  />
+                  <div className="after:content-[''] after:absolute after:top-[11px] after:-right-7 after:bg-indigo-300 after:h-[2px] after:w-5  "></div>
+                </div>
+                <input
+                  type="text"
+                  value={cert.contact}
+                  placeholder="Reference Contact"
+                  onBlur={() => handleBlur(index)}
+                  onChange={(e) => handleInputChange(index, 'contact', e.target.value)}
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
+                />
+              </div>
+              <div className="absolute top-4 right-2">
+                <button
+                  onClick={() => handleDelete(index)}
+                  className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                >
+                  <RiDeleteBin6Line size={16} />
                 </button>
-              )}
+              </div>
             </div>
           ))
-          : (
-            <div
-              className="flex items-center gap-2 rounded-lg opacity-75 backdrop-blur-[40px] font-medium  px-3 py-1"
-              style={{
-                color,
-                border: `1px solid ${templateColor}`,
-              }}
-            >
-              {/* <span> <FaReference /></span> */}
+        ) : (
+          <div className='relative py-4'>
+            {/* ====== Job Name ====== */}
+            <div className="flex items-center gap-4 border border-indigo-300 rounded-sm px-2">
+              <div className='relative mr-5'>
+                <input
+                  value=""
+                  onChange={(e) => handleAddFirstReference(e.target.value)}
+                  placeholder="Reference Name"
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                />
+                <div className="after:content-[''] after:absolute after:top-[11px] after:-right-7 after:bg-indigo-300 after:h-[2px] after:w-5  "></div>
+              </div>
               <input
-                value={''}
+                type="text"
+                placeholder="Reference Contact"
+                value=""
                 onChange={(e) => handleAddFirstReference(e.target.value)}
-                placeholder="Reference Name"
-                className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
-                style={{ color }}
-                autoFocus
+                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
               />
             </div>
-          )}
+            <div className="absolute top-4 right-2">
+              <button
+                className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+              >
+                <RiDeleteBin6Line size={16} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    </div >
   );
 };
 
 export default AllReferences;
+
