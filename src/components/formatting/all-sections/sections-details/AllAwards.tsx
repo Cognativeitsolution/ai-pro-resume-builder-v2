@@ -1,12 +1,12 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TiDelete } from 'react-icons/ti';
-import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
 import { addUserAwards, removeSection } from '@/redux/slices/addSectionSlice';
-import { FaDiamond } from 'react-icons/fa6';
 import { FaAward } from 'react-icons/fa';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
+
 
 type AwardType = {
   title: string;
@@ -99,23 +99,20 @@ const AllAwards = ({
   return (
     <div ref={containerRef} className={`py-4 flex bg-white flex-col gap-4 ${editable && templateColor && 'bg-slate-300/30'}`} onClick={handleEditableSection}>
       {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleAddAward}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
+        <SectionToolbar
+          onCopy={handleAddAward}
+          onDelete={handleRemoveSection}
+          // onMoveUp={handleAddAward}
+          position="top-8 right-2"
+          showDot={true}
+        />
       )}
-      <div className="flex flex-wrap gap-2 mt-1 ">
+      <div className="grid grid-cols-2 gap-2 mt-1 ">
         {awards.length > 0 ?
           awards.map((award, index) => (
             <div
               key={index}
-              className={` flex items-center gap-2 rounded-lg opacity-75 backdrop-blur-[40px] 
-                font-medium px-3 py-1 transition-all duration-500 ease-in-out ${hoveredIndex === index ? 'pr-5' : ''
-                }`}
+              className={` flex items-center gap-2 rounded-lg opacity-75 backdrop-blur-[40px] font-medium px-3 py-1 transition-all duration-500 ease-in-out `}
               style={{
                 color,
                 border: hoveredIndex === index ? `1px solid ${templateColor}` : 'none',
@@ -141,11 +138,11 @@ const AllAwards = ({
                 style={{ color }}
                 autoFocus
               />
-              {hoveredIndex === index && (
-                <button onClick={() => handleDeleteAward(index)} className="text-red-600 opacity-70 hover:opacity-100">
+              <div className={`transition-all duration-300 ease-in-out transform right-2 top-1 absolute  ${hoveredIndex === index ? 'translate-x-0 opacity-100' : 'translate-x-3 opacity-0'}`} >
+                <button onClick={() => handleDeleteAward(index)} className="text-red-600">
                   <RiDeleteBin6Line size={18} />
                 </button>
-              )}
+              </div>
             </div>
           ))
           : (

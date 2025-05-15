@@ -49,18 +49,18 @@ const Template3 = (props: ResumePreviewProps) => {
 
                         {data && data.name === "Summary" && <AllSummary data={data} />}
 
-                        {data?.name === "Experience" && (<AllExperiences data={data} />)}
+                        {data?.name === "Experience" && (<AllExperiences data={data} color="#000" templateColor="#fff" />)}
 
-                        {data?.name === "Education" && (<AllEducations data={data} />)}
+                        {data?.name === "Education" && (<AllEducations data={data} color="#000" templateColor="#fff" />)}
 
-                        {data && data.name === "Soft_Skills" && <AllSoftSkills data={data} />}
-                        {data && data.name === "Technical_Skills" && <AllTechnialSkills data={data} />}
-                        {data?.name === "Projects" && (<AllProjects data={data} />)}
-                        {data?.name === "Certificate" && (<AllCertificates data={data} />)}
-                        {data?.name === "Awards" && (<AllAwards data={data} />)}
-                        {data?.name === "Languages" && (<AllLanguages data={data} />)}
-                        {data?.name === "References" && (<AllReferences data={data} />)}
-                        {data?.name === "Custom_Section" && (<AllCustomSections data={data} />)}
+                        {data && data.name === "Soft_Skills" && <AllSoftSkills data={data} color="#000" templateColor="#fff" />}
+                        {data && data.name === "Technical_Skills" && <AllTechnialSkills data={data} color="#000" templateColor="#fff" />}
+                        {data?.name === "Projects" && (<AllProjects data={data} color="#000" templateColor="#fff" />)}
+                        {data?.name === "Certificate" && (<AllCertificates data={data} color="#000" templateColor="#fff" />)}
+                        {data?.name === "Awards" && (<AllAwards data={data} color="#000" templateColor="#fff" />)}
+                        {data?.name === "Languages" && (<AllLanguages data={data} color="#000" templateColor="#fff" />)}
+                        {data?.name === "References" && (<AllReferences data={data} color="#000" templateColor="#fff" />)}
+                        {data?.name === "Custom_Section" && (<AllCustomSections data={data} color="#000" templateColor="#fff" />)}
 
                     </div>
                 ))}
@@ -68,7 +68,6 @@ const Template3 = (props: ResumePreviewProps) => {
         </div>
     )
 }
-
 export default Template3
 
 
