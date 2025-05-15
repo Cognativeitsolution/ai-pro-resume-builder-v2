@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { NewFooter, NewHeader } from "@/components";
 import { PopupProvider } from "../configs/store/Popup"
-import Popup from "@/components/popup/Popup";
 
 const ConditionalLayout = ({ children }: any) => {
   const pathname = usePathname();
@@ -23,17 +22,14 @@ const ConditionalLayout = ({ children }: any) => {
   }
 
   return (
-    <>
-      <PopupProvider value={{ popup, togglePopup }}>
-        <>
-          <Popup />
-          {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <NewHeader />}
-          {/* {loading ? <SpinnerLoader /> : children} */}
-          {children}
-          <NewFooter />
-        </>
-      </PopupProvider>
-    </>
+    <PopupProvider value={{ popup, togglePopup }}>
+      <>
+        {pathname === "/create-resume/formatting" || pathname === "/formatting-new" ? null : <NewHeader />}
+        {/* {loading ? <SpinnerLoader /> : children} */}
+        {children}
+        <NewFooter />
+      </>
+    </PopupProvider>
   );
 };
 
