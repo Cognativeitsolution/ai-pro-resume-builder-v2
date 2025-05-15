@@ -131,7 +131,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 return <AllProjects data={section} color="#000" templateColor="#fff" />;
             case "Awards":
                 return <AllAwards data={section} color="#000" templateColor="#000" />;
-            case "Reference":
+            case "References":
                 return <AllReferences data={section} color="#000" templateColor="#000" />;
             case "Languages":
                 return <AllLanguages data={section} color="#fff" templateColor="#3358c5" />;
@@ -156,9 +156,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
 
     return (
-        <div className="w-a4 h-a4 flex relative" style={{ padding: `${currentState.padding || 0}px`, }} >
-            <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
-            <div className="w-[65%] z-10 p-6">
+        <div className="w-a4 h-a4 flex " style={{ padding: `${currentState.padding || 0}px`, }} >
+            {/* <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} /> */}
+            <div className="w-[65%] p-6">
                 {/*====== Header Left ======*/}
                 <div className="flex flex-col">
                     <input
@@ -194,7 +194,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
                 {loading && <p className="text-gray-500 mt-4">Checking for spelling/grammar errors...</p>}
             </div>
-            <div className={`w-[35%] z-10`} >
+            <div className={`w-[35%] `} style={{ backgroundColor: currentState.color }}>
                 {/*====== conact info ======*/}
                 <div className="p-3">
                     <div className="flex justify-center mb-2">
