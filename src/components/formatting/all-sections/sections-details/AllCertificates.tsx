@@ -115,7 +115,7 @@ const AllCertificates = ({
       <div className="flex flex-col gap-3 ">
         {certificates.length > 0 ? (
           certificates.map((cert, index) => (
-            <div key={index} className='relative border p-4'>
+            <div key={index} className='relative px-2 py-4'>
               {/* ====== Job Title ====== */}
               <div className="flex items-center justify-between">
                 <div className='w-full'>
@@ -148,7 +148,7 @@ const AllCertificates = ({
                   onChange={(e) => handleInputChange(index, 'description', e.target.value)}
                   placeholder="Description"
                   rows={2}
-                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
                 />
               </div>
               <div className="absolute bottom-2 right-2">
@@ -162,14 +162,19 @@ const AllCertificates = ({
             </div>
           ))
         ) : (
-          <div>
-            <div>
-              <input
-                value=""
-                onChange={(e) => handleAddFirstCertificate(e.target.value)}
-                placeholder="Title"
-                className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
-              />
+          <div className='relative px-2 py-4'>
+            {/* ====== Job Title ====== */}
+            <div className="flex items-center justify-between">
+              <div className='w-full'>
+                <input
+                  value=""
+                  onChange={(e) => handleAddFirstCertificate(e.target.value)}
+                  placeholder="Title"
+                  className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                />
+              </div>
+              {/* ====== Date Picker ====== */}
+              <CustomDatePicker onChange={(dates) => console.log(dates)} />
             </div>
             <div>
               <input
@@ -187,8 +192,16 @@ const AllCertificates = ({
                 onChange={(e) => handleAddFirstCertificate(e.target.value)}
                 placeholder="Description"
                 rows={2}
-                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
               />
+            </div>
+            <div className="absolute bottom-2 right-2">
+              <button
+                // onClick={() => handleDelete(index)}
+                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+              >
+                <RiDeleteBin6Line size={16} />
+              </button>
             </div>
           </div>
         )}

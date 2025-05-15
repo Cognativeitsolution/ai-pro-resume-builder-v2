@@ -1,13 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import * as FaIcons from 'react-icons/fa';
 import { IoMdAddCircle } from 'react-icons/io';
 
-const iconList = Object.keys(FaIcons).slice(0, 30);
+interface IconDropdownProps {
+    icons: Record<string, React.ComponentType<any>>; // Dynamic icons passed as props
+}
 
-export default function IconDropdown() {
+export default function IconDropdown({ icons }: IconDropdownProps) {
     const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const iconList = Object.keys(icons).slice(0, 50); // limit to first 30 for performance
 
     const handleClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -25,14 +28,16 @@ export default function IconDropdown() {
         setIsOpen(false);
     };
 
+    const SelectedIconComponent = selectedIcon ? icons[selectedIcon] : null;
+
     return (
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-[30px] flex justify-center items-start pt-1"
             >
-                {selectedIcon
-                    ? React.createElement(FaIcons[selectedIcon as keyof typeof FaIcons])
+                {SelectedIconComponent
+                    ? <SelectedIconComponent size={18} />
                     : <IoMdAddCircle size={18} />
                 }
             </button>
@@ -41,7 +46,7 @@ export default function IconDropdown() {
                 <div className="absolute z-10 mt-2 bg-white shadow-md border rounded-md p-2 w-60 max-h-72 overflow-y-auto">
                     <div className="grid grid-cols-4 gap-2">
                         {iconList.map((iconKey) => {
-                            const IconComponent = FaIcons[iconKey as keyof typeof FaIcons];
+                            const IconComponent = icons[iconKey];
                             return (
                                 <div
                                     key={iconKey}
