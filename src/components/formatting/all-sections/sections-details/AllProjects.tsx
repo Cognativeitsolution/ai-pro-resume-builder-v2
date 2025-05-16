@@ -8,7 +8,7 @@ import CustomDatePicker from '../../custom/CustomDatePicker';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUserProjects, removeSection } from '@/redux/slices/addSectionSlice';
-import { RiAddCircleFill } from 'react-icons/ri';
+import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 
 
@@ -84,9 +84,16 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
     };
   }, [projects, dispatch, data?.id]);
 
+  const handleAddFirstSoftSkill = (value: string) => {
+    const newSkill = { projectName: value.trim(), description: '', projectUrl: '', location: '' };
+    if (newSkill.projectName !== '') {
+      setProjects([newSkill]);
+    }
+  };
+
 
   return (
-    <div ref={containerRef} className={`border p-4 flex flex-col gap-4 ${editable && templateColor}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && templateColor}`} onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
@@ -100,10 +107,10 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
       )}
 
       {/* ===== Education Box ===== */}
-      <div className="flex flex-col gap-3">
-        {projects.map((project, index) => (
-          <div key={index}>
-            <div className="flex flex-col">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1">
+        {projects.length > 0 ? projects.map((project, index) => (
+          <div key={index} className=''>
+            <div className="flex flex-col mt-2">
               {/* ====== Degree and Field of Study ====== */}
               <div className="flex items-center justify-between">
                 <div className='w-full'>
@@ -125,7 +132,7 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
                     value={project.projectUrl}
                     placeholder="Project URL"
                     onChange={(e) => handleInputChange(index, 'projectUrl', e.target.value)}
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                   />
                 </div>
                 {/* ====== Location ====== */}
@@ -136,7 +143,7 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
                     disabled={!editable}
                     onChange={(e) => handleInputChange(index, 'location', e.target.value)}
                     placeholder="Location"
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
                   />
                 </div>
               </div>
@@ -153,14 +160,77 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
               </div>
             </div>
             {/* ====== Delete Button ====== */}
-            <div className="flex justify-end mt-5">
-              <button className="text-red-600 text-sm flex items-center gap-1" onClick={() => handleDelete(index)}>
-                <FaTrashAlt />
-                <span>Delete</span>
+            <div className="flex justify-end">
+              <button
+                onClick={() => handleDelete(index)}
+                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+              >
+                <RiDeleteBin6Line size={16} />
               </button>
             </div>
           </div>
-        ))}
+        )) :
+          <div className=''>
+            <div className="flex flex-col mt-2">
+              {/* ====== Degree and Field of Study ====== */}
+              <div className="flex items-center justify-between">
+                <div className='w-full'>
+                  <input
+                    placeholder="Project Name"
+                    value={''}
+                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                  />
+                </div>
+                {/* ====== Date Picker ====== */}
+                <CustomDatePicker onChange={(dates) => console.log(dates)} />
+              </div>
+              {/* ====== Project URL ====== */}
+              <div className="flex items-center justify-between">
+                <div className='w-full'>
+                  <input
+                    type="text"
+                    placeholder="Project URL"
+                    value={''}
+                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                  />
+                </div>
+                {/* ====== Location ====== */}
+                <div className='w-full'>
+                  <input
+                    type="text"
+                    disabled={!editable}
+                    value={''}
+                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                    placeholder="Location"
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
+                  />
+                </div>
+              </div>
+              {/* ====== Description ====== */}
+              <div>
+                <textarea
+                  disabled={!editable}
+                  value={''}
+                  onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                  placeholder="Short summary of your work"
+                  rows={2}
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                ></textarea>
+              </div>
+            </div>
+            {/* ====== Delete Button ====== */}
+            <div className="flex justify-end">
+              <button
+                // onClick={() => handleDelete(index)}
+                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+              >
+                <RiDeleteBin6Line size={16} />
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
   );

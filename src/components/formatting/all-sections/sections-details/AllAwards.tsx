@@ -115,7 +115,7 @@ const AllAwards = ({
               className={` flex items-center gap-2 rounded-lg opacity-75 backdrop-blur-[40px] font-medium px-3 py-1 transition-all duration-500 ease-in-out `}
               style={{
                 color,
-                border: hoveredIndex === index ? `1px solid ${templateColor}` : 'none',
+                border: hoveredIndex === index ? `1px solid ${templateColor}` : '1px solid transparent',
               }}
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {

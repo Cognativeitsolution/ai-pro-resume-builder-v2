@@ -8,7 +8,7 @@ import CustomDatePicker from '../../custom/CustomDatePicker';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUserExperience, removeSection } from '@/redux/slices/addSectionSlice';
-import { RiAddCircleFill } from 'react-icons/ri';
+import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 
 
@@ -87,9 +87,16 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
     };
   }, [experiences, dispatch, data?.id]);
 
+  const handleAddFirstSoftSkill = (value: string) => {
+    const newSkill = { title: value.trim(), description: '', companyName: '', location: '' };
+    if (newSkill.title !== '') {
+      setExperiences([newSkill]);
+    }
+  };
+
 
   return (
-    <div ref={containerRef} className={`border p-4 flex flex-col gap-4 ${editable && templateColor}}`}
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && templateColor}}`}
       onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
@@ -103,17 +110,78 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
         </div>
       )}
       {/* ===== Education Box ===== */}
-      <div className="flex flex-col gap-3">
-        {experiences.map((exp, index) => (
-          <div key={index}>
-            <div className="flex flex-col">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1">
+        {experiences.length > 0 ?
+          experiences.map((exp, index) => (
+            <div key={index}>
+              <div className="flex flex-col mt-2">
+                {/* ====== Job Title ====== */}
+                <div className="flex items-center justify-between">
+                  <div className='w-full'>
+                    <input
+                      value={exp.title}
+                      placeholder="Title"
+                      onChange={(e) => handleInputChange(index, 'title', e.target.value)}
+                      className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                    />
+                  </div>
+                  {/* ====== Date Picker ====== */}
+                  <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                </div>
+                {/* ====== Company Name ====== */}
+                <div className="flex items-center justify-between">
+                  <div className='w-full'>
+                    <input
+                      type="text"
+                      value={exp.companyName}
+                      placeholder="Company Name"
+                      onChange={(e) => handleInputChange(index, 'companyName', e.target.value)}
+                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
+                    />
+                  </div>
+                  {/* ====== Location ====== */}
+                  <div className='w-full'>
+                    <input
+                      type="text"
+                      value={exp.location || ''}
+                      disabled={!editable}
+                      onChange={(e) => handleInputChange(index, 'location', e.target.value)}
+                      placeholder="Location"
+                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
+                    />
+                  </div>
+                </div>
+                {/* ====== Description ====== */}
+                <div>
+                  <textarea
+                    value={exp.description}
+                    disabled={!editable}
+                    onChange={(e) => handleInputChange(index, 'description', e.target.value)}
+                    placeholder="Description"
+                    rows={2}
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                  ></textarea>
+                </div>
+              </div>
+              {/* ====== Delete Button ====== */}
+              <div className="flex justify-end mt-2">
+                <button
+                  className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                  onClick={() => handleDelete(index)}>
+                  <RiDeleteBin6Line size={16} />
+                </button>
+              </div>
+            </div>
+          )) :
+          <div>
+            <div className="flex flex-col mt-2">
               {/* ====== Job Title ====== */}
               <div className="flex items-center justify-between">
                 <div className='w-full'>
                   <input
-                    value={exp.title}
                     placeholder="Title"
-                    onChange={(e) => handleInputChange(index, 'title', e.target.value)}
+                    value={''}
+                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                   />
                 </div>
@@ -125,9 +193,9 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
                 <div className='w-full'>
                   <input
                     type="text"
-                    value={exp.companyName}
                     placeholder="Company Name"
-                    onChange={(e) => handleInputChange(index, 'companyName', e.target.value)}
+                    value={''}
+                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
                   />
                 </div>
@@ -135,9 +203,9 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
                 <div className='w-full'>
                   <input
                     type="text"
-                    value={exp.location || ''}
                     disabled={!editable}
-                    onChange={(e) => handleInputChange(index, 'location', e.target.value)}
+                    value={''}
+                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     placeholder="Location"
                     className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
                   />
@@ -146,9 +214,9 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
               {/* ====== Description ====== */}
               <div>
                 <textarea
-                  value={exp.description}
                   disabled={!editable}
-                  onChange={(e) => handleInputChange(index, 'description', e.target.value)}
+                  value={''}
+                  onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                   placeholder="Description"
                   rows={2}
                   className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
@@ -156,14 +224,15 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
               </div>
             </div>
             {/* ====== Delete Button ====== */}
-            <div className="flex justify-end mt-5">
-              <button className="text-red-600 text-sm flex items-center gap-1" onClick={() => handleDelete(index)}>
-                <FaTrashAlt />
-                <span>Delete</span>
+            <div className="flex justify-end mt-2">
+              <button
+                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+              >
+                <RiDeleteBin6Line size={16} />
               </button>
             </div>
           </div>
-        ))}
+        }
       </div>
 
 

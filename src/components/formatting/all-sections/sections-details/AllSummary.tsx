@@ -45,16 +45,19 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
     }, [data?.description]);
 
     return (
-        <div ref={containerRef} className={`border p-4 relative flex flex-col gap-4 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
-            <h1>{data?.name}</h1>
-
-            <div className="mt-1 flex flex-wrap gap-2">
-                <textarea
-                    value={inputData}
-                    className='border w-full'
-                    onChange={handleDataChange}
-                    placeholder='Full Name'
-                />
+        <div ref={containerRef} className={`p-1 relative flex flex-col gap-4 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+            <div className="flex flex-wrap gap-2">
+                {editable ?
+                    <textarea
+                        value={inputData}
+                        className="w-full min-h-[80px]  text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                        onChange={handleDataChange}
+                        placeholder='Full Name'
+                    /> :
+                    <p className="w-full min-h-[80px]  text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0">
+                        {inputData}
+                    </p>
+                }
             </div>
 
         </div>
