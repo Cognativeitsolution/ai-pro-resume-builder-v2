@@ -26,7 +26,6 @@ const TechnicalSkills = ({ sectionData, handleAddSec }: { sectionData: any, hand
             ))
           }
         </div>
-        <hr className="border-gray-300" />
       </div>
 
       {sectionData?.locked && <AddSectionClipPath />}
