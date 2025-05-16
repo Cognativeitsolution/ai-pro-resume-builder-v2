@@ -1,22 +1,28 @@
 "use client";
-// ==============
+// ============
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-// ==============
+import { useSelector, useDispatch } from "react-redux";
+// ============
+import Popup from '@/components/popup/Popup';
+import usePopup from '@/app/configs/store/Popup';
+import { addNewSection } from "@/redux/slices/addSectionSlice";
 import { ResumeActiveTemplate, TextEditor, UserHeader } from "@/components";
+import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
 
 
-export default function Page() {
-    const { availableSections } = useSelector((state: RootState) => state.addSection);
-    const { fontFamily, fontSize, color } = useSelector((state: any) => state.font)
+const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
+    const dispatch = useDispatch();
+    const { availableSections, addedSections } = useSelector((state: RootState) => state.addSection);
+    const { fontFamily, fontSize, color } = useSelector((state: any) => state.font);
+
     const [currentState, setCurrentState] = useState<any>({
-        fontSize: fontSize,
+        fontSize,
         fontWeight: "normal",
-        color: color,
+        color,
         selectedIndex: 0,
         text: [],
-        fontFamily: fontFamily,
+        fontFamily,
         margin: 0,
         padding: "8px",
     });
@@ -49,18 +55,27 @@ export default function Page() {
             setFuture(future.slice(1));
         }
     };
+
     useEffect(() => {
-        // Ensure text is an array of strings
         const newText = availableSections.map((section: any) => section.text || '');
-        setCurrentState((prevState: any) => ({
-            ...prevState,
+        setCurrentState((prev: any) => ({
+            ...prev,
             text: newText,
         }));
     }, [availableSections]);
 
+    const { popup, togglePopup } = usePopup();
+
+    const handleAddSection = (newSection: any) => {
+        dispatch(addNewSection(newSection));
+        togglePopup(true);
+    };
 
     return (
         <>
+            {sectionData?.locked && <AddSectionClipPath />}
+            {popup && <Popup handleAddSec={handleAddSection} sectionData={sectionData} />}
+
             <UserHeader
                 currentState={currentState}
                 handleUndo={handleUndo}
@@ -70,18 +85,18 @@ export default function Page() {
             />
             <div className="grid grid-cols-12 px-5 mt-28 mb-10">
                 <div className="col-span-4">
-                    <TextEditor
-                        currentState={currentState}
-                        updateState={updateState}
-                    />
+                    <TextEditor currentState={currentState} updateState={updateState} />
                 </div>
                 <div className="col-span-8">
                     <ResumeActiveTemplate
                         currentState={currentState}
                         updateState={updateState}
+                        addedSections={addedSections}
                     />
                 </div>
             </div>
         </>
     );
-}
+};
+
+export default ResumeEditor;

@@ -24,7 +24,7 @@ export default {
         primary: ["var(--font-primary),sans-serif"],
       },
       width: {
-        a4: '794px',
+        a4: '796px',
       },
       height: {
         a4: '1123px',
