@@ -116,7 +116,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             );
         });
     };
-
+    // ========== Render Sections
     const renderSection = (section: any) => {
         switch (section?.name) {
             case "Summary":
