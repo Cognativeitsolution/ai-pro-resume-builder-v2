@@ -26,7 +26,6 @@ const SoftSkills = ({ sectionData, handleAddSec }: { sectionData: any, handleAdd
             ))
           }
         </div>
-        <hr className="border-gray-300" />
       </div>
 
       {sectionData?.locked && <AddSectionClipPath />}
