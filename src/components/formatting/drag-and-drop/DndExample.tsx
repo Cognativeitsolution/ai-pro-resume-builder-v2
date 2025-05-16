@@ -25,7 +25,7 @@ const DndExample = ({ doubleColumn }: propsType) => {
     (state: any) => state.addSection.addedSections
   );
 
-  const rightSideSections = ["Technical_Skills", "Soft_Skills", "Languages", "References"];
+  const rightSideSections = ["Technical Skills", "Soft Skills", "Languages", "References"];
   const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
   const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 
@@ -46,7 +46,7 @@ const DndExample = ({ doubleColumn }: propsType) => {
     // Prevent moving between left/right columns
     if (sourceCol !== destCol) return;
 
-    const updatedSections = [...addedSections];
+    const updatedSections: any = [...addedSections];
 
     // Get actual section arrays based on column
     const targetGroup =
@@ -54,8 +54,8 @@ const DndExample = ({ doubleColumn }: propsType) => {
         ? addedSections.filter((section: any) => !rightSideSections.includes(section.name))
         : addedSections.filter((section: any) => rightSideSections.includes(section.name));
 
-    const startIdx = addedSections.findIndex((s) => s.id === targetGroup[source.index]?.id);
-    const endIdx = addedSections.findIndex((s) => s.id === targetGroup[destination.index]?.id);
+    const startIdx = addedSections.findIndex((s: any) => s.id === targetGroup[source.index]?.id);
+    const endIdx = addedSections.findIndex((s: any) => s.id === targetGroup[destination.index]?.id);
 
     if (startIdx === -1 || endIdx === -1) return;
 
@@ -65,8 +65,6 @@ const DndExample = ({ doubleColumn }: propsType) => {
     dispatch(reorderSections(updatedSections));
   };
   // old middle work end
-
-
 
   if (!addedSections.length) return <LoadingSkeleton />;
 

@@ -6,6 +6,7 @@ type SectionType = {
   name?: string;
   locked?: boolean;
   description?: string;
+  newSecName?: any;
 };
 
 type AddSectionState = {
@@ -44,12 +45,12 @@ const initialState: AddSectionState = {
     },
     {
       id: 6,
-      name: "Soft_Skills",
+      name: "Soft Skills",
       locked: true,
     },
     {
       id: 7,
-      name: "Technical_Skills",
+      name: "Technical Skills",
       locked: true,
     },
     {
@@ -73,7 +74,8 @@ const initialState: AddSectionState = {
     },
     {
       id: 12,
-      name: "Custom_Section"
+      name: "Custom Section",
+      newSecName: "",
     },
   ],
   addedSections: [
@@ -86,7 +88,7 @@ const initialState: AddSectionState = {
     {
       id: 2,
       name: "Summary",
-      description: "Developed scalable web applications using modern frameworks and cloud infrastructure",
+      description: "Briefly explain why you're a great fit for the role - use the AI assistant to tailor this summary for each job posting.",
       locked: true,
     },
 
@@ -126,7 +128,7 @@ export const addSectionSlice = createSlice({
     },
     addUserHeader: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      // console.log(sectionId, detail, "===>userHeader");
+      console.log(sectionId, detail, "4444===>userHeader");
       const section = state.addedSections.find(sec => sec.id === sectionId);
       if (section) {
         section.description = detail;
@@ -134,12 +136,10 @@ export const addSectionSlice = createSlice({
     },
     addUserSummary: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      // console.log(sectionId, detail, "=======userSummary");
       const section = state.addedSections.find(sec => sec.id === sectionId);
-      if (section) {
-        section.description = detail;
-      }
-
+     if (section) {
+       section.description = detail;
+     }
     },
     addUserSoft_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
@@ -169,7 +169,7 @@ export const addSectionSlice = createSlice({
     addUserCertificates: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
       // console.log(sectionId, detail, "userCertificates");
-      state.userCertificates.push(detail);
+      state.userCertificates=detail;
     },
 
     AddUserReferences: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
@@ -183,10 +183,17 @@ export const addSectionSlice = createSlice({
       state.userLanguages = detail
     },
 
-    addUserCustomSection: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
-      const { sectionId, detail } = action.payload;
-      // console.log(sectionId, detail, "userCustomSections");
+    addUserCustomSection: (state, action: PayloadAction<{ sectionId: number; detail: any, newSecName: any }>) => {
+      const { sectionId, detail, newSecName } = action.payload;
+      console.log(sectionId, detail,newSecName, "addUserSummaryaddUserSummaryaddUserSummary");
       state.userCustomSections = detail
+
+       const section = state.availableSections.find(sec => sec.id === sectionId);
+     if (section) {
+       section.name = newSecName;
+       section.newSecName= newSecName;
+     }
+
     },
 
     addUserAwards: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {

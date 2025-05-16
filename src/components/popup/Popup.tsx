@@ -19,7 +19,7 @@ const Popup = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: 
     const handleAddSection = () => {
         handleAddSec({
             id: 12,
-            name: "Custom_Section",
+            name: "Custom Section",
             description: "",
         });
     };

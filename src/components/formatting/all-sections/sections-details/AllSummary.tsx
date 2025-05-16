@@ -25,7 +25,6 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setEditable(false);
-
                 dispatch(addUserSummary({
                     sectionId: data.id,
                     detail: inputData

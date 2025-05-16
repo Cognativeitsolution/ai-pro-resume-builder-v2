@@ -8,7 +8,7 @@ const TechnicalSkills = ({ sectionData, handleAddSec }: { sectionData: any, hand
   const handleAddSection = () => {
     handleAddSec({
       id: 7,
-      name: "Technical_Skills",
+      name: "Technical Skills",
       description: "",
       locked: false
     })

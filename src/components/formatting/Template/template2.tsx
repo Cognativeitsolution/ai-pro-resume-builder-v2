@@ -113,15 +113,15 @@ const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
     const renderSection = (section: any) => {
         switch (section?.name) {
             case "Skills":
-                return <AllSoftSkills data={section} />;
+            // return <AllSoftSkills data={section} />;
             case "Certificate":
-                return <AllCertificates data={section} />;
+            // return <AllCertificates data={section} />;
             case "Education":
-                return <AllEducations data={section} />;
+            // return <AllEducations data={section} />;
             case "Experience":
-                return <AllExperiences data={section} />;
+            // return <AllExperiences data={section} />;
             case "Projects":
-                return <AllProjects data={section} />;
+            // return <AllProjects data={section} />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
@@ -135,7 +135,7 @@ const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
         };
         return `${base * (scaleMap[size] || 1)}px`;
     };
-    const rightSideSections = ["Technical_Skills", "Soft_Skills", "Languages", "References"];
+    const rightSideSections = ["Technical Skills", "Soft Skills", "Languages", "References"];
     const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
     const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 
@@ -199,19 +199,19 @@ const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
                             fontSize: scaleFont(24, currentState.fontSize),
                             fontFamily: currentState.fontFamily,
                         }}>
-                            <IconDropdown />
+                            {/* <IconDropdown /> */}
                             <span>Contact Info</span>
                         </div>
                         <div className="flex gap-2 text-white">
-                            <IconDropdown />
+                            {/* <IconDropdown /> */}
                             <input placeholder="Phone" className="w-full placeholder-white outline-none bg-transparent" />
                         </div>
                         <div className="flex gap-2 text-white">
-                            <IconDropdown />
+                            {/* <IconDropdown /> */}
                             <input placeholder="Email" className="w-full placeholder-white outline-none bg-transparent" />
                         </div>
                         <div className="flex gap-2 text-white">
-                            <IconDropdown />
+                            {/* <IconDropdown /> */}
                             <input placeholder="Address" className="w-full placeholder-white outline-none bg-transparent" />
                         </div>
 
