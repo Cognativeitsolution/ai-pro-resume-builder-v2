@@ -6,6 +6,7 @@ const NewFooter = dynamic(() => import("./Layout/newFooter/NewFooter"));
 const Header = dynamic(() => import("./Layout/header/Header"));
 const Footer = dynamic(() => import("./Layout/footer/Footer"));
 const TextEditor = dynamic(() => import("./formatting/TextEditor/TextEditor"));
+const ResumeEditor = dynamic(() => import("./resumeEditor/ResumeEditor"));
 const Template = dynamic(() => import("./formatting/Template/template"));
 const Rearrange = dynamic(() => import("./formatting/rearrange/rearrange"));
 const DndContext = dynamic(() => import("./formatting/drag-and-drop/DndContext"));
@@ -74,6 +75,7 @@ export {
   AutoPlaySlider,
   AutoScrollSlider,
   TextEditor,
+  ResumeEditor,
   NewSection,
   ResumeActiveTemplate,
   Ads,

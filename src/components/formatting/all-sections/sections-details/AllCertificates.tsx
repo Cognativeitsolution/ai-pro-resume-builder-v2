@@ -137,7 +137,7 @@ const AllCertificates = ({
                   placeholder="Institution Name"
                   onBlur={() => handleBlur(index)}
                   onChange={(e) => handleInputChange(index, 'institutionName', e.target.value)}
-                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-indigo-400"
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                 />
               </div>
               <div>
@@ -182,7 +182,7 @@ const AllCertificates = ({
                 placeholder="Institution Name"
                 value=""
                 onChange={(e) => handleAddFirstCertificate(e.target.value)}
-                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-indigo-400"
+                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
               />
             </div>
             <div>

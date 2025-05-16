@@ -2,19 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #79a9ff;
+  background: #2c2c2c;
   border-radius: 20px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #9885ff;
+  background: #9f9f9f;
   border-radius: 20px;
 }
-

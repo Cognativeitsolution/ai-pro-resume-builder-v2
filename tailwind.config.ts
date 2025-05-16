@@ -24,10 +24,10 @@ export default {
         primary: ["var(--font-primary),sans-serif"],
       },
       width: {
-        a4: '794px',
+        a4: '940px',
       },
       height: {
-        a4: '1123px',
+        a4: '1330px',
       },
       colors: {
         background: "var(--background)",

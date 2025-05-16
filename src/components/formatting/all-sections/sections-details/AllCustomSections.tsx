@@ -89,8 +89,7 @@ const AllCustomSection = ({ data = {}, color = '#000', templateColor, }: AllCust
 
 
   return (
-    <div ref={containerRef} className={`border p-4 flex flex-col gap-4 ${editable && templateColor}}`}
-      onClick={handleEditableSection}>
+    <div ref={containerRef} className={`border p-4 flex flex-col gap-4 ${editable ? templateColor : ''}`} onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">

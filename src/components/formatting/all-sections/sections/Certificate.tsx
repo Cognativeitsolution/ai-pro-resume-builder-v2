@@ -16,11 +16,9 @@ const Certificate = ({ sectionData, handleAddSec }: { sectionData: any, handleAd
       <div className="text-start space-y-1">
         <h1 className="border-black border-b-2 mb-2 text-lg font-semibold">Certification</h1>
         <p className="text-xs text-gray-700">Lorem ipsum dolor, sit amet cons</p>
-        <p className="text-xs text-gray-700">Consectetur</p>
-        <hr className="border-gray-300" />
+        <p className="text-xs text-gray-700 border-b group-hover:border-b-gray-500">Consectetur</p>
         <p className="text-xs mt-2 text-gray-700">Consectetur adipisicing</p>
-        <p className="text-xs text-gray-700">Consectetur gone</p>
-        <hr className="border-gray-300" />
+        <p className="text-xs text-gray-700 border-b group-hover:border-b-gray-500">Consectetur gone</p>
       </div>
 
       {sectionData?.locked && <AddSectionClipPath />}

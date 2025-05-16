@@ -8,7 +8,6 @@ import Template2 from "../Template/template2";
 import Template3 from "../Template/template3";
 import Template10 from "../Template/template10";
 
-
 type CurrentState = {
   fontSize: string;
   fontFamily: string;
@@ -22,9 +21,10 @@ type CurrentState = {
 type ResumePreviewProps = {
   currentState: CurrentState;
   updateState: (newState: CurrentState) => void;
+  addedSections?: any
 };
 
-const ResumeActiveTemplate = ({ currentState, updateState }: ResumePreviewProps) => {
+const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
   console.log(selectedTemplate, "selectedTemplate===========>")
 

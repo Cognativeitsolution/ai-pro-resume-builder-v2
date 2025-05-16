@@ -1,29 +1,19 @@
-'use client'
-// =============
+'use client';
+// ============
 import React, { useState } from 'react';
 import { FaHome } from 'react-icons/fa';
 import { FaCheck, FaPlus } from 'react-icons/fa6';
-// =============
+// ============
 import { CustomButton } from '@/components';
 import usePopup from '@/app/configs/store/Popup';
 import AddSectionClipPath from '../common/clipPath/addSectionClipPath';
-
 
 const Popup = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: any }) => {
     const [selectedFields, setSelectedFields] = useState<string[]>(['Title']);
     const { popup, togglePopup } = usePopup();
 
-    // ===== Popup
     const popupHandle = () => {
         togglePopup(popup);
-    };
-    if (!popup) return null;
-
-    // ===== CheckBox
-    const handleCheckboxChange = (field: string) => {
-        setSelectedFields(prev =>
-            prev.includes(field) ? prev.filter(f => f !== field) : [...prev, field]
-        );
     };
 
     const handleAddSection = () => {
@@ -32,10 +22,9 @@ const Popup = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: 
             name: "Custom_Section",
             description: "",
         });
-
-        // Optionally close popup after adding
-        togglePopup(true); // or false depending on your logic
     };
+
+    if (!popup) return null;
 
     return (
         <div className="popup fixed inset-0 z-50">
@@ -44,7 +33,7 @@ const Popup = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: 
                     <div className="w-2/4 mx-auto bg-white border border-indigo-200 rounded-md p-10 relative">
                         <FaPlus onClick={popupHandle} className='absolute right-2 top-2 rotate-45 hover:-rotate-45 transition-all duration-300 text-[24px] cursor-pointer text-primaryBlue' />
                         <h3 className='text-[30px] font-medium text-center mb-10'>Custom section</h3>
-                        {/*===== Section Data =====*/}
+
                         <div className="grid grid-cols-2 gap-10">
                             <div className="bg-white rounded-md shadow-lg p-5 w-3/4">
                                 <h3 className='text-[20px] font-medium underline mb-1'>Section Title</h3>
@@ -62,7 +51,7 @@ const Popup = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: 
                                     )}
                                 </div>
                             </div>
-                            {/*===== CheckBox =====*/}
+
                             <div className="flex flex-col gap-3">
                                 <h5 className='text-[18px]'>What should this section have?</h5>
                                 <div className='flex flex-col gap-2'>
@@ -72,7 +61,11 @@ const Popup = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: 
                                                 type="checkbox"
                                                 className="sr-only peer"
                                                 checked={selectedFields.includes(field)}
-                                                onChange={() => handleCheckboxChange(field)}
+                                                onChange={() => setSelectedFields(prev =>
+                                                    prev.includes(field)
+                                                        ? prev.filter(f => f !== field)
+                                                        : [...prev, field]
+                                                )}
                                             />
                                             <div className="w-5 h-5 rounded border border-gray-400 peer-checked:border-primaryBlue peer-checked:bg-primaryBlue flex items-center justify-center transition-colors duration-150">
                                                 {selectedFields.includes(field) && <FaCheck className='text-white' />}
@@ -86,9 +79,9 @@ const Popup = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec: 
 
                         {sectionData?.locked && <AddSectionClipPath />}
 
-                        {/*===== Add section =====*/}
                         <div className="flex items-center justify-center mt-8">
-                            <CustomButton className="bg-primary3 w-max px-3 py-2 rounded-[4px]"
+                            <CustomButton
+                                className="bg-primary3 w-max px-3 py-2 rounded-[4px]"
                                 title='Add Section'
                                 altColor='text-white'
                                 onClick={handleAddSection}

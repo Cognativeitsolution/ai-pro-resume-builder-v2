@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
 //===== Section Components =====
+import AllSummary from "../all-sections/sections-details/AllSummary";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
 import AllEducations from "../all-sections/sections-details/AllEducations";
 import AllExperiences from "../all-sections/sections-details/AllExperiences";
@@ -118,6 +119,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
     const renderSection = (section: any) => {
         switch (section?.name) {
+            case "Summary":
+                return <AllSummary data={section} />;
             case "Soft_Skills":
                 return <AllSoftSkills data={section} color="#000" templateColor="#fff" />;
             case "Technical_Skills":
@@ -157,86 +160,99 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
 
     return (
-        <div className="w-a4 h-a4 flex " style={{ padding: `${currentState.padding || 0}px`, }} >
-            {/* <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} /> */}
-            <div className="w-[65%] p-6">
-                {/*====== Header Left ======*/}
-                <div className="flex flex-col">
-                    <input
-                        placeholder="Name"
-                        className="outline-none focus:bg-transparent font-semibold"
-                        style={{
-                            fontSize: scaleFont(30, currentState.fontSize),
-                            fontFamily: currentState.fontFamily,
-                        }}
-                    />
-                    <input
-                        placeholder="Designation"
-                        className="outline-none focus:bg-transparent font-semibold"
-                        style={{
-                            fontSize: scaleFont(18, currentState.fontSize),
-                            fontFamily: currentState.fontFamily,
-                        }}
-                    />
-                </div>
-                {/*====== Left Sections ======*/}
-                {leftSections?.length > 0 ? (
-                    leftSections.map((section: any, index: number) => (
-                        <div key={index} className="py-4 relative">
-                            <div className="border-b text-black">
-                                <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
-                            </div>
-                            <div className="mt-2">{renderSection(section)}</div>
-                        </div>
-                    ))
-                ) : (
-                    <p>No sections added yet.</p>
-                )}
-
-                {loading && <p className="text-gray-500 mt-4">Checking for spelling/grammar errors...</p>}
-            </div>
-            <div className={`w-[35%] `} style={{ backgroundColor: currentState.color }}>
-                {/*====== conact info ======*/}
-                <div className="p-3">
-                    <div className="flex justify-center mb-2">
-                        <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
+        <div className="w-a4 h-a4 relative" style={{ padding: `${currentState.padding || 0}px`, }} >
+            <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
+            <div className="grid grid-cols-12 h-full p-[30px] pb-0">
+                <div className="col-span-8 pr-8">
+                    {/*====== Header Left ======*/}
+                    <div className="flex flex-col">
+                        <input
+                            placeholder="Name"
+                            className="outline-none focus:bg-transparent font-semibold text-zinc-900"
+                            style={{
+                                fontSize: scaleFont(30, currentState.fontSize),
+                                fontFamily: currentState.fontFamily,
+                            }}
+                        />
+                        <input
+                            placeholder="Designation"
+                            className="w-full rounded placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0 "
+                            style={{
+                                fontSize: scaleFont(18, currentState.fontSize),
+                                fontFamily: currentState.fontFamily,
+                                color: currentState.color,
+                            }}
+                        />
                     </div>
-                    <div className="flex justify-center flex-col gap-1">
-                        <div className="border-b text-start text-white flex gap-2" style={{
-                            fontSize: scaleFont(24, currentState.fontSize),
-                            fontFamily: currentState.fontFamily,
-                        }}>
-                            <IconDropdown icons={FaIcons} />
-                            <span>Contact Info</span>
-                        </div>
-                        <div className="flex gap-2 text-white">
-                            <IconDropdown icons={FaIcons} />
-                            <input placeholder="Phone" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
-                        </div>
-                        <div className="flex gap-2 text-white">
-                            <IconDropdown icons={FaIcons} />
-                            <input placeholder="Email" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
-                        </div>
-                        <div className="flex gap-2 text-white">
-                            <IconDropdown icons={FaIcons} />
-                            <textarea placeholder="Address" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
-                        </div>
-                    </div>
-                </div>
-
-                {/*====== Right Sections ======*/}
-                <div className="p-3">
-                    {rightSections?.length > 0 &&
-                        rightSections.map((section: any, index: number) => (
+                    {/*====== Left Sections ======*/}
+                    {leftSections?.length > 0 ? (
+                        leftSections.map((section: any, index: number) => (
                             <div key={index} className="py-4 relative">
-                                <div className="border-b text-white">
-                                    <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
+                                <div className="border-b ">
+                                    {section?.name == "Custom_Section" ?
+                                        <input type="text" className="text-[18px] font-semibold mb-1 "
+                                            style={{
+                                                color: currentState.color
+                                            }} value={section?.name}
+                                        />
+                                        :
+                                        <h2 className="text-[18px] font-semibold mb-1 " style={{
+                                            color: currentState.color
+                                        }}>{highlightWords(section?.name)}</h2>
+                                    }
                                 </div>
-                                <div className="mt-2">{renderSection(section)}
-                                </div>
+                                <div className="mt-2">{renderSection(section)}</div>
                             </div>
                         ))
-                    }
+                    ) : (
+                        <p>No sections added yet.</p>
+                    )}
+
+                    {loading && <p className="text-gray-500 mt-4">Checking for spelling/grammar errors...</p>}
+                </div>
+                <div className={`col-span-4 px-[10px] -mr-[30px] z-10`} >
+                    {/*====== conact info ======*/}
+                    <div className="p-3">
+                        <div className="flex justify-center mb-2">
+                            <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
+                        </div>
+                        <div className="flex justify-center flex-col gap-1">
+                            <div className="border-b text-start text-white flex items-center gap-2 pb-1 mb-1" style={{
+                                fontSize: scaleFont(24, currentState.fontSize),
+                                fontFamily: currentState.fontFamily,
+                            }}>
+                                <IconDropdown icons={FaIcons} />
+                                <span className="text-[20px]">Contact Info</span>
+                            </div>
+                            <div className="flex items-start gap-2 text-white">
+                                <IconDropdown icons={FaIcons} />
+                                <input placeholder="Phone" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                            </div>
+                            <div className="flex items-start gap-2 text-white">
+                                <IconDropdown icons={FaIcons} />
+                                <input placeholder="Email" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                            </div>
+                            <div className="flex items-start gap-2 text-white">
+                                <IconDropdown icons={FaIcons} />
+                                <textarea placeholder="Address" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/*====== Right Sections ======*/}
+                    <div className="p-3">
+                        {rightSections?.length > 0 &&
+                            rightSections.map((section: any, index: number) => (
+                                <div key={index} className="py-4 relative">
+                                    <div className="border-b text-white">
+                                        <h2 className="text-[18px] mb-1">{highlightWords(section?.name)}</h2>
+                                    </div>
+                                    <div className="mt-2">{renderSection(section)}
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
         </div>
