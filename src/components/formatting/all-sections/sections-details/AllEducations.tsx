@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUserEducation, removeSection } from '@/redux/slices/addSectionSlice';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 
 type EducationType = {
@@ -99,17 +100,16 @@ const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllEducatio
       onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color }} onClick={handleAddEducation}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button className="cursor-pointer" style={{ color }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
+        <SectionToolbar
+          onCopy={handleAddEducation}
+          onDelete={handleRemoveSection}
+          // onMoveUp={handleAddAward}
+          position="top-7 right-2"
+          showDot={true}
+        />
       )}
       {/* ===== Education Box ===== */}
-      <div className="flex flex-col gap-3 divide-y-[1px] px-1">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 ">
         {educations.length > 0 ?
           educations.map((exp, index) => (
             <div key={index}>
@@ -203,6 +203,7 @@ const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllEducatio
             {/* ====== Delete Button ====== */}
             <div className="flex justify-end mt-2">
               <button className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                onClick={handleRemoveSection}
               >
                 <RiDeleteBin6Line size={16} />
               </button>

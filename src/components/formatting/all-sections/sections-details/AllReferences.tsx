@@ -6,6 +6,7 @@ import { RootState } from '@/redux/store';
 import { AddUserReferences, removeSection } from '@/redux/slices/addSectionSlice';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 type ReferenceType = {
   name: string;
@@ -28,6 +29,7 @@ const AllReferences = ({
   const { userReferences } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState(false);
   const [references, setReferences] = useState<ReferenceType[]>([]);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (Array.isArray(userReferences) && userReferences.length > 0) {
@@ -82,8 +84,8 @@ const AllReferences = ({
 
 
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 bg-white `} onClick={handleEditableSection}>
-      {editable && (
+    <div ref={containerRef} className={`mt-3 flex flex-col bg-white `} onClick={handleEditableSection}>
+      {/* {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button style={{ color }} onClick={handleAddReference}>
             <RiAddCircleFill size={24} />
@@ -92,23 +94,50 @@ const AllReferences = ({
             <TiDelete size={30} />
           </button>
         </div>
+      )} */}
+      {editable && (
+        <SectionToolbar
+          onCopy={handleAddReference}
+          onDelete={handleRemoveSection}
+          // onMoveUp={handleAddAward}
+          position="top-7 right-2"
+          showDot={true}
+        />
       )}
 
       <div className="flex flex-col gap-3 ">
         {references.length > 0 ? (
           references.map((cert, index) => (
-            <div key={index} className='relative py-4'>
+            <div key={index} className='relative pb-2 pt-[6px]'>
               {/* ====== Job Name ====== */}
-              <div className="flex items-center gap-4 border border-indigo-300 rounded-sm px-2">
-                <div className='relative mr-5'>
+              <div className="flex items-center gap-4  rounded-sm px-2 transition-all duration-500 ease-in-out"
+                style={{
+                  color,
+                  border: hoveredIndex === index ? `1px solid #000` : '1px solid transparent',
+                }}
+                onMouseOver={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                    setHoveredIndex(index);
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                    setHoveredIndex(null);
+                  }
+                }}
+              >
+                <div className='relative mr-10'>
                   <input
                     value={cert.name}
                     onChange={(e) => handleInputChange(index, 'name', e.target.value)}
                     onBlur={() => handleBlur(index)}
                     placeholder="Reference Name"
+                    type='text'
                     className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                   />
-                  <div className="after:content-[''] after:absolute after:top-[11px] after:-right-7 after:bg-indigo-300 after:h-[2px] after:w-5  "></div>
+                  <div className=" absolute top-[11px] -right-7 h-[2px] w-5  " style={{
+                    background: templateColor
+                  }}></div>
                 </div>
                 <input
                   type="text"
@@ -119,7 +148,7 @@ const AllReferences = ({
                   className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
                 />
               </div>
-              <div className="absolute top-4 right-2">
+              <div className="absolute top-2 right-2">
                 <button
                   onClick={() => handleDelete(index)}
                   className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
@@ -130,9 +159,13 @@ const AllReferences = ({
             </div>
           ))
         ) : (
-          <div className='relative py-4'>
+          <div className='relative pb-2 pt-[6px]'>
             {/* ====== Job Name ====== */}
-            <div className="flex items-center gap-4 border border-indigo-300 rounded-sm px-2">
+            <div className="flex items-center gap-4 rounded-sm px-2 transition-all duration-500 ease-in-out"
+              style={{
+                color,
+                border: `1px solid #000`,
+              }}>
               <div className='relative mr-5'>
                 <input
                   value=""
@@ -140,7 +173,9 @@ const AllReferences = ({
                   placeholder="Reference Name"
                   className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                 />
-                <div className="after:content-[''] after:absolute after:top-[11px] after:-right-7 after:bg-indigo-300 after:h-[2px] after:w-5  "></div>
+                <div className=" absolute top-[11px] -right-7 h-[2px] w-5  " style={{
+                  background: templateColor
+                }}></div>
               </div>
               <input
                 type="text"
@@ -150,9 +185,10 @@ const AllReferences = ({
                 className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
               />
             </div>
-            <div className="absolute top-4 right-2">
+            <div className="absolute top-2 right-2">
               <button
                 className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                onClick={handleAddReference}
               >
                 <RiDeleteBin6Line size={16} />
               </button>

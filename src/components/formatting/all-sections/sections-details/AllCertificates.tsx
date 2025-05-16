@@ -7,6 +7,7 @@ import { addUserCertificates, removeSection } from '@/redux/slices/addSectionSli
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 import CustomDatePicker from '../../custom/CustomDatePicker';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 type CertificateType = {
   title: string;
@@ -101,7 +102,7 @@ const AllCertificates = ({
 
   return (
     <div ref={containerRef} className={`flex flex-col gap-4 bg-white `} onClick={handleEditableSection}>
-      {editable && (
+      {/* {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button style={{ color }} onClick={handleAddCertificate}>
             <RiAddCircleFill size={24} />
@@ -110,6 +111,15 @@ const AllCertificates = ({
             <TiDelete size={30} />
           </button>
         </div>
+      )} */}
+      {editable && (
+        <SectionToolbar
+          onCopy={handleAddCertificate}
+          onDelete={handleRemoveSection}
+          // onMoveUp={handleAddAward}
+          position="top-8 right-2"
+          showDot={true}
+        />
       )}
 
       <div className="flex flex-col gap-3 ">
@@ -197,7 +207,7 @@ const AllCertificates = ({
             </div>
             <div className="absolute bottom-2 right-2">
               <button
-                // onClick={() => handleDelete(index)}
+                onClick={handleRemoveSection}
                 className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
               >
                 <RiDeleteBin6Line size={16} />
