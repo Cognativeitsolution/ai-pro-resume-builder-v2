@@ -111,10 +111,10 @@ const AtsScore = () => {
                       <div className="relative w-full h-[200px] flex items-end justify-center">
                         <Doughnut data={data} options={options} />
                         <div className="absolute inset-0 flex flex-col items-center justify-center mt-2">
-                          <div className="text-[#59b036] text-xl mt-5 font-semibold">
+                          <div className="text-[#59b036] text-lg mt-[80px] font-semibold">
                             Score
                           </div>
-                          <div className="text-[#59b036] text-xl font-bold">
+                          <div className="text-[#59b036] text-lg font-bold">
                             {score}/100
                           </div>
                         </div>
