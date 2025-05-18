@@ -22,11 +22,12 @@ type ProjectType = {
 
 type AllProjectsType = {
   data?: any;
-  color?: string;
+  textColor?: string;
+  textAltColor?: string;
   templateColor: string;
 };
 
-const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsType) => {
+const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templateColor, }: AllProjectsType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userProjects } = useSelector((state: RootState) => state.addSection);
@@ -94,7 +95,7 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
 
 
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && templateColor}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && textAltColor}`} onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
         <SectionToolbar

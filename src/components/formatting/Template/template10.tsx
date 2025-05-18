@@ -10,6 +10,12 @@ import AllProjects from "../all-sections/sections-details/AllProjects";
 import Image from "next/image";
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp"
 import AllSoftSkills from "../all-sections/sections-details/AllSoftSkills";
+import AllSummary from "../all-sections/sections-details/AllSummary";
+import AllTechnicalSkills from "../all-sections/sections-details/AllTechnicalSkills";
+import AllAwards from "../all-sections/sections-details/AllAwards";
+import AllReferences from "../all-sections/sections-details/AllReferences";
+import AllLanguages from "../all-sections/sections-details/AllLanguages";
+import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 
 type CurrentState = {
     fontSize: string;
@@ -109,16 +115,28 @@ const Template10 = (props: ResumePreviewProps) => {
 
     const renderSection = (section: any) => {
         switch (section?.name) {
-            case "Skills":
-                return <AllSoftSkills data={section} />;
+            case "Summary":
+                return <AllSummary data={section} />;
+            case "Soft_Skills":
+                return <AllSoftSkills data={section} textColor="#fff" textAltColor="#000" />;
+            case "Technical_Skills":
+                return <AllTechnicalSkills data={section} textColor="#fff" textAltColor="#000" />;
             case "Certificate":
-                return <AllCertificates data={section} />;
+                return <AllCertificates data={section} textColor="" templateColor="" />;
             case "Education":
-                return <AllEducations data={section} />;
+                return <AllEducations data={section} textColor="" textAltColor="" templateColor="" />;
             case "Experience":
-                return <AllExperiences data={section} />;
+                return <AllExperiences data={section} textColor="" textAltColor="" templateColor="" />;
             case "Projects":
-                return <AllProjects data={section} />;
+                return <AllProjects data={section} textColor="" textAltColor="" templateColor="" />;
+            case "Awards":
+                return <AllAwards data={section} textColor="" textAltColor="#000"  templateColor="" />;
+            case "References":
+                return <AllReferences data={section} textColor="#000" textAltColor="#000" templateColor="" />;
+            case "Languages":
+                return <AllLanguages data={section} textColor="#fff" textAltColor="#3358c5" templateColor=""  />;
+            case "Custom_Section":
+                return <AllCustomSection data={section} textColor="#000" textAltColor="#fff" templateColor="" />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
@@ -138,7 +156,7 @@ const Template10 = (props: ResumePreviewProps) => {
         <div className="w-a4 h-a4 grid grid-cols-12">
             <div className="col-span-12 p-6" >
                 {/* Header Left Start*/}
-                <div className="flex flex-col items-center gap-2 p-3" style={{ background: color }}>
+                <div className="flex flex-col items-start justify-center gap-2 p-3" style={{ background: color }}>
                     <div className="">
                         <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
                     </div>

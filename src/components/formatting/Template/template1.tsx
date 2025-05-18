@@ -122,25 +122,25 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft_Skills":
-                return <AllSoftSkills data={section} color="#000" templateColor="#fff" />;
+                return <AllSoftSkills data={section} textColor="#fff" textAltColor="#000" />;
             case "Technical_Skills":
-                return <AllTechnicalSkills data={section} color="#000" templateColor="#fff" />;
+                return <AllTechnicalSkills data={section} textColor="#fff" textAltColor="#000" />;
             case "Certificate":
-                return <AllCertificates data={section} color="#000" templateColor="#fff" />;
+                return <AllCertificates data={section} textColor="" templateColor="" />;
             case "Education":
-                return <AllEducations data={section} color="#000" templateColor="#fff" />;
+                return <AllEducations data={section} textColor="" textAltColor="" templateColor="" />;
             case "Experience":
-                return <AllExperiences data={section} color="#000" templateColor="#fff" />;
+                return <AllExperiences data={section} textColor="" textAltColor="" templateColor="" />;
             case "Projects":
-                return <AllProjects data={section} color="#000" templateColor="#fff" />;
+                return <AllProjects data={section} textColor="" textAltColor="" templateColor="" />;
             case "Awards":
-                return <AllAwards data={section} color="#000" templateColor="#000" />;
+                return <AllAwards data={section} textColor="" textAltColor="#000"  templateColor="" />;
             case "References":
-                return <AllReferences data={section} color="#000" templateColor="#000" />;
+                return <AllReferences data={section} textColor="#000" textAltColor="#000" templateColor="" />;
             case "Languages":
-                return <AllLanguages data={section} color="#fff" templateColor="#3358c5" />;
+                return <AllLanguages data={section} textColor="#fff" textAltColor="#3358c5" templateColor=""  />;
             case "Custom_Section":
-                return <AllCustomSection data={section} color="#000" templateColor="#fff" />;
+                return <AllCustomSection data={section} textColor="#000" textAltColor="#fff" templateColor="" />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }

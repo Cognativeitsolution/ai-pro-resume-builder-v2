@@ -21,11 +21,12 @@ type EducationType = {
 
 type AllEducationType = {
   data?: any;
-  color?: string;
+  textColor?: string;
+  textAltColor: string;
   templateColor: string;
 };
 
-const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllEducationType) => {
+const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateColor }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userEducation } = useSelector((state: RootState) => state.addSection);
@@ -96,7 +97,7 @@ const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllEducatio
 
 
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && templateColor}`}
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && textAltColor}`}
       onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
@@ -146,7 +147,7 @@ const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllEducatio
                       disabled={!editable}
                       onChange={(e) => handleInputChange(index, 'location', e.target.value)}
                       placeholder="Location"
-                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
+                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
                     />
                   </div>
                 </div>
@@ -195,7 +196,7 @@ const AllEducation = ({ data = {}, color = '#000', templateColor, }: AllEducatio
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     placeholder="Location"
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
                   />
                 </div>
               </div>

@@ -22,12 +22,13 @@ type CustomSectionType = {
 
 type AllCustomSectionType = {
   data?: any;
-  color?: string;
-  templateColor: string;
-  secNewNames?: any
+  textColor?: string;
+  textAltColor?: string;
+  templateColor?: string;
+  secNewNames?: any;
 };
 
-const AllCustomSection = ({ secNewNames, data = {}, color = '#000', templateColor, }: AllCustomSectionType) => {
+const AllCustomSection = ({ secNewNames, data = {}, textColor = '#000', textAltColor, templateColor, }: AllCustomSectionType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userCustomSections } = useSelector((state: RootState) => state.addSection);

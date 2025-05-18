@@ -15,13 +15,15 @@ type ReferenceType = {
 
 type AllSummaryType = {
   data?: any;
-  color?: string;
+  textColor?: string;
+  textAltColor: string;
   templateColor: string;
 };
 
 const AllReferences = ({
   data = {},
-  color = '#fff',
+  textColor = '#fff',
+  textAltColor,
   templateColor
 }: AllSummaryType) => {
   const dispatch = useDispatch();
@@ -112,8 +114,8 @@ const AllReferences = ({
               {/* ====== Job Name ====== */}
               <div className="flex items-center gap-4  rounded-sm px-2 transition-all duration-500 ease-in-out"
                 style={{
-                  color,
-                  border: hoveredIndex === index ? `1px solid #000` : '1px solid transparent',
+                  color: textColor,
+                  border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
                 }}
                 onMouseOver={(e) => {
                   if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -136,7 +138,7 @@ const AllReferences = ({
                     className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                   />
                   <div className=" absolute top-[11px] -right-7 h-[2px] w-5  " style={{
-                    background: templateColor
+                    background: textAltColor
                   }}></div>
                 </div>
                 <input
@@ -163,8 +165,8 @@ const AllReferences = ({
             {/* ====== Job Name ====== */}
             <div className="flex items-center gap-4 rounded-sm px-2 transition-all duration-500 ease-in-out"
               style={{
-                color,
-                border: `1px solid #000`,
+                color: textColor,
+                border: `1px solid ${textColor}`,
               }}>
               <div className='relative mr-5'>
                 <input
@@ -174,7 +176,7 @@ const AllReferences = ({
                   className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                 />
                 <div className=" absolute top-[11px] -right-7 h-[2px] w-5  " style={{
-                  background: templateColor
+                  background: textAltColor
                 }}></div>
               </div>
               <input

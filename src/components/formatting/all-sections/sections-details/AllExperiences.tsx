@@ -22,11 +22,12 @@ type ExperienceType = {
 
 type AllExperienceType = {
   data?: any;
-  color?: string;
+  textColor?: string;
+  textAltColor?: string;
   templateColor: string;
 };
 
-const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperienceType) => {
+const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', templateColor, }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userExperiences } = useSelector((state: RootState) => state.addSection);
@@ -97,7 +98,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
 
 
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && templateColor}}`}
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && textAltColor}}`}
       onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (

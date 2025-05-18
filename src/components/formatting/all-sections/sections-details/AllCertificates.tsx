@@ -17,13 +17,13 @@ type CertificateType = {
 
 type AllSummaryType = {
   data?: any;
-  color?: string;
+  textColor?: string;
   templateColor: string;
 };
 
 const AllCertificates = ({
   data = {},
-  color = '#fff',
+  textColor = '#fff',
   templateColor
 }: AllSummaryType) => {
   const dispatch = useDispatch();

@@ -15,13 +15,15 @@ type AwardType = {
 
 type AllAwardsProps = {
   data?: { id: any };
-  color?: string;
+  textColor?: string;
+  textAltColor: string;
   templateColor: string;
 };
 
 const AllAwards = ({
   data = { id: '' },
-  color = '#fff',
+  textColor = '#fff',
+  textAltColor,
   templateColor,
 }: any) => {
   const dispatch = useDispatch();
@@ -97,7 +99,7 @@ const AllAwards = ({
   };
 
   return (
-    <div ref={containerRef} className={`pb-4 pt-[6px] flex bg-white flex-col gap-4 ${editable && templateColor && 'bg-slate-300/30'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`pb-4 pt-[6px] flex bg-white flex-col gap-4 ${editable && textAltColor && 'bg-slate-300/30'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           onCopy={handleAddAward}
@@ -114,7 +116,7 @@ const AllAwards = ({
               key={index}
               className={`flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium px-1 py-1 transition-all duration-500 ease-in-out `}
               style={{
-                color,
+                color: textColor,
                 border: hoveredIndex === index ? `1px solid #000` : '1px solid transparent',
               }}
               onMouseOver={(e) => {
@@ -128,14 +130,14 @@ const AllAwards = ({
                 }
               }}
             >
-              <span> <FaAward color={templateColor} /></span>
+              <span> <FaAward color={textAltColor} /></span>
               <input
                 value={award.title}
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 onBlur={() => handleBlur(index)}
                 placeholder="Award Name"
                 className="bg-transparent text-sm truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out opacity-70 "
-                style={{ color }}
+                style={{ color: textColor }}
                 autoFocus
               />
               <div className={`transition-all duration-300 ease-in-out transform right-2 top-1 absolute  ${hoveredIndex === index ? 'translate-x-0 opacity-100' : 'translate-x-3 opacity-0'}`} >
@@ -149,7 +151,7 @@ const AllAwards = ({
             <div
               className="flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium  px-3 py-1"
               style={{
-                color,
+                color: textColor,
                 border: `1px solid #000`,
               }}
             >
@@ -159,7 +161,7 @@ const AllAwards = ({
                 onChange={(e) => handleAddFirstAward(e.target.value)}
                 placeholder="Award Name"
                 className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
-                style={{ color }}
+                style={{ color: textColor }}
                 autoFocus
               />
               <div className={`transition-all duration-300 ease-in-out transform right-2 top-1 absolute  `} >
