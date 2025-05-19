@@ -20,7 +20,7 @@ export default {
         xl: "1200px",
         "2xl": "1400px",
       },
-        fontFamily: {
+      fontFamily: {
         primary: ["var(--font-primary),sans-serif"],
       },
       width: {
