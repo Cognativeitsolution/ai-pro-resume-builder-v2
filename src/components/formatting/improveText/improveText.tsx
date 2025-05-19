@@ -27,59 +27,56 @@ export default function ImproveText() {
     }, [grammarCheck, spellCheck]);
 
     return (
-        <div className=''>
+        <div className='mt-4 pt-2'>
+            <div className='flex pb-6 items-center justify-between '>
+                <p className='capitalize'>Tailored Suggessions</p>
+                <CustomSwitch
+                // checked={grammarCheck}
+                // onChange={handleGrammarCheck}
 
-            <div className='pt-8'>
-                <div className='flex pb-6 items-center justify-between '>
-                    <p className='capitalize'>Tailored Suggessions</p>
+                />
+            </div>
+            <div className='flex pb-6 items-center justify-between '>
+                <p className='capitalize'>Spell Check </p>
+                <div className='flex justify-center items-center gap-2'>
+                    {/* <Lock size={16} className="text-gray-600" /> */}
                     <CustomSwitch
-                    // checked={grammarCheck}
-                    // onChange={handleGrammarCheck}
-
+                        checked={spellCheck}
+                        onChange={handleSpellCheck}
                     />
                 </div>
-                <div className='flex pb-6 items-center justify-between '>
-                    <p className='capitalize'>Spell Check </p>
-                    <div className='flex justify-center items-center gap-2'>
-                        {/* <Lock size={16} className="text-gray-600" /> */}
-                        <CustomSwitch
-                            checked={spellCheck}
-                            onChange={handleSpellCheck}
-                        />
-                    </div>
+            </div>
+            <div className='flex pb-6 items-center justify-between '>
+                <p className='capitalize'>Grammer Check</p>
+                <div className='flex justify-center items-center gap-2'>
+                    <Lock size={16} className="text-gray-600" />
+                    <CustomSwitch
+                        checked={grammarCheck}
+                        onChange={handleGrammarCheck}
+                        disabled={true}
+                    />
                 </div>
-                <div className='flex pb-6 items-center justify-between '>
-                    <p className='capitalize'>Grammer Check</p>
-                    <div className='flex justify-center items-center gap-2'>
-                        <Lock size={16} className="text-gray-600" />
-                        <CustomSwitch
-                            checked={grammarCheck}
-                            onChange={handleGrammarCheck}
-                            disabled={true}
-                        />
-                    </div>
+            </div>
+            <div className='flex pb-6 items-center justify-between '>
+                <p className='capitalize'>Wording & readability</p>
+                <div className='flex justify-center items-center gap-2'>
+                    <Lock size={16} className="text-gray-600" />
+                    <CustomSwitch
+                        disabled={true}
+                    // checked={spellCheck}
+                    // onChange={handleSpellCheck}
+                    />
                 </div>
-                <div className='flex pb-6 items-center justify-between '>
-                    <p className='capitalize'>Wording & readability</p>
-                    <div className='flex justify-center items-center gap-2'>
-                        <Lock size={16} className="text-gray-600" />
-                        <CustomSwitch
-                            disabled={true}
-                        // checked={spellCheck}
-                        // onChange={handleSpellCheck}
-                        />
-                    </div>
-                </div>
-                <div className='flex pb-6 items-center justify-between '>
-                    <p className='capitalize'>Recommendations</p>
-                    <div className='flex justify-center items-center gap-2'>
-                        <Lock size={16} className="text-gray-600" />
-                        <CustomSwitch
-                            disabled={true}
-                        // checked={spellCheck}
-                        // onChange={handleSpellCheck}
-                        />
-                    </div>
+            </div>
+            <div className='flex pb-6 items-center justify-between '>
+                <p className='capitalize'>Recommendations</p>
+                <div className='flex justify-center items-center gap-2'>
+                    <Lock size={16} className="text-gray-600" />
+                    <CustomSwitch
+                        disabled={true}
+                    // checked={spellCheck}
+                    // onChange={handleSpellCheck}
+                    />
                 </div>
             </div>
         </div>

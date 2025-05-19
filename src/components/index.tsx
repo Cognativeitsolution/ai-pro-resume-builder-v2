@@ -8,7 +8,11 @@ const Footer = dynamic(() => import("./Layout/footer/Footer"));
 const TextEditor = dynamic(() => import("./formatting/TextEditor/TextEditor"));
 const ResumeEditor = dynamic(() => import("./resumeEditor/ResumeEditor"));
 const Template = dynamic(() => import("./formatting/Template/template"));
+const DesignFont = dynamic(() => import("./formatting/DesignFont/DesignFont"));
 const Rearrange = dynamic(() => import("./formatting/rearrange/rearrange"));
+const AtsCheck = dynamic(() => import("./formatting/AtsCheck/AtsCheck"));
+const YourScore = dynamic(() => import("./formatting/AtsCheck/YourScore"));
+const YourDetails = dynamic(() => import("./formatting/AtsCheck/YourDetails"));
 const DndContext = dynamic(() => import("./formatting/drag-and-drop/DndContext"));
 const DndExample = dynamic(() => import("./formatting/drag-and-drop/DndExample"));
 const ImproveText = dynamic(() => import("./formatting/improveText/improveText"));
@@ -96,7 +100,11 @@ export {
   UserReferral,
   CustomButton,
   Template,
+  DesignFont,
   Rearrange,
+  AtsCheck,
+  YourScore,
+  YourDetails,
   DndContext,
   DndExample,
   ImproveText,
