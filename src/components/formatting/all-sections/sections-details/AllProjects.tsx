@@ -7,7 +7,7 @@ import CustomDatePicker from '../../custom/CustomDatePicker';
 // ==============
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUserProjects, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserProjects, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
@@ -27,14 +27,17 @@ type AllProjectsType = {
   templateColor: string;
 };
 
-const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templateColor, }: AllProjectsType) => {
+const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '', templateColor, }: AllProjectsType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userProjects } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState<boolean>(false);
   const [projects, setProjects] = useState<ProjectType[]>([]);
-  const handleEditableSection = () => setEditable(true);
 
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
   // Sync local state with Redux store when userProjects changes
   useEffect(() => {
     if (Array.isArray(userProjects) && userProjects.length > 0) {
@@ -72,6 +75,8 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        dispatch(sectionEditMode(false))
+
         setEditable(false);
         dispatch(addUserProjects({ sectionId: data.id, detail: projects }));
       }
@@ -95,14 +100,14 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
 
 
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && textAltColor}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
         <SectionToolbar
           onCopy={handleAddProject}
           onDelete={handleRemoveSection}
           // onMoveUp={handleAddAward}
-          position="top-7 right-2"
+          position="top-7 right-0"
           showDot={true}
         />
       )}
@@ -119,7 +124,7 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
                     value={project.projectName}
                     placeholder="Project Name"
                     onChange={(e) => handleInputChange(index, 'projectName', e.target.value)}
-                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                    className="w-full bg-transparent text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -133,7 +138,7 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
                     value={project.projectUrl}
                     placeholder="Project URL"
                     onChange={(e) => handleInputChange(index, 'projectUrl', e.target.value)}
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                    className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                   />
                 </div>
                 {/* ====== Location ====== */}
@@ -156,7 +161,7 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
                   onChange={(e) => handleInputChange(index, 'description', e.target.value)}
                   placeholder="Short summary of your work"
                   rows={2}
-                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                 ></textarea>
               </div>
             </div>
@@ -180,7 +185,7 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
                     placeholder="Project Name"
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
-                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                    className="w-full bg-transparent text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -194,7 +199,7 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
                     placeholder="Project URL"
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                    className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                   />
                 </div>
                 {/* ====== Location ====== */}
@@ -205,7 +210,7 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     placeholder="Location"
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
+                    className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
                   />
                 </div>
               </div>
@@ -217,7 +222,7 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templa
                   onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                   placeholder="Short summary of your work"
                   rows={2}
-                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                 ></textarea>
               </div>
             </div>

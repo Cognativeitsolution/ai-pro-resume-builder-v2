@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { addUserCertificates, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserCertificates, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 import CustomDatePicker from '../../custom/CustomDatePicker';
@@ -46,6 +46,7 @@ const AllCertificates = ({
   const handleClickOutside = (event: MouseEvent) => {
     if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
       setEditable(false);
+      dispatch(sectionEditMode(false))
       const validCertificates = certificates.filter(
         certificate => certificate.title.trim() && certificate.institutionName.trim()
       );
@@ -60,7 +61,10 @@ const AllCertificates = ({
     }
   };
 
-  const handleEditableSection = () => setEditable(true);
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
 
   const handleAddCertificate = () => {
     setCertificates([...certificates, { title: '', description: '', institutionName: '' }]);
@@ -98,30 +102,18 @@ const AllCertificates = ({
     }
   };
 
-
-
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 bg-white `} onClick={handleEditableSection}>
-      {/* {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button style={{ color }} onClick={handleAddCertificate}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button style={{ color }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
-      )} */}
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && 'bg-white'} `} onClick={handleEditableSection}>
+
       {editable && (
         <SectionToolbar
           onCopy={handleAddCertificate}
           onDelete={handleRemoveSection}
           // onMoveUp={handleAddAward}
-          position="top-8 right-2"
+          position="top-8 right-0"
           showDot={true}
         />
       )}
-
       <div className="flex flex-col gap-3 ">
         {certificates.length > 0 ? (
           certificates.map((cert, index) => (
@@ -134,7 +126,7 @@ const AllCertificates = ({
                     onChange={(e) => handleInputChange(index, 'title', e.target.value)}
                     onBlur={() => handleBlur(index)}
                     placeholder="Title"
-                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0" />
+                    className="w-full bg-transparent text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0" />
                 </div>
                 {/* ====== Date Picker ====== */}
                 <CustomDatePicker onChange={(dates) => console.log(dates)} />
@@ -147,7 +139,7 @@ const AllCertificates = ({
                   placeholder="Institution Name"
                   onBlur={() => handleBlur(index)}
                   onChange={(e) => handleInputChange(index, 'institutionName', e.target.value)}
-                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                  className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                 />
               </div>
               <div>
@@ -158,7 +150,7 @@ const AllCertificates = ({
                   onChange={(e) => handleInputChange(index, 'description', e.target.value)}
                   placeholder="Description"
                   rows={2}
-                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
+                  className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
                 />
               </div>
               <div className="absolute bottom-2 right-2">
@@ -180,7 +172,7 @@ const AllCertificates = ({
                   value=""
                   onChange={(e) => handleAddFirstCertificate(e.target.value)}
                   placeholder="Title"
-                  className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-full text-[16px] bg-transparent rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                 />
               </div>
               {/* ====== Date Picker ====== */}
@@ -192,7 +184,7 @@ const AllCertificates = ({
                 placeholder="Institution Name"
                 value=""
                 onChange={(e) => handleAddFirstCertificate(e.target.value)}
-                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                className="w-full text-[14px] rounded bg-transparent placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
               />
             </div>
             <div>
@@ -202,7 +194,7 @@ const AllCertificates = ({
                 onChange={(e) => handleAddFirstCertificate(e.target.value)}
                 placeholder="Description"
                 rows={2}
-                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
+                className="w-full text-[14px] rounded bg-transparent placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
               />
             </div>
             <div className="absolute bottom-2 right-2">

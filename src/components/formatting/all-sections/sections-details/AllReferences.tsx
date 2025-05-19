@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { AddUserReferences, removeSection } from '@/redux/slices/addSectionSlice';
+import { AddUserReferences, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
@@ -45,8 +45,10 @@ const AllReferences = ({
   }, [userReferences]);
 
 
-  const handleEditableSection = () => setEditable(true);
-
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
   const handleAddReference = () => {
     setReferences([...references, { name: '', contact: '' }]);
   };
@@ -83,31 +85,18 @@ const AllReferences = ({
     }
   };
 
-
-
   return (
-    <div ref={containerRef} className={`mt-3 flex flex-col bg-white `} onClick={handleEditableSection}>
-      {/* {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button style={{ color }} onClick={handleAddReference}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button style={{ color }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
-      )} */}
+    <div ref={containerRef} className={`mt-3 flex flex-col bg-white`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           onCopy={handleAddReference}
           onDelete={handleRemoveSection}
           // onMoveUp={handleAddAward}
-          position="top-7 right-2"
+          position="top-7 right-0"
           showDot={true}
         />
       )}
-
-      <div className="flex flex-col gap-3 ">
+      <div className="flex flex-col gap-3">
         {references.length > 0 ? (
           references.map((cert, index) => (
             <div key={index} className='relative pb-2 pt-[6px]'>

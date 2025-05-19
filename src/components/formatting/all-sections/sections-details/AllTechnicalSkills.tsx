@@ -94,7 +94,7 @@ const AllTechnicalSkills = ({
   };
 
   return (
-    <div ref={containerRef} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`${editable && 'bg-white p-1'}`} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddTechnicalSkill}>

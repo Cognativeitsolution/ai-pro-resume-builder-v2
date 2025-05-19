@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
-import { addUserAwards, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserAwards, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import { FaAward } from 'react-icons/fa';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
@@ -32,6 +32,7 @@ const AllAwards = ({
   const [editable, setEditable] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [awards, setAwards] = useState<AwardType[]>([]);
+  const { editMode } = useSelector((state: any) => state.addSection);
 
   useEffect(() => {
     if (Array.isArray(userAwards) && userAwards.length > 0) {
@@ -47,9 +48,8 @@ const AllAwards = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setEditable(false);
+        dispatch(sectionEditMode(false))
         const validAwards = awards.filter(award => award.title.trim() !== '');
-
-        console.log(validAwards, "1111==validAwards");
 
         dispatch(addUserAwards({
           sectionId: data.id,
@@ -62,7 +62,10 @@ const AllAwards = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [awards, dispatch, data.id]);
 
-  const handleEditableSection = () => setEditable(true);
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
 
   const handleAddAward = () => {
     setAwards([...awards, { title: '' }]);
@@ -99,13 +102,14 @@ const AllAwards = ({
   };
 
   return (
-    <div ref={containerRef} className={`pb-4 pt-[6px] flex bg-white flex-col gap-4 ${editable && textAltColor && 'bg-slate-300/30'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`pb-4 pt-[6px] flex  flex-col gap-4 
+    ${editable && 'bg-white border border-red-600'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           onCopy={handleAddAward}
           onDelete={handleRemoveSection}
           // onMoveUp={handleAddAward}
-          position="top-7 right-2"
+          position="top-7 right-0"
           showDot={true}
         />
       )}

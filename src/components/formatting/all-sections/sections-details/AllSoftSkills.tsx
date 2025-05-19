@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TiDelete } from 'react-icons/ti';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
-import { addUserSoft_Skills, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserSoft_Skills, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 
 type SoftSkillType = {
   title: string;
@@ -45,6 +45,7 @@ const AllSoftSkills = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setEditable(false);
+        dispatch(sectionEditMode(false))
         const validSoftSkills = softskills.filter(skill => skill.title.trim() !== '');
         dispatch(addUserSoft_Skills({
           sectionId: data.id,
@@ -57,8 +58,10 @@ const AllSoftSkills = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [softskills, dispatch, data.id]);
 
-  const handleEditableSection = () => setEditable(true);
-
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
   const handleAddSoftSkill = () => {
     setSoftSkills([...softskills, { title: '', level: 0 }]);
   };
@@ -96,7 +99,7 @@ const AllSoftSkills = ({
 
 
   return (
-    <div ref={containerRef} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`${editable && 'bg-white p-1'}`} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddSoftSkill}>
@@ -107,15 +110,14 @@ const AllSoftSkills = ({
           </button>
         </div>
       )}
-      <div className="flex flex-wrap gap-2 mt-1 ">
+      <div className="flex flex-wrap gap-2 mt-1">
         {softskills.length > 0 ?
           softskills.map((skill, index) => (
             <div
               key={index}
-              className={`flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium px-3 py-1 transition-all duration-500 ease-in-out ${hoveredIndex === index ? 'pr-5' : ''
-                }`}
+              className={`flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium px-3 py-1 transition-all duration-500 ease-in-out ${hoveredIndex === index ? 'pr-5' : ''}`}
               style={{
-              color: textColor,
+                color: textColor,
                 background: textColor,
                 border: `1px solid ${textColor}`,
               }}
@@ -150,7 +152,7 @@ const AllSoftSkills = ({
             <div
               className="flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium  px-3 py-1"
               style={{
-              color: textColor,
+                color: textColor,
                 background: textColor,
                 border: `1px solid ${textColor}`,
               }}

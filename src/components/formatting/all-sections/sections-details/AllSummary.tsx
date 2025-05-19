@@ -1,5 +1,5 @@
 "use client";
-import { addUserSummary } from '@/redux/slices/addSectionSlice';
+import { addUserSummary, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -19,12 +19,14 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
     }
     const handleEditableSection = () => {
         setEditable(true);
+        dispatch(sectionEditMode(true))
     }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setEditable(false);
+                dispatch(sectionEditMode(false))
                 dispatch(addUserSummary({
                     sectionId: data.id,
                     detail: inputData
@@ -49,7 +51,7 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
                 {editable ?
                     <textarea
                         value={inputData}
-                        className="w-full min-h-[80px]  text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                        className="w-full min-h-[80px]  bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                         onChange={handleDataChange}
                         placeholder='Full Name'
                     /> :

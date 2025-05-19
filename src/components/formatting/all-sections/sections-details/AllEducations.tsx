@@ -7,7 +7,7 @@ import CustomDatePicker from '../../custom/CustomDatePicker';
 // ==============
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUserEducation, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserEducation, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
@@ -32,8 +32,11 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
   const { userEducation } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState<boolean>(false);
   const [educations, setEducations] = useState<EducationType[]>([]);
-  const handleEditableSection = () => setEditable(true);
 
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
   // Sync local state with the Redux store whenever userEducation updates
   useEffect(() => {
     if (Array.isArray(userEducation) && userEducation.length > 0) {
@@ -75,6 +78,7 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setEditable(false);
+        dispatch(sectionEditMode(false))
         dispatch(addUserEducation({
           sectionId: data.id,
           detail: educations
@@ -95,9 +99,8 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
     }
   };
 
-
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && textAltColor}`}
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && 'bg-white'}`}
       onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
@@ -105,7 +108,7 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
           onCopy={handleAddEducation}
           onDelete={handleRemoveSection}
           // onMoveUp={handleAddAward}
-          position="top-7 right-2"
+          position="top-7 right-0"
           showDot={true}
         />
       )}
@@ -122,7 +125,7 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                       value={exp.degree}
                       placeholder="Degree and Field of Study"
                       onChange={(e) => handleInputChange(index, 'degree', e.target.value)}
-                      className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                      className="w-full text-[16px] bg-transparent rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
@@ -136,7 +139,7 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                       value={exp.schoolName}
                       placeholder="School or University"
                       onChange={(e) => handleInputChange(index, 'schoolName', e.target.value)}
-                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                      className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                     />
                   </div>
                   {/* ====== Location ====== */}
@@ -171,7 +174,7 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                     placeholder="Degree and Field of Study"
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
-                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                    className="w-full text-[16px] bg-transparent rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -185,7 +188,7 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                     placeholder="School or University"
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                    className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                   />
                 </div>
                 {/* ====== Location ====== */}
@@ -203,10 +206,11 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
             </div>
             {/* ====== Delete Button ====== */}
             <div className="flex justify-end mt-2">
-              <button className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
-                onClick={handleRemoveSection}
-              >
-                <RiDeleteBin6Line size={16} />
+              <button
+                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                onClick={handleRemoveSection}>
+                <RiDeleteBin6Line size={16}
+                />
               </button>
             </div>
           </div>

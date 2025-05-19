@@ -18,13 +18,14 @@ type AddSectionState = {
   userExperiences: any;
   userEducation: any;
   userCertificates: any;
-
   userHeader: any;
   userSummary: any;
   userAwards: any;
   userReferences: any;
   userCustomSections: any;
   userLanguages: any;
+  sectionBgColor?: any;
+  editMode?: any;
 };
 
 const initialState: AddSectionState = {
@@ -105,12 +106,21 @@ const initialState: AddSectionState = {
   userReferences: [],
   userLanguages: [],
   userCustomSections: [],
+  sectionBgColor: 'lightgray',
+  editMode: false,
 };
 
 export const addSectionSlice = createSlice({
   name: "addSection",
   initialState,
   reducers: {
+
+    sectionEditMode: (state, action) => {
+      const section = action.payload;
+      console.log(section, "editngsSection");
+      state.editMode = section;
+    },
+
     addNewSection: (state, action: PayloadAction<SectionType>) => {
       const section = action.payload;
       if (!state.addedSections.find(s => s.id === section.id)) {
@@ -137,9 +147,9 @@ export const addSectionSlice = createSlice({
     addUserSummary: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
       const section = state.addedSections.find(sec => sec.id === sectionId);
-     if (section) {
-       section.description = detail;
-     }
+      if (section) {
+        section.description = detail;
+      }
     },
     addUserSoft_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
@@ -169,7 +179,7 @@ export const addSectionSlice = createSlice({
     addUserCertificates: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
       // console.log(sectionId, detail, "userCertificates");
-      state.userCertificates=detail;
+      state.userCertificates = detail;
     },
 
     AddUserReferences: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
@@ -185,15 +195,11 @@ export const addSectionSlice = createSlice({
 
     addUserCustomSection: (state, action: PayloadAction<{ sectionId: number; detail: any, newSecName?: any }>) => {
       const { sectionId, detail, newSecName } = action.payload;
-      console.log(sectionId, detail,newSecName, "addUserSummaryaddUserSummaryaddUserSummary");
       state.userCustomSections = detail
-
-       const section = state.availableSections.find(sec => sec.id === sectionId);
-     if (section) {
-       section.name = newSecName;
-       section.newSecName= newSecName;
-     }
-
+      const section = state.addedSections.find(sec => sec.id === sectionId);
+      if (section) {
+        section.newSecName = newSecName;
+      }
     },
 
     addUserAwards: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
@@ -210,7 +216,7 @@ export const addSectionSlice = createSlice({
   },
 });
 
-export const { addUserAwards, addUserCustomSection, addUserLanguages, AddUserReferences, addNewSection, removeSection, reorderSections,
+export const { sectionEditMode, addUserAwards, addUserCustomSection, addUserLanguages, AddUserReferences, addNewSection, removeSection, reorderSections,
   addUserSoft_Skills, addUserTechnical_Skills, addUserProjects, addUserEducation, addUserExperience, addUserCertificates,
   addUserHeader, addUserSummary
 } =

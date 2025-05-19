@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TiDelete } from 'react-icons/ti';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
-import { addUserLanguages, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserLanguages, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 
 type LanguageType = {
   title: string;
@@ -47,7 +47,7 @@ const AllLanguages = ({
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setEditable(false);
         setEditingIndex(null);
-
+        dispatch(sectionEditMode(false))
         dispatch(addUserLanguages({
           sectionId: data?.id,
           detail: languages
@@ -59,8 +59,10 @@ const AllLanguages = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [languages, dispatch, data?.id]);
 
-  const handleEditableSection = () => setEditable(true);
-
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
   const handleAddLanguage = () => {
     setLanguages([...languages, { title: '', level: 0 }]);
   };
@@ -105,9 +107,7 @@ const AllLanguages = ({
   };
 
   return (
-    <div ref={containerRef} onClick={handleEditableSection}
-
-    >
+    <div ref={containerRef} className={`${editable && 'bg-white'}`} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddLanguage}>
@@ -161,7 +161,6 @@ const AllLanguages = ({
                       onChange={(e) => handleLevelChange(index, Number(e.target.value))}
                       className="w-full opacity-80"
                       style={{ accentColor: textAltColor }}
-
                     />
                   </div>
                 </div>
