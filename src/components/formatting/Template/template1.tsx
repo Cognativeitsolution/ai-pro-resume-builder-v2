@@ -200,7 +200,13 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     };
 
     return (
-        <div className="w-a4 h-a4 relative" style={{ padding: `${currentState.padding || 0}px`, backgroundColor: editMode && templateBgColor }} >
+        <div className="w-a4 h-a4 relative"
+            style={{
+                padding: `${currentState.padding || 0}px`,
+                backgroundColor: editMode ? templateBgColor : undefined,
+                transition: 'background-color 0.9s ease-in-out',
+            }}
+        >
             <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
             <div className="grid grid-cols-12 h-full p-[30px] pb-0">
                 <div className="col-span-8 pr-8">
