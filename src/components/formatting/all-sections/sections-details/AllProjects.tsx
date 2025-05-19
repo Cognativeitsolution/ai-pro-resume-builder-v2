@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUserProjects, removeSection } from '@/redux/slices/addSectionSlice';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 
 type ProjectType = {
@@ -21,11 +22,12 @@ type ProjectType = {
 
 type AllProjectsType = {
   data?: any;
-  color?: string;
+  textColor?: string;
+  textAltColor?: string;
   templateColor: string;
 };
 
-const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsType) => {
+const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '',  templateColor, }: AllProjectsType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userProjects } = useSelector((state: RootState) => state.addSection);
@@ -93,17 +95,16 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
 
 
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && templateColor}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && textAltColor}`} onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color }} onClick={handleAddProject}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button className="cursor-pointer" style={{ color }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
+        <SectionToolbar
+          onCopy={handleAddProject}
+          onDelete={handleRemoveSection}
+          // onMoveUp={handleAddAward}
+          position="top-7 right-2"
+          showDot={true}
+        />
       )}
 
       {/* ===== Education Box ===== */}
@@ -223,7 +224,7 @@ const AllProjects = ({ data = {}, color = '#000', templateColor, }: AllProjectsT
             {/* ====== Delete Button ====== */}
             <div className="flex justify-end">
               <button
-                // onClick={() => handleDelete(index)}
+                onClick={handleRemoveSection}
                 className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
               >
                 <RiDeleteBin6Line size={16} />

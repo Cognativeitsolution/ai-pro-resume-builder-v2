@@ -14,13 +14,15 @@ type LanguageType = {
 
 type AllLanguagesProps = {
   data?: { id: any };
-  color?: string;
-  templateColor: string;
+  textColor?: string;
+  textAltColor?: string;
+  templateColor?: string;
 };
 
 const AllLanguages = ({
   data = { id: '' },
-  color = '#fff',
+  textColor = '#fff',
+  textAltColor,
   templateColor,
 }: AllLanguagesProps) => {
   const dispatch = useDispatch();
@@ -108,10 +110,10 @@ const AllLanguages = ({
     >
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color }} onClick={handleAddLanguage}>
+          <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddLanguage}>
             <RiAddCircleFill size={24} />
           </button>
-          <button className="cursor-pointer" style={{ color }} onClick={handleRemoveSection}>
+          <button className="cursor-pointer" style={{ color: textColor }} onClick={handleRemoveSection}>
             <TiDelete size={30} />
           </button>
         </div>
@@ -129,18 +131,18 @@ const AllLanguages = ({
                     onBlur={() => handleBlur(index)}
                     placeholder="Language"
                     className="text-base placeholder:text-base focus:outline-none bg-transparent "
-                    style={{ color }}
+                    style={{ color: textColor }}
                     autoFocus
                   />
                   {editingIndex === index && lang.title.trim() !== "" && (
                     <div className="flex gap-2">
-                      <div className="text-sm opacity-65" style={{ color }}>
+                      <div className="text-sm opacity-65" style={{ color: textColor }}>
                         {lang.level ?? 0}%
                       </div>
                       <button
                         onClick={() => handleDeleteLanguage(index)}
                         className="opacity-65 hover:opacity-100"
-                        style={{ color }}
+                        style={{ color: textColor }}
                       >
                         <RiDeleteBin6Line size={20} />
                       </button>
@@ -158,7 +160,7 @@ const AllLanguages = ({
                       disabled={lang.title.trim() !== "" ? false : true}
                       onChange={(e) => handleLevelChange(index, Number(e.target.value))}
                       className="w-full opacity-80"
-                      style={{ accentColor: templateColor }}
+                      style={{ accentColor: textAltColor }}
 
                     />
                   </div>
@@ -173,7 +175,7 @@ const AllLanguages = ({
                   onChange={(e) => handleAddFirstLanguage(e.target.value)}
                   placeholder="Language"
                   className="text-base placeholder:text-base focus:outline-none bg-transparent "
-                  style={{ color }}
+                  style={{ color: textColor }}
                   autoFocus
                 />
               </div>
@@ -186,7 +188,7 @@ const AllLanguages = ({
                     value=""
                     disabled={true}
                     className="w-full opacity-80"
-                    style={{ accentColor: templateColor }}
+                    style={{ accentColor: textAltColor }}
 
                   />
                 </div>

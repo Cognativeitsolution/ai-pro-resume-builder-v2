@@ -13,13 +13,15 @@ type TechnicalSkillType = {
 
 type AllTechnicalSkillsProps = {
   data?: { id: any };
-  color?: string;
-  templateColor: string;
+  textColor?: string;
+  textAltColor?: string;
+  templateColor?: string;
 };
 
 const AllTechnicalSkills = ({
   data = { id: '' },
-  color = '#fff',
+  textColor = '#fff',
+  textAltColor,
   templateColor,
 }: AllTechnicalSkillsProps) => {
   const dispatch = useDispatch();
@@ -95,10 +97,10 @@ const AllTechnicalSkills = ({
     <div ref={containerRef} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleAddTechnicalSkill}>
+          <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddTechnicalSkill}>
             <RiAddCircleFill size={24} />
           </button>
-          <button className="cursor-pointer" style={{ color: templateColor }} onClick={handleRemoveSection}>
+          <button className="cursor-pointer" style={{ color: textColor }} onClick={handleRemoveSection}>
             <TiDelete size={30} />
           </button>
         </div>
@@ -111,9 +113,9 @@ const AllTechnicalSkills = ({
               className={`flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium px-3 py-1 transition-all duration-500 ease-in-out ${hoveredIndex === index ? 'pr-5' : ''
                 }`}
               style={{
-                color,
-                background: templateColor,
-                border: `1px solid ${templateColor}`,
+                color: textColor,
+                background: textColor,
+                border: `1px solid ${textColor}`,
               }}
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -132,12 +134,12 @@ const AllTechnicalSkills = ({
                 onBlur={() => handleBlur(index)}
                 placeholder="Technical Skill"
                 className="bg-transparent text-sm truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70 "
-                style={{ color }}
+                style={{ color: textAltColor, }}
                 autoFocus
               />
               {hoveredIndex === index && (
                 <button onClick={() => handleDeleteTechnicalSkill(index)} className="opacity-70 hover:opacity-100">
-                  <RiDeleteBin6Line size={18} style={{ color }} />
+                  <RiDeleteBin6Line size={18} style={{ color: textAltColor, }} />
                 </button>
               )}
             </div>
@@ -146,9 +148,9 @@ const AllTechnicalSkills = ({
             <div
               className="flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium  px-3 py-1"
               style={{
-                color,
-                background: templateColor,
-                border: `1px solid ${templateColor}`,
+                color: textColor,
+                background: textColor,
+                border: `1px solid ${textColor}`,
               }}
             >
               <input
@@ -156,7 +158,7 @@ const AllTechnicalSkills = ({
                 onChange={(e) => handleAddFirstTechnicalSkill(e.target.value)}
                 placeholder="Technical Skill"
                 className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
-                style={{ color }}
+                style={{ color: textAltColor, }}
               />
             </div>
           )}

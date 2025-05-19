@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUserExperience, removeSection } from '@/redux/slices/addSectionSlice';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 
 type ExperienceType = {
@@ -21,11 +22,12 @@ type ExperienceType = {
 
 type AllExperienceType = {
   data?: any;
-  color?: string;
+  textColor?: string;
+  textAltColor?: string;
   templateColor: string;
 };
 
-const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperienceType) => {
+const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', templateColor, }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userExperiences } = useSelector((state: RootState) => state.addSection);
@@ -87,7 +89,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
     };
   }, [experiences, dispatch, data?.id]);
 
-  const handleAddFirstSoftSkill = (value: string) => {
+  const handleAddFirstExperience = (value: string) => {
     const newSkill = { title: value.trim(), description: '', companyName: '', location: '' };
     if (newSkill.title !== '') {
       setExperiences([newSkill]);
@@ -96,18 +98,17 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
 
 
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && templateColor}}`}
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && textAltColor}}`}
       onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color }} onClick={handleAddExperience}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button className="cursor-pointer" style={{ color }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
+        <SectionToolbar
+          onCopy={handleAddExperience}
+          onDelete={handleRemoveSection}
+          // onMoveUp={handleAddAward}
+          position="top-7 right-2"
+          showDot={true}
+        />
       )}
       {/* ===== Education Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1">
@@ -136,7 +137,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
                       value={exp.companyName}
                       placeholder="Company Name"
                       onChange={(e) => handleInputChange(index, 'companyName', e.target.value)}
-                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
+                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                     />
                   </div>
                   {/* ====== Location ====== */}
@@ -147,7 +148,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
                       disabled={!editable}
                       onChange={(e) => handleInputChange(index, 'location', e.target.value)}
                       placeholder="Location"
-                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
+                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
                     />
                   </div>
                 </div>
@@ -181,7 +182,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
                   <input
                     placeholder="Title"
                     value={''}
-                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                    onChange={(e) => handleAddFirstExperience(e.target.value)}
                     className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
                   />
                 </div>
@@ -195,8 +196,8 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
                     type="text"
                     placeholder="Company Name"
                     value={''}
-                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-blue-400"
+                    onChange={(e) => handleAddFirstExperience(e.target.value)}
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
                   />
                 </div>
                 {/* ====== Location ====== */}
@@ -205,9 +206,9 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
                     type="text"
                     disabled={!editable}
                     value={''}
-                    onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                    onChange={(e) => handleAddFirstExperience(e.target.value)}
                     placeholder="Location"
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
+                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
                   />
                 </div>
               </div>
@@ -216,7 +217,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
                 <textarea
                   disabled={!editable}
                   value={''}
-                  onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                  onChange={(e) => handleAddFirstExperience(e.target.value)}
                   placeholder="Description"
                   rows={2}
                   className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
@@ -227,6 +228,7 @@ const AllExperiences = ({ data = {}, color = '#000', templateColor, }: AllExperi
             <div className="flex justify-end mt-2">
               <button
                 className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                onClick={handleRemoveSection}
               >
                 <RiDeleteBin6Line size={16} />
               </button>

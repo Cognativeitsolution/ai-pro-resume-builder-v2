@@ -8,8 +8,9 @@ import CustomDatePicker from '../../custom/CustomDatePicker';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeSection, addUserCustomSection } from '@/redux/slices/addSectionSlice';
-import { RiAddCircleFill } from 'react-icons/ri';
+import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 
 type CustomSectionType = {
@@ -21,11 +22,13 @@ type CustomSectionType = {
 
 type AllCustomSectionType = {
   data?: any;
-  color?: string;
-  templateColor: string;
+  textColor?: string;
+  textAltColor?: string;
+  templateColor?: string;
+  secNewNames?: any;
 };
 
-const AllCustomSection = ({ data = {}, color = '#000', templateColor, }: AllCustomSectionType) => {
+const AllCustomSection = ({ secNewNames, data = {}, textColor = '#000', textAltColor, templateColor, }: AllCustomSectionType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const { userCustomSections } = useSelector((state: RootState) => state.addSection);
@@ -58,7 +61,8 @@ const AllCustomSection = ({ data = {}, color = '#000', templateColor, }: AllCust
       dispatch(removeSection(data));
       dispatch(addUserCustomSection({
         sectionId: data.id,
-        detail: []
+        detail: [],
+        secNewName: secNewNames
       }));
     }
   };
@@ -76,7 +80,8 @@ const AllCustomSection = ({ data = {}, color = '#000', templateColor, }: AllCust
         setEditable(false);
         dispatch(addUserCustomSection({
           sectionId: data.id,
-          detail: customSections
+          detail: customSections,
+          secNewName: secNewNames
         }));
       }
     };
@@ -85,27 +90,32 @@ const AllCustomSection = ({ data = {}, color = '#000', templateColor, }: AllCust
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [customSections, dispatch, data?.id]);
+  }, [customSections, dispatch, data?.id, secNewNames]);
 
+  const handleAddFirstCustomSection = (value: string) => {
+    const newSkill = { title: value.trim(), description: '', companyName: '', location: '' };
+    if (newSkill.title !== '') {
+      setCustomSection([newSkill]);
+    }
+  };
 
   return (
-    <div ref={containerRef} className={`border p-4 flex flex-col gap-4 ${editable ? templateColor : ''}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable ? templateColor : ''}`} onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color }} onClick={handleAddCustomSection}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button className="cursor-pointer" style={{ color }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
+        <SectionToolbar
+          onCopy={handleAddCustomSection}
+          onDelete={handleRemoveSection}
+          // onMoveUp={handleAddAward}
+          position="top-7 right-2"
+          showDot={true}
+        />
       )}
       {/* ===== Education Box ===== */}
-      <div className="flex flex-col gap-3">
-        {customSections.map((exp, index) => (
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 ">
+        {customSections.length > 0 ? customSections.map((exp, index) => (
           <div key={index}>
-            <div className="flex flex-col">
+            <div className="flex flex-col mt-2">
               {/* ====== Job Title ====== */}
               <div className="flex items-center justify-between">
                 <div className='w-full'>
@@ -143,14 +153,63 @@ const AllCustomSection = ({ data = {}, color = '#000', templateColor, }: AllCust
               </div>
             </div>
             {/* ====== Delete Button ====== */}
-            <div className="flex justify-end mt-5">
-              <button className="text-red-600 text-sm flex items-center gap-1" onClick={() => handleDelete(index)}>
-                <FaTrashAlt />
-                <span>Delete</span>
+            <div className="flex justify-end mt-2">
+              <button
+                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                onClick={() => handleDelete(index)}>
+                <RiDeleteBin6Line size={16} />
               </button>
             </div>
           </div>
-        ))}
+        )) :
+          <div>
+            <div className="flex flex-col mt-2">
+              {/* ====== Job Title ====== */}
+              <div className="flex items-center justify-between">
+                <div className='w-full'>
+                  <input
+                    placeholder="Title"
+                    value={''}
+                    onChange={(e) => handleAddFirstCustomSection(e.target.value)}
+                    className="w-full text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                  />
+                </div>
+                {/* ====== Date Picker ====== */}
+                <CustomDatePicker onChange={(dates) => console.log(dates)} />
+              </div>
+              {/* ====== Location ====== */}
+              <div className='w-full'>
+                <input
+                  type="text"
+                  disabled={!editable}
+                  value={''}
+                  onChange={(e) => handleAddFirstCustomSection(e.target.value)}
+                  placeholder="Location"
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                />
+              </div>
+              {/* ====== Description ====== */}
+              <div>
+                <textarea
+                  disabled={!editable}
+                  value={''}
+                  onChange={(e) => handleAddFirstCustomSection(e.target.value)}
+                  placeholder="Description"
+                  rows={2}
+                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                ></textarea>
+              </div>
+            </div>
+            {/* ====== Delete Button ====== */}
+            <div className="flex justify-end mt-2">
+              <button
+                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                onClick={handleRemoveSection}>
+                <RiDeleteBin6Line size={16} />
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
   );
