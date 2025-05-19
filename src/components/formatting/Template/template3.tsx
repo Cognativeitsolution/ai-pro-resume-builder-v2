@@ -53,14 +53,14 @@ const Template3 = (props: ResumePreviewProps) => {
 
                         {data?.name === "Education" && (<AllEducations data={data} color="#000" templateColor="#fff" />)}
 
-                        {data && data.name === "Soft_Skills" && <AllSoftSkills data={data} color="#000" templateColor="#fff" />}
-                        {data && data.name === "Technical_Skills" && <AllTechnialSkills data={data} color="#000" templateColor="#fff" />}
+                        {data && data.name === "Soft Skills" && <AllSoftSkills data={data} color="#000" templateColor="#fff" />}
+                        {data && data.name === "Technical Skills" && <AllTechnialSkills data={data} color="#000" templateColor="#fff" />}
                         {data?.name === "Projects" && (<AllProjects data={data} color="#000" templateColor="#fff" />)}
                         {data?.name === "Certificate" && (<AllCertificates data={data} color="#000" templateColor="#fff" />)}
                         {data?.name === "Awards" && (<AllAwards data={data} color="#000" templateColor="#fff" />)}
                         {data?.name === "Languages" && (<AllLanguages data={data} color="#000" templateColor="#fff" />)}
                         {data?.name === "References" && (<AllReferences data={data} color="#000" templateColor="#fff" />)}
-                        {data?.name === "Custom_Section" && (<AllCustomSections data={data} color="#000" templateColor="#fff" />)}
+                        {data?.name === "Custom Section" && (<AllCustomSections data={data} color="#000" templateColor="#fff" />)}
 
                     </div>
                 ))}

@@ -31,15 +31,16 @@ const AllSections = () => {
     <div className='grid gap-4 max-h-[650px] overflow-auto p-2 mt-4'>
       {
         availableSections?.map((section: any) => {
-          if (section.name === 'Soft_Skills') return <SoftSkills key={section.id} sectionData={section} handleAddSec={handleAdd} />;
-          if (section.name === 'Technical_Skills') return <TechnicalSkills key={section.id} sectionData={section} handleAddSec={handleAdd} />;
+          if (section.name === 'Soft Skills') return <SoftSkills key={section.id} sectionData={section} handleAddSec={handleAdd} />;
+          if (section.name === 'Technical Skills') return <TechnicalSkills key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'Certificate') return <Certificate key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'Experience') return <Experience key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'Education') return <Education key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'Projects') return <Projects key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'Awards') return <Awards key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'References') return <References key={section.id} sectionData={section} handleAddSec={handleAdd} />;
-          if (section.name === 'Custom_Section') return <CustomSections key={section.id} sectionData={section} handleAddSec={handleAdd} />;
+          if (section.name === 'Custom Section') return <CustomSections />;
+          // if (section.name === 'Custom Section') return <CustomSections key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'Languages') return <Languages key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           return null;
         })

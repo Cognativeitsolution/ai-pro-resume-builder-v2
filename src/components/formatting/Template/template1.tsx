@@ -43,6 +43,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
     const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
+    const [secName, setSecName] = useState('');
 
     //============= all sections
     const getAllText = () => {
@@ -55,6 +56,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         }).join("\n");
     };
 
+    useEffect(() => {
+        setSecName('Custom Section')
+    }, [])
+
+    const HandleChangeSectionName = (data: any) => {
+        console.log(data);
+        setSecName(data)
+
+    }
     const fullText = getAllText();
 
     //============= improve text logic
@@ -121,10 +131,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         switch (section?.name) {
             case "Summary":
                 return <AllSummary data={section} />;
-            case "Soft_Skills":
-                return <AllSoftSkills data={section} textColor="#fff" textAltColor="#000" />;
-            case "Technical_Skills":
-                return <AllTechnicalSkills data={section} textColor="#fff" textAltColor="#000" />;
+            case "Soft Skills":
+                return <AllSoftSkills data={section} textColor="#000" templateColor="#fff" />;
+            case "Technical Skills":
+                return <AllTechnicalSkills data={section} textColor="#000" templateColor="#fff" />;
             case "Certificate":
                 return <AllCertificates data={section} textColor="" templateColor="" />;
             case "Education":
@@ -134,13 +144,13 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Projects":
                 return <AllProjects data={section} textColor="" textAltColor="" templateColor="" />;
             case "Awards":
-                return <AllAwards data={section} textColor="" textAltColor="#000"  templateColor="" />;
+                return <AllAwards data={section} color="#000" templateColor={currentState.color} />;
             case "References":
-                return <AllReferences data={section} textColor="#000" textAltColor="#000" templateColor="" />;
+                return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={""} />;
             case "Languages":
-                return <AllLanguages data={section} textColor="#fff" textAltColor="#3358c5" templateColor=""  />;
-            case "Custom_Section":
-                return <AllCustomSection data={section} textColor="#000" textAltColor="#fff" templateColor="" />;
+                return <AllLanguages data={section} textColor="#fff" templateColor="#3358c5" />;
+            case "Custom Section":
+                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
@@ -154,7 +164,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         };
         return `${base * (scaleMap[size] || 1)}px`;
     };
-    const rightSideSections = ["Technical_Skills", "Soft_Skills", "Languages"];
+    const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
     const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
     const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 
@@ -189,11 +199,14 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         leftSections.map((section: any, index: number) => (
                             <div key={index} className="py-4 relative">
                                 <div className="border-b ">
-                                    {section?.name == "Custom_Section" ?
-                                        <input type="text" className="text-[18px] font-semibold mb-1 "
+                                    {section?.name == "Custom Section" ?
+                                        <input
+                                            onChange={(e) => HandleChangeSectionName(e.target.value)}
+                                            type="text" className="text-[18px] font-semibold mb-1 "
                                             style={{
                                                 color: currentState.color
-                                            }} value={section?.name}
+                                            }}
+                                            value={secName}
                                         />
                                         :
                                         <h2 className="text-[18px] font-semibold mb-1 " style={{
@@ -213,10 +226,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 <div className={`col-span-4 px-[10px] -mr-[30px] z-10`} >
                     {/*====== conact info ======*/}
                     <div className="p-3">
-                        <div className="flex justify-center mb-2">
+                        <div className="flex justify-center mb-6">
                             <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
                         </div>
-                        <div className="flex justify-center flex-col gap-1">
+                        <div className="flex justify-center flex-col gap-2">
                             <div className="border-b text-start text-white flex items-center gap-2 pb-1 mb-1" style={{
                                 fontSize: scaleFont(24, currentState.fontSize),
                                 fontFamily: currentState.fontFamily,
@@ -226,15 +239,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                             </div>
                             <div className="flex items-start gap-2 text-white">
                                 <IconDropdown icons={FaIcons} />
-                                <input placeholder="Phone" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                                <input placeholder="Phone" className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent" />
                             </div>
                             <div className="flex items-start gap-2 text-white">
                                 <IconDropdown icons={FaIcons} />
-                                <input placeholder="Email" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                                <input placeholder="Email" className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent" />
                             </div>
                             <div className="flex items-start gap-2 text-white">
                                 <IconDropdown icons={FaIcons} />
-                                <textarea placeholder="Address" className="w-full placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                                <textarea placeholder="Address" className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent" />
                             </div>
                         </div>
                     </div>
