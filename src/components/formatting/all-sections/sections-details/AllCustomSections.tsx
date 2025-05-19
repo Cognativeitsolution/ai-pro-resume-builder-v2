@@ -62,7 +62,7 @@ const AllCustomSection = ({ secNewNames, data = {}, textColor = '#000', textAltC
       dispatch(addUserCustomSection({
         sectionId: data.id,
         detail: [],
-        secNewName: secNewNames
+        newSecName: secNewNames
       }));
     }
   };
@@ -81,7 +81,7 @@ const AllCustomSection = ({ secNewNames, data = {}, textColor = '#000', textAltC
         dispatch(addUserCustomSection({
           sectionId: data.id,
           detail: customSections,
-          secNewName: secNewNames
+          newSecName: secNewNames
         }));
       }
     };

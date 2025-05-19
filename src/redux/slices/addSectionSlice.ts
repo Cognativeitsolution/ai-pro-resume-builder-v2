@@ -183,7 +183,7 @@ export const addSectionSlice = createSlice({
       state.userLanguages = detail
     },
 
-    addUserCustomSection: (state, action: PayloadAction<{ sectionId: number; detail: any, newSecName: any }>) => {
+    addUserCustomSection: (state, action: PayloadAction<{ sectionId: number; detail: any, newSecName?: any }>) => {
       const { sectionId, detail, newSecName } = action.payload;
       console.log(sectionId, detail,newSecName, "addUserSummaryaddUserSummaryaddUserSummary");
       state.userCustomSections = detail

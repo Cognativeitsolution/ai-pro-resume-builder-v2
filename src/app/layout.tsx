@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Lexend } from "next/font/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "./globals.css";
 import ConditionalLayout from "./Layout/conditionalLayout";
 import ReduxProvider from "@/redux/Provider";
 import "suneditor/dist/css/suneditor.min.css";
 import { Suspense } from "react";
+import { primary } from "./configs/font";
+
 
 // Meta Data
-const lexend = Lexend({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
   // Title & Descriptions
   title: "AI Pro Resume Builder",
@@ -46,7 +42,7 @@ export default function RootLayout({ children }: any) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={lexend.className} cz-shortcut-listen="true">
+      <body className={`${primary.variable} font-primary `} cz-shortcut-listen="true">
         <ReduxProvider>
           <Suspense>
             <ConditionalLayout>
