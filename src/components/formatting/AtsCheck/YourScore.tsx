@@ -1,16 +1,13 @@
 "use client";
-
+// ===========
 import React, { useState } from "react";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+// ===========
 import { BiSolidLock } from "react-icons/bi";
 import { IoMdClose } from "react-icons/io";
 import { MdDone } from "react-icons/md";
-import {
-  RiArrowDropDownLine,
-  RiArrowDropUpLine,
-  RiErrorWarningLine,
-} from "react-icons/ri";
-import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { RiArrowDropDownLine, RiArrowDropUpLine, RiErrorWarningLine, } from "react-icons/ri";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -41,7 +38,7 @@ const YourScore = () => {
 
   const options = {
     responsive: true,
-    cutout: "60%", // To create donut effect
+    cutout: "60%",
     plugins: {
       legend: {
         display: false,

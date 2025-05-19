@@ -28,7 +28,7 @@ const AllSections = () => {
 
   return (
 
-    <div className='grid gap-4 max-h-[650px] overflow-auto p-2 mt-4'>
+    <div className='grid gap-4 max-h-[650px] overflow-auto pl-0 p-2 mt-4'>
       {
         availableSections?.map((section: any) => {
           if (section.name === 'Soft Skills') return <SoftSkills key={section.id} sectionData={section} handleAddSec={handleAdd} />;
@@ -39,7 +39,7 @@ const AllSections = () => {
           if (section.name === 'Projects') return <Projects key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'Awards') return <Awards key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'References') return <References key={section.id} sectionData={section} handleAddSec={handleAdd} />;
-          if (section.name === 'Custom Section') return <CustomSections />;
+          if (section.name === 'Custom Section') return <CustomSections key={section.id} />;
           // if (section.name === 'Custom Section') return <CustomSections key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           if (section.name === 'Languages') return <Languages key={section.id} sectionData={section} handleAddSec={handleAdd} />;
           return null;

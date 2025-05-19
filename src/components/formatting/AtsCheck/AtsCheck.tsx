@@ -1,9 +1,10 @@
 "use client";
-
-import Image from "next/image";
+// ===========
 import React, { useState } from "react";
-import UploadImg from "../../../../public/assets/upload-file.webp";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+// ===========
+import UploadImg from "../../../../public/assets/upload-file.webp";
 
 const AtsCheck = () => {
   const [fileData, setFileData] = useState<{ name: string; file: File | null }>(
@@ -26,7 +27,7 @@ const AtsCheck = () => {
       });
       setLoading(true);
       setTimeout(() => {
-        router.push("/resume-parser");
+        router.push("/ats-score");
       }, 200);
     } else {
       setFileData({
@@ -35,30 +36,30 @@ const AtsCheck = () => {
       });
     }
   };
+
   return (
     <>
       <div className="mt-4">
         {loading ? (
-          <div className="flex items-center justify-center h-screen">
+          <div className="flex flex-col items-center justify-center gap-5 pt-28">
+            <p className="text-[20px] font-semibold text-[#707275]">Uploading Resume</p>
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-purple-500"></div>
           </div>
         ) : (
-          <div className="flex flex-col items-start justify-center gap-3">
-            {/* <h1> ATS Check Content</h1>
-          <p className="text-sm">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem
-            veritatis cum sint quia ullam ratione repellendus rerum eligendi
-            distinctio voluptatum, quam molestiae explicabo at quasi atque neque
-            vel odio laudantium, laboriosam, veniam saepe enim. Nostrum, eligendi
-            velit, rerum soluta omnis magni, provident nulla ab obcaecati porro
-            reiciendis quibusdam dolorum at.
-          </p> */}
+          <div className="flex flex-col items-center justify-center gap-3">
+            <h3 className="text-[24px] font-semibold"> ATS Check Content</h3>
+            <p className="text-[16px] text-center mb-5">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem
+              veritatis cum sint quia ullam ratione repellendus rerum eligendi
+              distinctio voluptatum, quam molestiae explicabo at quasi atque neque
+              vel odio laudantium, laboriosam, veniam saepe enim. Nostrum, eligendi
+              velit, rerum soluta omnis magni, provident nulla ab obcaecati porro
+              reiciendis quibusdam dolorum at.
+            </p>
 
             <label
               htmlFor="uploadFile1"
-              className=" border-[1.2px] border-dashed border-[#7d16c4] font-semibold text-base rounded-3xl w-full h-52 flex 
-                                      flex-col items-center justify-center cursor-pointer"
-            >
+              className=" border-[1.2px] border-dashed border-[#7d16c4] font-semibold text-base rounded-3xl w-full h-52 flex flex-col items-center justify-center cursor-pointer">
               <div className="bg-white/85 backdrop-blur-sm p-3 rounded-full mb-3">
                 <Image src={UploadImg} alt="upload" width={40} height={40} />
               </div>

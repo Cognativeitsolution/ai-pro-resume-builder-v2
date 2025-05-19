@@ -72,8 +72,8 @@ function TemplateSwitch() {
     const dispatch = useDispatch();
 
     return (
-        <div className="h-[600px] overflow-y-auto pr-2 border-4">
-            <div className="grid grid-cols-2 gap-3 mt-4 px-2">
+        <div className="h-[600px] overflow-y-auto mt-4 pt-2">
+            <div className="grid grid-cols-2 gap-3 pr-2">
                 {templateData.map((template) => (
                     <div
                         key={template.id}

@@ -1,9 +1,13 @@
 "use client";
 //=============
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setProfileImage } from '@/redux/slices/profileImageSlice';
+//===== Images =====
+import * as FaIcons from 'react-icons/fa';
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
 //===== Section Components =====
 import AllSummary from "../all-sections/sections-details/AllSummary";
@@ -18,7 +22,6 @@ import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
-import * as FaIcons from 'react-icons/fa';
 
 type CurrentState = {
     fontSize: any;
@@ -36,7 +39,8 @@ type ResumePreviewProps = {
 }
 
 const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
-    const addedSections = useSelector((state: any) => state.addSection.addedSections);
+    const dispatch = useDispatch();
+    const { addedSections, sectionBgColor, editMode } = useSelector((state: any) => state.addSection);
     console.log(addedSections, "addedSections===========>")
 
     const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
@@ -44,6 +48,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [secName, setSecName] = useState('');
+    const [templateBgColor, setTemplateBgColor] = useState<any>('');
 
     //============= all sections
     const getAllText = () => {
@@ -66,6 +71,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
     }
     const fullText = getAllText();
+
+    // ===================
+    useEffect(() => {
+        setTemplateBgColor(sectionBgColor)
+    }, [editMode, sectionBgColor])
 
     //============= improve text logic
     useEffect(() => {
@@ -126,6 +136,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             );
         });
     };
+
     // ========== Render Sections
     const renderSection = (section: any) => {
         switch (section?.name) {
@@ -168,9 +179,28 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
     const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 
+    //============= upload image
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const imageSrc = useSelector((state: RootState) => state.profileImage.image);
+
+    const handleImageClick = () => {
+        fileInputRef.current?.click();
+    };
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (typeof reader.result === 'string') {
+                    dispatch(setProfileImage(reader.result));
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     return (
-        <div className="w-a4 h-a4 relative" style={{ padding: `${currentState.padding || 0}px`, }} >
+        <div className="w-a4 h-a4 relative" style={{ padding: `${currentState.padding || 0}px`, backgroundColor: editMode && templateBgColor }} >
             <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
             <div className="grid grid-cols-12 h-full p-[30px] pb-0">
                 <div className="col-span-8 pr-8">
@@ -197,7 +227,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     {/*====== Left Sections ======*/}
                     {leftSections?.length > 0 ? (
                         leftSections.map((section: any, index: number) => (
-                            <div key={index} className="py-4 relative">
+                            <div key={index} className="py-4  relative">
                                 <div className="border-b ">
                                     {section?.name == "Custom Section" ?
                                         <input
@@ -209,9 +239,16 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                                             value={secName}
                                         />
                                         :
-                                        <h2 className="text-[18px] font-semibold mb-1 " style={{
-                                            color: currentState.color
-                                        }}>{highlightWords(section?.name)}</h2>
+                                        <h2 className="text-[18px] font-semibold mb-1"
+                                            style={{
+                                                color: currentState.color
+                                            }}>
+                                            {highlightWords(
+                                                section?.name === "Custom Section" && section?.newSecName
+                                                    ? section.newSecName
+                                                    : section?.name
+                                            )}
+                                        </h2>
                                     }
                                 </div>
                                 <div className="mt-2">{renderSection(section)}</div>
@@ -224,11 +261,26 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     {loading && <p className="text-gray-500 mt-4">Checking for spelling/grammar errors...</p>}
                 </div>
                 <div className={`col-span-4 px-[10px] -mr-[30px] z-10`} >
-                    {/*====== conact info ======*/}
+                    {/*====== Image ======*/}
                     <div className="p-3">
-                        <div className="flex justify-center mb-6">
-                            <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
+                        <div className="flex justify-center mb-6 w-[160px] h-[160px] mx-auto rounded-full overflow-hidden cursor-pointer">
+                            <Image
+                                src={imageSrc || placeHolderImg}
+                                alt="Profile Image"
+                                width={160}
+                                height={160}
+                                className="w-full"
+                                onClick={handleImageClick}
+                            />
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                className="hidden"
+                            />
                         </div>
+                        {/*====== conact info ======*/}
                         <div className="flex justify-center flex-col gap-2">
                             <div className="border-b text-start text-white flex items-center gap-2 pb-1 mb-1" style={{
                                 fontSize: scaleFont(24, currentState.fontSize),
@@ -258,7 +310,27 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                             rightSections.map((section: any, index: number) => (
                                 <div key={index} className="py-4 relative">
                                     <div className="border-b text-white">
-                                        <h2 className="text-[18px] mb-1">{highlightWords(section?.name)}</h2>
+                                        {section?.name == "Custom Section" ?
+                                            <input
+                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
+                                                type="text" className="text-[18px] font-semibold mb-1 "
+                                                style={{
+                                                    color: currentState.color
+                                                }}
+                                                value={secName}
+                                            />
+                                            :
+                                            <h2 className="text-[18px] font-semibold mb-1"
+                                                style={{
+                                                    color: currentState.color
+                                                }}>
+                                                {highlightWords(
+                                                    section?.name === "Custom Section" && section?.newSecName
+                                                        ? section.newSecName
+                                                        : section?.name
+                                                )}
+                                            </h2>
+                                        }
                                     </div>
                                     <div className="mt-2">{renderSection(section)}
                                     </div>
