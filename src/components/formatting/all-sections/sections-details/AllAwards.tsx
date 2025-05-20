@@ -147,7 +147,9 @@ const AllAwards = ({
                 }
               }}
             >
-              <span> <FaAward color={textAltColor} /></span>
+              <span style={{
+                color: textAltColor
+              }}> <FaAward /></span>
               <input
                 value={award.title}
                 onChange={(e) => handleInputChange(index, e.target.value)}
@@ -168,11 +170,13 @@ const AllAwards = ({
             <div
               className="flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium  px-3 py-1"
               style={{
-                color: textColor,
+                // color: textColor,
                 border: `1px solid #000`,
               }}
             >
-              <span> <FaAward /></span>
+              <span> <FaAward style={{
+                color: textAltColor
+              }} /></span>
               <input
                 value={''}
                 onChange={(e) => handleAddFirstAward(e.target.value)}

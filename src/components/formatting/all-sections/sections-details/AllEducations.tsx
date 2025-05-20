@@ -22,8 +22,8 @@ type EducationType = {
 type AllEducationType = {
   data?: any;
   textColor?: string;
-  textAltColor: string;
-  templateColor: string;
+  textAltColor?: string;
+  templateColor?: string;
 };
 
 const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateColor }: AllEducationType) => {
@@ -126,6 +126,9 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                       placeholder="Degree and Field of Study"
                       onChange={(e) => handleInputChange(index, 'degree', e.target.value)}
                       className="w-full text-[16px] bg-transparent rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                      style={{
+                        color: textAltColor ? textAltColor : textColor
+                      }}
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
@@ -140,6 +143,9 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                       placeholder="School or University"
                       onChange={(e) => handleInputChange(index, 'schoolName', e.target.value)}
                       className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                      style={{
+                        color: textColor
+                      }}
                     />
                   </div>
                   {/* ====== Location ====== */}
@@ -151,6 +157,9 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                       onChange={(e) => handleInputChange(index, 'location', e.target.value)}
                       placeholder="Location"
                       className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
+                      style={{
+                        color: textColor
+                      }}
                     />
                   </div>
                 </div>
@@ -175,6 +184,9 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     className="w-full text-[16px] bg-transparent rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                    style={{
+                      color: textAltColor ? textAltColor : textColor
+                    }}
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -189,6 +201,9 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                    style={{
+                      color: textColor
+                    }}
                   />
                 </div>
                 {/* ====== Location ====== */}
@@ -200,6 +215,9 @@ const AllEducation = ({ data = {}, textColor = '#000', textAltColor, templateCol
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     placeholder="Location"
                     className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
+                    style={{
+                      color: textColor
+                    }}
                   />
                 </div>
               </div>

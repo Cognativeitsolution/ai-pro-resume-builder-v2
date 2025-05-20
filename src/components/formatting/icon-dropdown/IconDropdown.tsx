@@ -3,9 +3,10 @@ import { IoMdAddCircle } from 'react-icons/io';
 
 interface IconDropdownProps {
     icons: Record<string, React.ComponentType<any>>; // Dynamic icons passed as props
+    iconColor?: string
 }
 
-export default function IconDropdown({ icons }: IconDropdownProps) {
+export default function IconDropdown({ icons, iconColor }: IconDropdownProps) {
     const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -51,9 +52,9 @@ export default function IconDropdown({ icons }: IconDropdownProps) {
                                 <div
                                     key={iconKey}
                                     onClick={() => handleSelect(iconKey)}
-                                    className="flex flex-col items-center p-2 cursor-pointer hover:bg-gray-100 rounded text-black"
+                                    className={`flex flex-col items-center p-2 cursor-pointer hover:bg-gray-100 rounded ${iconColor ? iconColor : "text-black"}`}
                                 >
-                                    <IconComponent size={24} />
+                                    <IconComponent size={24} color={iconColor} />
                                 </div>
                             );
                         })}

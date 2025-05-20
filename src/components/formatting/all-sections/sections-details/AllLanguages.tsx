@@ -17,6 +17,7 @@ type AllLanguagesProps = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  editableAltBG?: string;
 };
 
 const AllLanguages = ({
@@ -24,6 +25,7 @@ const AllLanguages = ({
   textColor = '#fff',
   textAltColor,
   templateColor,
+  editableAltBG
 }: AllLanguagesProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -107,7 +109,7 @@ const AllLanguages = ({
   };
 
   return (
-    <div ref={containerRef} className={`${editable && 'bg-white'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`p-1 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddLanguage}>

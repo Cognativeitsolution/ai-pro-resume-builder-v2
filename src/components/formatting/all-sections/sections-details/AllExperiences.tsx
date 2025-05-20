@@ -24,7 +24,7 @@ type AllExperienceType = {
   data?: any;
   textColor?: string;
   textAltColor?: string;
-  templateColor: string;
+  templateColor?: string;
 };
 
 const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', templateColor, }: AllExperienceType) => {
@@ -126,6 +126,9 @@ const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', 
                       placeholder="Title"
                       onChange={(e) => handleInputChange(index, 'title', e.target.value)}
                       className="w-full text-[16px] bg-transparent rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                      style={{
+                        color: textAltColor ? textAltColor : textColor
+                      }}
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
@@ -137,9 +140,12 @@ const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', 
                     <input
                       type="text"
                       value={exp.companyName}
-                      placeholder="Company Nassme"
+                      placeholder="Company Name"
                       onChange={(e) => handleInputChange(index, 'companyName', e.target.value)}
                       className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                      style={{
+                        color: textColor
+                      }}
                     />
                   </div>
                   {/* ====== Location ====== */}
@@ -151,6 +157,9 @@ const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', 
                       onChange={(e) => handleInputChange(index, 'location', e.target.value)}
                       placeholder="Location"
                       className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
+                      style={{
+                        color: textColor
+                      }}
                     />
                   </div>
                 </div>
@@ -163,6 +172,9 @@ const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', 
                     placeholder="Description"
                     rows={2}
                     className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                    style={{
+                      color: textColor
+                    }}
                   ></textarea>
                 </div>
               </div>
@@ -186,6 +198,9 @@ const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', 
                     value={''}
                     onChange={(e) => handleAddFirstExperience(e.target.value)}
                     className="w-full text-[16px] bg-transparent rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                    style={{
+                      color: textAltColor ? textAltColor : textColor
+                    }}
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -200,6 +215,9 @@ const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', 
                     value={''}
                     onChange={(e) => handleAddFirstExperience(e.target.value)}
                     className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                    style={{
+                      color: textAltColor ? textAltColor : textColor
+                    }}
                   />
                 </div>
                 {/* ====== Location ====== */}
@@ -211,6 +229,9 @@ const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', 
                     onChange={(e) => handleAddFirstExperience(e.target.value)}
                     placeholder="Location"
                     className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
+                    style={{
+                      color: textColor
+                    }}
                   />
                 </div>
               </div>
@@ -223,6 +244,9 @@ const AllExperiences = ({ data = {}, textColor = '#000', textAltColor = '#000', 
                   placeholder="Description"
                   rows={2}
                   className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                  style={{
+                    color: textColor
+                  }}
                 ></textarea>
               </div>
             </div>

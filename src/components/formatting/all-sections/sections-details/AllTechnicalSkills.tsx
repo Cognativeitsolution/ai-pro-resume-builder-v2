@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TiDelete } from 'react-icons/ti';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
-import { addUserTechnical_Skills, removeSection } from '@/redux/slices/addSectionSlice';
+import { addUserTechnical_Skills, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 
 type TechnicalSkillType = {
   title: string;
@@ -16,6 +16,7 @@ type AllTechnicalSkillsProps = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  editableAltBG?: string;
 };
 
 const AllTechnicalSkills = ({
@@ -23,6 +24,7 @@ const AllTechnicalSkills = ({
   textColor = '#fff',
   textAltColor,
   templateColor,
+  editableAltBG,
 }: AllTechnicalSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,6 +47,7 @@ const AllTechnicalSkills = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setEditable(false);
+        dispatch(sectionEditMode(false))
         const validTechnicalSkills = technicalskills.filter(skill => skill.title.trim() !== '');
         dispatch(addUserTechnical_Skills({
           sectionId: data.id,
@@ -57,7 +60,10 @@ const AllTechnicalSkills = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [technicalskills, dispatch, data.id]);
 
-  const handleEditableSection = () => setEditable(true);
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
 
   const handleAddTechnicalSkill = () => {
     setTechnicalSkills([...technicalskills, { title: '', level: 0 }]);
@@ -94,7 +100,7 @@ const AllTechnicalSkills = ({
   };
 
   return (
-    <div ref={containerRef} className={`${editable && 'bg-white p-1'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`p-1 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
         <div className="flex gap-1 absolute top-5 right-0">
           <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddTechnicalSkill}>
