@@ -142,11 +142,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft Skills":
-                return <AllSoftSkills data={section} textColor="#000" templateColor="#fff" />;
+                return <AllSoftSkills data={section} textColor="#fff" textAltColor="#000" templateColor="#fff" editableAltBG="bg-gray-900/80" />;
             case "Technical Skills":
-                return <AllTechnicalSkills data={section} textColor="#000" templateColor="#fff" />;
+                return <AllTechnicalSkills data={section} textColor="#fff" textAltColor="#000" templateColor="#fff" editableAltBG="bg-gray-900/80" />;
             case "Certificate":
-                return <AllCertificates data={section} textColor="" templateColor="" />;
+                return <AllCertificates data={section} />;
             case "Education":
                 return <AllEducations data={section} textColor="" textAltColor="" templateColor="" />;
             case "Experience":
@@ -154,11 +154,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Projects":
                 return <AllProjects data={section} textColor="" textAltColor="" templateColor="" />;
             case "Awards":
-                return <AllAwards data={section} color="#000" templateColor={currentState.color} />;
+                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} />;
             case "References":
-                return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={""} />;
+                return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={currentState.color} />;
             case "Languages":
-                return <AllLanguages data={section} textColor="#fff" templateColor="#3358c5" />;
+                return <AllLanguages data={section} textColor="#fff" templateColor="#3358c5" editableAltBG="bg-gray-900/80" />;
             case "Custom Section":
                 return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" />;
             default:
@@ -319,16 +319,12 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                                             <input
                                                 onChange={(e) => HandleChangeSectionName(e.target.value)}
                                                 type="text" className="text-[18px] font-semibold mb-1 "
-                                                style={{
-                                                    color: currentState.color
-                                                }}
+
                                                 value={secName}
                                             />
                                             :
                                             <h2 className="text-[18px] font-semibold mb-1"
-                                                style={{
-                                                    color: currentState.color
-                                                }}>
+                                            >
                                                 {highlightWords(
                                                     section?.name === "Custom Section" && section?.newSecName
                                                         ? section.newSecName

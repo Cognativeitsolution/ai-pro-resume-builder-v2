@@ -18,12 +18,14 @@ type CertificateType = {
 type AllSummaryType = {
   data?: any;
   textColor?: string;
-  templateColor: string;
+  textAltColor?: string;
+  templateColor?: string;
 };
 
 const AllCertificates = ({
   data = {},
-  textColor = '#fff',
+  textColor,
+  textAltColor,
   templateColor
 }: AllSummaryType) => {
   const dispatch = useDispatch();
@@ -130,7 +132,11 @@ const AllCertificates = ({
                     onChange={(e) => handleInputChange(index, 'title', e.target.value)}
                     onBlur={() => handleBlur(index)}
                     placeholder="Title"
-                    className="w-full bg-transparent text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0" />
+                    className="w-full bg-transparent text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                    style={{
+                      color: textAltColor ? textAltColor : textColor
+                    }}
+                  />
                 </div>
                 {/* ====== Date Picker ====== */}
                 <CustomDatePicker onChange={(dates) => console.log(dates)} />
@@ -144,6 +150,9 @@ const AllCertificates = ({
                   onBlur={() => handleBlur(index)}
                   onChange={(e) => handleInputChange(index, 'institutionName', e.target.value)}
                   className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                  style={{
+                    color: textColor
+                  }}
                 />
               </div>
               <div>
@@ -155,6 +164,9 @@ const AllCertificates = ({
                   placeholder="Description"
                   rows={2}
                   className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
+                  style={{
+                    color: textColor
+                  }}
                 />
               </div>
               <div className="absolute bottom-2 right-2">
@@ -177,6 +189,9 @@ const AllCertificates = ({
                   onChange={(e) => handleAddFirstCertificate(e.target.value)}
                   placeholder="Title"
                   className="w-full text-[16px] bg-transparent rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
+                  style={{
+                    color: textAltColor ? textAltColor : textColor
+                  }}
                 />
               </div>
               {/* ====== Date Picker ====== */}
@@ -189,6 +204,9 @@ const AllCertificates = ({
                 value=""
                 onChange={(e) => handleAddFirstCertificate(e.target.value)}
                 className="w-full text-[14px] rounded bg-transparent placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
+                style={{
+                  color: textColor
+                }}
               />
             </div>
             <div>
@@ -199,6 +217,9 @@ const AllCertificates = ({
                 placeholder="Description"
                 rows={2}
                 className="w-full text-[14px] rounded bg-transparent placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
+                style={{
+                  color: textColor
+                }}
               />
             </div>
             <div className="absolute bottom-2 right-2">

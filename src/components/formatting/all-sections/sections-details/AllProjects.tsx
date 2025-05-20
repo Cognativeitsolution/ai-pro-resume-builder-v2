@@ -24,7 +24,7 @@ type AllProjectsType = {
   data?: any;
   textColor?: string;
   textAltColor?: string;
-  templateColor: string;
+  templateColor?: string;
 };
 
 const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '', templateColor, }: AllProjectsType) => {

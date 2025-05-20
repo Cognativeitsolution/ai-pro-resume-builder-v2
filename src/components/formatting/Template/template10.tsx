@@ -1,24 +1,30 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+//=============
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-// Import all the reusable section components
+import Image from "next/image";
+import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setProfileImage } from '@/redux/slices/profileImageSlice';
+//===== Images =====
+import * as FaIcons from 'react-icons/fa';
+import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
+//===== Section Components =====
+import AllSummary from "../all-sections/sections-details/AllSummary";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
 import AllEducations from "../all-sections/sections-details/AllEducations";
 import AllExperiences from "../all-sections/sections-details/AllExperiences";
 import AllProjects from "../all-sections/sections-details/AllProjects";
-import Image from "next/image";
-import placeHolderImg from "media/assets/reusme_placeholder_image.webp"
 import AllSoftSkills from "../all-sections/sections-details/AllSoftSkills";
-import AllSummary from "../all-sections/sections-details/AllSummary";
+import AllLanguages from "../all-sections/sections-details/AllLanguages";
 import AllTechnicalSkills from "../all-sections/sections-details/AllTechnicalSkills";
 import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
-import AllLanguages from "../all-sections/sections-details/AllLanguages";
+import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 
 type CurrentState = {
-    fontSize: string;
+    fontSize: any;
     fontFamily: string;
     fontWeight: string;
     color: string;
@@ -26,21 +32,25 @@ type CurrentState = {
     padding: number;
     text: any;
 }
+
 type ResumePreviewProps = {
     currentState: CurrentState;
     updateState: (newState: CurrentState) => void;
 }
 
-const Template10 = (props: ResumePreviewProps) => {
-    const addedSections = useSelector((state: any) => state.addSection.addedSections);
-    const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
-    const { fontFamily, fontSize, color } = useSelector((state: any) => state.font)
+const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
+    const dispatch = useDispatch();
+    const { addedSections, sectionBgColor, editMode } = useSelector((state: any) => state.addSection);
+    console.log(addedSections, "addedSections===========>")
 
+    const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
     const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
     const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
+    const [secName, setSecName] = useState('');
+    const [templateBgColor, setTemplateBgColor] = useState<any>('');
 
-    //all sections
+    //============= all sections
     const getAllText = () => {
         return addedSections?.map((section: any) => {
             if (typeof section?.content === "string") return section.content;
@@ -51,9 +61,23 @@ const Template10 = (props: ResumePreviewProps) => {
         }).join("\n");
     };
 
+    useEffect(() => {
+        setSecName('Custom Section')
+    }, [])
+
+    const HandleChangeSectionName = (data: any) => {
+        console.log(data);
+        setSecName(data)
+
+    }
     const fullText = getAllText();
 
-    // improve text logic
+    // ===================
+    useEffect(() => {
+        setTemplateBgColor(sectionBgColor)
+    }, [editMode, sectionBgColor])
+
+    //============= improve text logic
     useEffect(() => {
         const fetchCorrections = async () => {
             if (!spellCheck && !grammarCheck) return;
@@ -92,7 +116,7 @@ const Template10 = (props: ResumePreviewProps) => {
         fetchCorrections();
     }, [spellCheck, grammarCheck, fullText]);
 
-    // Highlight function
+    //============= Highlight function
     const highlightWords = (text: string) => {
         return text.split(/\s+/).map((word, index) => {
             const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
@@ -113,75 +137,217 @@ const Template10 = (props: ResumePreviewProps) => {
         });
     };
 
+    // ========== Render Sections
     const renderSection = (section: any) => {
         switch (section?.name) {
             case "Summary":
                 return <AllSummary data={section} />;
-            case "Soft_Skills":
-                return <AllSoftSkills data={section} textColor="#fff" textAltColor="#000" />;
-            case "Technical_Skills":
-                return <AllTechnicalSkills data={section} textColor="#fff" textAltColor="#000" />;
+            case "Soft Skills":
+                return <AllSoftSkills data={section} textColor="#000" textAltColor="#fff" templateColor="#000" />;
+            case "Technical Skills":
+                return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#fff" templateColor="#000" />;
             case "Certificate":
-                return <AllCertificates data={section} textColor="" templateColor="" />;
+                return <AllCertificates data={section} textAltColor="#F54A00" />;
             case "Education":
-                return <AllEducations data={section} textColor="" textAltColor="" templateColor="" />;
+                return <AllEducations data={section} textAltColor="#F54A00" />;
             case "Experience":
-                return <AllExperiences data={section} textColor="" textAltColor="" templateColor="" />;
+                return <AllExperiences data={section} textAltColor="#F54A00" />;
             case "Projects":
-                return <AllProjects data={section} textColor="" textAltColor="" templateColor="" />;
+                return <AllProjects data={section} textAltColor="#F54A00" />;
             case "Awards":
-                return <AllAwards data={section} textColor="" textAltColor="#000"  templateColor="" />;
+                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} />;
             case "References":
-                return <AllReferences data={section} textColor="#000" textAltColor="#000" templateColor="" />;
+                return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={currentState.color} />;
             case "Languages":
-                return <AllLanguages data={section} textColor="#fff" textAltColor="#3358c5" templateColor=""  />;
-            case "Custom_Section":
-                return <AllCustomSection data={section} textColor="#000" textAltColor="#fff" templateColor="" />;
+                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" />;
+            case "Custom Section":
+                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
     };
 
-    // Font Logic
+    const scaleFont = (base: number, size: string) => {
+        const scaleMap: Record<string, number> = {
+            small: 0.85,
+            medium: 1,
+            large: 1.2,
+        };
+        return `${base * (scaleMap[size] || 1)}px`;
+    };
+    const leftSideSections = ["Technical Skills", "Soft Skills", "Languages"];
+    const rightSections = addedSections?.filter((section: any) => !leftSideSections.includes(section?.name));
+    const leftSections = addedSections?.filter((section: any) => leftSideSections.includes(section?.name));
 
-    const getFontSize = (base: number, scale: 'small' | 'medium' | 'large') => {
-        const scaleFactor = scale === 'small' ? 0.85 : scale === 'large' ? 1.08 : 1;
-        return `${base * scaleFactor}px`;
+    //============= upload image
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const imageSrc = useSelector((state: RootState) => state.profileImage.image);
+
+    const handleImageClick = () => {
+        fileInputRef.current?.click();
+    };
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (typeof reader.result === 'string') {
+                    dispatch(setProfileImage(reader.result));
+                }
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
-    const nameFontSize = getFontSize(40, fontSize); // base is 40px
-    const descFontSize = getFontSize(18, fontSize); // base is 18px
-
     return (
-        <div className="w-a4 h-a4 grid grid-cols-12">
-            <div className="col-span-12 p-6" >
-                {/* Header Left Start*/}
-                <div className="flex flex-col items-start justify-center gap-2 p-3" style={{ background: color }}>
-                    <div className="">
-                        <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
-                    </div>
-                    <div className="">
-                        <input placeholder="Name" className="w-full text-white placeholder-white bg-transparent" />
-                        <input placeholder="Designation" className="w-full text-white placeholder-white bg-transparent" />
+        <div className="w-a4 h-a4 "
+            style={{
+                padding: `${currentState.padding || 0}px`,
+                backgroundColor: editMode ? templateBgColor : undefined,
+                transition: 'background-color 0.9s ease-in-out',
+            }}
+        >
+            <div className="grid grid-cols-12 gap-4 p-6">
+                <div className="col-span-12 relative">
+                    <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
+                    {/* Header Left Start*/}
+                    <div className="grid grid-cols-12 gap-2 p-3" style={{ backgroundColor: currentState.color }}>
+                        <div className="col-span-4">
+                            <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full mx-auto" />
+                        </div>
+                        <div className="col-span-8 ">
+                            <input
+                                placeholder="Name"
+                                className="outline-none bg-transparent font-semibold text-white placeholder:text-white"
+                                style={{
+                                    fontSize: scaleFont(30, currentState.fontSize),
+                                    fontFamily: currentState.fontFamily,
+                                }}
+                            />
+                            <input
+                                placeholder="Designation"
+                                className="w-full rounded placeholder:text-[18px] bg-transparent focus:outline-none focus:ring-0 focus:border-0 text-white placeholder:text-white"
+                                style={{
+                                    fontSize: scaleFont(18, currentState.fontSize),
+                                    fontFamily: currentState.fontFamily,
+                                    color: currentState.color,
+                                }}
+                            />
+                            <div className="flex flex-col gap-1">
+                                <div className="flex gap-2">
+                                    <div className="border rounded-full flex justify-center items-center bg-white h-6 w-6 text-orange-600">
+                                        <IconDropdown icons={FaIcons} />
+                                    </div>
+                                    <div className="">
+                                        <input
+                                            placeholder="Phone"
+                                            className="w-full rounded placeholder:text-[16px] bg-transparent focus:outline-none focus:ring-0 focus:border-0 text-white placeholder:text-white"
+                                            style={{
+                                                fontSize: scaleFont(16, currentState.fontSize),
+                                                fontFamily: currentState.fontFamily,
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <div className="border rounded-full flex justify-center items-center bg-white h-6 w-6 text-orange-600">
+                                        <IconDropdown icons={FaIcons} />
+                                    </div>
+                                    <div className="">
+                                        <input
+                                            placeholder="Email"
+                                            className="w-full rounded placeholder:text-[16px] bg-transparent focus:outline-none focus:ring-0 focus:border-0 text-white placeholder:text-white"
+                                            style={{
+                                                fontSize: scaleFont(16, currentState.fontSize),
+                                                fontFamily: currentState.fontFamily,
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <div className="border rounded-full flex justify-center items-center bg-white h-6 w-6 text-orange-600">
+                                        <IconDropdown icons={FaIcons} />
+                                    </div>
+                                    <div className="">
+                                        <input
+                                            placeholder="Location"
+                                            className="w-full rounded placeholder:text-[16px] bg-transparent focus:outline-none focus:ring-0 focus:border-0 text-white placeholder:text-white"
+                                            style={{
+                                                fontSize: scaleFont(16, currentState.fontSize),
+                                                fontFamily: currentState.fontFamily,
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="" >
-                    {/* Header Left End*/}
-                    {addedSections?.length > 0 ? (
-                        addedSections.map((section: any, index: number) => (
-                            <div key={index} className="border-b py-4">
-                                <h2 className="text-xl font-semibold mb-2">{highlightWords(section?.name)}</h2>
-                                {renderSection(section)}
+
+                <div className="col-span-4">
+                    {/*====== left Sections ======*/}
+                    <div className="">
+                        {leftSections?.length > 0 &&
+                            leftSections.map((section: any, index: number) => (
+                                <div key={index} className="py-4 relative">
+                                    <div className="border-b text-white">
+                                        {section?.name == "Custom Section" ?
+                                            <input
+                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
+                                                type="text" className="text-[18px] font-semibold mb-1 "
+                                                style={{
+                                                    color: currentState.color
+                                                }}
+                                                value={secName}
+                                            />
+                                            :
+                                            <h2 className="text-[18px] font-semibold mb-1 text-gray-950"
+                                            >
+                                                {highlightWords(
+                                                    section?.name === "Custom Section" && section?.newSecName
+                                                        ? section.newSecName
+                                                        : section?.name
+                                                )}
+                                            </h2>
+                                        }
+                                    </div>
+                                    <div className="mt-2">{renderSection(section)}
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </div>
+                <div className="col-span-8 ">
+                    {/*====== Left Sections ======*/}
+                    {rightSections?.length > 0 ? (
+                        rightSections.map((section: any, index: number) => (
+                            <div key={index} className="py-4  relative">
+                                <div className="border-b ">
+                                    {section?.name == "Custom Section" ?
+                                        <input
+                                            onChange={(e) => HandleChangeSectionName(e.target.value)}
+                                            type="text" className="text-[18px] font-semibold mb-1"
+                                            value={secName}
+                                        />
+                                        :
+                                        <h2 className="text-[18px] font-semibold mb-1">
+                                            {highlightWords(
+                                                section?.name === "Custom Section" && section?.newSecName
+                                                    ? section.newSecName
+                                                    : section?.name
+                                            )}
+                                        </h2>
+                                    }
+                                </div>
+                                <div className="mt-2">{renderSection(section)}</div>
                             </div>
                         ))
                     ) : (
                         <p>No sections added yet.</p>
                     )}
-
-                    {loading && <p className="text-gray-500 mt-4">Checking for spelling/grammar errors...</p>}
                 </div>
             </div>
-
         </div>
     );
 };

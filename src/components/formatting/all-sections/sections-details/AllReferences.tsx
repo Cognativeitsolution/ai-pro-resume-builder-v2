@@ -114,25 +114,23 @@ const AllReferences = ({
       <div className="flex flex-col gap-3">
         {references.length > 0 ? (
           references.map((cert, index) => (
-            <div key={index} className='relative pb-2 pt-[6px]'>
+            <div key={index} className='flex justify-between my-[6px] mx-2 rounded-sm px-2 transition-all duration-500 ease-in-out' style={{
+              color: textColor,
+              border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
+            }}
+              onMouseOver={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setHoveredIndex(index);
+                }
+              }}
+              onMouseOut={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setHoveredIndex(null);
+                }
+              }}>
               {/* ====== Job Name ====== */}
-              <div className="flex items-center gap-4  rounded-sm px-2 transition-all duration-500 ease-in-out"
-                style={{
-                  color: textColor,
-                  border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
-                }}
-                onMouseOver={(e) => {
-                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                    setHoveredIndex(index);
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                    setHoveredIndex(null);
-                  }
-                }}
-              >
-                <div className='relative mr-10'>
+              <div className="flex items-center gap-4  " >
+                <div className='flex items-center justify-center gap-4'>
                   <input
                     value={cert.name}
                     onChange={(e) => handleInputChange(index, 'name', e.target.value)}
@@ -141,7 +139,7 @@ const AllReferences = ({
                     type='text'
                     className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                   />
-                  <div className="absolute top-[11px] -right-7 h-[2px] w-5  " style={{
+                  <div className="h-[2px] w-5  " style={{
                     background: textAltColor
                   }}></div>
                 </div>
@@ -154,7 +152,7 @@ const AllReferences = ({
                   className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
                 />
               </div>
-              <div className="absolute top-2 right-2">
+              <div className="">
                 <button
                   onClick={() => handleDelete(index)}
                   className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
@@ -165,21 +163,21 @@ const AllReferences = ({
             </div>
           ))
         ) : (
-          <div className='relative pb-2 pt-[6px]'>
+          <div className='flex justify-between px-2 my-[6px] mx-2 rounded-sm' style={{
+            color: textColor,
+            border: `1px solid ${textColor}`,
+          }}>
             {/* ====== Job Name ====== */}
-            <div className="flex items-center gap-4 rounded-sm px-2 transition-all duration-500 ease-in-out"
-              style={{
-                color: textColor,
-                border: `1px solid ${textColor}`,
-              }}>
-              <div className='relative mr-5'>
+            <div className="flex items-center gap-4  px-2 "
+            >
+              <div className='flex items-center justify-center gap-4 '>
                 <input
                   value=""
                   onChange={(e) => handleAddFirstReference(e.target.value)}
                   placeholder="Reference Name"
                   className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                 />
-                <div className=" absolute top-[11px] -right-7 h-[2px] w-5  " style={{
+                <div className="  h-[2px] w-5  " style={{
                   background: textAltColor
                 }}></div>
               </div>
@@ -188,10 +186,10 @@ const AllReferences = ({
                 placeholder="Reference Contact"
                 value=""
                 onChange={(e) => handleAddFirstReference(e.target.value)}
-                className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
+                className=" w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
               />
             </div>
-            <div className="absolute top-2 right-2">
+            <div className="">
               <button
                 className="text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
                 onClick={handleAddReference}
