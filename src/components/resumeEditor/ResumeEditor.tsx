@@ -73,7 +73,7 @@ const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
 
     return (
         <>
-            {sectionData?.locked && <AddSectionClipPath />}
+            {/* {sectionData?.locked && <AddSectionClipPath />} */}
             {popup && <Popup handleAddSec={handleAddSection} sectionData={sectionData} />}
 
             <UserHeader
