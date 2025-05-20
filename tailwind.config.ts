@@ -20,14 +20,14 @@ export default {
         xl: "1200px",
         "2xl": "1400px",
       },
-      fontFamily: {
-        primary: ["var(--font-primary),sans-serif"],
-      },
       width: {
         a4: '940px',
       },
       height: {
         a4: '1330px',
+      },
+      fontFamily: {
+        primary: ["var(--font-primary),sans-serif"],
       },
       colors: {
         background: "var(--background)",
