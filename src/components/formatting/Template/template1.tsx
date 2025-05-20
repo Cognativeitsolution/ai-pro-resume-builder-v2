@@ -41,7 +41,7 @@ type ResumePreviewProps = {
 const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const dispatch = useDispatch();
     const { addedSections, sectionBgColor, editMode } = useSelector((state: any) => state.addSection);
-    console.log(addedSections, "addedSections===========>")
+    console.log(addedSections,sectionBgColor, "addedSections===========>")
 
     const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
     const [incorrectWords, setIncorrectWords] = useState<string[]>([]);

@@ -111,7 +111,7 @@ const AllSoftSkills = ({
         </div>
       )}
       <div className="flex flex-wrap gap-2 mt-1">
-        {softskills.length > 0 ?
+        {softskills.length > 0 &&
           softskills.map((skill, index) => (
             <div
               key={index}
@@ -148,24 +148,7 @@ const AllSoftSkills = ({
               )}
             </div>
           ))
-          : (
-            <div
-              className="flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium  px-3 py-1"
-              style={{
-                color: textColor,
-                background: textColor,
-                border: `1px solid ${textColor}`,
-              }}
-            >
-              <input
-                value={''}
-                onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
-                placeholder="Soft Skill"
-                className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
-                style={{ color: textAltColor, }}
-              />
-            </div>
-          )}
+          }
       </div>
     </div>
   );

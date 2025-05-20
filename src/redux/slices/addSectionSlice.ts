@@ -168,7 +168,9 @@ export const addSectionSlice = createSlice({
     },
     addUserEducation: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      // console.log(sectionId, detail, "userEducation");
+      // console.log("here in redux",detail )
+      console.log(action)
+      console.log(sectionId, detail, "userEducation");
       state.userEducation = detail;
     },
     addUserExperience: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {

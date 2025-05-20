@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlignCenter, AlignLeft, AlignRight, Bold, CircleSmall, ListOrdered, LucideCopyPlus, Underline } from 'lucide-react';
+import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, CircleSmall, ListOrdered, LucideCopyPlus, Underline } from 'lucide-react';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { ImMoveUp } from 'react-icons/im';
 
@@ -44,8 +44,8 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
            <AlignCenter   size={18}
                     className="text-indigo-400 hover:text-indigo-600 hover:scale-110 transition-transform duration-300" />
           </button>
-          <button onClick={() => execCommand("justifyRight")} className="btn">
-            <AlignRight   size={18}
+          <button onClick={() => execCommand("justifyFull")} className="btn">
+            <AlignJustify    size={18}
                     className="text-indigo-400 hover:text-indigo-600 hover:scale-110 transition-transform duration-300" />
           </button>
        
