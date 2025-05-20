@@ -10,7 +10,7 @@ import SectionToolbar from '../../section-toolbar/SectionToolbar';
 // ==============
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeSection, addUserCustomSection } from '@/redux/slices/addSectionSlice';
+import { removeSection, addUserCustomSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 
 
 type CustomSectionType = {
@@ -34,8 +34,11 @@ const AllCustomSection = ({ secNewNames, data = {}, textColor = '#000', textAltC
   const { userCustomSections } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState<boolean>(false);
   const [customSections, setCustomSection] = useState<CustomSectionType[]>([]);
-  const handleEditableSection = () => setEditable(true);
 
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true))
+  }
   // Sync local state with Redux store whenever userCustomSections changes
   useEffect(() => {
     if (Array.isArray(userCustomSections) && userCustomSections.length > 0) {
@@ -78,6 +81,7 @@ const AllCustomSection = ({ secNewNames, data = {}, textColor = '#000', textAltC
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setEditable(false);
+        dispatch(sectionEditMode(false))
         dispatch(addUserCustomSection({
           sectionId: data.id,
           detail: customSections,
@@ -85,7 +89,6 @@ const AllCustomSection = ({ secNewNames, data = {}, textColor = '#000', textAltC
         }));
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -100,7 +103,7 @@ const AllCustomSection = ({ secNewNames, data = {}, textColor = '#000', textAltC
   };
 
   return (
-    <div ref={containerRef} className={`flex flex-col gap-4 ${editable ? templateColor : ''}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col gap-4 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
         <SectionToolbar

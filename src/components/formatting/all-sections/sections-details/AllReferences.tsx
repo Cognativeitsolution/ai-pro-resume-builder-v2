@@ -44,6 +44,21 @@ const AllReferences = ({
     }
   }, [userReferences]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setEditable(false);
+        dispatch(sectionEditMode(false))
+        dispatch(AddUserReferences({
+          sectionId: data.id,
+          detail: references
+        }));
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [references, dispatch, data.id]);
 
   const handleEditableSection = () => {
     setEditable(true);
@@ -86,7 +101,7 @@ const AllReferences = ({
   };
 
   return (
-    <div ref={containerRef} className={`mt-3 flex flex-col bg-white`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`mt-3 flex flex-col ${editable && 'bg-white'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           onCopy={handleAddReference}
@@ -124,9 +139,9 @@ const AllReferences = ({
                     onBlur={() => handleBlur(index)}
                     placeholder="Reference Name"
                     type='text'
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                    className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                   />
-                  <div className=" absolute top-[11px] -right-7 h-[2px] w-5  " style={{
+                  <div className="absolute top-[11px] -right-7 h-[2px] w-5  " style={{
                     background: textAltColor
                   }}></div>
                 </div>
@@ -136,7 +151,7 @@ const AllReferences = ({
                   placeholder="Reference Contact"
                   onBlur={() => handleBlur(index)}
                   onChange={(e) => handleInputChange(index, 'contact', e.target.value)}
-                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
+                  className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
                 />
               </div>
               <div className="absolute top-2 right-2">
@@ -162,7 +177,7 @@ const AllReferences = ({
                   value=""
                   onChange={(e) => handleAddFirstReference(e.target.value)}
                   placeholder="Reference Name"
-                  className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                 />
                 <div className=" absolute top-[11px] -right-7 h-[2px] w-5  " style={{
                   background: textAltColor
@@ -173,12 +188,12 @@ const AllReferences = ({
                 placeholder="Reference Contact"
                 value=""
                 onChange={(e) => handleAddFirstReference(e.target.value)}
-                className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
+                className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
               />
             </div>
             <div className="absolute top-2 right-2">
               <button
-                className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                className="text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
                 onClick={handleAddReference}
               >
                 <RiDeleteBin6Line size={16} />

@@ -26,7 +26,6 @@ type ResumePreviewProps = {
 
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
-  console.log(selectedTemplate, "selectedTemplate===========>")
 
   const renderTemplate = () => {
     switch (selectedTemplate) {

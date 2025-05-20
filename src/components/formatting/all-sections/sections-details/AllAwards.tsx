@@ -32,7 +32,6 @@ const AllAwards = ({
   const [editable, setEditable] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [awards, setAwards] = useState<AwardType[]>([]);
-  const { editMode } = useSelector((state: any) => state.addSection);
 
   useEffect(() => {
     if (Array.isArray(userAwards) && userAwards.length > 0) {
@@ -50,7 +49,6 @@ const AllAwards = ({
         setEditable(false);
         dispatch(sectionEditMode(false))
         const validAwards = awards.filter(award => award.title.trim() !== '');
-
         dispatch(addUserAwards({
           sectionId: data.id,
           detail: validAwards
@@ -100,10 +98,25 @@ const AllAwards = ({
       setAwards(updated);
     }
   };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setEditable(false);
+        dispatch(sectionEditMode(false))
+        const validAwards = awards.filter(award => award.title.trim() !== '');
 
+        dispatch(addUserAwards({
+          sectionId: data.id,
+          detail: validAwards
+        }));
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [awards, dispatch, data.id]);
   return (
-    <div ref={containerRef} className={`pb-4 pt-[6px] flex  flex-col gap-4 
-    ${editable && 'bg-white border border-red-600'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`pb-4 pt-[6px] flex  flex-col gap-4  ${editable && 'bg-white '}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           onCopy={handleAddAward}

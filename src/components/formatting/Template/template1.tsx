@@ -41,7 +41,6 @@ type ResumePreviewProps = {
 const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const dispatch = useDispatch();
     const { addedSections, sectionBgColor, editMode } = useSelector((state: any) => state.addSection);
-    console.log(addedSections, "addedSections===========>")
 
     const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
     const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
@@ -204,7 +203,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             style={{
                 padding: `${currentState.padding || 0}px`,
                 backgroundColor: editMode ? templateBgColor : undefined,
-                transition: 'background-color 0.9s ease-in-out',
+                transition: 'background-color 0.6s ease-in-out',
             }}
         >
             <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
@@ -221,8 +220,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                             }}
                         />
                         <input
-                            placeholder="Desisssssgnation"
-                            className="w-full rounded  bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0 "
+                            placeholder="Designation"
+                            className="w-full rounded bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0 "
                             style={{
                                 fontSize: scaleFont(18, currentState.fontSize),
                                 fontFamily: currentState.fontFamily,

@@ -66,8 +66,6 @@ const DesignFont = ({ currentState, updateState, }: DesignFontProps) => {
   const dispatch = useDispatch();
   const globalColor = useSelector((state: RootState) => state.font.color)
 
-  console.log(globalColor, "globalColor============>")
-
   // Define font family
   const fontStyles: { [key: string]: string } = {
     Rubik: rubik.className,

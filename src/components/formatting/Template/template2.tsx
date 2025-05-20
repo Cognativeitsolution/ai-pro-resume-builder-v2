@@ -30,7 +30,6 @@ type ResumePreviewProps = {
 
 const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
     const addedSections = useSelector((state: any) => state.addSection.addedSections);
-    console.log(addedSections, "addedSections===========>")
 
     const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
     const [incorrectWords, setIncorrectWords] = useState<string[]>([]);

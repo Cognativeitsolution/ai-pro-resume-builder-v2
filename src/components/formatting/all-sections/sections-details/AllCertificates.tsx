@@ -43,23 +43,27 @@ const AllCertificates = ({
     }
   }, [userCertificates]);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-      setEditable(false);
-      dispatch(sectionEditMode(false))
-      const validCertificates = certificates.filter(
-        certificate => certificate.title.trim() && certificate.institutionName.trim()
-      );
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setEditable(false);
+        dispatch(sectionEditMode(false))
+        const validCertificates = certificates.filter(
+          certificate => certificate.title.trim() && certificate.institutionName.trim()
+        );
 
-      // Only dispatch if something actually changed or is valid
-      if (validCertificates.length > 0) {
-        dispatch(addUserCertificates({
-          sectionId: data.id,
-          detail: validCertificates
-        }));
+        // Only dispatch if something actually changed or is valid
+        if (validCertificates.length > 0) {
+          dispatch(addUserCertificates({
+            sectionId: data.id,
+            detail: validCertificates
+          }));
+        }
       }
-    }
-  };
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [certificates, dispatch, data.id]);
 
   const handleEditableSection = () => {
     setEditable(true);
