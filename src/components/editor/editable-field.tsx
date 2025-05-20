@@ -5,11 +5,13 @@ export default function EditableField({
   html,
   onChange,
   placeholder,
+  placeholderClassName,
   className = '',
 }: {
   html: string;
   onChange: (val: string) => void;
   placeholder?: string;
+  placeholderClassName?: string;
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -32,7 +34,7 @@ export default function EditableField({
     <div className="relative w-full">
       {/* Placeholder */}
       {(!html || html === '<br>') && !isFocused && (
-        <div className="absolute left-0 top-0 text-gray-400 pointer-events-none text-sm">
+        <div className={`absolute left-0 top-0 text-gray-400 pointer-events-none text-sm , ${placeholderClassName}`}>
           {placeholder}
         </div>
       )}

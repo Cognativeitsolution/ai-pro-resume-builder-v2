@@ -206,7 +206,8 @@ const AllEducation = ({
                         handleContentChange(index, "location", val)
                       }
                        placeholder="Location"
-                      className="text-[16px] bg-transparent"
+                      className="text-[16px] bg-transparent text-right"
+                      placeholderClassName="text-right"
                     />
                   </div>
                 </div>
