@@ -214,15 +214,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     <div className="flex flex-col">
                         <input
                             placeholder="Name"
-                            className="outline-none focus:bg-transparent font-semibold text-zinc-900"
+                            className="outline-none bg-transparent font-semibold text-zinc-900"
                             style={{
                                 fontSize: scaleFont(30, currentState.fontSize),
                                 fontFamily: currentState.fontFamily,
                             }}
                         />
                         <input
-                            placeholder="Designation"
-                            className="w-full rounded placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0 "
+                            placeholder="Desisssssgnation"
+                            className="w-full rounded  bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0 "
                             style={{
                                 fontSize: scaleFont(18, currentState.fontSize),
                                 fontFamily: currentState.fontFamily,
