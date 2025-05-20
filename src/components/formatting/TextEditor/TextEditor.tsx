@@ -10,6 +10,7 @@ import DesignFont from "../DesignFont/DesignFont";
 import ImproveText from "../improveText/improveText";
 import AtsCheck from "../AtsCheck/AtsCheck";
 import ReArrange from "../rearrange/rearrange";
+import AiAssistant from "../aiAssistant/AiAssistant";
 // ===============
 import sections from 'media/builderIcons/sections.svg';
 import templetes from 'media/builderIcons/templetes.svg';
@@ -48,7 +49,7 @@ const TextEditor = (props: TextEditorProps) => {
   return (
     <>
       <div className="flex gap-2 sticky top-[11%]">
-        <div className="w-[18%] py-4 bg-[#ffffff] border border-gray-300 rounded-md">
+        <div className="w-[18%] py-4 bg-[#ffffff] border border-gray-300 rounded-xl">
           <ul className="flex flex-col gap-8">
             <li
               className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "Add Section" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
@@ -125,9 +126,9 @@ const TextEditor = (props: TextEditorProps) => {
           </ul>
         </div>
 
-        <div className="w-[70%] p-4 bg-[#ffffff] border border-gray-300 rounded-md">
+        <div className="w-[70%] p-4 bg-[#ffffff] border border-gray-300 rounded-xl relative overflow-hidden">
           <div className="flex justify-between items-center pb-3 border-b border-gray-300">
-            <h3 className="text-[16px] text-[#707275] font-bold">{activeTab}</h3>
+            <h3 className="text-[16px] text-[#707275] font-semibold">{activeTab}</h3>
           </div>
           {/* ===== Add Sections ===== */}
           {activeTab === "Add Section" && (
@@ -150,7 +151,7 @@ const TextEditor = (props: TextEditorProps) => {
           {/* ===== ATS Check ===== */}
           {activeTab === "ATS Check" && <AtsCheck />}
           {/* ===== AI Assistant ===== */}
-          {activeTab === "AI Assistant" && <div>AI Assistant Content</div>}
+          {activeTab === "AI Assistant" && <AiAssistant />}
           {/* ===== Summary Generator ===== */}
           {activeTab === "Summary Generator" && <div>Summary Generator Content</div>}
           {/* ===== Rearrange ===== */}
