@@ -210,7 +210,7 @@ const AllProjects = ({ data = {}, textColor = '#000', textAltColor = '', templat
                     value={''}
                     onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
                     placeholder="Location"
-                    className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
+                    className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end"
                   />
                 </div>
               </div>

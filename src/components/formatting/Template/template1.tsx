@@ -203,7 +203,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             style={{
                 padding: `${currentState.padding || 0}px`,
                 backgroundColor: editMode ? templateBgColor : undefined,
-                transition: 'background-color 0.6s ease-in-out',
+                transition: 'background-color 0.3s ease-in-out',
             }}
         >
             <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
