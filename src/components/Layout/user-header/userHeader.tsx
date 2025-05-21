@@ -2,8 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import { jsPDF } from 'jspdf';
 import { FaAngleDown } from 'react-icons/fa6';
-// ===============
 import logo from 'media/builderIcons/logo.svg';
+import html2canvas from "html2canvas"
 import pen from 'media/builderIcons/pen.svg';
 import plus from 'media/builderIcons/plus.svg';
 import right from 'media/builderIcons/right.svg';
@@ -13,7 +13,6 @@ import preview from 'media/builderIcons/preview.svg';
 import crown from 'media/builderIcons/crown.svg';
 import user from 'media/builderIcons/user.svg';
 
-// Define types for props
 type HeaderProps = {
   currentState: {
     fontSize: string;
@@ -29,16 +28,24 @@ type HeaderProps = {
 
 const UserHeader = (props: HeaderProps) => {
   const { currentState, handleUndo, handleRedo, history, future } = props
-  const downloadPDF = () => {
-    const doc = new jsPDF();
-    const fontSize = parseInt(currentState.fontSize, 10);
-    doc.setFontSize(fontSize);
-    const fontFamily = currentState.fontFamily || 'Arial';
-    doc.setFont(fontFamily);
-    const color = currentState.color || '#000000';
-    doc.setTextColor(color);
-    doc.text(currentState.text, 10, 20);
-    doc.save('resume.pdf');
+  const downloadPDF = async() => {
+    const resume = document.getElementById("resume-content");
+
+  if (!resume) return;
+
+  const canvas = await html2canvas(resume, {
+    scale: 2,
+    useCORS: true, 
+  });
+console.log(canvas)
+  const imgData = canvas.toDataURL("image/png");
+const pdf = new jsPDF("p", "mm", "a4");
+
+ const imgProps = pdf.getImageProperties(imgData);
+  const pdfWidth = 210
+  const pdfHeight = 297
+  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  pdf.save("resume.pdf");
   };
 
   return (

@@ -35,7 +35,7 @@ export default function IconDropdown({ icons, iconColor }: IconDropdownProps) {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-[30px] flex justify-center items-start pt-[2px]"
+                className=" flex justify-center items-start "
             >
                 {SelectedIconComponent
                     ? <SelectedIconComponent size={18} />

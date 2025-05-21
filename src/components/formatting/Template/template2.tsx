@@ -140,16 +140,12 @@ const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
 
 
     return (
-        <div className="w-a4 h-a4 flex relative"
+        <div id="resume-content" className="w-a4 h-a4 flex relative"
             style={{
                 margin: `${currentState.margin || 0}px`,
                 padding: `${currentState.padding || 0}px`,
             }}
         >
-            <div
-                className="absolute right-0 top-0 h-full w-[35%] z-0"
-                style={{ backgroundColor: currentState.color }}
-            />
             <div className="w-[65%] z-10 p-6">
                 {/* Header Left Start*/}
                 <div className="flex flex-col">
@@ -186,12 +182,12 @@ const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
 
                 {loading && <p className="text-gray-500 mt-4">Checking for spelling/grammar errors...</p>}
             </div>
-            <div className={`w-[35%] z-10`} >
+            <div className={`w-[35%] z-10`} style={{ backgroundColor: currentState.color }} >
                 {/* conact info */}
                 <div className="p-3">
 
                     <div className="flex justify-center mb-2">
-                        <Image src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
+                        <Image unoptimized src={placeHolderImg} alt="profile Image" width={160} height={160} className="rounded-full" />
                     </div>
                     <div className="flex justify-center flex-col gap-1">
                         <div className="border-b text-start text-white flex gap-2" style={{
