@@ -21,10 +21,10 @@ export default {
         "2xl": "1400px",
       },
       width: {
-        a4: '940px',
+        a4: '210mm',
       },
       height: {
-        a4: '1330px',
+        a4: '297mm',
       },
       fontFamily: {
         primary: ["var(--font-primary),sans-serif"],

@@ -14,7 +14,6 @@ type ChatMessage = {
 export default function ChatBox() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
-    const [buttonsVisible, setButtonsVisible] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [aiTime] = useState(() =>
         new Date().toLocaleTimeString([], {
@@ -37,13 +36,11 @@ export default function ChatBox() {
         const time = getCurrentTime();
         setMessages(prev => [...prev, { text: input, time }]);
         setInput('');
-        setButtonsVisible(false);
     };
 
     const handleButtonClick = (text: string) => {
         const time = getCurrentTime();
         setMessages(prev => [...prev, { text, time }]);
-        setButtonsVisible(false);
     };
 
     const handleAttachClick = () => {
@@ -69,7 +66,6 @@ export default function ChatBox() {
                     isDocument,
                 },
             ]);
-            setButtonsVisible(false);
         }
     };
 
@@ -82,34 +78,38 @@ export default function ChatBox() {
                     <div className="text-[16px] py-3 px-10 w-max mx-auto flex items-center justify-center bg-primaryNew rounded-xl rounded-tl-none text-black">
                         Welcome! How can I assist you today?
                     </div>
-                    <div className="text-[14px] text-[#676767] capitalize px-10 mt-1">
+                    <div className="text-[12px] text-[#676767] capitalize px-10 mt-1">
                         {aiTime}
                     </div>
                 </div>
 
                 {/*{/*===== Buttons {/*=====*/}
-                {buttonsVisible && (
-                    <div className="flex flex-wrap justify-center gap-4 mb-4">
+                <div className='mb-5'>
+                    <div className="flex flex-wrap gap-4 py-3 px-2 bg-primaryNew rounded-xl rounded-tl-none">
+                        <p className="text-[15px] text-black">Please select an option below to get started.</p>
                         <button
                             onClick={() => handleButtonClick('Create New Resume')}
-                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-transparent hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
+                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
                         >
                             Create New Resume
                         </button>
                         <button
                             onClick={() => handleButtonClick('Edit Existing Resume')}
-                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-transparent hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
+                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
                         >
                             Edit Existing Resume
                         </button>
                         <button
                             onClick={() => handleButtonClick('Generate Cover Letter')}
-                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-transparent hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
+                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
                         >
                             Generate Cover Letter
                         </button>
                     </div>
-                )}
+                    <div className="text-[12px] text-[#676767] capitalize mt-1">
+                        {aiTime}
+                    </div>
+                </div>
 
                 {/*{/*===== User Messages {/*=====*/}
                 <div className="flex flex-col gap-2">
@@ -126,7 +126,7 @@ export default function ChatBox() {
                                     msg.text
                                 )}
                             </div>
-                            <div className="text-[14px] text-[#676767] w-max ml-auto capitalize mt-1">
+                            <div className="text-[12px] text-[#676767] w-max ml-auto capitalize mt-1">
                                 {msg.time}
                             </div>
                         </div>
