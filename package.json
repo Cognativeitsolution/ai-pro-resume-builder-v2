@@ -17,6 +17,7 @@
     "embla-carousel-auto-scroll": "^8.5.2",
     "embla-carousel-autoplay": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
+    "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.3",
     "js-cookie": "^3.0.5",
     "jspdf": "^3.0.1",
