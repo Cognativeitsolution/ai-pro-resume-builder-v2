@@ -11,12 +11,15 @@ import {
   sectionEditMode,
 } from "@/redux/slices/addSectionSlice";
 import EditableField from "@/components/editor/editable-field";
+import { FaHome } from 'react-icons/fa';
 
 type CustomSectionType = {
   title: string;
-  description: string;
-  companyName: string;
+  description?: string;
+  companyName?: string;
   location?: string;
+  sectionFields?: any;
+  icon?: any;
 };
 
 type AllCustomSectionType = {
@@ -31,34 +34,35 @@ const AllCustomSection = ({
   secNewNames,
   data = {},
   textColor = "#000",
-  textAltColor,
-  templateColor,
 }: AllCustomSectionType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userCustomSections } = useSelector(
+  const { userCustomSections, addedSections } = useSelector(
     (state: RootState) => state.addSection
   );
   const [editable, setEditable] = useState<boolean>(false);
+  const [customSectionFields, setCustomSectionFields] = useState<any>();
   const [customSections, setCustomSection] = useState<CustomSectionType[]>([
     {
       companyName: "",
       description: "",
       title: "",
       location: "",
+      icon: "",
     },
   ]);
+  const hasField = (field: string) => {
+    return (
+      Array.isArray(customSectionFields?.[0]?.sectionFields) && customSectionFields[0].sectionFields.includes(field)
+    );
+  };
 
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true));
   };
-  // Sync local state with Redux store whenever userCustomSections changes
-  useEffect(() => {
-    if (Array.isArray(userCustomSections) && userCustomSections.length > 0) {
-      setCustomSection(userCustomSections);
-    }
-  }, [userCustomSections]);
+
+
 
   // Handle input changes for each field in an customSections entry
   const handleInputChange = (
@@ -75,7 +79,7 @@ const AllCustomSection = ({
   const handleAddCustomSection = () => {
     setCustomSection([
       ...customSections,
-      { title: "", description: "", companyName: "", location: "" },
+      { title: "", description: "", companyName: "", location: "", icon: "" },
     ]);
   };
 
@@ -98,6 +102,21 @@ const AllCustomSection = ({
     const updated = customSections.filter((_, i) => i !== index);
     setCustomSection(updated);
   };
+
+  let arrayy: any[] = [];
+  useEffect(() => {
+    if (Array.isArray(userCustomSections) && userCustomSections.length > 0) {
+      setCustomSection(userCustomSections);
+    }
+    const sections = addedSections?.filter((d: any) => d?.name === 'Custom Section');
+    sections?.forEach((item: any) => {
+      const alreadyExists = arrayy.some(existing => existing?.id === item?.id);
+      if (!alreadyExists) {
+        arrayy.push(item);
+      }
+    });
+    setCustomSectionFields(arrayy)
+  }, [userCustomSections, addedSections]);
 
   // Detect click outside the component to disable editing and save data to Redux
   useEffect(() => {
@@ -123,18 +142,6 @@ const AllCustomSection = ({
     };
   }, [customSections, dispatch, data?.id, secNewNames]);
 
-  const handleAddFirstCustomSection = (value: string) => {
-    const newSkill = {
-      title: value.trim(),
-      description: "",
-      companyName: "",
-      location: "",
-    };
-    if (newSkill.title !== "") {
-      setCustomSection([newSkill]);
-    }
-  };
-
   return (
     <div
       ref={containerRef}
@@ -157,57 +164,53 @@ const AllCustomSection = ({
           customSections.map((exp, index) => (
             <div key={index}>
               <div className="flex flex-col mt-2">
-                {/* ====== Job Title ====== */}
-                <div className="flex items-center justify-between">
-                  {/* <CustomInput
-                    type="text"
-                    value={exp.title}
-                    disabled={!editable}
-                    onChange={(e) =>
-                      handleInputChange(index, "title", e.target.value)
-                    }
-                    placeholder="Title"
-                    baseClass="text-[16px] placeholder:text-[16px]"
-                  /> */}
-                  <EditableField
-                    html={exp.title || ""}
-                    onChange={(val) => handleInputChange(index, "title", val)}
-                    placeholder="Title"
-                    className="text-[16px] bg-transparent "
-                    placeholderClassName=""
-                  />
+
+                <div className="flex items-center justify-between gap-1">
+
+                  {/* ====== Icon ====== */}
+                  {hasField("Icon") && (
+                    <FaHome className="text-[22px] mb-1 text-indigo-600" />
+                  )}
+
+                  {/* ====== Job Title ====== */}
+                  {hasField("Title") && (
+                    <EditableField
+                      html={exp.title || ""}
+                      onChange={(val) => handleInputChange(index, "title", val)}
+                      placeholder="Title"
+                      className="text-[16px] bg-transparent"
+                      placeholderClassName=""
+                    />
+                  )}
+
                   {/* ====== Date Picker ====== */}
-                  <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                  {hasField("Date") && (
+                    <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                  )}
                 </div>
                 {/* ====== Location ====== */}
-                {/* <CustomInput
-                  type="text"
-                  value={exp.location || ""}
-                  disabled={!editable}
-                  onChange={(e) =>
-                    handleInputChange(index, "location", e.target.value)
-                  }
-                  placeholder="Location"
-                  baseClass="text-[14px] placeholder:text-[14px]"
-                /> */}
-                <EditableField
-                  html={exp.location || ""}
-                  onChange={(val) => handleInputChange(index, "location", val)}
-                  placeholder="Location"
-                  className="text-[16px] bg-transparent"
-                  placeholderClassName=""
-                />
+                {hasField("Location") && (
+                  <EditableField
+                    html={exp.location || ""}
+                    onChange={(val) => handleInputChange(index, "location", val)}
+                    placeholder="Location"
+                    className="text-[16px] bg-transparent"
+                    placeholderClassName=""
+                  />
+                )}
                 {/* ====== Description ====== */}
 
-                <EditableField
-                  html={exp.description || ""}
-                  onChange={(val) =>
-                    handleInputChange(index, "description", val)
-                  }
-                  placeholder="Description"
-                  className="text-[16px] bg-transparent "
-                  placeholderClassName=""
-                />
+                {hasField("Description") && (
+                  <EditableField
+                    html={exp.description || ""}
+                    onChange={(val) =>
+                      handleInputChange(index, "description", val)
+                    }
+                    placeholder="Description"
+                    className="text-[16px] bg-transparent"
+                    placeholderClassName=""
+                  />
+                )}
               </div>
               {/* ====== Delete Button ====== */}
               <div className="flex justify-end mt-2">
