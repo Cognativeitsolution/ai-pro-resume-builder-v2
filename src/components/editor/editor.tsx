@@ -12,35 +12,35 @@ const Editor: React.FC = () => {
     <div className="p-4 max-w-2xl mx-auto">
       {/* Toolbar */}
       {/* {isFocused && ( */}
-        <div className="absolute flex flex-wrap gap-2 mb-4">
-          <button onClick={() => execCommand("bold")} className="btn">
-            Bold
-          </button>
-          <button onClick={() => execCommand("underline")} className="btn">
-            Underline
-          </button>
-          <button onClick={() => execCommand("justifyLeft")} className="btn">
-            Left
-          </button>
-          <button onClick={() => execCommand("justifyCenter")} className="btn">
-            Center
-          </button>
-          <button onClick={() => execCommand("justifyRight")} className="btn">
-            Right
-          </button>
-          <button
-            onClick={() => execCommand("insertUnorderedList")}
-            className="btn"
-          >
-            Bullet
-          </button>
-          <button
-            onClick={() => execCommand("insertOrderedList")}
-            className="btn"
-          >
-            Number
-          </button>
-        </div>
+      <div className="absolute flex flex-wrap gap-2 mb-4">
+        <button onClick={() => execCommand("bold")} className="btn">
+          Bold
+        </button>
+        <button onClick={() => execCommand("underline")} className="btn">
+          Underline
+        </button>
+        <button onClick={() => execCommand("justifyLeft")} className="btn">
+          Left
+        </button>
+        <button onClick={() => execCommand("justifyCenter")} className="btn">
+          Center
+        </button>
+        <button onClick={() => execCommand("justifyRight")} className="btn">
+          Right
+        </button>
+        <button
+          onClick={() => execCommand("insertUnorderedList")}
+          className="btn"
+        >
+          Bullet
+        </button>
+        <button
+          onClick={() => execCommand("insertOrderedList")}
+          className="btn"
+        >
+          Number
+        </button>
+      </div>
       {/* )} */}
 
       {/* Editor */}

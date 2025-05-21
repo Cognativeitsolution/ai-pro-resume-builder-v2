@@ -1,15 +1,12 @@
 "use client";
-//=============
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { RootState } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { setProfileImage } from '@/redux/slices/profileImageSlice';
-//===== Images =====
-import * as FaIcons from 'react-icons/fa';
+import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setProfileImage } from "@/redux/slices/profileImageSlice";
+import * as FaIcons from "react-icons/fa";
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
-//===== Section Components =====
 import AllSummary from "../all-sections/sections-details/AllSummary";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
 import AllEducations from "../all-sections/sections-details/AllEducations";
@@ -31,50 +28,57 @@ type CurrentState = {
     margin: number;
     padding: number;
     text: any;
-}
+};
 
 type ResumePreviewProps = {
     currentState: CurrentState;
     updateState: (newState: CurrentState) => void;
-}
+};
 
 const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const dispatch = useDispatch();
-    const { addedSections, sectionBgColor, editMode } = useSelector((state: any) => state.addSection);
+    const { addedSections, sectionBgColor, editMode } = useSelector(
+        (state: any) => state.addSection
+    );
 
-    const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
+    const { spellCheck, grammarCheck } = useSelector(
+        (state: any) => state.ImproveText
+    );
     const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
     const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
-    const [secName, setSecName] = useState('');
-    const [templateBgColor, setTemplateBgColor] = useState<any>('');
+    const [secName, setSecName] = useState("");
+    const [templateBgColor, setTemplateBgColor] = useState<any>("");
 
     //============= all sections
     const getAllText = () => {
-        return addedSections?.map((section: any) => {
-            if (typeof section?.content === "string") return section.content;
-            if (Array.isArray(section?.content)) {
-                return section.content.map((item: any) => Object.values(item).join(" ")).join(" ");
-            }
-            return "";
-        }).join("\n");
+        return addedSections
+            ?.map((section: any) => {
+                if (typeof section?.content === "string") return section.content;
+                if (Array.isArray(section?.content)) {
+                    return section.content
+                        .map((item: any) => Object.values(item).join(" "))
+                        .join(" ");
+                }
+                return "";
+            })
+            .join("\n");
     };
 
     useEffect(() => {
-        setSecName('Custom Section')
-    }, [])
+        setSecName("Custom Section");
+    }, []);
 
     const HandleChangeSectionName = (data: any) => {
         console.log(data);
-        setSecName(data)
-
-    }
+        setSecName(data);
+    };
     const fullText = getAllText();
 
     // ===================
     useEffect(() => {
-        setTemplateBgColor(sectionBgColor)
-    }, [editMode, sectionBgColor])
+        setTemplateBgColor(sectionBgColor);
+    }, [editMode, sectionBgColor]);
 
     //============= improve text logic
     useEffect(() => {
@@ -91,7 +95,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         { text: fullText },
                         { headers: { "Content-Type": "application/json" } }
                     );
-                    spellingMistakes = spellResponse.data?.data?.map((item: any) => item?.misspelledWord) || [];
+                    spellingMistakes =
+                        spellResponse.data?.data?.map(
+                            (item: any) => item?.misspelledWord
+                        ) || [];
                 }
 
                 if (grammarCheck) {
@@ -100,7 +107,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         { text: fullText },
                         { headers: { "Content-Type": "application/json" } }
                     );
-                    grammarMistakes = grammarResponse.data?.data?.map((item: any) => item?.wrongWords) || [];
+                    grammarMistakes =
+                        grammarResponse.data?.data?.map((item: any) => item?.wrongWords) ||
+                        [];
                 }
 
                 setIncorrectWords(spellingMistakes);
@@ -142,25 +151,90 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft Skills":
-                return <AllSoftSkills data={section} textColor="#fff" textAltColor="#000" templateColor="#fff" editableAltBG="bg-gray-900/80" />;
+                return (
+                    <AllSoftSkills
+                        data={section}
+                        textColor="#fff"
+                        textAltColor="#000"
+                        templateColor="#fff"
+                        editableAltBG="bg-gray-900/80"
+                        isPillStyle={true} />
+                );
             case "Technical Skills":
-                return <AllTechnicalSkills data={section} textColor="#fff" textAltColor="#000" templateColor="#fff" editableAltBG="bg-gray-900/80" />;
+                return (
+                    <AllTechnicalSkills
+                        data={section}
+                        textColor="#fff"
+                        textAltColor="#000"
+                        templateColor="#fff"
+                        editableAltBG="bg-gray-900/80"
+                        isPillStyle={true} />
+                );
             case "Certificate":
                 return <AllCertificates data={section} />;
             case "Education":
-                return <AllEducations data={section} textColor="" textAltColor="" templateColor="" />;
+                return (
+                    <AllEducations
+                        data={section}
+                        textColor=""
+                        textAltColor=""
+                        templateColor=""
+                    />
+                );
             case "Experience":
-                return <AllExperiences data={section} textColor="" textAltColor="" templateColor="" />;
+                return (
+                    <AllExperiences
+                        data={section}
+                        textColor=""
+                        textAltColor=""
+                        templateColor=""
+                    />
+                );
             case "Projects":
-                return <AllProjects data={section} textColor="" textAltColor="" templateColor="" />;
+                return (
+                    <AllProjects
+                        data={section}
+                        textColor=""
+                        textAltColor=""
+                        templateColor=""
+                    />
+                );
             case "Awards":
-                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} />;
+                return (
+                    <AllAwards
+                        data={section}
+                        textColor="#000"
+                        textAltColor={currentState.color}
+                        templateColor={currentState.color}
+                    />
+                );
             case "References":
-                return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={currentState.color} />;
+                return (
+                    <AllReferences
+                        data={section}
+                        textColor="#000"
+                        templateColor={currentState.color}
+                        textAltColor={currentState.color}
+                    />
+                );
             case "Languages":
-                return <AllLanguages data={section} textColor="#fff" templateColor="#3358c5" editableAltBG="bg-gray-900/80" />;
+                return (
+                    <AllLanguages
+                        data={section}
+                        textColor="#fff"
+                        templateColor="#3358c5"
+                        editableAltBG="bg-gray-900/80"
+                    />
+                );
             case "Custom Section":
-                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" />;
+                return (
+                    <AllCustomSection
+                        secNewNames={secName}
+                        data={section}
+                        textColor="#000"
+                        templateColor="#fff"
+                    />
+                );
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
@@ -175,10 +249,13 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         return `${base * (scaleMap[size] || 1)}px`;
     };
     const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
-    const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
-    const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
+    const leftSections = addedSections?.filter(
+        (section: any) => !rightSideSections.includes(section?.name)
+    );
+    const rightSections = addedSections?.filter((section: any) =>
+        rightSideSections.includes(section?.name)
+    );
 
-    //============= upload image
     const fileInputRef = useRef<HTMLInputElement>(null);
     const imageSrc = useSelector((state: RootState) => state.profileImage.image);
 
@@ -187,10 +264,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     };
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file && file.type.startsWith('image/')) {
+        if (file && file.type.startsWith("image/")) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                if (typeof reader.result === 'string') {
+                if (typeof reader.result === "string") {
                     dispatch(setProfileImage(reader.result));
                 }
             };
@@ -199,79 +276,86 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     };
 
     return (
-        <div className="w-a4 h-a4 relative"
+        <div
+            className="w-a4 h-a4 relative"
+            id="resume-content"
             style={{
                 padding: `${currentState.padding || 0}px`,
                 backgroundColor: editMode ? templateBgColor : undefined,
-                transition: 'background-color 0.3s ease-in-out',
+                transition: "background-color 0.3s ease-in-out"
             }}
         >
-            <div className="absolute right-0 top-0 h-full w-[35%] z-0" style={{ backgroundColor: currentState.color }} />
-            <div className="grid grid-cols-12 h-full p-[30px] pb-0">
-                <div className="col-span-8 pr-8">
-                    {/*====== Header Left ======*/}
+            <div className="grid grid-cols-12 h-full shadow-xl pb-0">
+                {/* Left Column */}
+                <div className="col-span-8 p-[30px] pr-8">
+                    {/* Header */}
                     <div className="flex flex-col">
                         <input
                             placeholder="Name"
                             className="outline-none bg-transparent font-semibold text-zinc-900"
                             style={{
                                 fontSize: scaleFont(30, currentState.fontSize),
-                                fontFamily: currentState.fontFamily,
+                                fontFamily: currentState.fontFamily
                             }}
                         />
                         <input
                             placeholder="Designation"
-                            className="w-full rounded bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0 "
+                            className="w-full rounded bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0"
                             style={{
                                 fontSize: scaleFont(18, currentState.fontSize),
                                 fontFamily: currentState.fontFamily,
-                                color: currentState.color,
+                                color: currentState.color
                             }}
                         />
                     </div>
-                    {/*====== Left Sections ======*/}
+
+                    {/* Left Sections */}
                     {leftSections?.length > 0 ? (
                         leftSections.map((section: any, index: number) => (
-                            <div key={index} className="py-4  relative">
-                                <div className="border-b ">
-                                    {section?.name == "Custom Section" ?
+                            <div key={index} className="pt-4 relative">
+                                <div className="border-b">
+                                    {section?.name === "Custom Section" ? (
                                         <input
-                                            onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                            type="text" className="text-[18px] font-semibold mb-1 "
-                                            style={{
-                                                color: currentState.color
-                                            }}
+                                            type="text"
+                                            className="text-[18px] font-semibold mb-1"
+                                            style={{ color: currentState.color }}
                                             value={secName}
+                                            onChange={(e) => HandleChangeSectionName(e.target.value)}
                                         />
-                                        :
-                                        <h2 className="text-[18px] font-semibold mb-1"
-                                            style={{
-                                                color: currentState.color
-                                            }}>
-                                            {highlightWords(
-                                                section?.name === "Custom Section" && section?.newSecName
-                                                    ? section.newSecName
-                                                    : section?.name
-                                            )}
+                                    ) : (
+                                        <h2
+                                            className="text-[18px] font-semibold mb-1"
+                                            style={{ color: currentState.color }}
+                                        >
+                                            {highlightWords(section?.newSecName || section?.name)}
                                         </h2>
-                                    }
+                                    )}
                                 </div>
-                                <div className="mt-2">{renderSection(section)}</div>
+                                <div className="">{renderSection(section)}</div>
                             </div>
                         ))
                     ) : (
                         <p>No sections added yet.</p>
                     )}
 
-                    {loading && <p className="text-gray-500 mt-4">Checking for spelling/grammar errors...</p>}
+                    {loading && (
+                        <p className="text-gray-500 mt-4">
+                            Checking for spelling/grammar errors...
+                        </p>
+                    )}
                 </div>
-                <div className={`col-span-4 px-[10px] -mr-[30px] z-10`} >
-                    {/*====== Image ======*/}
-                    <div className="p-3">
+
+                {/* Right Column */}
+                <div
+                    className="col-span-4 px-[10px] h-a4 -mr-[30px] z-10"
+                    style={{ backgroundColor: currentState.color }}
+                >
+                    {/* Profile Image */}
+                    <div className="p-3 py-12">
                         <div className="flex justify-center mb-6 w-[160px] h-[160px] mx-auto rounded-full overflow-hidden cursor-pointer">
                             <Image
                                 src={imageSrc || placeHolderImg}
-                                alt="Profile Image"
+                                alt="Profile"
                                 width={160}
                                 height={160}
                                 className="w-full"
@@ -285,59 +369,61 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                                 className="hidden"
                             />
                         </div>
-                        {/*====== conact info ======*/}
-                        <div className="flex justify-center flex-col gap-2">
-                            <div className="border-b text-start text-white flex items-center gap-2 pb-1 mb-1" style={{
-                                fontSize: scaleFont(24, currentState.fontSize),
-                                fontFamily: currentState.fontFamily,
-                            }}>
+
+                        {/* Contact Info */}
+                        <div className="flex flex-col gap-2">
+                            <div
+                                className="text-start text-white flex items-center gap-2 pb-1 mb-1"
+                                style={{
+                                    fontSize: scaleFont(24, currentState.fontSize),
+                                    fontFamily: currentState.fontFamily
+                                }}
+                            >
                                 <IconDropdown icons={FaIcons} />
                                 <span className="text-[20px]">Contact Info</span>
                             </div>
+                            <hr />
+                            {["Phone", "Email"].map((placeholder, idx) => (
+                                <div key={idx} className="flex items-start gap-2 text-white">
+                                    <IconDropdown icons={FaIcons} />
+                                    <input
+                                        placeholder={placeholder}
+                                        className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent"
+                                    />
+                                </div>
+                            ))}
                             <div className="flex items-start gap-2 text-white">
                                 <IconDropdown icons={FaIcons} />
-                                <input placeholder="Phone" className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent" />
-                            </div>
-                            <div className="flex items-start gap-2 text-white">
-                                <IconDropdown icons={FaIcons} />
-                                <input placeholder="Email" className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent" />
-                            </div>
-                            <div className="flex items-start gap-2 text-white">
-                                <IconDropdown icons={FaIcons} />
-                                <textarea placeholder="Address" className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent" />
+                                <textarea
+                                    placeholder="Address"
+                                    className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent"
+                                />
                             </div>
                         </div>
                     </div>
 
-                    {/*====== Right Sections ======*/}
+                    {/* Right Sections */}
                     <div className="p-3">
                         {rightSections?.length > 0 &&
                             rightSections.map((section: any, index: number) => (
-                                <div key={index} className="py-4 relative">
+                                <div key={index} className="pt-4 relative">
                                     <div className="border-b text-white">
-                                        {section?.name == "Custom Section" ?
+                                        {section?.name === "Custom Section" ? (
                                             <input
-                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                                type="text" className="text-[18px] font-semibold mb-1 "
-
+                                                type="text"
+                                                className="text-[18px] font-semibold mb-1"
                                                 value={secName}
+                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
                                             />
-                                            :
-                                            <h2 className="text-[18px] font-semibold mb-1"
-                                            >
-                                                {highlightWords(
-                                                    section?.name === "Custom Section" && section?.newSecName
-                                                        ? section.newSecName
-                                                        : section?.name
-                                                )}
+                                        ) : (
+                                            <h2 className="text-[18px] font-semibold mb-1">
+                                                {highlightWords(section?.newSecName || section?.name)}
                                             </h2>
-                                        }
+                                        )}
                                     </div>
-                                    <div className="mt-2">{renderSection(section)}
-                                    </div>
+                                    <div className="">{renderSection(section)}</div>
                                 </div>
-                            ))
-                        }
+                            ))}
                     </div>
                 </div>
             </div>

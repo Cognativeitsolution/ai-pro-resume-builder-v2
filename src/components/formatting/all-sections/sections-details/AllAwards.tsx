@@ -116,22 +116,25 @@ const AllAwards = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [awards, dispatch, data.id]);
   return (
-    <div ref={containerRef} className={`pb-4 pt-[6px] flex  flex-col gap-4  ${editable && 'bg-white '}`} onClick={handleEditableSection}>
+    <div ref={containerRef}
+      className={`flex flex-col py-5 ${editable ? 'bg-white' : ''}`}
+      onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
+          isTextEditor={true}
           onCopy={handleAddAward}
           onDelete={handleRemoveSection}
-          // onMoveUp={handleAddAward}
-          position="top-7 right-0"
+          position={`top-7 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
       )}
-      <div className="grid grid-cols-2 gap-2 mt-1 ">
+      <div className="grid grid-cols-2 gap-2 px-1 mb-2 ">
         {awards.length > 0 ?
           awards.map((award, index) => (
             <div
               key={index}
-              className={`flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium px-1 py-1 transition-all duration-500 ease-in-out `}
+              className={`flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium px-1 py-1 transition-all duration-500 ease-in-out relative`}
               style={{
                 color: textColor,
                 border: hoveredIndex === index ? `1px solid #000` : '1px solid transparent',

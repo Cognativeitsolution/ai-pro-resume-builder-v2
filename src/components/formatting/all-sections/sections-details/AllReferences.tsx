@@ -101,20 +101,21 @@ const AllReferences = ({
   };
 
   return (
-    <div ref={containerRef} className={`mt-3 flex flex-col ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col py-5 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
+          isTextEditor={true}
           onCopy={handleAddReference}
           onDelete={handleRemoveSection}
-          // onMoveUp={handleAddAward}
-          position="top-7 right-0"
+          position={`top-7 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
       )}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2 px-1 mb-2">
         {references.length > 0 ? (
           references.map((cert, index) => (
-            <div key={index} className='flex justify-between my-[6px] mx-2 rounded-sm px-2 transition-all duration-500 ease-in-out' style={{
+            <div key={index} className='flex justify-between gap-2 mx-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative' style={{
               color: textColor,
               border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
             }}
@@ -139,7 +140,7 @@ const AllReferences = ({
                     type='text'
                     className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                   />
-                  <div className="h-[2px] w-5  " style={{
+                  <div className="h-[2px] w-5" style={{
                     background: textAltColor
                   }}></div>
                 </div>
@@ -152,18 +153,22 @@ const AllReferences = ({
                   className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
                 />
               </div>
-              <div className="">
-                <button
-                  onClick={() => handleDelete(index)}
-                  className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
-                >
-                  <RiDeleteBin6Line size={16} />
-                </button>
-              </div>
+              {editable && (
+                <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                  >
+                    <RiDeleteBin6Line size={16} />
+                  </button>
+                </div>
+              )}
             </div>
           ))
         ) : (
-          <div className='flex justify-between px-2 my-[6px] mx-2 rounded-sm' style={{
+          <div className='flex justify-between px-2 my-[6px] mx-2 rounded-sm relative' style={{
             color: textColor,
             border: `1px solid ${textColor}`,
           }}>
@@ -189,14 +194,18 @@ const AllReferences = ({
                 className=" w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
               />
             </div>
-            <div className="">
-              <button
-                className="text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
-                onClick={handleAddReference}
-              >
-                <RiDeleteBin6Line size={16} />
-              </button>
-            </div>
+            {editable && (
+              <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                <button
+                  className="text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                  onClick={handleAddReference}
+                >
+                  <RiDeleteBin6Line size={16} />
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
