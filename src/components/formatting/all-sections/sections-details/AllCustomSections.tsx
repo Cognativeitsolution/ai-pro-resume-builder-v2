@@ -151,6 +151,7 @@ const AllCustomSection = ({
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
         <SectionToolbar
+          isTextEditor={true}
           onCopy={handleAddCustomSection}
           onDelete={handleRemoveSection}
           // onMoveUp={handleAddAward}
