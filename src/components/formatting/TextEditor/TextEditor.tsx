@@ -127,9 +127,11 @@ const TextEditor = (props: TextEditorProps) => {
         </div>
 
         <div className="w-[70%] p-4 bg-[#ffffff] border border-gray-300 rounded-xl relative overflow-hidden">
-          <div className="flex justify-between items-center pb-3 border-b border-gray-300">
-            <h3 className="text-[16px] text-[#707275] font-semibold">{activeTab}</h3>
-          </div>
+          {activeTab === "AI Assistant" ? "" : (
+            <div className="flex justify-between items-center pb-3 border-b border-gray-300">
+              <h3 className="text-[16px] text-[#707275] font-semibold">{activeTab}</h3>
+            </div>
+          )}
           {/* ===== Add Sections ===== */}
           {activeTab === "Add Section" && (
             <AllSections />

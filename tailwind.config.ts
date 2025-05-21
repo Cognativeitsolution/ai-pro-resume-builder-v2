@@ -29,9 +29,19 @@ export default {
       fontFamily: {
         primary: ["var(--font-primary),sans-serif"],
       },
+      backgroundImage: {
+        primaryNew: "linear-gradient(to right, #9885FF50,#79A9FF50)",
+        PrimaryDark: "radial-gradient(95.2% 351.86% at 100.99% 0%, #7D16C4 0%, #3358C3 81.2%, #3358C3 100%)",
+        secondaryNew: "linear-gradient(90deg, rgba(207,199,255,0.6) 0%, rgba(211,211,211,0.1) 50%, rgba(212,228,255,1) 100%)",
+        primary: "linear-gradient(to right, #F8F8F8, #E9E9E9)",
+        secondary: "linear-gradient(to right, #9885FF, #79A9FF)",
+        primary2: "linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.7) 100%)",
+        primary3: "linear-gradient(to right, #9885FF,#79A9FF)",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        hamzaPrimary: "#7f6afc",
         primaryBlue: "#0072b1",
         secondaryBlue: "#27AAE1",
         primaryGreen: "#01b2ac",
@@ -42,7 +52,7 @@ export default {
         primaryCran: "#00caa5",
         primarySlate: "#343434",
       },
-      keyframes: {
+       keyframes: {
         fadeInUp: {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
@@ -63,12 +73,6 @@ export default {
         "bounce-in-up": "bounce-in-up 0.8s ease-out forwards",
         rotate:
           "rotate 50s cubic-bezier(0.8, 0.2, 0.2, 0.8) infinite alternate",
-      },
-      backgroundImage: {
-        primary: "linear-gradient(to right, #F8F8F8, #E9E9E9)",
-        secondary: "linear-gradient(to right, #9885FF, #79A9FF)",
-        primary2: "linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.7) 100%)",
-        primary3: "linear-gradient(to right, #9885FF,#79A9FF)",
       },
     },
   },
