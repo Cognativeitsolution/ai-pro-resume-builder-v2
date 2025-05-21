@@ -167,9 +167,9 @@ const AllExperiences = ({
                       handleInputChange(index, "title", val)
                     }
                     placeholder="Title"
-                    // style={{
-                    //   color: textAltColor ? textAltColor : textColor
-                    // }}
+                    style={{
+                      color: textAltColor ? textAltColor : textColor
+                    }}
                     className="text-[16px] bg-transparent"
                   />
                 </div>
