@@ -5,6 +5,7 @@ import { TiDelete } from 'react-icons/ti';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
 import { addUserTechnical_Skills, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 type TechnicalSkillType = {
   title: string;
@@ -17,6 +18,7 @@ type AllTechnicalSkillsProps = {
   textAltColor?: string;
   templateColor?: string;
   editableAltBG?: string;
+  isPillStyle?: any;
 };
 
 const AllTechnicalSkills = ({
@@ -25,6 +27,7 @@ const AllTechnicalSkills = ({
   textAltColor,
   templateColor,
   editableAltBG,
+  isPillStyle
 }: AllTechnicalSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -100,28 +103,31 @@ const AllTechnicalSkills = ({
   };
 
   return (
-    <div ref={containerRef} className={`p-1 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`px-1 py-5 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddTechnicalSkill}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button className="cursor-pointer" style={{ color: textColor }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
+        <SectionToolbar
+          isTextEditor={false}
+          onCopy={handleAddTechnicalSkill}
+          onDelete={handleRemoveSection}
+          position={`top-7 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          showDot={true}
+        />
       )}
-      <div className="flex flex-wrap gap-2 mt-1 ">
+      <div className="flex flex-wrap gap-2 ">
         {technicalskills.length > 0 ?
           technicalskills.map((skill, index) => (
             <div
               key={index}
-              className={`flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium px-3 py-1 transition-all duration-500 ease-in-out ${hoveredIndex === index ? 'pr-5' : ''
-                }`}
+              className={`flex items-center gap-2 
+              ${isPillStyle && "rounded-full"} opacity-75 backdrop-blur-[40px] 
+              font-medium px-3 py-1 transition-all duration-500 ease-in-out 
+              ${hoveredIndex === index ? 'pr-5' : ''}`}
               style={{
                 color: textColor,
-                background: textColor,
-                border: `1px solid ${textColor}`,
+                background: isPillStyle && textColor,
+                border: isPillStyle && `1px solid ${textColor}`,
+                borderBottom: `2px solid ${textColor}`,
               }}
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -152,11 +158,14 @@ const AllTechnicalSkills = ({
           ))
           : (
             <div
-              className="flex items-center gap-2 rounded-full opacity-75 backdrop-blur-[40px] font-medium  px-3 py-1"
+              className={`flex items-center gap-2 
+            ${isPillStyle && "rounded-full"} opacity-75 backdrop-blur-[40px] 
+            font-medium px-3 py-1 transition-all duration-500 ease-in-out `}
               style={{
                 color: textColor,
-                background: textColor,
-                border: `1px solid ${textColor}`,
+                background: isPillStyle && textColor,
+                border: isPillStyle && `1px solid ${textColor}`,
+                borderBottom: `2px solid ${textColor}`,
               }}
             >
               <input

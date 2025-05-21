@@ -132,24 +132,25 @@ const AllProjects = ({
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col gap-4 ${editable && "bg-white"}`}
+      className={`flex flex-col pt-2 ${editable ? 'bg-white' : ''}`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
         <SectionToolbar
+          isTextEditor={true}
           onCopy={handleAddProject}
           onDelete={handleRemoveSection}
-          // onMoveUp={handleAddAward}
-          position="top-7 right-0"
+          position={`top-7 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
       )}
 
       {/* ===== Education Box ===== */}
-      <div className="flex flex-col gap-3 divide-y-[1px] px-1">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
         {projects.map((project, index) => (
-          <div key={index} className="">
+          <div key={index} className={`relative pb-6`}>
             <div className="flex flex-col mt-2">
               {/* ====== Degree and Field of Study ====== */}
               <div className="flex items-center justify-between">
@@ -162,6 +163,9 @@ const AllProjects = ({
                     }
                     placeholder="Project Name"
                     className="text-[16px] bg-transparent"
+                    style={{
+                      color: textAltColor ? textAltColor : textColor
+                    }}
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -178,20 +182,13 @@ const AllProjects = ({
                     }
                     placeholder="Project Url"
                     className="text-[16px] bg-transparent"
+                    style={{
+                      color: textColor
+                    }}
                   />
                 </div>
                 {/* ====== Location ====== */}
                 <div className="w-full">
-                  {/* <input
-                    type="text"
-                    value={project.location || ""}
-                    disabled={!editable}
-                    onChange={(e) =>
-                      handleInputChange(index, "location", e.target.value)
-                    }
-                    placeholder="Location"
-                    className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
-                  /> */}
                   <EditableField
                     html={project.location || ""}
                     onChange={(val) =>
@@ -199,21 +196,14 @@ const AllProjects = ({
                     }
                     placeholder="Location"
                     className="text-[16px] bg-transparent"
+                    style={{
+                      color: textColor
+                    }}
                   />
                 </div>
               </div>
               {/* ====== Description ====== */}
               <div>
-                {/* <textarea
-                  value={project.description}
-                  disabled={!editable}
-                  onChange={(e) =>
-                    handleInputChange(index, "description", e.target.value)
-                  }
-                  placeholder="Short summary of your work"
-                  rows={2}
-                  className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
-                ></textarea> */}
                 <EditableField
                   html={project.description || ""}
                   onChange={(val) =>
@@ -221,18 +211,25 @@ const AllProjects = ({
                   }
                   placeholder="Description"
                   className="text-[16px] bg-transparent"
+                  style={{
+                    color: textColor
+                  }}
                 />
               </div>
             </div>
             {/* ====== Delete Button ====== */}
-            <div className="flex justify-end">
-              <button
-                onClick={() => handleDelete(index)}
-                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
-              >
-                <RiDeleteBin6Line size={16} />
-              </button>
-            </div>
+            {editable && (
+              <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                <button
+                  onClick={() => handleDelete(index)}
+                  className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                >
+                  <RiDeleteBin6Line size={16} />
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>

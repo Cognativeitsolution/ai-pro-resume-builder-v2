@@ -12,8 +12,7 @@ import {
   removeSection,
   sectionEditMode,
 } from "@/redux/slices/addSectionSlice";
-import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
-import { TiDelete } from "react-icons/ti";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
 
@@ -140,23 +139,24 @@ const AllExperiences = ({
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col gap-4 ${editable && "bg-white"}`}
+      className={`flex flex-col pt-2 ${editable ? 'bg-white' : ''}`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
       {editable && (
         <SectionToolbar
+          isTextEditor={true}
           onCopy={handleAddExperience}
           onDelete={handleRemoveSection}
-          // onMoveUp={handleAddAward}
-          position="top-7 right-0"
+          position={`top-7 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
       )}
       {/* ===== Education Box ===== */}
-      <div className="flex flex-col gap-3 divide-y-[1px] px-1">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
         {experiences.map((exp, index) => (
-          <div key={index}>
+          <div key={index} className={`relative pb-6`}>
             <div className="flex flex-col mt-2">
               {/* ====== Job Title ====== */}
               <div className="flex items-center justify-between">
@@ -186,9 +186,9 @@ const AllExperiences = ({
                       handleInputChange(index, "companyName", val)
                     }
                     placeholder="Company Name"
-                    // style={{
-                    //   color: textAltColor ? textAltColor : textColor
-                    // }}
+                    style={{
+                      color: textColor
+                    }}
                     className="text-[16px] bg-transparent"
                   />
                 </div>
@@ -201,9 +201,9 @@ const AllExperiences = ({
                       handleInputChange(index, "location", val)
                     }
                     placeholder="Location"
-                    // style={{
-                    //   color: textColor
-                    // }}
+                    style={{
+                      color: textColor
+                    }}
                     className="text-[16px] bg-transparent"
                   />
                 </div>
@@ -218,22 +218,26 @@ const AllExperiences = ({
                   }
                   placeholder="Description"
                   rows={2}
-                  // style={{
-                  //   color: textColor
-                  // }}
+                  style={{
+                    color: textColor
+                  }}
                   className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                 ></textarea>
               </div>
             </div>
             {/* ====== Delete Button ====== */}
-            <div className="flex justify-end mt-2">
-              <button
-                className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
-                onClick={() => handleDelete(index)}
-              >
-                <RiDeleteBin6Line size={16} />
-              </button>
-            </div>
+            {editable && (
+              <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                <button
+                  className="bg-red-800/30 text-red-800 text-sm w-5 h-5 flex justify-center items-center rounded-l-sm"
+                  onClick={() => handleDelete(index)}
+                >
+                  <RiDeleteBin6Line size={16} />
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>

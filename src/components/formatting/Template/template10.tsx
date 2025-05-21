@@ -143,9 +143,9 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft Skills":
-                return <AllSoftSkills data={section} textColor="#000" textAltColor="#fff" templateColor="#000" />;
+                return <AllSoftSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" />;
             case "Technical Skills":
-                return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#fff" templateColor="#000" />;
+                return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" />;
             case "Certificate":
                 return <AllCertificates data={section} textAltColor="#F54A00" />;
             case "Education":
@@ -289,7 +289,7 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
                     <div className="">
                         {leftSections?.length > 0 &&
                             leftSections.map((section: any, index: number) => (
-                                <div key={index} className="py-4 relative">
+                                <div key={index} className="pt-4 relative">
                                     <div className="border-b text-white">
                                         {section?.name == "Custom Section" ?
                                             <input
@@ -311,7 +311,7 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
                                             </h2>
                                         }
                                     </div>
-                                    <div className="mt-2">{renderSection(section)}
+                                    <div className="">{renderSection(section)}
                                     </div>
                                 </div>
                             ))
@@ -322,7 +322,7 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
                     {/*====== Left Sections ======*/}
                     {rightSections?.length > 0 ? (
                         rightSections.map((section: any, index: number) => (
-                            <div key={index} className="py-4  relative">
+                            <div key={index} className="pt-4 relative">
                                 <div className="border-b ">
                                     {section?.name == "Custom Section" ?
                                         <input
@@ -340,7 +340,7 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
                                         </h2>
                                     }
                                 </div>
-                                <div className="mt-2">{renderSection(section)}</div>
+                                <div className="">{renderSection(section)}</div>
                             </div>
                         ))
                     ) : (

@@ -5,6 +5,7 @@ import { TiDelete } from 'react-icons/ti';
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
 import { addUserLanguages, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 type LanguageType = {
   title: string;
@@ -109,16 +110,16 @@ const AllLanguages = ({
   };
 
   return (
-    <div ref={containerRef} className={`p-1 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`px-1 py-4 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
-        <div className="flex gap-1 absolute top-5 right-0">
-          <button className="cursor-pointer" style={{ color: textColor }} onClick={handleAddLanguage}>
-            <RiAddCircleFill size={24} />
-          </button>
-          <button className="cursor-pointer" style={{ color: textColor }} onClick={handleRemoveSection}>
-            <TiDelete size={30} />
-          </button>
-        </div>
+        <SectionToolbar
+          isTextEditor={false}
+          onCopy={handleAddLanguage}
+          onDelete={handleRemoveSection}
+          position={`top-7 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          showDot={true}
+        />
       )}
 
       <div className="px-1 flex flex-col gap-4 relative">

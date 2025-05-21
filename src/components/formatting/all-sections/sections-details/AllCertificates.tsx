@@ -114,126 +114,85 @@ const AllCertificates = ({
     setCertificates(updated);
   };
 
-  const handleBlur = (index: number) => {
-    if (certificates[index]?.title.trim() === "") {
-      const updated = certificates.filter((_, i) => i !== index);
-      setCertificates(updated);
-    }
-  };
-
-  const handleAddFirstCertificate = (value: string) => {
-    const trimmedValue = value.trim();
-    if (trimmedValue !== "") {
-      setCertificates([
-        { title: trimmedValue, description: "", institutionName: "" },
-      ]);
-    }
-  };
-
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col gap-4 ${editable && "bg-white"} `}
+      className={`flex flex-col pt-2  ${editable && "bg-white"} `}
       onClick={handleEditableSection}
     >
       {editable && (
         <SectionToolbar
+          isTextEditor={true}
           onCopy={handleAddCertificate}
           onDelete={handleRemoveSection}
-          // onMoveUp={handleAddAward}
-          position="top-8 right-0"
+          position={`top-7 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
       )}
-      <div className="flex flex-col gap-3 ">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
         {certificates.length > 0 &&
           certificates.map((cert, index) => (
-            <div key={index} className="relative px-2 py-4">
-              {/* ====== Job Title ====== */}
-              <div className="flex items-center justify-between">
+            <div key={index} className="relative pb-6">
+              <div className="flex flex-col mt-2 ">
+                {/* ====== Job Title ====== */}
+                <div className="flex items-center justify-between">
+                  <div className="w-full">
+                    <EditableField
+                      html={cert.title || ""}
+                      onChange={(val) =>
+                        handleInputChange(index, "title", val)
+                      }
+                      placeholder="Title"
+                      className="text-[16px] bg-transparent"
+                      style={{
+                        color: textAltColor ? textAltColor : textColor
+                      }}
+                    />
+                  </div>
+                  {/* ====== Date Picker ====== */}
+                  <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                </div>
+                {/* ====== Company Name ====== */}
                 <div className="w-full">
-                  {/* <input
-                    value={cert.title}
-                    onChange={(e) =>
-                      handleInputChange(index, "title", e.target.value)
-                    }
-                    onBlur={() => handleBlur(index)}
-                    placeholder="Title"
-                    className="w-full bg-transparent text-[16px] rounded placeholder:text-[16px] focus:outline-none focus:ring-0 focus:border-0"
-                    style={{
-                      color: textAltColor ? textAltColor : textColor
-                    }}
-                  /> */}
                   <EditableField
-                    html={cert.title || ""}
+                    html={cert.institutionName || ""}
                     onChange={(val) =>
-                      handleInputChange(index, "title", val)
+                      handleInputChange(index, "institutionName", val)
                     }
-                    placeholder="Title"
+                    placeholder="Institution Name"
                     className="text-[16px] bg-transparent"
+                    style={{
+                      color: textColor
+                    }}
                   />
                 </div>
-                {/* ====== Date Picker ====== */}
-                <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                <div>
+                  <EditableField
+                    html={cert.description || ""}
+                    onChange={(val) =>
+                      handleInputChange(index, "description", val)
+                    }
+                    placeholder="Description"
+                    className="text-[16px] bg-transparent"
+                    style={{
+                      color: textColor
+                    }}
+                  />
+                </div>
               </div>
-              {/* ====== Company Name ====== */}
-              <div className="w-full">
-                {/* <input
-                  type="text"
-                  value={cert.institutionName}
-                  placeholder="Institution Name"
-                  onBlur={() => handleBlur(index)}
-                  onChange={(e) =>
-                    handleInputChange(index, "institutionName", e.target.value)
-                  }
-                  className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
-                  style={{
-                    color: textColor
-                  }}
-                />
-                /> */}
-                <EditableField
-                  html={cert.institutionName || ""}
-                  onChange={(val) =>
-                    handleInputChange(index, "institutionName", val)
-                  }
-                  placeholder="Institution Name"
-                  className="text-[16px] bg-transparent"
-                />
-              </div>
-              <div>
-                {/* <textarea
-                  value={cert.description}
-                  disabled={!editable}
-                  onBlur={() => handleBlur(index)}
-                  onChange={(e) =>
-                    handleInputChange(index, "description", e.target.value)
-                  }
-                  placeholder="Description"
-                  rows={2}
-                  className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 mb-4"
-                  style={{
-                    color: textColor
-                  }}
-                />
-                /> */}
-                <EditableField
-                  html={cert.description || ""}
-                  onChange={(val) =>
-                    handleInputChange(index, "description", val)
-                  }
-                  placeholder="Description"
-                  className="text-[16px] bg-transparent"
-                />
-              </div>
-              <div className="absolute bottom-2 right-2">
-                <button
-                  onClick={() => handleDelete(index)}
-                  className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
-                >
-                  <RiDeleteBin6Line size={16} />
-                </button>
-              </div>
+              {editable && (
+                <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="bg-red-800/30 text-red-800 text-sm w-5 h-5 flex justify-center items-center rounded-l-sm"
+                  >
+                    <RiDeleteBin6Line size={16} />
+                  </button>
+                </div>
+              )}
             </div>
           ))}
       </div>

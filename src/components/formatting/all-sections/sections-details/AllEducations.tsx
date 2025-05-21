@@ -121,36 +121,30 @@ const AllEducation = ({
     };
   }, [educations, dispatch, data?.id]);
 
-  const handleAddFirstSoftSkill = (value: string) => {
-    const newSkill = { degree: value.trim(), location: "", schoolName: "" };
-    if (newSkill.degree !== "") {
-      setEducations([newSkill]);
-    }
-  };
 
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col gap-4 ${editable && "bg-white"}`}
+      className={`flex flex-col pt-2 ${editable ? 'bg-white' : ''}`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
-      {editable && (
-        <SectionToolbar
-          onCopy={handleAddEducation}
-          onDelete={handleRemoveSection}
-          // onMoveUp={handleAddAward}
-          position="top-7 right-0"
-          showDot={true}
-        />
-      )}
+
+      <SectionToolbar
+        isTextEditor={true}
+        onCopy={handleAddEducation}
+        onDelete={handleRemoveSection}
+        position={`top-7 right-0 `}
+        mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+        showDot={true}
+      />
       {/* ===== Education Box ===== */}
-      <div className="flex flex-col gap-3 divide-y-[1px] px-1 ">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
         {/* <Editor/> */}
         {educations.length > 0 &&
           educations.map((exp, index) => (
-            <div key={index}>
-              <div className="flex flex-col mt-2">
+            <div key={index} className={`relative pb-6`}>
+              <div className="flex flex-col mt-2 ">
                 {/* ====== Degree and Field of Study ====== */}
                 <div className="flex items-center justify-between">
                   <div className="w-full">
@@ -160,9 +154,9 @@ const AllEducation = ({
                         handleContentChange(index, "degree", val)
                       }
                       placeholder="Degree and Field of Study"
-                      // style={{
-                      //   color: textAltColor ? textAltColor : textColor
-                      // }}
+                      style={{
+                        color: textAltColor ? textAltColor : textColor
+                      }}
                       className="text-[16px] bg-transparent"
                     />
                   </div>
@@ -172,18 +166,6 @@ const AllEducation = ({
                 {/* ====== School or University ====== */}
                 <div className="flex items-center justify-between">
                   <div className="w-full">
-                    {/* <input
-                      type="text"
-                      value={exp.schoolName}
-                      placeholder="School or University"
-                      onChange={(e) =>
-                        handleInputChange(index, "schoolName", e.target.value)
-                      }
-                      className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 "
-                      style={{
-                        color: textColor
-                      }}
-                    /> */}
                     <EditableField
                       html={exp.schoolName}
                       onChange={(val) =>
@@ -192,23 +174,13 @@ const AllEducation = ({
                       }
                       placeholder="School or University"
                       className="text-[16px] bg-transparent"
+                      style={{
+                        color: textColor
+                      }}
                     />
                   </div>
                   {/* ====== Location ====== */}
                   <div className="w-full">
-                    {/* <input
-                      type="text"
-                      value={exp.location || ""}
-                      disabled={!editable}
-                      onChange={(e) =>
-                        handleInputChange(index, "location", e.target.value)
-                      }
-                      placeholder="Location"
-                      className="w-full text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 text-end bg-transparent"
-                      style={{
-                        color: textColor
-                      }}
-                    /> */}
                     <EditableField
                       html={exp.location || ""}
                       onChange={(val) =>
@@ -217,20 +189,26 @@ const AllEducation = ({
                       placeholder="Location"
                       className="text-[16px] bg-transparent text-right"
                       placeholderClassName="text-right"
+                      style={{
+                        color: textColor
+                      }}
                     />
                   </div>
                 </div>
               </div>
               {/* ====== Delete Button ====== */}
-
-              <div className="flex justify-end mt-2">
-                <button
-                  onClick={() => handleDelete(index)}
-                  className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
-                >
-                  <RiDeleteBin6Line size={16} />
-                </button>
-              </div>
+              {editable && (
+                <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="bg-red-800/30 text-red-800 text-sm w-5 h-5 flex justify-center items-center rounded-l-sm"
+                  >
+                    <RiDeleteBin6Line size={16} />
+                  </button>
+                </div>
+              )}
 
             </div>
           )
