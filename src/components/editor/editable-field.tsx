@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 
 export default function EditableField({
   html,
@@ -7,12 +7,14 @@ export default function EditableField({
   placeholder,
   placeholderClassName,
   className = '',
+  style = {},
 }: {
   html: string;
   onChange: (val: string) => void;
   placeholder?: string;
   placeholderClassName?: string;
   className?: string;
+  style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -47,6 +49,7 @@ export default function EditableField({
         className={`min-h-[1.5rem] w-full focus:outline-none ${className}`}
         onFocus={() => setIsFocused(true)}
         onBlur={handleBlur}
+        style={style}
       />
     </div>
   );
