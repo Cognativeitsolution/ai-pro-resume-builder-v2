@@ -214,9 +214,9 @@ const AllCustomSection = ({
                 )}
               </div>
               {/* ====== Delete Button ====== */}
-              <div className="flex justify-end mt-2">
+              {editable && <div className="flex justify-end mt-2">
                 <button
-                  className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                  className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
                   onClick={() => {
                     if (index > 0) return handleDelete(index);
                     return handleRemoveSection()
@@ -224,7 +224,7 @@ const AllCustomSection = ({
                 >
                   <RiDeleteBin6Line size={16} />
                 </button>
-              </div>
+              </div>}
             </div>
           ))}
       </div>

@@ -19,6 +19,7 @@ import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
+import { sectionEditMode } from "@/redux/slices/addSectionSlice";
 
 type CurrentState = {
     fontSize: any;
@@ -49,6 +50,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const [loading, setLoading] = useState(false);
     const [secName, setSecName] = useState("");
     const [templateBgColor, setTemplateBgColor] = useState<any>("");
+    const [editable, setEditable] = useState<boolean>(false);
+    const [headerEditable, setHeaderEditable] = useState<boolean>(false);
+    const containerHeaderRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     //============= all sections
     const getAllText = () => {
@@ -275,6 +280,32 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         }
     };
 
+    const handleEditableSection = () => {
+        setEditable(true);
+        dispatch(sectionEditMode(true));
+    };
+    const handleEditableSectionHeader = () => {
+        setHeaderEditable(true);
+        dispatch(sectionEditMode(true));
+    };
+
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setEditable(false);
+                dispatch(sectionEditMode(false));
+            }
+            if (containerHeaderRef.current && !containerHeaderRef.current.contains(event.target as Node)) {
+                setHeaderEditable(false)
+                dispatch(sectionEditMode(false));
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [editable]);
     return (
         <div
             className="w-a4 h-a4 relative"
@@ -289,7 +320,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 {/* Left Column */}
                 <div className="col-span-8 p-[30px] pr-8">
                     {/* Header */}
-                    <div className="flex flex-col">
+                    <div ref={containerHeaderRef}
+                        className={`flex flex-col ${headerEditable && 'bg-white'}`}
+                        onClick={handleEditableSectionHeader}>
                         <input
                             placeholder="Name"
                             className="outline-none bg-transparent font-semibold text-zinc-900"
@@ -315,18 +348,17 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                             <div key={index} className="pt-4 relative">
                                 <div className="border-b">
                                     {section?.name === "Custom Section" ? (
-                                        <input
-                                            type="text"
-                                            className="text-[18px] font-semibold mb-1"
-                                            style={{ color: currentState.color }}
-                                            value={secName}
-                                            onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                        />
+                                        <div ref={containerRef} className={`flex flex-col pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+                                            <input
+                                                type="text"
+                                                className="text-[18px] bg-transparent focus:outline-none font-semibold mb-1"
+                                                style={{ color: currentState.color }}
+                                                value={secName}
+                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
+                                            />
+                                        </div>
                                     ) : (
-                                        <h2
-                                            className="text-[18px] font-semibold mb-1"
-                                            style={{ color: currentState.color }}
-                                        >
+                                        <h2 className="text-[18px] font-semibold mb-1" style={{ color: currentState.color }}>
                                             {highlightWords(section?.newSecName || section?.name)}
                                         </h2>
                                     )}
@@ -409,12 +441,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                                 <div key={index} className="pt-4 relative">
                                     <div className="border-b text-white">
                                         {section?.name === "Custom Section" ? (
-                                            <input
-                                                type="text"
-                                                className="text-[18px] font-semibold mb-1"
-                                                value={secName}
-                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                            />
+                                            <div ref={containerRef} className={`flex flex-col pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+                                                <input
+                                                    type="text"
+                                                    className="text-[18px] bg-transparent focus:outline-none font-semibold mb-1"
+                                                    style={{ color: currentState.color }}
+                                                    value={secName}
+                                                    onChange={(e) => HandleChangeSectionName(e.target.value)}
+                                                />
+                                            </div>
                                         ) : (
                                             <h2 className="text-[18px] font-semibold mb-1">
                                                 {highlightWords(section?.newSecName || section?.name)}

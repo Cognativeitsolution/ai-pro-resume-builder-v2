@@ -106,7 +106,7 @@ const initialState: AddSectionState = {
   userReferences: [],
   userLanguages: [],
   userCustomSections: [],
-  sectionBgColor: 'lightgray',
+  sectionBgColor: '#E7E9EB',
   editMode: false,
 };
 

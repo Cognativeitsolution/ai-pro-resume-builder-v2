@@ -203,7 +203,7 @@ const AllEducation = ({
               `}>
                   <button
                     onClick={() => handleDelete(index)}
-                    className="bg-red-800/30 text-red-800 text-sm w-5 h-5 flex justify-center items-center rounded-l-sm"
+                    className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
                   >
                     <RiDeleteBin6Line size={16} />
                   </button>

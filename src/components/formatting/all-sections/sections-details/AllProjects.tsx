@@ -224,7 +224,7 @@ const AllProjects = ({
               `}>
                 <button
                   onClick={() => handleDelete(index)}
-                  className="bg-red-800/30 text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                  className="bg-red-800/20 shadow-md  text-red-800 text-sm w-6 h-6 flex justify-center items-center rounded-full"
                 >
                   <RiDeleteBin6Line size={16} />
                 </button>
