@@ -3,7 +3,7 @@ import { IoMdAddCircle } from 'react-icons/io';
 
 interface IconDropdownProps {
     icons: Record<string, React.ComponentType<any>>; // Dynamic icons passed as props
-    iconColor?: string
+    iconColor?: string;
 }
 
 export default function IconDropdown({ icons, iconColor }: IconDropdownProps) {
@@ -38,8 +38,12 @@ export default function IconDropdown({ icons, iconColor }: IconDropdownProps) {
                 className=" flex justify-center items-start "
             >
                 {SelectedIconComponent
-                    ? <SelectedIconComponent size={18} />
-                    : <IoMdAddCircle size={18} />
+                    ? <SelectedIconComponent size={18} style={{
+                        color: iconColor ? iconColor : '#000'
+                    }} />
+                    : <IoMdAddCircle size={18} style={{
+                        color: iconColor ? iconColor : '#000'
+                    }} />
                 }
             </button>
 
@@ -53,6 +57,7 @@ export default function IconDropdown({ icons, iconColor }: IconDropdownProps) {
                                     key={iconKey}
                                     onClick={() => handleSelect(iconKey)}
                                     className={`flex flex-col items-center p-2 cursor-pointer hover:bg-gray-100 rounded ${iconColor ? iconColor : "text-black"}`}
+
                                 >
                                     <IconComponent size={24} color={iconColor} />
                                 </div>
