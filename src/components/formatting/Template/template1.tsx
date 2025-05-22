@@ -19,7 +19,7 @@ import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
-import { sectionEditMode } from "@/redux/slices/addSectionSlice";
+import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
 
 
@@ -56,7 +56,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const [headerEditable, setHeaderEditable] = useState<boolean>(false);
     const containerHeaderRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-
+    const [headerData, setHeaderData] = useState({ name: "", designation: "" });
     //============= all sections
     const getAllText = () => {
         return addedSections
@@ -301,21 +301,30 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             if (containerHeaderRef.current && !containerHeaderRef.current.contains(event.target as Node)) {
                 setHeaderEditable(false)
                 dispatch(sectionEditMode(false));
+                dispatch(
+                    addUserHeader({
+                        sectionId: 1,
+                        detail: headerData,
+                    })
+                );
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [editable]);
+    }, [editable, headerData]);
 
     // rearrange 
     useEffect(() => {
-        // const allSectionNames = addedSections.map((s: any) => s?.name);
         dispatch(setList(rightSideSections));
-
         dispatch(setColumn(true));
     }, [addedSections]);
+
+    const handleChangeHeader = (e: React.ChangeEvent<HTMLInputElement>, key: "name" | "designation") => {
+        const value = e.target.value;
+        setHeaderData(prev => ({ ...prev, [key]: value }));
+    };
     return (
         <div
             className="w-a4 h-a4 relative"
@@ -334,7 +343,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         className={`flex flex-col ${headerEditable && 'bg-white'}`}
                         onClick={handleEditableSectionHeader}>
                         <input
+                            name="name"
                             placeholder="Name"
+                            onChange={(e) => handleChangeHeader(e, "name")}
                             className="outline-none bg-transparent font-semibold text-zinc-900"
                             style={{
                                 fontSize: scaleFont(30, currentState.fontSize),
@@ -342,7 +353,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                             }}
                         />
                         <input
+                            name="designation"
                             placeholder="Designation"
+                            onChange={(e) => handleChangeHeader(e, "designation")}
                             className="w-full rounded bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0"
                             style={{
                                 fontSize: scaleFont(18, currentState.fontSize),
