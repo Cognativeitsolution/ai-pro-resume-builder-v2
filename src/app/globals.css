@@ -37,3 +37,8 @@ body {
   background: #9f9f9f;
   border-radius: 20px;
 }
+@media print {
+  .page-break {
+    page-break-after: always;
+  }
+}

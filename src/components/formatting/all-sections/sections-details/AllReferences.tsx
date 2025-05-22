@@ -30,7 +30,10 @@ const AllReferences = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { userReferences } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState(false);
-  const [references, setReferences] = useState<ReferenceType[]>([]);
+  const [references, setReferences] = useState<ReferenceType[]>([{
+    name:"",
+    contact:"",
+  }]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -86,12 +89,12 @@ const AllReferences = ({
     setReferences(updated);
   };
 
-  const handleBlur = (index: number) => {
-    if (references[index]?.name.trim() === '') {
-      const updated = references.filter((_, i) => i !== index);
-      setReferences(updated);
-    }
-  };
+  // const handleBlur = (index: number) => {
+  //   if (references[index]?.name.trim() === '') {
+  //     const updated = references.filter((_, i) => i !== index);
+  //     setReferences(updated);
+  //   }
+  // };
 
   const handleAddFirstReference = (value: string) => {
     const trimmedValue = value.trim();
@@ -101,7 +104,7 @@ const AllReferences = ({
   };
 
   return (
-    <div ref={containerRef} className={`flex flex-col py-5 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col py-5  ${editable && 'bg-white'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={true}
@@ -112,10 +115,10 @@ const AllReferences = ({
           showDot={true}
         />
       )}
-      <div className="flex flex-col gap-2 px-1 mb-2">
-        {references.length > 0 ? (
+      <div className="flex flex-col gap-1 px-1 ">
+        {references.length > 0 && (
           references.map((cert, index) => (
-            <div key={index} className='flex justify-between gap-2 mx-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative' style={{
+            <div key={index} className='flex justify-between gap-2  rounded-sm px-2 transition-all duration-500 ease-in-out relative' style={{
               color: textColor,
               border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
             }}
@@ -131,26 +134,26 @@ const AllReferences = ({
               }}>
               {/* ====== Job Name ====== */}
               <div className="flex items-center gap-4  " >
-                <div className='flex items-center justify-center gap-4'>
+            
                   <input
                     value={cert.name}
                     onChange={(e) => handleInputChange(index, 'name', e.target.value)}
-                    onBlur={() => handleBlur(index)}
+                    // onBlur={() => handleBlur(index)}
                     placeholder="Reference Name"
                     type='text'
-                    className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                    className="w-[50%] bg-transparent leading-8 text-sm  rounded  placeholder:text-gray-600 focus:outline-none focus:ring-0 focus:border-0"
                   />
                   <div className="h-[2px] w-5" style={{
                     background: textAltColor
                   }}></div>
-                </div>
+              
                 <input
                   type="text"
                   value={cert.contact}
                   placeholder="Reference Contact"
-                  onBlur={() => handleBlur(index)}
+                  // onBlur={() => handleBlur(index)}
                   onChange={(e) => handleInputChange(index, 'contact', e.target.value)}
-                  className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
+                  className="w-full bg-transparent text-sm leading-8 rounded  focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
                 />
               </div>
               {editable && (
@@ -158,8 +161,11 @@ const AllReferences = ({
                 ${editable ? 'opacity-100 ' : 'opacity-0 '}
               `}>
                   <button
-                    onClick={() => handleDelete(index)}
-                    className=" text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
+                    onClick={() =>{
+                      if(references.length >1) return handleDelete(index)
+                        return handleRemoveSection()
+                      }}
+                    className=" text-red-800/90 text-sm w-6 h-[2rem] flex justify-center items-center rounded-l-sm"
                   >
                     <RiDeleteBin6Line size={16} />
                   </button>
@@ -167,46 +173,6 @@ const AllReferences = ({
               )}
             </div>
           ))
-        ) : (
-          <div className='flex justify-between px-2 my-[6px] mx-2 rounded-sm relative' style={{
-            color: textColor,
-            border: `1px solid ${textColor}`,
-          }}>
-            {/* ====== Job Name ====== */}
-            <div className="flex items-center gap-4  px-2 "
-            >
-              <div className='flex items-center justify-center gap-4 '>
-                <input
-                  value=""
-                  onChange={(e) => handleAddFirstReference(e.target.value)}
-                  placeholder="Reference Name"
-                  className="w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
-                />
-                <div className="  h-[2px] w-5  " style={{
-                  background: textAltColor
-                }}></div>
-              </div>
-              <input
-                type="text"
-                placeholder="Reference Contact"
-                value=""
-                onChange={(e) => handleAddFirstReference(e.target.value)}
-                className=" w-full bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
-              />
-            </div>
-            {editable && (
-              <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
-                ${editable ? 'opacity-100 ' : 'opacity-0 '}
-              `}>
-                <button
-                  className="text-red-800/90 text-sm w-6 h-6 flex justify-center items-center rounded-l-sm"
-                  onClick={handleAddReference}
-                >
-                  <RiDeleteBin6Line size={16} />
-                </button>
-              </div>
-            )}
-          </div>
         )}
       </div>
     </div >

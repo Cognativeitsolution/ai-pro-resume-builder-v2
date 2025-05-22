@@ -1,11 +1,15 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { TiDelete } from 'react-icons/ti';
-import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
-import { RootState } from '@/redux/store';
-import { addUserSoft_Skills, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
-import SectionToolbar from '../../section-toolbar/SectionToolbar';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { TiDelete } from "react-icons/ti";
+import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
+import { RootState } from "@/redux/store";
+import {
+  addUserSoft_Skills,
+  removeSection,
+  sectionEditMode,
+} from "@/redux/slices/addSectionSlice";
+import SectionToolbar from "../../section-toolbar/SectionToolbar";
 
 type SoftSkillType = {
   title: string;
@@ -22,25 +26,31 @@ type AllSoftSkillsProps = {
 };
 
 const AllSoftSkills = ({
-  data = { id: '' },
-  textColor = '#fff',
+  data = { id: "" },
+  textColor = "#fff",
   textAltColor,
   templateColor,
   editableAltBG,
-  isPillStyle
-
+  isPillStyle,
 }: AllSoftSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userSoft_Skills } = useSelector((state: RootState) => state.addSection);
+  const { userSoft_Skills } = useSelector(
+    (state: RootState) => state.addSection
+  );
   const [editable, setEditable] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [softskills, setSoftSkills] = useState<SoftSkillType[]>([]);
+  const [softskills, setSoftSkills] = useState<SoftSkillType[]>([
+    {
+      title: "",
+      level: 0,
+    },
+  ]);
 
   useEffect(() => {
     if (Array.isArray(userSoft_Skills) && userSoft_Skills.length > 0) {
-      const normalizedSoftSkills = userSoft_Skills.map(skill => ({
-        title: skill.title ?? '',
+      const normalizedSoftSkills = userSoft_Skills.map((skill) => ({
+        title: skill.title ?? "",
         level: skill.level ?? 0,
       }));
       setSoftSkills(normalizedSoftSkills);
@@ -49,27 +59,34 @@ const AllSoftSkills = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setEditable(false);
-        dispatch(sectionEditMode(false))
-        const validSoftSkills = softskills.filter(skill => skill.title.trim() !== '');
-        dispatch(addUserSoft_Skills({
-          sectionId: data.id,
-          detail: validSoftSkills
-        }));
+        dispatch(sectionEditMode(false));
+        const validSoftSkills = softskills.filter(
+          (skill) => skill.title.trim() !== ""
+        );
+        dispatch(
+          addUserSoft_Skills({
+            sectionId: data.id,
+            detail: validSoftSkills,
+          })
+        );
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [softskills, dispatch, data.id]);
 
   const handleEditableSection = () => {
     setEditable(true);
-    dispatch(sectionEditMode(true))
-  }
+    dispatch(sectionEditMode(true));
+  };
   const handleAddSoftSkill = () => {
-    setSoftSkills([...softskills, { title: '', level: 0 }]);
+    setSoftSkills([...softskills, { title: "", level: 0 }]);
   };
 
   const handleRemoveSection = () => {
@@ -89,7 +106,7 @@ const AllSoftSkills = ({
   };
 
   const handleBlur = (index: number) => {
-    if (softskills[index]?.title.trim() === '') {
+    if (softskills[index]?.title.trim() === "") {
       const updated = softskills.filter((_, i) => i !== index);
       setSoftSkills(updated);
     }
@@ -97,33 +114,45 @@ const AllSoftSkills = ({
 
   const handleAddFirstSoftSkill = (value: string) => {
     const newSkill = { title: value.trim(), level: 0 };
-    if (newSkill.title !== '') {
+    if (newSkill.title !== "") {
       setSoftSkills([newSkill]);
     }
   };
 
-
-
   return (
-    <div ref={containerRef} className={`px-1 py-5 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
+    <div
+      ref={containerRef}
+      className={`px-1 py-5 ${
+        editable === true
+          ? editableAltBG
+            ? editableAltBG
+            : "bg-white"
+          : "bg-transparent"
+      }`}
+      onClick={handleEditableSection}
+    >
       {/* ====== Add and Delete Section Buttons ====== */}
       <SectionToolbar
         isTextEditor={false}
         onCopy={handleAddSoftSkill}
         onDelete={handleRemoveSection}
         position={`top-7 right-0`}
-        mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+        mainClass={`transition-all duration-500 ease-in-out ${
+          editable ? "block " : "hidden"
+        }`}
         showDot={true}
       />
       <div className="flex flex-wrap gap-2 ">
-        {softskills.length > 0 ?
+        {softskills.length > 0 &&
           softskills.map((skill, index) => (
             <div
               key={index}
               className={`flex items-center gap-2 
-              ${isPillStyle && "rounded-full"} opacity-75 backdrop-blur-[40px] 
-              font-medium px-3 py-1 transition-all duration-500 ease-in-out 
-              ${hoveredIndex === index ? 'pr-5' : ''}`}
+              ${
+                isPillStyle && "rounded-full"
+              } opacity-75  backdrop-blur-[40px] 
+              font-medium px-3  transition-all duration-500 ease-in-out 
+              ${hoveredIndex === index ? "pr-5" : ""}`}
               style={{
                 color: textColor,
                 background: isPillStyle && textColor,
@@ -146,40 +175,25 @@ const AllSoftSkills = ({
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 onBlur={() => handleBlur(index)}
                 placeholder="Soft Skill"
-                className="bg-transparent text-sm truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70 "
-                style={{ color: textAltColor, }}
+                className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70 "
+                style={{ color: textAltColor }}
                 autoFocus
               />
+              
               {hoveredIndex === index && (
-                <button onClick={() => handleDeleteSoftSkill(index)} className="opacity-70 hover:opacity-100">
-                  <RiDeleteBin6Line size={18} style={{ color: textAltColor, }} />
+                <button
+                  onClick={() => {
+                    console.log(index)
+                      if (index > 0) return handleDeleteSoftSkill(index);
+                    return handleRemoveSection()
+                  }}
+                  className="opacity-70 hover:opacity-100"
+                >
+                  <RiDeleteBin6Line size={18} style={{ color: textAltColor }} />
                 </button>
               )}
             </div>
-          ))
-          : (
-            <div
-              className={`flex items-center gap-2 
-            ${isPillStyle && "rounded-full"} opacity-75 backdrop-blur-[40px] 
-            font-medium px-3 py-1 transition-all duration-500 ease-in-out 
-            `}
-              style={{
-                color: textColor,
-                background: isPillStyle && textColor,
-                border: isPillStyle && `1px solid ${textColor}`,
-                borderBottom: `2px solid ${textColor}`,
-              }}
-            >
-              <input
-                value={''}
-                onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
-                placeholder="soft Skill"
-                className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
-                style={{ color: textAltColor, }}
-              />
-            </div>
-          )
-        }
+          ))}
       </div>
     </div>
   );

@@ -121,7 +121,7 @@ const AllTechnicalSkills = ({
               key={index}
               className={`flex items-center gap-2 
               ${isPillStyle && "rounded-full"} opacity-75 backdrop-blur-[40px] 
-              font-medium px-3 py-1 transition-all duration-500 ease-in-out 
+              font-medium px-3  transition-all duration-500 ease-in-out 
               ${hoveredIndex === index ? 'pr-5' : ''}`}
               style={{
                 color: textColor,
@@ -145,7 +145,7 @@ const AllTechnicalSkills = ({
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 onBlur={() => handleBlur(index)}
                 placeholder="Technical Skill"
-                className="bg-transparent text-sm truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70 "
+                className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70"
                 style={{ color: textAltColor, }}
                 autoFocus
               />
