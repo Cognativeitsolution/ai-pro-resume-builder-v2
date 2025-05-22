@@ -274,14 +274,15 @@ const Template9 = ({ currentState, updateState }: ResumePreviewProps) => {
                                 color: currentState?.color,
                             }}
                         />
-                        <div className="w-full gap-6 p-2 mt-2 flex justify-around items-center ps-24">
+                        <div className="w-full gap-6 p-2 mt-2 flex justify-around items-center ">
                             
                             {["Phone", "Email", "Address"].map((placeholder, idx) => (
                                 <div key={idx} className="flex items-center justify-center gap-2 text-black ">
                                     <IconDropdown icons={FaIcons} />
                                     <input
-                                        placeholder={placeholder}
-                                        className="w-full text-[14px] placeholder:text-[14px] placeholder-black outline-none focus:bg-transparent bg-transparent"
+                                    type="text"
+                                        placeholder={`please add your ${placeholder} here`}
+                                        className="min-w-[180px] text-[14px] placeholder:text-[14px] placeholder-black outline-none focus:bg-transparent bg-transparent"
                                     />
                                 </div>
                             ))}
