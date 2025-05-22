@@ -1,4 +1,5 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { jsPDF } from 'jspdf';
 import { FaAngleDown } from 'react-icons/fa6';
@@ -12,6 +13,8 @@ import download from 'media/builderIcons/download.svg';
 import preview from 'media/builderIcons/preview.svg';
 import crown from 'media/builderIcons/crown.svg';
 import user from 'media/builderIcons/user.svg';
+import { generatePdfPreview } from '@/utils/pdf-preview';
+import PdfPreviewModal from '@/components/common/modal/pdf-preview-modal';
 
 type HeaderProps = {
   currentState: {
@@ -28,6 +31,14 @@ type HeaderProps = {
 
 const UserHeader = (props: HeaderProps) => {
   const { currentState, handleUndo, handleRedo, history, future } = props
+
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  
+  const handlePreview = async () => {
+  await generatePdfPreview("resume-section", setPdfUrl);
+  };
+
+
   const downloadPDF = async() => {
     const resume = document.getElementById("resume-content");
 
@@ -37,7 +48,6 @@ const UserHeader = (props: HeaderProps) => {
     scale: 2,
     useCORS: true, 
   });
-console.log(canvas)
   const imgData = canvas.toDataURL("image/png");
 const pdf = new jsPDF("p", "mm", "a4");
 
@@ -95,7 +105,10 @@ const pdf = new jsPDF("p", "mm", "a4");
           </div>
           <div className="bg-secondary rounded-3xl py-2 px-4 cursor-pointer flex items-center gap-2 shadow-md">
             <Image src={preview} alt="Preview" className="w-[15px]" />
-            <span className="text-[14px] text-[#ffffff]">Preview</span>
+              <button onClick={handlePreview} className='text-white'>
+        Preview
+      </button>
+        {pdfUrl && <PdfPreviewModal pdfUrl={pdfUrl} onClose={() => setPdfUrl(null)} />}
           </div>
           <span className="bg-[#D9D9D9] w-[2px] h-[30px]" />
           <div className="cursor-pointer">
