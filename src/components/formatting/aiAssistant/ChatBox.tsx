@@ -14,7 +14,6 @@ type ChatMessage = {
 export default function ChatBox() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const [aiTime] = useState(() =>
         new Date().toLocaleTimeString([], {
             hour: '2-digit',
@@ -43,32 +42,6 @@ export default function ChatBox() {
         setMessages(prev => [...prev, { text, time }]);
     };
 
-    const handleAttachClick = () => {
-        fileInputRef.current?.click();
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const time = getCurrentTime();
-            const fileUrl = URL.createObjectURL(file);
-            const isImage = file.type.startsWith('image/');
-            const isDocument = file.type.includes('pdf') || file.type.includes('text') || file.name.match(/\.(docx?|xlsx?)$/i);
-
-            setMessages(prev => [
-                ...prev,
-                {
-                    text: `Attached: ${file.name}`,
-                    time,
-                    fileUrl,
-                    fileName: file.name,
-                    isImage,
-                    isDocument,
-                },
-            ]);
-        }
-    };
-
     return (
         <div className="flex flex-col justify-between gap-1 h-full w-full pr-1 text-white">
             {/*===== Message Box =====*/}
@@ -89,20 +62,17 @@ export default function ChatBox() {
                         <p className="text-[15px] text-black">Please select an option below to get started.</p>
                         <button
                             onClick={() => handleButtonClick('Create New Resume')}
-                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
-                        >
+                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-black text-black hover:text-white border border-hamzaPrimary rounded-full transition-all duration-500">
                             Create New Resume
                         </button>
                         <button
                             onClick={() => handleButtonClick('Edit Existing Resume')}
-                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
-                        >
+                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-black text-black hover:text-white border border-hamzaPrimary rounded-full transition-all duration-500">
                             Edit Existing Resume
                         </button>
                         <button
                             onClick={() => handleButtonClick('Generate Cover Letter')}
-                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-primaryNew text-black border border-hamzaPrimary rounded-full"
-                        >
+                            className="text-[16px] w-max h-[40px] px-4 flex items-center bg-white hover:bg-black text-black hover:text-white border border-hamzaPrimary rounded-full transition-all duration-500">
                             Generate Cover Letter
                         </button>
                     </div>
@@ -145,20 +115,8 @@ export default function ChatBox() {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                     />
-                    <div className="ml-2 flex items-center gap-5">
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            className="hidden"
-                        />
-                        <button onClick={handleAttachClick} className="text-[24px] text-zinc-800 rotate-45">
-                            <IoMdAttach />
-                        </button>
-                        <button
-                            onClick={handleSend}
-                            className="p-2 text-[25px] rounded-full bg-PrimaryDark text-white"
-                        >
+                    <div className="ml-2 flex items-center">
+                        <button onClick={handleSend} className="p-2 text-[25px] rounded-full bg-PrimaryDark text-white">
                             <IoIosSend />
                         </button>
                     </div>

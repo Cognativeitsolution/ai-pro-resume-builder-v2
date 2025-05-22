@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 // ==================
+const CTA = dynamic(() => import("./common/CTA"));
 const UserHeader = dynamic(() => import("./Layout/user-header/userHeader"));
 const NewHeader = dynamic(() => import("./Layout/newHeader/NewHeader"));
 const NewFooter = dynamic(() => import("./Layout/newFooter/NewFooter"));
@@ -59,8 +60,10 @@ const LogIn = dynamic(() => import("./auth/LogIn"));
 const ForgetPassword = dynamic(() => import("./auth/ForgetPassword"));
 const ResetPassword = dynamic(() => import("./auth/ResetPassword"));
 const VerifyUser = dynamic(() => import("./auth/VerifyUser"));
+const StepTabs = dynamic(() => import("./stepTabs/StepTabs"));
 
 export {
+  CTA,
   CustomAlert,
   CustomSelect,
   CustomPhoneNumber,
@@ -120,4 +123,5 @@ export {
   ForgetPassword,
   ResetPassword,
   VerifyUser,
+  StepTabs,
 }
