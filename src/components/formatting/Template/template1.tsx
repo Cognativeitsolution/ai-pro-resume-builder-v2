@@ -327,7 +327,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     };
     return (
         <div
-            className="w-a4 h-a4 relative"
+            className="resume-container"
             id="resume-content"
             style={{
                 padding: `${currentState.padding || 0}px`,
@@ -335,7 +335,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 transition: "background-color 0.3s ease-in-out"
             }}
         >
-            <div className="grid grid-cols-12 h-full shadow-xl pb-0">
+            <div className="w-a4 h-a4 relative grid grid-cols-12 shadow-xl pb-0">
                 {/* Left Column */}
                 <div className="col-span-8 p-[30px] pr-8">
                     {/* Header */}
@@ -368,7 +368,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     {/* Left Sections */}
                     {leftSections?.length > 0 ? (
                         leftSections.map((section: any, index: number) => (
-                            <div key={index} className="pt-4 relative">
+                            <div key={index} className="pt-4 relative section-to-break">
                                 <div className="border-b">
                                     {section?.name === "Custom Section" ? (
                                         <div ref={containerRef} className={`flex flex-col pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
@@ -461,7 +461,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     <div className="p-3">
                         {rightSections?.length > 0 &&
                             rightSections.map((section: any, index: number) => (
-                                <div key={index} className="pt-4 relative">
+                                <div key={index} className="pt-4 relative section-to-break">
                                     <div className="border-b text-white">
                                         {section?.name === "Custom Section" ? (
                                             <div ref={containerRef} className={`flex flex-col pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
