@@ -7,6 +7,7 @@ import ImproveTextReducer from "@/redux/slices/improveTextSlice";
 import addSectionReducer from "@/redux/slices/addSectionSlice";
 import templateReducer from "@/redux/slices/template";
 import profileImageReducer from './slices/profileImageSlice';
+import rearrangeReducer from "./slices/rearrangeSlice";
 
 
 export const store = configureStore({
@@ -18,7 +19,8 @@ export const store = configureStore({
         ImproveText: ImproveTextReducer,
         addSection: addSectionReducer,
         template: templateReducer,
-         profileImage: profileImageReducer,
+        profileImage: profileImageReducer,
+        rearrange: rearrangeReducer
     },
 });
 

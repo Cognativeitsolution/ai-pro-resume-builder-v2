@@ -13,6 +13,7 @@ import Image from "next/image";
 import Add from "media/builderIcons/add.svg";
 import { CgClose } from "react-icons/cg";
 import LoadingSkeleton from "@/components/loadingSkeleton/loadingSkeleton";
+import { RootState } from "@/redux/store";
 
 type propsType = {
   doubleColumn?: boolean | string;
@@ -24,8 +25,9 @@ const DndExample = ({ doubleColumn }: propsType) => {
   const addedSections = useSelector(
     (state: any) => state.addSection.addedSections
   );
+  const rightSideSections = useSelector((state: RootState) => state.rearrange.list);
 
-  const rightSideSections = ["Technical Skills", "Soft Skills", "Languages", "References"];
+  // const rightSideSections = ["Technical Skills", "Soft Skills", "Languages", "References"];
   const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
   const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 

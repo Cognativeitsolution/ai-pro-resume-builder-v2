@@ -22,6 +22,7 @@ import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
+import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
 
 type CurrentState = {
     fontSize: any;
@@ -175,9 +176,9 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
         };
         return `${base * (scaleMap[size] || 1)}px`;
     };
-    const leftSideSections = ["Technical Skills", "Soft Skills", "Languages"];
-    const rightSections = addedSections?.filter((section: any) => !leftSideSections.includes(section?.name));
-    const leftSections = addedSections?.filter((section: any) => leftSideSections.includes(section?.name));
+    const rightSideSections = ["Summary", "Certificate", "Education", "Experience", "Projects", "Awards", "References", "Custom Section"];
+    const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
+    const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
 
     //============= upload image
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -198,6 +199,14 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
             reader.readAsDataURL(file);
         }
     };
+
+    // rearrange
+    useEffect(() => {
+        // const allSectionNames = addedSections.map((s: any) => s?.name);
+        dispatch(setList(rightSideSections));
+
+        dispatch(setColumn(true));
+    }, [addedSections]);
 
     return (
         <div className="w-a4 h-a4 "

@@ -20,6 +20,8 @@ import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 import { sectionEditMode } from "@/redux/slices/addSectionSlice";
+import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
+
 
 type CurrentState = {
     fontSize: any;
@@ -306,6 +308,14 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [editable]);
+
+    // rearrange 
+    useEffect(() => {
+        // const allSectionNames = addedSections.map((s: any) => s?.name);
+        dispatch(setList(rightSideSections));
+
+        dispatch(setColumn(true));
+    }, [addedSections]);
     return (
         <div
             className="w-a4 h-a4 relative"
