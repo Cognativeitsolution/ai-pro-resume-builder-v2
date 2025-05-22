@@ -1,12 +1,20 @@
 "use client";
+// ============
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+// ============
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileImage } from "@/redux/slices/profileImageSlice";
+import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
+import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
+// ============
 import * as FaIcons from "react-icons/fa";
+import { BookUser, Mail, Phone } from "lucide-react";
+// ============
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
+// ============
 import AllSummary from "../all-sections/sections-details/AllSummary";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
 import AllEducations from "../all-sections/sections-details/AllEducations";
@@ -19,9 +27,6 @@ import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
-import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
-import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
-import { BookUser, Mail, Phone } from "lucide-react";
 
 
 type CurrentState = {
