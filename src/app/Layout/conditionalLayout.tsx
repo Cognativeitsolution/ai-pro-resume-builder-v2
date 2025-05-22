@@ -24,10 +24,10 @@ const ConditionalLayout = ({ children }: any) => {
   return (
     <PopupProvider value={{ popup, togglePopup }}>
       <>
-        {pathname === "/create-resume" || pathname === "/formatting-new" ? null : <NewHeader />}
+        {pathname === "/create-resume" || pathname === "/onboarding" ? null : <NewHeader />}
         {/* {loading ? <SpinnerLoader /> : children} */}
         {children}
-        <NewFooter />
+        {pathname === "/onboarding" ? null : <NewFooter />}
       </>
     </PopupProvider>
   );
