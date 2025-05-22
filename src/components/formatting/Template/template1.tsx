@@ -21,28 +21,29 @@ import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
+import { BookUser, Mail, Phone } from "lucide-react";
 
 
 type CurrentState = {
-    fontSize: any;
-    fontFamily: string;
-    fontWeight: string;
-    color: string;
-    margin: number;
-    padding: number;
-    text: any;
+  fontSize: any;
+  fontFamily: string;
+  fontWeight: string;
+  color: string;
+  margin: number;
+  padding: number;
+  text: any;
 };
 
 type ResumePreviewProps = {
-    currentState: CurrentState;
-    updateState: (newState: CurrentState) => void;
+  currentState: CurrentState;
+  updateState: (newState: CurrentState) => void;
 };
 
 const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
-    const dispatch = useDispatch();
-    const { addedSections, sectionBgColor, editMode } = useSelector(
-        (state: any) => state.addSection
-    );
+  const dispatch = useDispatch();
+  const { addedSections, sectionBgColor, editMode } = useSelector(
+    (state: any) => state.addSection
+  );
 
     const { spellCheck, grammarCheck } = useSelector(
         (state: any) => state.ImproveText
@@ -72,215 +73,217 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             .join("\n");
     };
 
-    useEffect(() => {
-        setSecName("Custom Section");
-    }, []);
+  useEffect(() => {
+    setSecName("Custom Section");
+  }, []);
 
-    const HandleChangeSectionName = (data: any) => {
-        console.log(data);
-        setSecName(data);
+  const HandleChangeSectionName = (data: any) => {
+    console.log(data);
+    setSecName(data);
+  };
+  const fullText = getAllText();
+
+  // ===================
+  useEffect(() => {
+    setTemplateBgColor(sectionBgColor);
+  }, [editMode, sectionBgColor]);
+
+  //============= improve text logic
+  useEffect(() => {
+    const fetchCorrections = async () => {
+      if (!spellCheck && !grammarCheck) return;
+      setLoading(true);
+      try {
+        let spellingMistakes: string[] = [];
+        let grammarMistakes: string[] = [];
+
+        if (spellCheck) {
+          const spellResponse = await axios.post(
+            "https://ai.spellcheck.aiproresume.com/api/v1/spell-correction",
+            { text: fullText },
+            { headers: { "Content-Type": "application/json" } }
+          );
+          spellingMistakes =
+            spellResponse.data?.data?.map(
+              (item: any) => item?.misspelledWord
+            ) || [];
+        }
+
+        if (grammarCheck) {
+          const grammarResponse = await axios.post(
+            "https://ai.grmcheck.aiproresume.com/api/v1/grammar-correction",
+            { text: fullText },
+            { headers: { "Content-Type": "application/json" } }
+          );
+          grammarMistakes =
+            grammarResponse.data?.data?.map((item: any) => item?.wrongWords) ||
+            [];
+        }
+
+        setIncorrectWords(spellingMistakes);
+        setGrammarErrors(grammarMistakes);
+      } catch (err) {
+        console.error("Error during API call:", err);
+      } finally {
+        setLoading(false);
+      }
     };
-    const fullText = getAllText();
 
-    // ===================
-    useEffect(() => {
-        setTemplateBgColor(sectionBgColor);
-    }, [editMode, sectionBgColor]);
+    fetchCorrections();
+  }, [spellCheck, grammarCheck, fullText]);
 
-    //============= improve text logic
-    useEffect(() => {
-        const fetchCorrections = async () => {
-            if (!spellCheck && !grammarCheck) return;
-            setLoading(true);
-            try {
-                let spellingMistakes: string[] = [];
-                let grammarMistakes: string[] = [];
+  //============= Highlight function
+  const highlightWords = (text: string) => {
+    return text.split(/\s+/).map((word, index) => {
+      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
+      const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
+      const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
 
-                if (spellCheck) {
-                    const spellResponse = await axios.post(
-                        "https://ai.spellcheck.aiproresume.com/api/v1/spell-correction",
-                        { text: fullText },
-                        { headers: { "Content-Type": "application/json" } }
-                    );
-                    spellingMistakes =
-                        spellResponse.data?.data?.map(
-                            (item: any) => item?.misspelledWord
-                        ) || [];
-                }
-
-                if (grammarCheck) {
-                    const grammarResponse = await axios.post(
-                        "https://ai.grmcheck.aiproresume.com/api/v1/grammar-correction",
-                        { text: fullText },
-                        { headers: { "Content-Type": "application/json" } }
-                    );
-                    grammarMistakes =
-                        grammarResponse.data?.data?.map((item: any) => item?.wrongWords) ||
-                        [];
-                }
-
-                setIncorrectWords(spellingMistakes);
-                setGrammarErrors(grammarMistakes);
-            } catch (err) {
-                console.error("Error during API call:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCorrections();
-    }, [spellCheck, grammarCheck, fullText]);
-
-    //============= Highlight function
-    const highlightWords = (text: string) => {
-        return text.split(/\s+/).map((word, index) => {
-            const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
-            const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
-            const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
-
-            return (
-                <span
-                    key={index}
-                    className={`
+      return (
+        <span
+          key={index}
+          className={`
                         ${isSpellingMistake ? "text-red-500" : ""}
                         ${isGrammarMistake ? "bg-blue-200 underline" : ""}
                     `}
-                >
-                    {word}{" "}
-                </span>
-            );
-        });
-    };
+        >
+          {word}{" "}
+        </span>
+      );
+    });
+  };
 
-    // ========== Render Sections
-    const renderSection = (section: any) => {
-        switch (section?.name) {
-            case "Summary":
-                return <AllSummary data={section} />;
-            case "Soft Skills":
-                return (
-                    <AllSoftSkills
-                        data={section}
-                        textColor="#fff"
-                        textAltColor="#000"
-                        templateColor="#fff"
-                        editableAltBG="bg-gray-900/80"
-                        isPillStyle={true} />
-                );
-            case "Technical Skills":
-                return (
-                    <AllTechnicalSkills
-                        data={section}
-                        textColor="#fff"
-                        textAltColor="#000"
-                        templateColor="#fff"
-                        editableAltBG="bg-gray-900/80"
-                        isPillStyle={true} />
-                );
-            case "Certificate":
-                return <AllCertificates data={section} />;
-            case "Education":
-                return (
-                    <AllEducations
-                        data={section}
-                        textColor=""
-                        textAltColor=""
-                        templateColor=""
-                    />
-                );
-            case "Experience":
-                return (
-                    <AllExperiences
-                        data={section}
-                        textColor=""
-                        textAltColor=""
-                        templateColor=""
-                    />
-                );
-            case "Projects":
-                return (
-                    <AllProjects
-                        data={section}
-                        textColor=""
-                        textAltColor=""
-                        templateColor=""
-                    />
-                );
-            case "Awards":
-                return (
-                    <AllAwards
-                        data={section}
-                        textColor="#000"
-                        textAltColor={currentState.color}
-                        templateColor={currentState.color}
-                    />
-                );
-            case "References":
-                return (
-                    <AllReferences
-                        data={section}
-                        textColor="#000"
-                        templateColor={currentState.color}
-                        textAltColor={currentState.color}
-                    />
-                );
-            case "Languages":
-                return (
-                    <AllLanguages
-                        data={section}
-                        textColor="#fff"
-                        templateColor="#3358c5"
-                        editableAltBG="bg-gray-900/80"
-                    />
-                );
-            case "Custom Section":
-                return (
-                    <AllCustomSection
-                        secNewNames={secName}
-                        data={section}
-                        textColor="#000"
-                        templateColor="#fff"
-                    />
-                );
-            default:
-                return <p>{highlightWords(section?.content || "")}</p>;
+  // ========== Render Sections
+  const renderSection = (section: any) => {
+    switch (section?.name) {
+      case "Summary":
+        return <AllSummary data={section} />;
+      case "Soft Skills":
+        return (
+          <AllSoftSkills
+            data={section}
+            textColor="#fff"
+            textAltColor="#000"
+            templateColor="#fff"
+            editableAltBG="bg-gray-900/80"
+            isPillStyle={true}
+          />
+        );
+      case "Technical Skills":
+        return (
+          <AllTechnicalSkills
+            data={section}
+            textColor="#fff"
+            textAltColor="#000"
+            templateColor="#fff"
+            editableAltBG="bg-gray-900/80"
+            isPillStyle={true}
+          />
+        );
+      case "Certificate":
+        return <AllCertificates data={section} />;
+      case "Education":
+        return (
+          <AllEducations
+            data={section}
+            textColor=""
+            textAltColor=""
+            templateColor=""
+          />
+        );
+      case "Experience":
+        return (
+          <AllExperiences
+            data={section}
+            textColor=""
+            textAltColor=""
+            templateColor=""
+          />
+        );
+      case "Projects":
+        return (
+          <AllProjects
+            data={section}
+            textColor=""
+            textAltColor=""
+            templateColor=""
+          />
+        );
+      case "Awards":
+        return (
+          <AllAwards
+            data={section}
+            textColor="#000"
+            textAltColor={currentState.color}
+            templateColor={currentState.color}
+          />
+        );
+      case "References":
+        return (
+          <AllReferences
+            data={section}
+            textColor="#000"
+            templateColor={currentState.color}
+            textAltColor={currentState.color}
+          />
+        );
+      case "Languages":
+        return (
+          <AllLanguages
+            data={section}
+            textColor="#fff"
+            templateColor="#3358c5"
+            editableAltBG="bg-gray-900/80"
+          />
+        );
+      case "Custom Section":
+        return (
+          <AllCustomSection
+            secNewNames={secName}
+            data={section}
+            textColor="#000"
+            templateColor="#fff"
+          />
+        );
+      default:
+        return <p>{highlightWords(section?.content || "")}</p>;
+    }
+  };
+
+  const scaleFont = (base: number, size: string) => {
+    const scaleMap: Record<string, number> = {
+      small: 0.85,
+      medium: 1,
+      large: 1.2,
+    };
+    return `${base * (scaleMap[size] || 1)}px`;
+  };
+  const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
+  const leftSections = addedSections?.filter(
+    (section: any) => !rightSideSections.includes(section?.name)
+  );
+  const rightSections = addedSections?.filter((section: any) =>
+    rightSideSections.includes(section?.name)
+  );
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageSrc = useSelector((state: RootState) => state.profileImage.image);
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          dispatch(setProfileImage(reader.result));
         }
-    };
-
-    const scaleFont = (base: number, size: string) => {
-        const scaleMap: Record<string, number> = {
-            small: 0.85,
-            medium: 1,
-            large: 1.2,
-        };
-        return `${base * (scaleMap[size] || 1)}px`;
-    };
-    const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
-    const leftSections = addedSections?.filter(
-        (section: any) => !rightSideSections.includes(section?.name)
-    );
-    const rightSections = addedSections?.filter((section: any) =>
-        rightSideSections.includes(section?.name)
-    );
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const imageSrc = useSelector((state: RootState) => state.profileImage.image);
-
-    const handleImageClick = () => {
-        fileInputRef.current?.click();
-    };
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && file.type.startsWith("image/")) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                if (typeof reader.result === "string") {
-                    dispatch(setProfileImage(reader.result));
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
     const handleEditableSection = () => {
         setEditable(true);
@@ -393,69 +396,71 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         <p>No sections added yet.</p>
                     )}
 
-                    {loading && (
-                        <p className="text-gray-500 mt-4">
-                            Checking for spelling/grammar errors...
-                        </p>
-                    )}
+          {loading && (
+            <p className="text-gray-500 mt-4">
+              Checking for spelling/grammar errors...
+            </p>
+          )}
+        </div>
+
+        {/* Right Column */}
+        <div
+          className="col-span-4 px-[10px] h-a4 z-10"
+          style={{ backgroundColor: currentState.color }}
+        >
+          {/* Profile Image */}
+          <div className="p-3 py-12">
+            <div className="flex justify-center mb-6 w-[160px] h-[160px] mx-auto rounded-full overflow-hidden cursor-pointer">
+              <Image
+                src={imageSrc || placeHolderImg}
+                alt="Profile"
+                width={160}
+                height={160}
+                className="w-full"
+                onClick={handleImageClick}
+              />
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </div>
+
+            {/* Contact Info */}
+            <div className="flex flex-col gap-2">
+              <div
+                className="text-start text-white flex items-center gap-2"
+                style={{
+                  fontSize: scaleFont(24, currentState.fontSize),
+                  fontFamily: currentState.fontFamily,
+                }}
+              >
+                <span className="text-[20px]">Contact Info</span>
+              </div>
+              <hr className="mt-2" />
+              {[
+                { name: "Phone", icon: <Phone size={16} /> },
+                { name: "Email", icon: <Mail size={16} /> },
+              ].map((placeholder, idx) => (
+                <div key={idx} className="flex items-center gap-2  text-white">
+                  <div className="self-center mt-2 ">{placeholder.icon}</div>
+                  <input
+                    placeholder={placeholder.name}
+                    className="w-full leading-[1.5rem] placeholder:opacity-70 text-sm placeholder-white outline-none   focus:bg-transparent bg-transparent"
+                  />
                 </div>
-
-                {/* Right Column */}
-                <div
-                    className="col-span-4 px-[10px] h-a4 -mr-[30px] z-10"
-                    style={{ backgroundColor: currentState.color }}
-                >
-                    {/* Profile Image */}
-                    <div className="p-3 py-12">
-                        <div className="flex justify-center mb-6 w-[160px] h-[160px] mx-auto rounded-full overflow-hidden cursor-pointer">
-                            <Image
-                                src={imageSrc || placeHolderImg}
-                                alt="Profile"
-                                width={160}
-                                height={160}
-                                className="w-full"
-                                onClick={handleImageClick}
-                            />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                ref={fileInputRef}
-                                onChange={handleFileChange}
-                                className="hidden"
-                            />
-                        </div>
-
-                        {/* Contact Info */}
-                        <div className="flex flex-col gap-2">
-                            <div
-                                className="text-start text-white flex items-center gap-2 pb-1 mb-1"
-                                style={{
-                                    fontSize: scaleFont(24, currentState.fontSize),
-                                    fontFamily: currentState.fontFamily
-                                }}
-                            >
-                                <IconDropdown icons={FaIcons} />
-                                <span className="text-[20px]">Contact Info</span>
-                            </div>
-                            <hr />
-                            {["Phone", "Email"].map((placeholder, idx) => (
-                                <div key={idx} className="flex items-start gap-2 text-white">
-                                    <IconDropdown icons={FaIcons} />
-                                    <input
-                                        placeholder={placeholder}
-                                        className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent"
-                                    />
-                                </div>
-                            ))}
-                            <div className="flex items-start gap-2 text-white">
-                                <IconDropdown icons={FaIcons} />
-                                <textarea
-                                    placeholder="Address"
-                                    className="w-full text-[14px] placeholder:text-[14px] placeholder-white outline-none focus:bg-transparent bg-transparent"
-                                />
-                            </div>
-                        </div>
-                    </div>
+              ))}
+              <div className="flex items-start gap-2 text-white">
+                <BookUser size={16} className="mt-1 self-center leading-[1.5rem]" />
+                <input
+                  placeholder="Address"
+                  className="w-full leading-[1.5rem] placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
+                />
+              </div>
+            </div>
+          </div>
 
                     {/* Right Sections */}
                     <div className="p-3">
