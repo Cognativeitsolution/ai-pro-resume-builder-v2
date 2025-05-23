@@ -27,8 +27,7 @@ import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
-
-
+import Logo from "media/assets/logo_resume_white.svg";
 type CurrentState = {
   fontSize: any;
   fontFamily: string;
@@ -50,33 +49,33 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     (state: any) => state.addSection
   );
 
-    const { spellCheck, grammarCheck } = useSelector(
-        (state: any) => state.ImproveText
-    );
-    const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
-    const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [secName, setSecName] = useState("");
-    const [templateBgColor, setTemplateBgColor] = useState<any>("");
-    const [editable, setEditable] = useState<boolean>(false);
-    const [headerEditable, setHeaderEditable] = useState<boolean>(false);
-    const containerHeaderRef = useRef<HTMLDivElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [headerData, setHeaderData] = useState({ name: "", designation: "" });
-    //============= all sections
-    const getAllText = () => {
-        return addedSections
-            ?.map((section: any) => {
-                if (typeof section?.content === "string") return section.content;
-                if (Array.isArray(section?.content)) {
-                    return section.content
-                        .map((item: any) => Object.values(item).join(" "))
-                        .join(" ");
-                }
-                return "";
-            })
-            .join("\n");
-    };
+  const { spellCheck, grammarCheck } = useSelector(
+    (state: any) => state.ImproveText
+  );
+  const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
+  const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [secName, setSecName] = useState("");
+  const [templateBgColor, setTemplateBgColor] = useState<any>("");
+  const [editable, setEditable] = useState<boolean>(false);
+  const [headerEditable, setHeaderEditable] = useState<boolean>(false);
+  const containerHeaderRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [headerData, setHeaderData] = useState({ name: "", designation: "" });
+  //============= all sections
+  const getAllText = () => {
+    return addedSections
+      ?.map((section: any) => {
+        if (typeof section?.content === "string") return section.content;
+        if (Array.isArray(section?.content)) {
+          return section.content
+            .map((item: any) => Object.values(item).join(" "))
+            .join(" ");
+        }
+        return "";
+      })
+      .join("\n");
+  };
 
   useEffect(() => {
     setSecName("Custom Section");
@@ -290,116 +289,145 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     }
   };
 
-    const handleEditableSection = () => {
-        setEditable(true);
-        dispatch(sectionEditMode(true));
+  const handleEditableSection = () => {
+    setEditable(true);
+    dispatch(sectionEditMode(true));
+  };
+  const handleEditableSectionHeader = () => {
+    setHeaderEditable(true);
+    dispatch(sectionEditMode(true));
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setEditable(false);
+        dispatch(sectionEditMode(false));
+      }
+      if (
+        containerHeaderRef.current &&
+        !containerHeaderRef.current.contains(event.target as Node)
+      ) {
+        setHeaderEditable(false);
+        dispatch(sectionEditMode(false));
+        dispatch(
+          addUserHeader({
+            sectionId: 1,
+            detail: headerData,
+          })
+        );
+      }
     };
-    const handleEditableSectionHeader = () => {
-        setHeaderEditable(true);
-        dispatch(sectionEditMode(true));
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [editable, headerData]);
 
+  // rearrange
+  useEffect(() => {
+    dispatch(setList(rightSideSections));
+    dispatch(setColumn(true));
+  }, [addedSections]);
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                setEditable(false);
-                dispatch(sectionEditMode(false));
-            }
-            if (containerHeaderRef.current && !containerHeaderRef.current.contains(event.target as Node)) {
-                setHeaderEditable(false)
-                dispatch(sectionEditMode(false));
-                dispatch(
-                    addUserHeader({
-                        sectionId: 1,
-                        detail: headerData,
-                    })
-                );
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [editable, headerData]);
+  const handleChangeHeader = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: "name" | "designation"
+  ) => {
+    const value = e.target.value;
+    setHeaderData((prev) => ({ ...prev, [key]: value }));
+  };
+  return (
+    <div
+      className="resume-container"
+      id="resume-content"
+      style={{
+        padding: `${currentState.padding || 0}px`,
+        backgroundColor: editMode ? templateBgColor : undefined,
+        transition: "background-color 0.3s ease-in-out",
+      }}
+    >
+      <div className="w-a4 h-a4 relative grid grid-cols-12 shadow-xl ">
+        {/* Left Column */}
+        <div className="col-span-8 p-[30px] pr-8">
+          {/* Header */}
+          <div
+            ref={containerHeaderRef}
+            className={`flex flex-col ${headerEditable && "bg-white"}`}
+            onClick={handleEditableSectionHeader}
+          >
+            <input
+              name="name"
+              placeholder="Name"
+              onChange={(e) => handleChangeHeader(e, "name")}
+              className="outline-none bg-transparent font-semibold text-zinc-900"
+              style={{
+                fontSize: scaleFont(30, currentState.fontSize),
+                fontFamily: currentState.fontFamily,
+              }}
+            />
+            <input
+              name="designation"
+              placeholder="Designation"
+              onChange={(e) => handleChangeHeader(e, "designation")}
+              className="w-full rounded bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0"
+              style={{
+                fontSize: scaleFont(18, currentState.fontSize),
+                fontFamily: currentState.fontFamily,
+                color: currentState.color,
+              }}
+            />
+          </div>
 
-    // rearrange 
-    useEffect(() => {
-        dispatch(setList(rightSideSections));
-        dispatch(setColumn(true));
-    }, [addedSections]);
-
-    const handleChangeHeader = (e: React.ChangeEvent<HTMLInputElement>, key: "name" | "designation") => {
-        const value = e.target.value;
-        setHeaderData(prev => ({ ...prev, [key]: value }));
-    };
-    return (
-        <div
-            className="resume-container"
-            id="resume-content"
-            style={{
-                padding: `${currentState.padding || 0}px`,
-                backgroundColor: editMode ? templateBgColor : undefined,
-                transition: "background-color 0.3s ease-in-out"
-            }}
-        >
-            <div className="w-a4 h-a4 relative grid grid-cols-12 shadow-xl pb-0">
-                {/* Left Column */}
-                <div className="col-span-8 p-[30px] pr-8">
-                    {/* Header */}
-                    <div ref={containerHeaderRef}
-                        className={`flex flex-col ${headerEditable && 'bg-white'}`}
-                        onClick={handleEditableSectionHeader}>
-                        <input
-                            name="name"
-                            placeholder="Name"
-                            onChange={(e) => handleChangeHeader(e, "name")}
-                            className="outline-none bg-transparent font-semibold text-zinc-900"
-                            style={{
-                                fontSize: scaleFont(30, currentState.fontSize),
-                                fontFamily: currentState.fontFamily
-                            }}
-                        />
-                        <input
-                            name="designation"
-                            placeholder="Designation"
-                            onChange={(e) => handleChangeHeader(e, "designation")}
-                            className="w-full rounded bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0"
-                            style={{
-                                fontSize: scaleFont(18, currentState.fontSize),
-                                fontFamily: currentState.fontFamily,
-                                color: currentState.color
-                            }}
-                        />
+          {/* Left Sections */}
+          {leftSections?.length > 0 ? (
+            leftSections.map((section: any, index: number) => (
+              <div key={index} className="pt-4 relative section-to-break">
+                <div className="border-b">
+                  {section?.name === "Custom Section" ? (
+                    <div
+                      ref={containerRef}
+                      className={`flex flex-col pt-2 ${editable && "bg-white"}`}
+                      onClick={handleEditableSection}
+                    >
+                      <input
+                        type="text"
+                        className="text-[18px] bg-transparent focus:outline-none font-semibold mb-1"
+                        style={{ color: currentState.color }}
+                        value={secName}
+                        onChange={(e) =>
+                          HandleChangeSectionName(e.target.value)
+                        }
+                      />
                     </div>
+                  ) : (
+                    <h2
+                      className="text-[18px] font-semibold mb-1"
+                      style={{ color: currentState.color }}
+                    >
+                      {highlightWords(section?.newSecName || section?.name)}
+                    </h2>
+                  )}
+                </div>
+                <div className="">{renderSection(section)}</div>
+              </div>
+            ))
+          ) : (
+            <p>No sections added yet.</p>
+          )}
+   <div className="absolute bottom-4 text-xs opacity-65 flex gap-2 items-center leading-none">
+  <img
+    src="/assets/logoai.svg"
+    alt="logo"
+    width={150}
+    height={20} // Reduce height if necessary
+    className="inline-block align-middle"
+  />
+</div>
 
-                    {/* Left Sections */}
-                    {leftSections?.length > 0 ? (
-                        leftSections.map((section: any, index: number) => (
-                            <div key={index} className="pt-4 relative section-to-break">
-                                <div className="border-b">
-                                    {section?.name === "Custom Section" ? (
-                                        <div ref={containerRef} className={`flex flex-col pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
-                                            <input
-                                                type="text"
-                                                className="text-[18px] bg-transparent focus:outline-none font-semibold mb-1"
-                                                style={{ color: currentState.color }}
-                                                value={secName}
-                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                            />
-                                        </div>
-                                    ) : (
-                                        <h2 className="text-[18px] font-semibold mb-1" style={{ color: currentState.color }}>
-                                            {highlightWords(section?.newSecName || section?.name)}
-                                        </h2>
-                                    )}
-                                </div>
-                                <div className="">{renderSection(section)}</div>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No sections added yet.</p>
-                    )}
 
           {loading && (
             <p className="text-gray-500 mt-4">
@@ -458,7 +486,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 </div>
               ))}
               <div className="flex items-start gap-2 text-white">
-                <BookUser size={16} className="mt-1 self-center leading-[1.5rem]" />
+                <BookUser
+                  size={16}
+                  className="mt-1 self-center leading-[1.5rem]"
+                />
                 <input
                   placeholder="Address"
                   className="w-full leading-[1.5rem] placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
@@ -467,36 +498,44 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             </div>
           </div>
 
-                    {/* Right Sections */}
-                    <div className="p-3">
-                        {rightSections?.length > 0 &&
-                            rightSections.map((section: any, index: number) => (
-                                <div key={index} className="pt-4 relative section-to-break">
-                                    <div className="border-b text-white">
-                                        {section?.name === "Custom Section" ? (
-                                            <div ref={containerRef} className={`flex flex-col pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
-                                                <input
-                                                    type="text"
-                                                    className="text-[18px] bg-transparent focus:outline-none font-semibold mb-1"
-                                                    style={{ color: currentState.color }}
-                                                    value={secName}
-                                                    onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <h2 className="text-[18px] font-semibold mb-1">
-                                                {highlightWords(section?.newSecName || section?.name)}
-                                            </h2>
-                                        )}
-                                    </div>
-                                    <div className="">{renderSection(section)}</div>
-                                </div>
-                            ))}
-                    </div>
+          {/* Right Sections */}
+          <div className="p-3">
+            {rightSections?.length > 0 &&
+              rightSections.map((section: any, index: number) => (
+                <div key={index} className="pt-4 relative section-to-break">
+                  <div className="border-b text-white">
+                    {section?.name === "Custom Section" ? (
+                      <div
+                        ref={containerRef}
+                        className={`flex flex-col pt-2 ${
+                          editable && "bg-white"
+                        }`}
+                        onClick={handleEditableSection}
+                      >
+                        <input
+                          type="text"
+                          className="text-[18px] bg-transparent focus:outline-none font-semibold mb-1"
+                          style={{ color: currentState.color }}
+                          value={secName}
+                          onChange={(e) =>
+                            HandleChangeSectionName(e.target.value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <h2 className="text-[18px] font-semibold mb-1">
+                        {highlightWords(section?.newSecName || section?.name)}
+                      </h2>
+                    )}
+                  </div>
+                  <div className="">{renderSection(section)}</div>
                 </div>
-            </div>
+              ))}
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Template1;

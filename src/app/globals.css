@@ -37,8 +37,22 @@ body {
   background: #9f9f9f;
   border-radius: 20px;
 }
-@media print {
-  .page-break {
+
+/* @media print {
+  .page {
     page-break-after: always;
+    break-after: page;
+  }
+} */
+
+/* Print-specific page break handling */
+@media print {
+  .break-after-page {
+    page-break-after: always;
+    break-after: page;
+  }
+  .avoid-break-inside {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }
