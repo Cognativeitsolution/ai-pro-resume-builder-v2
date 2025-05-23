@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 // ===========
-import UploadImg from "../../../../public/assets/upload-file.webp";
+import UploadImg from "media/assets/upload-file.webp";
 
 const AtsCheck = () => {
   const [fileData, setFileData] = useState<{ name: string; file: File | null }>(

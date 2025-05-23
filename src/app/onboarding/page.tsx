@@ -1,10 +1,37 @@
-import { StepTabs } from '@/components'
-import React from 'react'
+"use client"
+// =============
+import { FirstStep, LastStep, StepTabs } from '@/components'
+import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const Page = () => {
+  const [showFirstStep, setShowFirstStep] = useState(true)
+  const [showLastStep, setShowLastStep] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFirstStep(false)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  const handleTemplateSelect = () => {
+    setTimeout(() => {
+      setShowLastStep(true)
+    }, 500)
+  }
+
   return (
-      <StepTabs currentStep={1} />
+    <>
+      {showFirstStep ? (
+        <FirstStep />
+      ) : showLastStep ? (
+        <LastStep />
+      ) : (
+        <StepTabs currentStep={1} onTemplateSelect={handleTemplateSelect} />
+      )}
+    </>
   )
 }
 
-export default page
+export default Page

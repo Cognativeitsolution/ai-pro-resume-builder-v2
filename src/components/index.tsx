@@ -60,7 +60,9 @@ const LogIn = dynamic(() => import("./auth/LogIn"));
 const ForgetPassword = dynamic(() => import("./auth/ForgetPassword"));
 const ResetPassword = dynamic(() => import("./auth/ResetPassword"));
 const VerifyUser = dynamic(() => import("./auth/VerifyUser"));
+const FirstStep = dynamic(() => import("./stepTabs/FirstStep"));
 const StepTabs = dynamic(() => import("./stepTabs/StepTabs"));
+const LastStep = dynamic(() => import("./stepTabs/LastStep"));
 
 export {
   CTA,
@@ -123,5 +125,7 @@ export {
   ForgetPassword,
   ResetPassword,
   VerifyUser,
+  FirstStep,
   StepTabs,
+  LastStep,
 }
