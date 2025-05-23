@@ -1,7 +1,7 @@
 "use client"
 // =============
-import { FirstStep, LastStep, StepTabs } from '@/components'
 import React, { useEffect, useState } from 'react'
+import { FirstStep, LastStep, StepTabs } from '@/components'
 
 const Page = () => {
   const [showFirstStep, setShowFirstStep] = useState(true)
