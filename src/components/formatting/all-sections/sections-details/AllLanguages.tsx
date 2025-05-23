@@ -71,6 +71,9 @@ const AllLanguages = ({
   };
 
   const handleDeleteLanguage = (index: number) => {
+    if (languages?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
     const updated = languages.filter((_, i) => i !== index);
     setLanguages(updated);
   };
@@ -116,7 +119,7 @@ const AllLanguages = ({
           isTextEditor={false}
           onCopy={handleAddLanguage}
           onDelete={handleRemoveSection}
-          position={`top-7 right-0 `}
+          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />

@@ -90,6 +90,9 @@ const AllProjects = ({
 
   // Delete a specific project from the list based on index
   const handleDelete = (index: number) => {
+    if (projects?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
     const updated = projects.filter((_, i) => i !== index);
     setProjects(updated);
   };
@@ -141,7 +144,7 @@ const AllProjects = ({
           isTextEditor={true}
           onCopy={handleAddProject}
           onDelete={handleRemoveSection}
-          position={`top-7 right-0 `}
+          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
@@ -155,7 +158,6 @@ const AllProjects = ({
               {/* ====== Degree and Field of Study ====== */}
               <div className="flex items-center justify-between">
                 <div className="w-full">
-
                   <EditableField
                     html={project.projectName || ""}
                     onChange={(val) =>
@@ -195,7 +197,8 @@ const AllProjects = ({
                       handleInputChange(index, "location", val)
                     }
                     placeholder="Location"
-                    className="text-[16px] bg-transparent"
+                    className="text-[16px] bg-transparent text-right"
+                    placeholderClassName="right-0"
                     style={{
                       color: textColor
                     }}

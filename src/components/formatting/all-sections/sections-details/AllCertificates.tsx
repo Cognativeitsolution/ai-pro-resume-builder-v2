@@ -110,6 +110,9 @@ const AllCertificates = ({
   };
 
   const handleDelete = (index: number) => {
+    if (certificates?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
     const updated = certificates.filter((_, i) => i !== index);
     setCertificates(updated);
   };
@@ -125,7 +128,7 @@ const AllCertificates = ({
           isTextEditor={true}
           onCopy={handleAddCertificate}
           onDelete={handleRemoveSection}
-          position={`top-7 right-0 `}
+          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />

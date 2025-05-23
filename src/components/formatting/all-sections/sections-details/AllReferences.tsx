@@ -31,8 +31,8 @@ const AllReferences = ({
   const { userReferences } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState(false);
   const [references, setReferences] = useState<ReferenceType[]>([{
-    name:"",
-    contact:"",
+    name: "",
+    contact: "",
   }]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -85,6 +85,9 @@ const AllReferences = ({
   };
 
   const handleDelete = (index: number) => {
+    if (references?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
     const updated = references.filter((_, i) => i !== index);
     setReferences(updated);
   };
@@ -110,7 +113,7 @@ const AllReferences = ({
           isTextEditor={true}
           onCopy={handleAddReference}
           onDelete={handleRemoveSection}
-          position={`top-7 right-0 `}
+          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
@@ -134,19 +137,19 @@ const AllReferences = ({
               }}>
               {/* ====== Job Name ====== */}
               <div className="flex items-center gap-4  " >
-            
-                  <input
-                    value={cert.name}
-                    onChange={(e) => handleInputChange(index, 'name', e.target.value)}
-                    // onBlur={() => handleBlur(index)}
-                    placeholder="Reference Name"
-                    type='text'
-                    className="w-[50%] bg-transparent leading-8 text-sm  rounded  placeholder:text-gray-600 focus:outline-none focus:ring-0 focus:border-0"
-                  />
-                  <div className="h-[2px] w-5" style={{
-                    background: textAltColor
-                  }}></div>
-              
+
+                <input
+                  value={cert.name}
+                  onChange={(e) => handleInputChange(index, 'name', e.target.value)}
+                  // onBlur={() => handleBlur(index)}
+                  placeholder="Reference Name"
+                  type='text'
+                  className="w-[50%] bg-transparent leading-8 text-sm  rounded  placeholder:text-gray-600 focus:outline-none focus:ring-0 focus:border-0"
+                />
+                <div className="h-[2px] w-5" style={{
+                  background: textAltColor
+                }}></div>
+
                 <input
                   type="text"
                   value={cert.contact}
@@ -161,10 +164,10 @@ const AllReferences = ({
                 ${editable ? 'opacity-100 ' : 'opacity-0 '}
               `}>
                   <button
-                    onClick={() =>{
-                      if(references.length >1) return handleDelete(index)
-                        return handleRemoveSection()
-                      }}
+                    onClick={() => {
+                      if (references.length > 1) return handleDelete(index)
+                      return handleRemoveSection()
+                    }}
                     className=" text-red-800/90 text-sm w-6 h-[2rem] flex justify-center items-center rounded-l-sm"
                   >
                     <RiDeleteBin6Line size={16} />

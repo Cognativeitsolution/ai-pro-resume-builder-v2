@@ -36,7 +36,7 @@ export default function EditableField({
     <div className="relative w-full">
       {/* Placeholder */}
       {(!html || html === '<br>') && !isFocused && (
-        <div className={`absolute left-0 top-0 text-gray-400 pointer-events-none text-sm , ${placeholderClassName}`}>
+        <div className={`absolute top-0 text-gray-400 pointer-events-none text-sm ${placeholderClassName}`}>
           {placeholder}
         </div>
       )}
@@ -46,7 +46,8 @@ export default function EditableField({
         ref={ref}
         contentEditable
         suppressContentEditableWarning
-        className={`min-h-[1.5rem] w-full focus:outline-none ${className}`}
+        className={`min-h-[1.5rem] w-full focus:outline focus:outline-[0.1px] focus:outline-indigo-600 ${className}`}
+
         onFocus={() => setIsFocused(true)}
         onBlur={handleBlur}
         style={style}

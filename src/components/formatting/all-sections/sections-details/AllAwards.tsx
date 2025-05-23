@@ -70,6 +70,9 @@ const AllAwards = ({
   };
 
   const handleDeleteAward = (index: number) => {
+    if (awards?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
     const updated = awards.filter((_, i) => i !== index);
     setAwards(updated);
   };
@@ -124,7 +127,7 @@ const AllAwards = ({
           isTextEditor={true}
           onCopy={handleAddAward}
           onDelete={handleRemoveSection}
-          position={`top-7 right-0 `}
+          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />

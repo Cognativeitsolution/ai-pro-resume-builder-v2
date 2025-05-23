@@ -97,6 +97,10 @@ const AllExperiences = ({
 
   // Delete a specific experience entry by index
   const handleDelete = (index: number) => {
+    if (experiences?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
+    experiences?.length <= 1 && index === 0 && handleRemoveSection()
     const updated = experiences.filter((_, i) => i !== index);
     setExperiences(updated);
   };
@@ -148,7 +152,7 @@ const AllExperiences = ({
           isTextEditor={true}
           onCopy={handleAddExperience}
           onDelete={handleRemoveSection}
-          position={`top-7 right-0 `}
+          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
@@ -204,7 +208,8 @@ const AllExperiences = ({
                     style={{
                       color: textColor
                     }}
-                    className="text-[16px] bg-transparent"
+                    className="text-[16px] bg-transparent text-right"
+                    placeholderClassName="right-0"
                   />
                 </div>
               </div>
@@ -221,7 +226,7 @@ const AllExperiences = ({
                   style={{
                     color: textColor
                   }}
-                  className="w-full text-[14px] bg-transparent rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-11/12 text-[14px] bg-transparent placeholder:text-[14px] focus:outline focus:outline-[0.1px] focus:outline-indigo-600 "
                 ></textarea>
               </div>
             </div>

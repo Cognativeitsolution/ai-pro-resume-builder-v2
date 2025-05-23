@@ -91,6 +91,9 @@ const AllEducation = ({
 
   // Delete a single education entry by index
   const handleDelete = (index: number) => {
+    if (educations?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
     const updated = educations.filter((_, i) => i !== index);
     console.log(updated)
     setEducations(updated);
@@ -121,7 +124,6 @@ const AllEducation = ({
     };
   }, [educations, dispatch, data?.id]);
 
-
   return (
     <div
       ref={containerRef}
@@ -134,7 +136,7 @@ const AllEducation = ({
         isTextEditor={true}
         onCopy={handleAddEducation}
         onDelete={handleRemoveSection}
-        position={`top-7 right-0 `}
+        position={`top-1 right-0 `}
         mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
         showDot={true}
       />
@@ -188,7 +190,7 @@ const AllEducation = ({
                       }
                       placeholder="Location"
                       className="text-[16px] bg-transparent text-right"
-                      placeholderClassName="text-right"
+                      placeholderClassName="right-0"
                       style={{
                         color: textColor
                       }}

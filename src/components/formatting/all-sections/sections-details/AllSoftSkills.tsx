@@ -101,6 +101,9 @@ const AllSoftSkills = ({
   };
 
   const handleDeleteSoftSkill = (index: number) => {
+    if (softskills?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
     const updated = softskills.filter((_, i) => i !== index);
     setSoftSkills(updated);
   };
@@ -122,13 +125,12 @@ const AllSoftSkills = ({
   return (
     <div
       ref={containerRef}
-      className={`px-1 py-5 ${
-        editable === true
+      className={`px-1 py-5 ${editable === true
+        ? editableAltBG
           ? editableAltBG
-            ? editableAltBG
-            : "bg-white"
-          : "bg-transparent"
-      }`}
+          : "bg-white"
+        : "bg-transparent"
+        }`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
@@ -136,10 +138,9 @@ const AllSoftSkills = ({
         isTextEditor={false}
         onCopy={handleAddSoftSkill}
         onDelete={handleRemoveSection}
-        position={`top-7 right-0`}
-        mainClass={`transition-all duration-500 ease-in-out ${
-          editable ? "block " : "hidden"
-        }`}
+        position={`top-1 right-0`}
+        mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"
+          }`}
         showDot={true}
       />
       <div className="flex flex-wrap gap-2 ">
@@ -148,9 +149,8 @@ const AllSoftSkills = ({
             <div
               key={index}
               className={`flex items-center gap-2 
-              ${
-                isPillStyle && "rounded-full"
-              } opacity-75  backdrop-blur-[40px] 
+              ${isPillStyle && "rounded-full"
+                } opacity-75  backdrop-blur-[40px] 
               font-medium px-3  transition-all duration-500 ease-in-out 
               ${hoveredIndex === index ? "pr-5" : ""}`}
               style={{
@@ -179,12 +179,12 @@ const AllSoftSkills = ({
                 style={{ color: textAltColor }}
                 autoFocus
               />
-              
+
               {hoveredIndex === index && (
                 <button
                   onClick={() => {
                     console.log(index)
-                      if (index > 0) return handleDeleteSoftSkill(index);
+                    if (index > 0) return handleDeleteSoftSkill(index);
                     return handleRemoveSection()
                   }}
                   className="opacity-70 hover:opacity-100"
