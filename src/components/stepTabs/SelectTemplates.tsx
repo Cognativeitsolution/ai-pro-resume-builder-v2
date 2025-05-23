@@ -1,8 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 // ===============
-import { CTA } from "@/components";
+import { CTA, LastStep } from "@/components";
 // ===============
 import template1 from 'media/images/resume-templates/Sleek Simplicity 1.webp'
 import template2 from 'media/images/resume-templates/Professional Polished 2.webp'
@@ -49,8 +49,11 @@ const templates = [
     { name: "Transcendent Trajectory", image: template20 },
 ];
 
-const SelectTemplates = () => {
+type SelectTemplatesProps = {
+    onTemplateSelect?: () => void;
+};
 
+const SelectTemplates: React.FC<SelectTemplatesProps> = ({ onTemplateSelect }) => {
     return (
         <section className="my-5 md:my-10">
             <div className="container">
@@ -64,7 +67,7 @@ const SelectTemplates = () => {
                             </div>
 
                             <div className="ring-2 ring-zinc-500/20 rounded-lg shadow-lg overflow-hidden relative">
-                                {/* Template Image */}
+                                {/*======= Template Image =======*/}
                                 <Image
                                     src={template.image}
                                     alt={`Template ${index + 1}`}
@@ -73,7 +76,7 @@ const SelectTemplates = () => {
                                     className="w-full lg:w-auto h-auto"
                                 />
 
-                                {/* Overlay CTA */}
+                                {/*======= Overlay CTA =======*/}
                                 <div className="flex items-center justify-center w-full h-full bg-slate-800/90 absolute top-0 left-0 z-20 opacity-0 group-hover:opacity-100 transition-all duration-1000">
                                     <div className="translate-y-56 group-hover:-translate-y-0 transition-all duration-1000">
                                         <CTA
@@ -82,6 +85,7 @@ const SelectTemplates = () => {
                                             bgColor="bg-PrimaryDark hover:bg-transparent"
                                             txtColor="text-white"
                                             border="border border-white"
+                                            handleClick={onTemplateSelect}
                                         />
                                     </div>
                                 </div>
