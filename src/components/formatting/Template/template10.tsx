@@ -144,9 +144,9 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft Skills":
-                return <AllSoftSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" />;
+                return <AllSoftSkills data={section} textColor="" textAltColor="#000"  templateColor="#000" />;
             case "Technical Skills":
-                return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" />;
+                return <AllTechnicalSkills data={section} textColor="" textAltColor="#000"  templateColor="#000" />;
             case "Certificate":
                 return <AllCertificates data={section} textAltColor="#F54A00" />;
             case "Education":

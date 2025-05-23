@@ -40,7 +40,7 @@ type ResumePreviewProps = {
     updateState: (newState: CurrentState) => void;
 }
 
-const Template9 = ({ currentState, updateState }: ResumePreviewProps) => {
+const Template8 = ({ currentState, updateState }: ResumePreviewProps) => {
     const dispatch = useDispatch();
     const { addedSections, sectionBgColor, editMode } = useSelector((state: any) => state.addSection);
     console.log(addedSections, "addedSections===========>")
@@ -149,17 +149,17 @@ const Template9 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft Skills":
-                return <AllSoftSkills data={section} textColor="#000" textAltColor="#fff" templateColor="#000" pillRounded="3px" isPillStyle={true} />;
+                return <AllSoftSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" pillBg="transparent" isPillStyle={true} />;
             case "Technical Skills":
-                return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#fff" templateColor="#000" pillRounded="3px" isPillStyle={true} />;
+                return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" pillBg="transparent" isPillStyle={true} />;
             case "Certificate":
-                return <AllCertificates data={section} textAltColor="#F54A00" />;
+                return <AllCertificates data={section} textAltColor={currentState?.color} />;
             case "Education":
-                return <AllEducations data={section} textAltColor="#F54A00" />;
+                return <AllEducations data={section} textAltColor={currentState?.color} />;
             case "Experience":
-                return <AllExperiences data={section} textAltColor="#F54A00" />;
+                return <AllExperiences data={section} textAltColor={currentState?.color} />;
             case "Projects":
-                return <AllProjects data={section} textAltColor="#F54A00" />;
+                return <AllProjects data={section} textAltColor={currentState?.color} />;
             case "Awards":
                 return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} />;
             case "References":
@@ -248,125 +248,150 @@ const Template9 = ({ currentState, updateState }: ResumePreviewProps) => {
                 transition: "background-color 0.3s ease-in-out"
             }}
         >
-            <div className="grid grid-cols-12 h-full shadow-xl pb-0 ">
+            <div className="grid grid-cols-12 h-full shadow-xl pb-0 relative">
+                <div className="absolute left-0 top-[225px] w-full h-12 z-0" style={{
+                            background: currentState?.color,
+                        }}></div>
                 <div className="col-span-12 relative p-[30px] ">
+
+                    <div className="flex gap-3 ">
+                        <div className="w-9/12 flex flex-col items-start text-start ">
+                            <input
+                                placeholder="Name"
+                                className="outline-none bg-transparent font-semibold text-black placeholder:text-black "
+                                style={{
+                                    fontSize: scaleFont(30, currentState.fontSize),
+                                    fontFamily: currentState.fontFamily,
+                                }}
+                            />
+                            <input
+                                placeholder="Designation"
+                                className="placeholder:text-[18px] bg-transparent focus:outline-none focus:ring-0 focus:border-0 placeholder:text-black "
+                                style={{
+                                    fontSize: scaleFont(18, currentState.fontSize),
+                                    fontFamily: currentState.fontFamily,
+                                    color: currentState?.color,
+                                }}
+                            />
+                            {midSections?.length > 0 &&
+                                midSections.map((section: any, index: number) => (
+                                    section.name === 'Summary' &&
+                                    <div key={index} className="pt-[12px] relative">
+                                        <div className="">{renderSection(section)}</div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        <div className="w-3/12 border">
+                            <Image unoptimized src={placeHolderImg} alt="profile Image" className="" />
+                        </div>
+                    </div>
                     {/* Header */}
-                    <div ref={containerHeaderRef}
-                        className={`flex flex-col ${headerEditable && 'bg-white'}`}
-                        onClick={handleEditableSectionHeader}>
-                        <input
-                            placeholder="Name"
-                            className="outline-none bg-transparent font-semibold text-black placeholder:text-black text-center"
-                            style={{
-                                fontSize: scaleFont(30, currentState.fontSize),
-                                fontFamily: currentState.fontFamily,
-                            }}
-                        />
-                        <input
-                            placeholder="Designation"
-                            className="placeholder:text-[18px] bg-transparent focus:outline-none focus:ring-0 focus:border-0 placeholder:text-black text-center"
-                            style={{
-                                fontSize: scaleFont(18, currentState.fontSize),
-                                fontFamily: currentState.fontFamily,
-                                color: currentState?.color,
-                            }}
-                        />
-                        <div className="w-full gap-6 p-2 mt-2 flex justify-around items-center ">
-                            
+                    <div
+                        className={`flex flex-col relative  mt-4`}>
+                        {/* <div className="absolute left-0 top-0 w-full h-12 z-0" style={{
+                            background: currentState?.color,
+                        }}></div> */}
+
+                        <div className="w-full gap-2 py-3  flex justify-between items-center z-10 " >
+
                             {["Phone", "Email", "Address"].map((placeholder, idx) => (
                                 <div key={idx} className="flex items-center justify-center gap-2 text-black ">
-                                    <IconDropdown icons={FaIcons} />
+                                    <IconDropdown icons={FaIcons} iconColor="white" />
                                     <input
-                                    type="text"
+                                        type="text"
                                         placeholder={`please add your ${placeholder} here`}
-                                        className="min-w-[180px] text-[14px] placeholder:text-[14px] placeholder-black outline-none focus:bg-transparent bg-transparent"
+                                        className="min-w-[180px] text-[14px] placeholder:text-[14px] text-white placeholder-white outline-none focus:bg-transparent bg-transparent"
+                                        style={{
+                                            fontSize: scaleFont(14, currentState.fontSize),
+                                            fontFamily: currentState.fontFamily,
+                                        }}
                                     />
                                 </div>
                             ))}
                         </div>
-                    </div>
-                    {midSections?.length > 0 &&
-                        midSections.map((section: any, index: number) => (
-                            <div key={index} className="pt-[12px] relative">
-                                <div className="border-b " style={{
-                                    fontSize: scaleFont(24, currentState.fontSize),
-                                }} >
-                                    {section?.name == "Custom Section" ?
-                                        <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
-                                            <IconDropdown icons={FaIcons} iconColor={currentState?.color} />
-                                            <input
-                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                                type="text" className="text-[18px] font-semibold "
-                                                style={{
-                                                    fontSize: scaleFont(18, currentState.fontSize),
-                                                }}
-                                                value={secName}
-                                            />
-                                        </div>
-                                        :
-                                        <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
-                                            <IconDropdown icons={FaIcons} iconColor={currentState?.color} />
-                                            <h2 className="text-[18px] font-semibold text-gray-950"
-                                                style={{
-                                                    fontSize: scaleFont(18, currentState.fontSize),
-                                                }}
-                                            >
-                                                {highlightWords(
-                                                    section?.name === "Custom Section" && section?.newSecName
-                                                        ? section.newSecName
-                                                        : section?.name
-                                                )}
-                                            </h2>
-                                        </div>
-                                    }
-                                </div>
-                                <div className="">{renderSection(section)}</div>
-                            </div>
-                        ))
-                    }
 
-                    {bottomSections?.length > 0 ? (
-                        bottomSections.map((section: any, index: number) => (
-                            <div key={index} className="pt-[12px] relative">
-                                <div className="border-b flex items-center gap-2 ">
-                                    {section?.name == "Custom Section" ?
-                                        <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
-                                            <IconDropdown icons={FaIcons} iconColor={currentState?.color} />
-                                            <input
-                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                                type="text" className="text-[18px] font-semibold"
-                                                style={{
-                                                    fontSize: scaleFont(18, currentState.fontSize),
-                                                }}
-                                                value={secName}
-                                            />
+                        {midSections?.length > 0 &&
+                            midSections.map((section: any, index: number) => (
+                                section?.name === "Summary" ? null :
+                                    <div key={index} className="pt-[12px] relative">
+                                        <div className="border-b " style={{
+                                            fontSize: scaleFont(24, currentState.fontSize),
+                                        }} >
+                                            {section?.name == "Custom Section" ?
+                                                <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+                                                    <input
+                                                        onChange={(e) => HandleChangeSectionName(e.target.value)}
+                                                        type="text" className="text-[18px] font-semibold "
+                                                        style={{
+                                                            fontSize: scaleFont(18, currentState.fontSize),
+                                                        }}
+                                                        value={secName}
+                                                    />
+                                                </div>
+                                                :
+                                                <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+                                                    <h2 className="text-[18px] font-semibold text-gray-950"
+                                                        style={{
+                                                            fontSize: scaleFont(18, currentState.fontSize),
+                                                        }}
+                                                    >
+                                                        {highlightWords(
+                                                            section?.name === "Custom Section" && section?.newSecName
+                                                                ? section.newSecName
+                                                                : section?.name
+                                                        )}
+                                                    </h2>
+                                                </div>
+                                            }
                                         </div>
-                                        :
-                                        <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
-                                            <IconDropdown icons={FaIcons} iconColor={currentState?.color} />
-                                            <h2 className="text-[18px] font-semibold"
-                                                style={{
-                                                    fontSize: scaleFont(18, currentState.fontSize),
-                                                }}>
-                                                {highlightWords(
-                                                    section?.name === "Custom Section" && section?.newSecName
-                                                        ? section.newSecName
-                                                        : section?.name
-                                                )}
-                                            </h2>
-                                        </div>
-                                    }
+                                        <div className="">{renderSection(section)}</div>
+                                    </div>
+                            ))
+                        }
+
+                        {bottomSections?.length > 0 ? (
+                            bottomSections.map((section: any, index: number) => (
+                                <div key={index} className="pt-[12px] relative">
+                                    <div className="border-b flex items-center gap-2 ">
+                                        {section?.name == "Custom Section" ?
+                                            <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+                                                <input
+                                                    onChange={(e) => HandleChangeSectionName(e.target.value)}
+                                                    type="text" className="text-[18px] font-semibold"
+                                                    style={{
+                                                        fontSize: scaleFont(18, currentState.fontSize),
+                                                    }}
+                                                    value={secName}
+                                                />
+                                            </div>
+                                            :
+                                            <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+                                                <h2 className="text-[18px] font-semibold"
+                                                    style={{
+                                                        fontSize: scaleFont(18, currentState.fontSize),
+                                                    }}>
+                                                    {highlightWords(
+                                                        section?.name === "Custom Section" && section?.newSecName
+                                                            ? section.newSecName
+                                                            : section?.name
+                                                    )}
+                                                </h2>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div className="">{renderSection(section)}</div>
                                 </div>
-                                <div className="">{renderSection(section)}</div>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No sections added yet.</p>
-                    )}
+                            ))
+                        ) : (
+                            <p>No sections added yet.</p>
+                        )}
+                    </div>
+
                 </div>
             </div>
         </div >
     );
 };
 
-export default Template9;
+export default Template8;

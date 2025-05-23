@@ -6,8 +6,9 @@ import { useSelector } from "react-redux";
 import Template1 from "../Template/template1";
 import Template2 from "../Template/template2";
 import Template3 from "../Template/template3";
-import Template10 from "../Template/template10";
+import Template8 from "../Template/template8";
 import Template9 from "../Template/template9";
+import Template10 from "../Template/template10";
 
 type CurrentState = {
   fontSize: string;
@@ -36,6 +37,8 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
         return <Template2 currentState={currentState} updateState={updateState} />;
       case "template3":
         return <Template3 currentState={currentState} updateState={updateState} />;
+      case "template8":
+        return <Template8 currentState={currentState} updateState={updateState} />;
       case "template9":
         return <Template9 currentState={currentState} updateState={updateState} />;
       case "template10":

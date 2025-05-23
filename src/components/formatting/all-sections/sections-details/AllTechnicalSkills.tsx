@@ -19,6 +19,8 @@ type AllTechnicalSkillsProps = {
   templateColor?: string;
   editableAltBG?: string;
   isPillStyle?: any;
+  pillBg?: any;
+  pillRounded?: any;
 };
 
 const AllTechnicalSkills = ({
@@ -27,7 +29,9 @@ const AllTechnicalSkills = ({
   textAltColor,
   templateColor,
   editableAltBG,
-  isPillStyle
+  isPillStyle,
+  pillBg,
+  pillRounded
 }: AllTechnicalSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -123,14 +127,15 @@ const AllTechnicalSkills = ({
             <div
               key={index}
               className={`flex items-center gap-2 
-              ${isPillStyle && "rounded-full"} opacity-75 backdrop-blur-[40px] 
+              ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
               font-medium px-3  transition-all duration-500 ease-in-out 
               ${hoveredIndex === index ? 'pr-5' : ''}`}
               style={{
                 color: textColor,
-                background: isPillStyle && textColor,
+                background: isPillStyle && pillBg ? pillBg : textColor,
                 border: isPillStyle && `1px solid ${textColor}`,
                 borderBottom: `2px solid ${textColor}`,
+                borderRadius: pillRounded 
               }}
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -162,13 +167,14 @@ const AllTechnicalSkills = ({
           : (
             <div
               className={`flex items-center gap-2 
-            ${isPillStyle && "rounded-full"} opacity-75 backdrop-blur-[40px] 
+            ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
             font-medium px-3 py-1 transition-all duration-500 ease-in-out `}
               style={{
                 color: textColor,
-                background: isPillStyle && textColor,
+                background: isPillStyle && pillBg ? pillBg : textColor,
                 border: isPillStyle && `1px solid ${textColor}`,
                 borderBottom: `2px solid ${textColor}`,
+                borderRadius: isPillStyle 
               }}
             >
               <input

@@ -43,7 +43,7 @@ const templateData = [
     // { id: 'template5', name: 'Classic Professional', image: TemplateImage5 },
     // { id: 'template6', name: 'Career Catalyst', image: TemplateImage6 },
     // { id: 'template7', name: 'Innovative Edge', image: TemplateImage7 },
-    // { id: 'template8', name: 'Dynamic Designer', image: TemplateImage8 },
+    { id: 'template8', name: 'Dynamic Designer', image: TemplateImage8 },
     { id: 'template9', name: 'Bold Statement', image: TemplateImage9 },
     { id: 'template10', name: 'Fresher Resume', image: TemplateImage10 },
     // { id: 'template11', name: 'Bright Future', image: TemplateImage11 },

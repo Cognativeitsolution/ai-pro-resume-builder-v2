@@ -23,6 +23,8 @@ type AllSoftSkillsProps = {
   templateColor?: string;
   editableAltBG?: string;
   isPillStyle?: any;
+  pillBg?: any;
+  pillRounded?: any;
 };
 
 const AllSoftSkills = ({
@@ -32,6 +34,8 @@ const AllSoftSkills = ({
   templateColor,
   editableAltBG,
   isPillStyle,
+  pillBg,
+  pillRounded,
 }: AllSoftSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -134,30 +138,31 @@ const AllSoftSkills = ({
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
-      <SectionToolbar
-        isTextEditor={false}
-        onCopy={handleAddSoftSkill}
-        onDelete={handleRemoveSection}
-        position={`top-1 right-0`}
-        mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"
-          }`}
-        showDot={true}
-      />
+      {editable && (
+        <SectionToolbar
+          isTextEditor={false}
+          onCopy={handleAddSoftSkill}
+          onDelete={handleRemoveSection}
+          position={`top-1 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          showDot={true}
+        />
+      )}
       <div className="flex flex-wrap gap-2 ">
         {softskills.length > 0 &&
           softskills.map((skill, index) => (
             <div
               key={index}
               className={`flex items-center gap-2 
-              ${isPillStyle && "rounded-full"
-                } opacity-75  backdrop-blur-[40px] 
+              ${isPillStyle && !pillRounded && "rounded-full"} opacity-75  backdrop-blur-[40px] 
               font-medium px-3  transition-all duration-500 ease-in-out 
               ${hoveredIndex === index ? "pr-5" : ""}`}
               style={{
                 color: textColor,
-                background: isPillStyle && textColor,
+                background: isPillStyle && pillBg ? pillBg : textColor,
                 border: isPillStyle && `1px solid ${textColor}`,
                 borderBottom: `2px solid ${textColor}`,
+                borderRadius: pillRounded 
               }}
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
