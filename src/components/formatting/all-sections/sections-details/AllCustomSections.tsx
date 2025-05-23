@@ -154,8 +154,8 @@ const AllCustomSection = ({
           isTextEditor={true}
           onCopy={handleAddCustomSection}
           onDelete={handleRemoveSection}
-          // onMoveUp={handleAddAward}
-          position="top-7 right-0"
+          position={`top-1 right-0 `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
         />
       )}
