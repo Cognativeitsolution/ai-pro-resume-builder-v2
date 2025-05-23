@@ -56,15 +56,14 @@ const downloadPDF = async () => {
   const resume = document.getElementById("resume-content");
   if (!resume) return;
 
-  const originalHeight = resume.scrollHeight;
-  const pageHeightPx = 1123; // approx. pixels for A4 at 96 DPI
   const scale = 2;
-
+  const pageHeightPx = 1123; // A4 in px @96dpi
+  const originalHeight = resume.scrollHeight;
   const totalPages = Math.ceil(originalHeight / pageHeightPx);
 
   const pdf = new jsPDF("p", "mm", "a4");
-  const pdfWidth = 210;
-  const pdfHeight = 297;
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = pdf.internal.pageSize.getHeight();
 
   for (let page = 0; page < totalPages; page++) {
     const canvas = await html2canvas(resume, {
@@ -77,11 +76,10 @@ const downloadPDF = async () => {
     });
 
     const imgData = canvas.toDataURL("image/png");
-    const imgProps = pdf.getImageProperties(imgData);
     const imgWidth = pdfWidth;
     const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-    if (page !== 0) pdf.addPage();
+    if (page > 0) pdf.addPage();
     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
   }
 
@@ -89,11 +87,12 @@ const downloadPDF = async () => {
 };
 
 
+
   return (
     <div className="flex items-center justify-between bg-[#ffffff] py-4 px-5 border-b border-[#CECECE] fixed top-0 left-0 w-full z-40">
          {isModalOpen && (
         <div className="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-x-hidden z-50">
-          <div className="bg-white relative  rounded shadow-lg max-h-[90vh] overflow-auto overflow-x-hidden">
+          <div className="bg-white   rounded shadow-lg max-h-[90vh] overflow-auto overflow-x-hidden">
           
              
               <button
