@@ -11,7 +11,8 @@ interface SectionToolbarProps {
     position?: string;
     showDot?: boolean;
     mainClass?: string;
-    isTextEditor?: any
+    isTextEditor?: any;
+    dotClass?: any;
 }
 
 const SectionToolbar: React.FC<SectionToolbarProps> = ({
@@ -22,7 +23,8 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
     position = 'top-8 right-0',
     showDot = true,
     mainClass,
-    isTextEditor
+    isTextEditor,
+    dotClass,
 }) => {
 
     const execCommand = (command: string, value: string | null = null) => {
@@ -78,17 +80,19 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
                 <button className="cursor-pointer" onClick={onDelete}>
                     <RiDeleteBin6Line
                         size={18}
-                        className="text-white hover:text-gray-200 hover:scale-110 transition-transform duration-300"
+                        className={`text-white ${dotClass && '-rotate-90'} hover:text-gray-200 hover:scale-110 transition-transform duration-300`}
                     />
                 </button>
                 <button className="cursor-pointer" onClick={onMoveUp}>
                     <ImMoveUp
                         size={18}
-                        className="text-white hover:text-gray-200 hover:scale-110 transition-transform duration-300"
+                        className={`text-white ${dotClass && '-rotate-90'} hover:text-gray-200 hover:scale-110 transition-transform duration-300`}
                     />
                 </button>
                 {showDot && (
-                    <div className="absolute top-3 -left-2 h-3 w-3 border rounded-full bg-white border-slate-700" />
+                    <div
+                        className={`absolute h-3 w-3 border rounded-full bg-white border-slate-700 ${dotClass ? dotClass : ' top-3 -left-2'}`}
+                    />
                 )}
             </div>
         </div>

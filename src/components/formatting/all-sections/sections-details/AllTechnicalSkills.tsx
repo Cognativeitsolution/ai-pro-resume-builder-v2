@@ -116,9 +116,10 @@ const AllTechnicalSkills = ({
           isTextEditor={false}
           onCopy={handleAddTechnicalSkill}
           onDelete={handleRemoveSection}
-          position={`top-1 right-0 `}
-          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          position={`-top-[125px] right-[70px]  `}
+          mainClass={`transition-all rotate-90 duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
+          dotClass={`top-[30px] left-[48px]`}
         />
       )}
       <div className="flex flex-wrap gap-2 ">
@@ -135,7 +136,7 @@ const AllTechnicalSkills = ({
                 background: isPillStyle && pillBg ? pillBg : textColor,
                 border: isPillStyle && `1px solid ${textColor}`,
                 borderBottom: `2px solid ${textColor}`,
-                borderRadius: pillRounded 
+                borderRadius: pillRounded
               }}
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -174,7 +175,7 @@ const AllTechnicalSkills = ({
                 background: isPillStyle && pillBg ? pillBg : textColor,
                 border: isPillStyle && `1px solid ${textColor}`,
                 borderBottom: `2px solid ${textColor}`,
-                borderRadius: isPillStyle 
+                borderRadius: isPillStyle
               }}
             >
               <input

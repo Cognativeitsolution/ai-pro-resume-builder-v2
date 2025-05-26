@@ -119,9 +119,10 @@ const AllLanguages = ({
           isTextEditor={false}
           onCopy={handleAddLanguage}
           onDelete={handleRemoveSection}
-          position={`top-1 right-0 `}
-          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          position={`-top-[125px] right-[70px]  `}
+          mainClass={`transition-all rotate-90 duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
+          dotClass={`top-[30px] left-[48px]`}
         />
       )}
 
@@ -136,7 +137,7 @@ const AllLanguages = ({
                     onChange={(e) => handleInputChange(index, e.target.value)}
                     onBlur={() => handleBlur(index)}
                     placeholder="Language"
-                    className="text-base placeholder:text-base focus:outline-none bg-transparent "
+                    className="text-base placeholder:text-base focus:outline-none bg-transparent"
                     style={{ color: textColor }}
                     autoFocus
                   />
