@@ -1,6 +1,6 @@
 "use client";
 // ==============
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 // ==============
 import Template1 from "../Template/template1";
@@ -9,6 +9,8 @@ import Template3 from "../Template/template3";
 import Template8 from "../Template/template8";
 import Template9 from "../Template/template9";
 import Template10 from "../Template/template10";
+import { IoSettingsOutline } from "react-icons/io5";
+import CustomSwitch from "@/components/common/switch/switch";
 
 type CurrentState = {
   fontSize: string;
@@ -28,6 +30,7 @@ type ResumePreviewProps = {
 
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
+  const [showSettings, setShowSettings] = useState(false);
 
   const renderTemplate = () => {
     switch (selectedTemplate) {
@@ -53,8 +56,21 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   }, [selectedTemplate]);
 
   return (
-    <div className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto">
+    <div className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto relative">
       {renderTemplate()}
+      <button className="cursor-pointer absolute top-0 -right-8 rounded-sm bg-slate-900/70 p-1" onClick={() => setShowSettings((prev) => !prev)}>
+        <IoSettingsOutline
+          size={22}
+          className="text-white hover:text-gray-200 hover:scale-110 transition-transform duration-300"
+        />
+      </button>
+
+      {/* Dropdown */}
+      {showSettings && (
+        <div className="absolute z top-9 -right-[163px] bg-blue-200/30 border border-indigo-200 text-sm text-black rounded-sm py-2 px-2 w-40">
+          <div className="cursor-pointer p-1 flex justify-between items-center gap-x-2">Show Icon <CustomSwitch /> </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 // ===============
 // import { addSection } from '../../../redux/slices/fontSlice';
@@ -19,6 +18,7 @@ import improve from 'media/builderIcons/improve.svg';
 import ats from 'media/builderIcons/ats.svg';
 import robot from 'media/builderIcons/robot.svg';
 import rearrange from 'media/builderIcons/rearrange.svg';
+import { useEditorTab } from "@/app/configs/store/EditorTabContext";
 
 
 type TextEditorProps = {
@@ -38,13 +38,15 @@ type TextEditorProps = {
 
 const TextEditor = (props: TextEditorProps) => {
   const { currentState, updateState, lockedColors = [] } = props;
-  const dispatch = useDispatch();
 
-  const [activeTab, setActiveTab] = useState<string>("Add Section");
+  // Remove local activeTab state
+  const { activeTabContext, setActiveTabContext } = useEditorTab();
 
-  const handleTabChange = (tab: string): void => {
-    setActiveTab(tab);
+  const handleTabChangeContext = (tab: string): void => {
+    setActiveTabContext(tab);
   };
+
+
 
   return (
     <>
@@ -52,8 +54,8 @@ const TextEditor = (props: TextEditorProps) => {
         <div className="w-[18%] py-4 bg-[#ffffff] border border-gray-300 rounded-xl">
           <ul className="flex flex-col gap-8">
             <li
-              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "Add Section" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
-              onClick={() => handleTabChange("Add Section")}
+              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTabContext === "Add Section" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
+              onClick={() => handleTabChangeContext("Add Section")}
             >
               <div>
                 <Image src={sections} alt="Sections" />
@@ -61,8 +63,8 @@ const TextEditor = (props: TextEditorProps) => {
               <span>Add <br /> Section</span>
             </li>
             <li
-              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "Templates" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
-              onClick={() => handleTabChange("Templates")}
+              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTabContext === "Templates" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
+              onClick={() => handleTabChangeContext("Templates")}
             >
               <div>
                 <Image src={templetes} alt="Templates" />
@@ -70,8 +72,8 @@ const TextEditor = (props: TextEditorProps) => {
               <span>Templates</span>
             </li>
             <li
-              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "Design & Font" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
-              onClick={() => handleTabChange("Design & Font")}
+              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTabContext === "Design & Font" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
+              onClick={() => handleTabChangeContext("Design & Font")}
             >
               <div>
                 <Image src={design} alt="Design" />
@@ -79,8 +81,8 @@ const TextEditor = (props: TextEditorProps) => {
               <span>Design <br /> & Font</span>
             </li>
             <li
-              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "Improve Text" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
-              onClick={() => handleTabChange("Improve Text")}
+              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTabContext === "Improve Text" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
+              onClick={() => handleTabChangeContext("Improve Text")}
             >
               <div>
                 <Image src={improve} alt="Improve" />
@@ -88,8 +90,8 @@ const TextEditor = (props: TextEditorProps) => {
               <span>Improve <br /> Text</span>
             </li>
             <li
-              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "ATS Check" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
-              onClick={() => handleTabChange("ATS Check")}
+              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTabContext === "ATS Check" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
+              onClick={() => handleTabChangeContext("ATS Check")}
             >
               <div>
                 <Image src={ats} alt="ATS" />
@@ -97,8 +99,8 @@ const TextEditor = (props: TextEditorProps) => {
               <span>ATS <br /> Check</span>
             </li>
             <li
-              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "AI Assistant" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
-              onClick={() => handleTabChange("AI Assistant")}
+              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTabContext === "AI Assistant" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
+              onClick={() => handleTabChangeContext("AI Assistant")}
             >
               <div>
                 <Image src={robot} alt="Robot" />
@@ -106,8 +108,8 @@ const TextEditor = (props: TextEditorProps) => {
               <span>AI <br /> Assistant</span>
             </li>
             <li
-              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "Summary Generator" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
-              onClick={() => handleTabChange("Summary Generator")}
+              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTabContext === "Summary Generator" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
+              onClick={() => handleTabChangeContext("Summary Generator")}
             >
               <div>
                 <Image src={robot} alt="Robot" />
@@ -115,8 +117,8 @@ const TextEditor = (props: TextEditorProps) => {
               <span>Summary <br /> Generator</span>
             </li>
             <li
-              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTab === "Rearrange" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
-              onClick={() => handleTabChange("Rearrange")}
+              className={`flex flex-col items-center justify-center gap-2 text-[14px] leading-[1.1] font-medium cursor-pointer text-center ${activeTabContext === "Rearrange" ? 'text-[#7B40EA]' : 'text-[#707275]'}`}
+              onClick={() => handleTabChangeContext("Rearrange")}
             >
               <div>
                 <Image src={rearrange} alt="Rearrange" />
@@ -127,21 +129,21 @@ const TextEditor = (props: TextEditorProps) => {
         </div>
 
         <div className="w-[70%] p-4 bg-[#ffffff] border border-gray-300 rounded-xl relative overflow-hidden">
-          {activeTab === "AI Assistant" ? "" : (
+          {activeTabContext === "AI Assistant" ? "" : (
             <div className="flex justify-between items-center pb-3 border-b border-gray-300">
-              <h3 className="text-[16px] text-[#707275] font-semibold">{activeTab}</h3>
+              <h3 className="text-[16px] text-[#707275] font-semibold">{activeTabContext}</h3>
             </div>
           )}
           {/* ===== Add Sections ===== */}
-          {activeTab === "Add Section" && (
+          {activeTabContext === "Add Section" && (
             <AllSections />
           )}
           {/* ===== Templates ===== */}
-          {activeTab === "Templates" && <div>
+          {activeTabContext === "Templates" && <div>
             <TemplateSwitch />
           </div>}
           {/* ===== Design & Fonts ===== */}
-          {activeTab === "Design & Font" && (
+          {activeTabContext === "Design & Font" && (
             <DesignFont
               currentState={currentState}
               updateState={updateState}
@@ -149,15 +151,15 @@ const TextEditor = (props: TextEditorProps) => {
             />
           )}
           {/* ===== Improve Text ===== */}
-          {activeTab === "Improve Text" && <ImproveText />}
+          {activeTabContext === "Improve Text" && <ImproveText />}
           {/* ===== ATS Check ===== */}
-          {activeTab === "ATS Check" && <AtsCheck />}
+          {activeTabContext === "ATS Check" && <AtsCheck />}
           {/* ===== AI Assistant ===== */}
-          {activeTab === "AI Assistant" && <AiAssistant />}
+          {activeTabContext === "AI Assistant" && <AiAssistant />}
           {/* ===== Summary Generator ===== */}
-          {activeTab === "Summary Generator" && <div>Summary Generator Content</div>}
+          {activeTabContext === "Summary Generator" && <div>Summary Generator Content</div>}
           {/* ===== Rearrange ===== */}
-          {activeTab === "Rearrange" && <ReArrange />}
+          {activeTabContext === "Rearrange" && <ReArrange />}
         </div>
       </div>
     </>

@@ -25,13 +25,17 @@ type AllSummaryType = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  fontSize?: any;
+  fontFamily?: any;
 };
 
 const AllCertificates = ({
   data = {},
   textColor,
   textAltColor,
-  templateColor
+  templateColor,
+  fontSize,
+  fontFamily,
 }: AllSummaryType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -121,8 +125,7 @@ const AllCertificates = ({
     <div
       ref={containerRef}
       className={`flex flex-col pt-2  ${editable && "bg-white"} `}
-      onClick={handleEditableSection}
-    >
+      onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={true}
@@ -147,9 +150,11 @@ const AllCertificates = ({
                         handleInputChange(index, "title", val)
                       }
                       placeholder="Title"
-                      className="text-[16px] bg-transparent"
+                      className="bg-transparent"
                       style={{
-                        color: textAltColor ? textAltColor : textColor
+                        color: textAltColor ? textAltColor : textColor,
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
                       }}
                     />
                   </div>
@@ -164,9 +169,11 @@ const AllCertificates = ({
                       handleInputChange(index, "institutionName", val)
                     }
                     placeholder="Institution Name"
-                    className="text-[16px] bg-transparent"
+                    className="bg-transparent"
                     style={{
-                      color: textColor
+                      color: textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
                     }}
                   />
                 </div>
@@ -177,15 +184,17 @@ const AllCertificates = ({
                       handleInputChange(index, "description", val)
                     }
                     placeholder="Description"
-                    className="text-[16px] bg-transparent"
+                    className="bg-transparent"
                     style={{
-                      color: textColor
+                      color: textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
                     }}
                   />
                 </div>
               </div>
               {editable && (
-                <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+                <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
                 ${editable ? 'opacity-100 ' : 'opacity-0 '}
               `}>
                   <button

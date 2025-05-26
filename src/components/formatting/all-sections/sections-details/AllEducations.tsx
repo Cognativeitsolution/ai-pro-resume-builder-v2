@@ -15,8 +15,8 @@ import {
 import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
 import { TiDelete } from "react-icons/ti";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
-import Editor from "@/components/editor/editor";
 import EditableField from "@/components/editor/editable-field";
+import { IoLocationSharp } from "react-icons/io5";
 
 type EducationType = {
   degree: string;
@@ -29,6 +29,8 @@ type AllEducationType = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  fontSize?: any;
+  fontFamily?: any;
 };
 
 const AllEducation = ({
@@ -36,6 +38,8 @@ const AllEducation = ({
   textColor = "#000",
   textAltColor,
   templateColor,
+  fontSize,
+  fontFamily,
 }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -101,7 +105,6 @@ const AllEducation = ({
 
   // Handle click outside the section to save changes and exit edit mode
   useEffect(() => {
-
     const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
@@ -157,13 +160,35 @@ const AllEducation = ({
                       }
                       placeholder="Degree and Field of Study"
                       style={{
-                        color: textAltColor ? textAltColor : textColor
+                        color: textAltColor ? textAltColor : textColor,
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
                       }}
-                      className="text-[16px] bg-transparent"
+                      className="bg-transparent"
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
                   <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                </div>
+                {/* ====== Location ====== */}
+                <div className="w-full">
+                  <div className="flex items-center justify-start gap-1 ">
+                    {/* ====== Icon ====== */}
+                    <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                    <EditableField
+                      html={exp.location || ""}
+                      onChange={(val) =>
+                        handleContentChange(index, "location", val)
+                      }
+                      placeholder="Location"
+                      className="bg-transparent text-left "
+                      style={{
+                        color: textColor,
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
+                      }}
+                    />
+                  </div>
                 </div>
                 {/* ====== School or University ====== */}
                 <div className="flex items-center justify-between">
@@ -175,32 +200,22 @@ const AllEducation = ({
                           , val)
                       }
                       placeholder="School or University"
-                      className="text-[16px] bg-transparent"
+                      className="bg-transparent"
                       style={{
-                        color: textColor
+                        color: textColor,
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
                       }}
                     />
                   </div>
-                  {/* ====== Location ====== */}
-                  <div className="w-full">
-                    <EditableField
-                      html={exp.location || ""}
-                      onChange={(val) =>
-                        handleContentChange(index, "location", val)
-                      }
-                      placeholder="Location"
-                      className="text-[16px] bg-transparent text-right"
-                      placeholderClassName="right-0"
-                      style={{
-                        color: textColor
-                      }}
-                    />
-                  </div>
+
+
+
                 </div>
               </div>
               {/* ====== Delete Button ====== */}
               {editable && (
-                <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+                <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
                 ${editable ? 'opacity-100 ' : 'opacity-0 '}
               `}>
                   <button

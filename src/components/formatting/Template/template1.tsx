@@ -193,7 +193,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
           />
         );
       case "Certificate":
-        return <AllCertificates data={section} />;
+        return <AllCertificates data={section}
+          fontSize={scaleFont(16, currentState.fontSize)}
+          fontFamily={currentState.fontFamily} />;
       case "Education":
         return (
           <AllEducations
@@ -201,6 +203,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Experience":
@@ -210,6 +214,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Projects":
@@ -228,6 +234,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor="#000"
             textAltColor={currentState.color}
             templateColor={currentState.color}
+            fontSize={scaleFont(16, currentState.fontSize)}
+            iconSize={scaleFont(13, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "References":
@@ -246,6 +255,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor="#fff"
             templateColor="#3358c5"
             editableAltBG="bg-gray-900/80"
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Custom Section":
@@ -255,6 +266,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             data={section}
             textColor="#000"
             templateColor="#fff"
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
+            iconSize={scaleFont(22, currentState.fontSize)}
           />
         );
       default:
@@ -348,7 +362,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     setHeaderData((prev) => ({ ...prev, [key]: value }));
   };
 
-    // Step 1: Measure section heights
+  // Step 1: Measure section heights
   useEffect(() => {
     if (measured) return;
 
@@ -360,7 +374,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     let currentPage: any[] = [];
     let currentHeight = 0;
 
-    leftSections.forEach((section:any, i:any) => {
+    leftSections.forEach((section: any, i: any) => {
       const height = heights[i];
       if (currentHeight + height > A4_HEIGHT_PX && currentPage.length > 0) {
         newPages.push(currentPage);
@@ -377,7 +391,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     setPages(newPages);
     setMeasured(true);
   }, [leftSections, measured]);
-console.log(pages)
+  console.log(pages)
   return (
     <div
       className="resume-container"
@@ -388,10 +402,10 @@ console.log(pages)
         transition: "background-color 0.3s ease-in-out",
       }}
     >
-      
-      <div style={{minHeight:"297mm" , width:"210mm"}}  className="relative grid grid-cols-12 shadow-xl ">
+
+      <div style={{ minHeight: "297mm", width: "210mm" }} className="relative grid grid-cols-12 shadow-xl ">
         {/* Left Column */}
-        <div className="col-span-8  pr-8" style={{padding:"30px"}} >
+        <div className="col-span-8  pr-8" style={{ padding: "30px" }} >
           {/* Header */}
           <div
             ref={containerHeaderRef}
@@ -459,7 +473,7 @@ console.log(pages)
           ) : (
             <p>No sections added yet.</p>
           )}
-          <Watermark/>
+          <Watermark />
           {loading && (
             <p className="text-gray-500 mt-4">
               Checking for spelling/grammar errors...
@@ -470,12 +484,12 @@ console.log(pages)
         {/* Right Column */}
         <div
           className="col-span-4 px-2  z-10"
-          style={{ backgroundColor: currentState.color , minHeight: "297mm" }}
+          style={{ backgroundColor: currentState.color, minHeight: "297mm" }}
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
             <div className="flex justify-center mb-6 w-40 h-40 mx-auto rounded-full overflow-hidden cursor-pointer">
-              
+
               <Image
                 src={imageSrc || placeHolderImage}
                 alt="Profile"
@@ -539,9 +553,8 @@ console.log(pages)
                     {section?.name === "Custom Section" ? (
                       <div
                         ref={containerRef}
-                        className={`flex flex-col pt-2 ${
-                          editable && "bg-white"
-                        }`}
+                        className={`flex flex-col pt-2 ${editable && "bg-white"
+                          }`}
                         onClick={handleEditableSection}
                       >
                         <input

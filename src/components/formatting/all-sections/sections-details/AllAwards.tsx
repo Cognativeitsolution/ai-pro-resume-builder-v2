@@ -10,7 +10,8 @@ import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 type AwardType = {
   title: string;
-  // icon?: number;
+  icon?: any;
+  iconSize?: any;
 };
 
 type AllAwardsProps = {
@@ -18,6 +19,9 @@ type AllAwardsProps = {
   textColor?: string;
   textAltColor: string;
   templateColor: string;
+  fontSize?: any;
+  fontFamily?: any;
+
 };
 
 const AllAwards = ({
@@ -25,6 +29,8 @@ const AllAwards = ({
   textColor = '#fff',
   textAltColor,
   templateColor,
+  fontSize,
+  fontFamily,
 }: any) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,7 +38,7 @@ const AllAwards = ({
   const [editable, setEditable] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [awards, setAwards] = useState<AwardType[]>([{
-    title:""
+    title: ""
   }]);
 
   useEffect(() => {
@@ -157,14 +163,18 @@ const AllAwards = ({
             >
               <span style={{
                 color: textAltColor
-              }}> <FaAward size={13}/></span>
+              }}>{award.icon ? award.icon : <FaAward size={award.iconSize} />}</span>
               <input
                 value={award.title}
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 // onBlur={() => handleBlur(index)}
                 placeholder="Award Name"
-                className="bg-transparent text-sm leading-7  truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out opacity-70 "
-                style={{ color: textColor }}
+                className="bg-transparent leading-7  truncate focus:outline-none transition-all duration-500 ease-in-out opacity-70 "
+                style={{
+                  color: textColor,
+                  fontSize: fontSize,
+                  fontFamily: fontFamily,
+                }}
                 autoFocus
               />
               <div className={`transition-all duration-300 ease-in-out transform right-2 top-1 absolute  ${hoveredIndex === index ? 'translate-x-0 opacity-100' : 'translate-x-3 opacity-0'}`} >
@@ -174,7 +184,7 @@ const AllAwards = ({
               </div>
             </div>
           ))
-          }
+        }
       </div>
     </div>
   );

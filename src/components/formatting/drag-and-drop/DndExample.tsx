@@ -119,7 +119,7 @@ const DndExample = ({ doubleColumn }: propsType) => {
                           />
                         )}
                         {component.name}
-                        {!component.locked && <CgClose />}
+                        {!component.locked ? <CgClose /> : <div></div>}
                       </div>
                     )}
                   </Draggable>
