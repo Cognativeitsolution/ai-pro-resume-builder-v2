@@ -53,38 +53,31 @@ const UserHeader = (props: HeaderProps) => {
   };
 
 const downloadPDF = async () => {
-  const resume = document.getElementById("resume-content");
-  if (!resume) return;
+  const resumeElement = document.getElementById("resume-content");
+  if (!resumeElement) return;
 
-  const scale = 2;
-  const pageHeightPx = 1123; // A4 in px @96dpi
-  const originalHeight = resume.scrollHeight;
-  const totalPages = Math.ceil(originalHeight / pageHeightPx);
+  const html = resumeElement.innerHTML;
 
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = pdf.internal.pageSize.getHeight();
+  const res = await fetch("/api/download-pdf", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ html }),
+  });
 
-  for (let page = 0; page < totalPages; page++) {
-    const canvas = await html2canvas(resume, {
-      scale,
-      useCORS: true,
-      scrollY: -window.scrollY,
-      height: pageHeightPx,
-      y: page * pageHeightPx,
-      windowHeight: pageHeightPx,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    if (page > 0) pdf.addPage();
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+  if (!res.ok) {
+    console.error("Failed to generate PDF");
+    return;
   }
 
-  pdf.save("resume.pdf");
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "resume.pdf";
+  a.click();
+  window.URL.revokeObjectURL(url);
 };
+
 
 
 
