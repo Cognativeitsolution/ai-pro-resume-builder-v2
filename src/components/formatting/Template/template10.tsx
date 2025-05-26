@@ -144,25 +144,25 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft Skills":
-                return <AllSoftSkills data={section} textColor="" textAltColor="#000"  templateColor="#000" />;
+                return <AllSoftSkills data={section} textColor="" textAltColor="#000" templateColor="#000" />;
             case "Technical Skills":
-                return <AllTechnicalSkills data={section} textColor="" textAltColor="#000"  templateColor="#000" />;
+                return <AllTechnicalSkills data={section} textColor="" textAltColor="#000" templateColor="#000" />;
             case "Certificate":
-                return <AllCertificates data={section} textAltColor="#F54A00" />;
+                return <AllCertificates data={section} textAltColor="#F54A00" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Education":
-                return <AllEducations data={section} textAltColor="#F54A00" />;
+                return <AllEducations data={section} textAltColor="#F54A00" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Experience":
-                return <AllExperiences data={section} textAltColor="#F54A00" />;
+                return <AllExperiences data={section} textAltColor="#F54A00" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Projects":
                 return <AllProjects data={section} textAltColor="#F54A00" />;
             case "Awards":
-                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} />;
+                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} iconSize={scaleFont(13, currentState.fontSize)} />;
             case "References":
                 return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={currentState.color} />;
             case "Languages":
-                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" />;
+                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Custom Section":
-                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" />;
+                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} iconSize={scaleFont(22, currentState.fontSize)} />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }

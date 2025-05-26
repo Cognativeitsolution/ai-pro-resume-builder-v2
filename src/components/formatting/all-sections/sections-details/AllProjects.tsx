@@ -222,7 +222,7 @@ const AllProjects = ({
             </div>
             {/* ====== Delete Button ====== */}
             {editable && (
-              <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+              <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
                 ${editable ? 'opacity-100 ' : 'opacity-0 '}
               `}>
                 <button

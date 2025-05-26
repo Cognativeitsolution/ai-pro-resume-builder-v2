@@ -28,12 +28,18 @@ type AllCustomSectionType = {
   textAltColor?: string;
   templateColor?: string;
   secNewNames?: any;
+  fontSize?: any;
+  fontFamily?: any;
+  iconSize?: any;
 };
 
 const AllCustomSection = ({
   secNewNames,
   data = {},
   textColor = "#000",
+  fontSize,
+  fontFamily,
+  iconSize
 }: AllCustomSectionType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -145,7 +151,7 @@ const AllCustomSection = ({
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col gap-4 ${editable && "bg-white"}`}
+      className={`flex flex-col pt-2 ${editable && "bg-white"}`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
@@ -160,7 +166,7 @@ const AllCustomSection = ({
         />
       )}
       {/* ===== Section Box ===== */}
-      <div className="flex flex-col gap-3 divide-y-[1px] px-1 ">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
         {customSections.length > 0 &&
           customSections.map((exp, index) => (
             <div key={index}>
@@ -170,7 +176,7 @@ const AllCustomSection = ({
 
                   {/* ====== Icon ====== */}
                   {hasField("Icon") && (
-                    <FaHome className="text-[22px] mb-1 text-indigo-600" />
+                    <FaHome className="mb-1 text-indigo-600" size={iconSize} />
                   )}
 
                   {/* ====== Job Title ====== */}
@@ -179,8 +185,12 @@ const AllCustomSection = ({
                       html={exp.title || ""}
                       onChange={(val) => handleInputChange(index, "title", val)}
                       placeholder="Title"
-                      className="text-[16px] bg-transparent"
+                      className="bg-transparent"
                       placeholderClassName=""
+                      style={{
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
+                      }}
                     />
                   )}
 
@@ -195,8 +205,12 @@ const AllCustomSection = ({
                     html={exp.location || ""}
                     onChange={(val) => handleInputChange(index, "location", val)}
                     placeholder="Location"
-                    className="text-[16px] bg-transparent"
+                    className="bg-transparent"
                     placeholderClassName=""
+                    style={{
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
+                    }}
                   />
                 )}
                 {/* ====== Description ====== */}
@@ -208,23 +222,30 @@ const AllCustomSection = ({
                       handleInputChange(index, "description", val)
                     }
                     placeholder="Description"
-                    className="text-[16px] bg-transparent"
+                    className="bg-transparent"
                     placeholderClassName=""
+                    style={{
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
+                    }}
                   />
                 )}
               </div>
               {/* ====== Delete Button ====== */}
-              {editable && <div className="flex justify-end mt-2">
-                <button
-                  className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
-                  onClick={() => {
-                    if (index > 0) return handleDelete(index);
-                    return handleRemoveSection()
-                  }}
-                >
-                  <RiDeleteBin6Line size={16} />
-                </button>
-              </div>}
+              {editable && (
+                <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                  <button
+                    className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
+                    onClick={() => {
+                      if (index > 0) return handleDelete(index);
+                      return handleRemoveSection()
+                    }}
+                  >
+                    <RiDeleteBin6Line size={16} />
+                  </button>
+                </div>)}
             </div>
           ))}
       </div>

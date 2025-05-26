@@ -9,6 +9,7 @@ import usePopup from '@/app/configs/store/Popup';
 import { addNewSection } from "@/redux/slices/addSectionSlice";
 import { ResumeActiveTemplate, TextEditor, UserHeader } from "@/components";
 import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
+import { TabProvider } from "@/app/configs/store/EditorTabContext";
 
 
 const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
@@ -73,28 +74,32 @@ const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
 
     return (
         <>
-            {/* {sectionData?.locked && <AddSectionClipPath />} */}
-            {popup && <Popup handleAddSec={handleAddSection} sectionData={sectionData} />}
+            <TabProvider>
+                {/* {sectionData?.locked && <AddSectionClipPath />} */}
+                {popup && <Popup handleAddSec={handleAddSection} sectionData={sectionData} />}
 
-            <UserHeader
-                currentState={currentState}
-                handleUndo={handleUndo}
-                handleRedo={handleRedo}
-                history={history}
-                future={future}
-            />
-            <div className="grid grid-cols-12 px-5 mt-28 mb-10">
-                <div className="col-span-4">
-                    <TextEditor currentState={currentState} updateState={updateState} />
+                <UserHeader
+                    currentState={currentState}
+                    handleUndo={handleUndo}
+                    handleRedo={handleRedo}
+                    history={history}
+                    future={future}
+                />
+                <div className="grid grid-cols-12 px-5 mt-28 mb-10">
+                    <div className="col-span-4">
+
+                        <TextEditor currentState={currentState} updateState={updateState} />
+
+                    </div>
+                    <div className="col-span-8">
+                        <ResumeActiveTemplate
+                            currentState={currentState}
+                            updateState={updateState}
+                            addedSections={addedSections}
+                        />
+                    </div>
                 </div>
-                <div className="col-span-8">
-                    <ResumeActiveTemplate
-                        currentState={currentState}
-                        updateState={updateState}
-                        addedSections={addedSections}
-                    />
-                </div>
-            </div>
+            </TabProvider>
         </>
     );
 };

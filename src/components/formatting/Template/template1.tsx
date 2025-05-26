@@ -28,6 +28,11 @@ import AllReferences from "../all-sections/sections-details/AllReferences";
 import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 import Logo from "media/assets/logo_resume_white.svg";
+import Watermark from "@/components/common/watermark/watermark";
+import { placeHolderImage } from "@/constant/placeholder-image-base64";
+const A4_HEIGHT_PX = 1122;
+const PAGE_PADDING = 60; // adjust based on your layout padding
+
 type CurrentState = {
   fontSize: any;
   fontFamily: string;
@@ -62,6 +67,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const containerHeaderRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [measured, setMeasured] = useState(false);
   //============= all sections
   const getAllText = () => {
     return addedSections
@@ -81,6 +88,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     setSecName("Custom Section");
   }, []);
 
+  const [pages, setPages] = useState<any[][]>([]);
   const HandleChangeSectionName = (data: any) => {
     console.log(data);
     setSecName(data);
@@ -185,7 +193,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
           />
         );
       case "Certificate":
-        return <AllCertificates data={section} />;
+        return <AllCertificates data={section}
+          fontSize={scaleFont(16, currentState.fontSize)}
+          fontFamily={currentState.fontFamily} />;
       case "Education":
         return (
           <AllEducations
@@ -193,6 +203,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Experience":
@@ -202,6 +214,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Projects":
@@ -220,6 +234,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor="#000"
             textAltColor={currentState.color}
             templateColor={currentState.color}
+            fontSize={scaleFont(16, currentState.fontSize)}
+            iconSize={scaleFont(13, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "References":
@@ -238,6 +255,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor="#fff"
             templateColor="#3358c5"
             editableAltBG="bg-gray-900/80"
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Custom Section":
@@ -247,6 +266,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             data={section}
             textColor="#000"
             templateColor="#fff"
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
+            iconSize={scaleFont(22, currentState.fontSize)}
           />
         );
       default:
@@ -272,7 +294,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageSrc = useSelector((state: RootState) => state.profileImage.image);
-
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
@@ -340,6 +361,37 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     const value = e.target.value;
     setHeaderData((prev) => ({ ...prev, [key]: value }));
   };
+
+  // Step 1: Measure section heights
+  useEffect(() => {
+    if (measured) return;
+
+    const heights = sectionRefs.current.map((el) =>
+      el ? el.getBoundingClientRect().height : 0
+    );
+
+    const newPages: any[][] = [];
+    let currentPage: any[] = [];
+    let currentHeight = 0;
+
+    leftSections.forEach((section: any, i: any) => {
+      const height = heights[i];
+      if (currentHeight + height > A4_HEIGHT_PX && currentPage.length > 0) {
+        newPages.push(currentPage);
+        currentPage = [section];
+        currentHeight = height;
+      } else {
+        currentPage.push(section);
+        currentHeight += height;
+      }
+    });
+
+    if (currentPage.length > 0) newPages.push(currentPage);
+
+    setPages(newPages);
+    setMeasured(true);
+  }, [leftSections, measured]);
+  console.log(pages)
   return (
     <div
       className="resume-container"
@@ -350,9 +402,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         transition: "background-color 0.3s ease-in-out",
       }}
     >
-      <div className="w-a4 h-a4 relative grid grid-cols-12 shadow-xl ">
+
+      <div style={{ minHeight: "297mm", width: "210mm" }} className="relative grid grid-cols-12 shadow-xl ">
         {/* Left Column */}
-        <div className="col-span-8 p-[30px] pr-8">
+        <div className="col-span-8  pr-8" style={{ padding: "30px" }} >
           {/* Header */}
           <div
             ref={containerHeaderRef}
@@ -362,6 +415,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             <input
               name="name"
               placeholder="Name"
+              value={headerData.name}
               onChange={(e) => handleChangeHeader(e, "name")}
               className="outline-none bg-transparent font-semibold text-zinc-900"
               style={{
@@ -371,9 +425,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             />
             <input
               name="designation"
+              value={headerData.designation}
               placeholder="Designation"
               onChange={(e) => handleChangeHeader(e, "designation")}
-              className="w-full rounded bg-transparent placeholder:text-[18px] focus:outline-none focus:ring-0 focus:border-0"
+              className="w-full rounded bg-transparent placeholder:text-lg focus:outline-none focus:ring-0 focus:border-0"
               style={{
                 fontSize: scaleFont(18, currentState.fontSize),
                 fontFamily: currentState.fontFamily,
@@ -395,7 +450,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     >
                       <input
                         type="text"
-                        className="text-[18px] bg-transparent focus:outline-none font-semibold mb-1"
+                        className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
                         style={{ color: currentState.color }}
                         value={secName}
                         onChange={(e) =>
@@ -405,7 +460,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     </div>
                   ) : (
                     <h2
-                      className="text-[18px] font-semibold "
+                      className="text-lg font-semibold "
                       style={{ color: currentState.color }}
                     >
                       {highlightWords(section?.newSecName || section?.name)}
@@ -418,17 +473,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
           ) : (
             <p>No sections added yet.</p>
           )}
-   <div className="absolute bottom-4 text-xs opacity-65 flex gap-2 items-center leading-none">
-  <img
-    src="/assets/logoai.svg"
-    alt="logo"
-    width={150}
-    height={20} // Reduce height if necessary
-    className="inline-block align-middle"
-  />
-</div>
-
-
+          <Watermark />
           {loading && (
             <p className="text-gray-500 mt-4">
               Checking for spelling/grammar errors...
@@ -438,14 +483,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
         {/* Right Column */}
         <div
-          className="col-span-4 px-[10px] h-a4 z-10"
-          style={{ backgroundColor: currentState.color }}
+          className="col-span-4 px-2  z-10"
+          style={{ backgroundColor: currentState.color, minHeight: "297mm" }}
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
-            <div className="flex justify-center mb-6 w-[160px] h-[160px] mx-auto rounded-full overflow-hidden cursor-pointer">
+            <div className="flex justify-center mb-6 w-40 h-40 mx-auto rounded-full overflow-hidden cursor-pointer">
+
               <Image
-                src={imageSrc || placeHolderImg}
+                src={imageSrc || placeHolderImage}
                 alt="Profile"
                 width={160}
                 height={160}
@@ -470,7 +516,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                   fontFamily: currentState.fontFamily,
                 }}
               >
-                <span className="text-[20px]">Contact Info</span>
+                <span className="text-xl">Contact Info</span>
               </div>
               <hr className="mt-2" />
               {[
@@ -478,21 +524,21 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                 { name: "Email", icon: <Mail size={16} /> },
               ].map((placeholder, idx) => (
                 <div key={idx} className="flex items-center gap-2  text-white">
-                  <div className="self-center mt-2 ">{placeholder.icon}</div>
+                  <div className="self-center  ">{placeholder.icon}</div>
                   <input
                     placeholder={placeholder.name}
-                    className="w-full leading-[1.5rem] placeholder:opacity-70 text-sm placeholder-white outline-none   focus:bg-transparent bg-transparent"
+                    className="w-full  placeholder:opacity-70 text-sm placeholder-white outline-none   focus:bg-transparent bg-transparent"
                   />
                 </div>
               ))}
               <div className="flex items-start gap-2 text-white">
                 <BookUser
                   size={16}
-                  className="mt-1 self-center leading-[1.5rem]"
+                  className=" self-center "
                 />
                 <input
                   placeholder="Address"
-                  className="w-full leading-[1.5rem] placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
+                  className="w-full placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
                 />
               </div>
             </div>
@@ -507,14 +553,13 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     {section?.name === "Custom Section" ? (
                       <div
                         ref={containerRef}
-                        className={`flex flex-col pt-2 ${
-                          editable && "bg-white"
-                        }`}
+                        className={`flex flex-col pt-2 ${editable && "bg-white"
+                          }`}
                         onClick={handleEditableSection}
                       >
                         <input
                           type="text"
-                          className="text-[18px] bg-transparent focus:outline-none font-semibold mb-1"
+                          className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
                           style={{ color: currentState.color }}
                           value={secName}
                           onChange={(e) =>
@@ -523,7 +568,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         />
                       </div>
                     ) : (
-                      <h2 className="text-[18px] font-semibold mb-1">
+                      <h2 className="text-lg font-semibold mb-1">
                         {highlightWords(section?.newSecName || section?.name)}
                       </h2>
                     )}

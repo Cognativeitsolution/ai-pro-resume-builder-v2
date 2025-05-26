@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setProfileImage } from '@/redux/slices/profileImageSlice';
 //===== Images =====
 import * as FaIcons from 'react-icons/fa';
-import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
 //===== Section Components =====
 import AllSummary from "../all-sections/sections-details/AllSummary";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
@@ -153,21 +152,21 @@ const Template9 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Technical Skills":
                 return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#fff" templateColor="#000" pillRounded="3px" isPillStyle={true} />;
             case "Certificate":
-                return <AllCertificates data={section} textAltColor="#F54A00" />;
+                return <AllCertificates data={section} textAltColor="#F54A00" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Education":
-                return <AllEducations data={section} textAltColor="#F54A00" />;
+                return <AllEducations data={section} textAltColor="#F54A00" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Experience":
-                return <AllExperiences data={section} textAltColor="#F54A00" />;
+                return <AllExperiences data={section} textAltColor="#F54A00" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Projects":
                 return <AllProjects data={section} textAltColor="#F54A00" />;
             case "Awards":
-                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} />;
+                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} iconSize={scaleFont(13, currentState.fontSize)} />;
             case "References":
                 return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={currentState.color} />;
             case "Languages":
-                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" />;
+                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Custom Section":
-                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" />;
+                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} iconSize={scaleFont(22, currentState.fontSize)} />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
@@ -272,12 +271,12 @@ const Template9 = ({ currentState, updateState }: ResumePreviewProps) => {
                             }}
                         />
                         <div className="w-full gap-6 p-2 mt-2 flex justify-around items-center ">
-                            
+
                             {["Phone", "Email", "Address"].map((placeholder, idx) => (
                                 <div key={idx} className="flex items-center justify-center gap-2 text-black ">
                                     <IconDropdown icons={FaIcons} />
                                     <input
-                                    type="text"
+                                        type="text"
                                         placeholder={`please add your ${placeholder} here`}
                                         className="min-w-[180px] text-[14px] placeholder:text-[14px] placeholder-black outline-none focus:bg-transparent bg-transparent"
                                     />
@@ -305,7 +304,8 @@ const Template9 = ({ currentState, updateState }: ResumePreviewProps) => {
                                         </div>
                                         :
                                         <div ref={containerRef} className={`flex items-center gap-2 pt-2 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
-                                            <IconDropdown icons={FaIcons} iconColor={currentState?.color} />
+                                            {/* <IconDropdown icons={FaIcons} iconColor={currentState?.color} /> */}
+                                            {section.Icon}
                                             <h2 className="text-[18px] font-semibold text-gray-950"
                                                 style={{
                                                     fontSize: scaleFont(18, currentState.fontSize),

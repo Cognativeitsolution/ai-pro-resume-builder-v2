@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TiDelete } from 'react-icons/ti';
-import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
 import { addUserLanguages, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
@@ -19,6 +18,8 @@ type AllLanguagesProps = {
   textAltColor?: string;
   templateColor?: string;
   editableAltBG?: string;
+  fontSize?: any;
+  fontFamily?: any;
 };
 
 const AllLanguages = ({
@@ -26,7 +27,9 @@ const AllLanguages = ({
   textColor = '#fff',
   textAltColor,
   templateColor,
-  editableAltBG
+  editableAltBG,
+  fontSize,
+  fontFamily,
 }: AllLanguagesProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -138,12 +141,17 @@ const AllLanguages = ({
                     onBlur={() => handleBlur(index)}
                     placeholder="Language"
                     className="text-base placeholder:text-base focus:outline-none bg-transparent"
-                    style={{ color: textColor }}
+                    style={{
+                      color: textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily
+                    }}
                     autoFocus
                   />
                   {editingIndex === index && lang.title.trim() !== "" && (
                     <div className="flex gap-2">
-                      <div className="text-sm opacity-65" style={{ color: textColor }}>
+                      <div className="text-sm opacity-65"
+                        style={{ color: textColor }}>
                         {lang.level ?? 0}%
                       </div>
                       <button

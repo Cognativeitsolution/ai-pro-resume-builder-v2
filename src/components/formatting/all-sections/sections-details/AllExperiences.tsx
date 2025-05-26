@@ -15,6 +15,7 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
+import { IoLocationSharp } from "react-icons/io5";
 
 type ExperienceType = {
   title: string;
@@ -28,6 +29,8 @@ type AllExperienceType = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  fontSize?: any;
+  fontFamily?: any;
 };
 
 const AllExperiences = ({
@@ -35,6 +38,8 @@ const AllExperiences = ({
   textColor = "#000",
   textAltColor = "#000",
   templateColor,
+  fontSize,
+  fontFamily,
 }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -172,13 +177,35 @@ const AllExperiences = ({
                     }
                     placeholder="Title"
                     style={{
-                      color: textAltColor ? textAltColor : textColor
+                      color: textAltColor ? textAltColor : textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
                     }}
-                    className="text-[16px] bg-transparent"
+                    className="bg-transparent"
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
                 <CustomDatePicker onChange={(dates) => console.log(dates)} />
+              </div>
+              {/* ====== Location ====== */}
+              <div className="w-full">
+                <div className="flex items-center justify-start gap-1 ">
+                  {/* ====== Icon ====== */}
+                  <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                  <EditableField
+                    html={exp.location || ""}
+                    onChange={(val) =>
+                      handleInputChange(index, "location", val)
+                    }
+                    placeholder="Location"
+                    className="bg-transparent text-left"
+                    style={{
+                      color: textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
+                    }}
+                  />
+                </div>
               </div>
               {/* ====== Company Name ====== */}
               <div className="flex items-center justify-between">
@@ -191,48 +218,48 @@ const AllExperiences = ({
                     }
                     placeholder="Company Name"
                     style={{
-                      color: textColor
+                      color: textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
                     }}
-                    className="text-[16px] bg-transparent"
-                  />
-                </div>
-                {/* ====== Location ====== */}
-                <div className="w-full">
-
-                  <EditableField
-                    html={exp.location || ""}
-                    onChange={(val) =>
-                      handleInputChange(index, "location", val)
-                    }
-                    placeholder="Location"
-                    style={{
-                      color: textColor
-                    }}
-                    className="text-[16px] bg-transparent text-right"
-                    placeholderClassName="right-0"
+                    className="bg-transparent"
                   />
                 </div>
               </div>
               {/* ====== Description ====== */}
               <div>
-                <textarea
+                {/* <textarea
                   value={exp.description}
                   disabled={!editable}
                   onChange={(e) =>
                     handleInputChange(index, "description", e.target.value)
                   }
                   placeholder="Description"
-                  rows={2}
                   style={{
-                    color: textColor
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
                   }}
-                  className="w-11/12 text-[14px] bg-transparent placeholder:text-[14px] focus:outline focus:outline-[0.1px] focus:outline-indigo-600 "
-                ></textarea>
+                  className="w-full text-[14px] bg-transparent placeholder:text-[14px] focus:outline focus:outline-[0.1px] focus:outline-indigo-600 "
+                ></textarea> */}
+                <EditableField
+                  html={exp.description || ""}
+                  onChange={(val) =>
+                    handleInputChange(index, "description", val)
+                  }
+                  placeholder="Description"
+                  className="bg-transparent"
+                  style={{
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
+                  }}
+                />
               </div>
             </div>
             {/* ====== Delete Button ====== */}
             {editable && (
-              <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
+              <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
                 ${editable ? 'opacity-100 ' : 'opacity-0 '}
               `}>
                 <button

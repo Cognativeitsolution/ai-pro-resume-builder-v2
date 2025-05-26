@@ -153,21 +153,21 @@ const Template8 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Technical Skills":
                 return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" pillBg="transparent" isPillStyle={true} />;
             case "Certificate":
-                return <AllCertificates data={section} textAltColor={currentState?.color} />;
+                return <AllCertificates data={section} textAltColor={currentState?.color} fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Education":
-                return <AllEducations data={section} textAltColor={currentState?.color} />;
+                return <AllEducations data={section} textAltColor={currentState?.color} fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Experience":
-                return <AllExperiences data={section} textAltColor={currentState?.color} />;
+                return <AllExperiences data={section} textAltColor={currentState?.color} fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Projects":
                 return <AllProjects data={section} textAltColor={currentState?.color} />;
             case "Awards":
-                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} />;
+                return <AllAwards data={section} textColor="#000" textAltColor={currentState.color} templateColor={currentState.color} fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} iconSize={scaleFont(13, currentState.fontSize)} />;
             case "References":
                 return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={currentState.color} />;
             case "Languages":
-                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" />;
+                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Custom Section":
-                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" />;
+                return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} iconSize={scaleFont(22, currentState.fontSize)} />;
             default:
                 return <p>{highlightWords(section?.content || "")}</p>;
         }
@@ -250,8 +250,8 @@ const Template8 = ({ currentState, updateState }: ResumePreviewProps) => {
         >
             <div className="grid grid-cols-12 h-full shadow-xl pb-0 relative">
                 <div className="absolute left-0 top-[225px] w-full h-12 z-0" style={{
-                            background: currentState?.color,
-                        }}></div>
+                    background: currentState?.color,
+                }}></div>
                 <div className="col-span-12 relative p-[30px] ">
 
                     <div className="flex gap-3 ">
