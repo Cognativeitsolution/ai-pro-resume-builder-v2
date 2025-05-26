@@ -16,6 +16,8 @@ import user from 'media/builderIcons/user.svg';
 import { generatePdfPreview } from '@/utils/pdf-preview';
 import PdfPreviewModal from '@/components/common/modal/pdf-preview-modal';
 import { X } from 'lucide-react';
+import RenameResume from '@/components/formatting/renameResume/RenameResume';
+import { FiPlusCircle } from 'react-icons/fi';
 
 type HeaderProps = {
   currentState: {
@@ -35,7 +37,8 @@ const UserHeader = (props: HeaderProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [htmlContent, setHtmlContent] = useState("");
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  
+  const [resumeTitle, setResumeTitle] = useState("My Resume001");
+
   // const handlePreview = async () => {
   // await generatePdfPreview("resume-section", setPdfUrl);
   // };
@@ -52,49 +55,49 @@ const UserHeader = (props: HeaderProps) => {
     setIsModalOpen(false);
   };
 
-const downloadPDF = async () => {
-  const resumeElement = document.getElementById("resume-content");
-  if (!resumeElement) return;
+  const downloadPDF = async () => {
+    const resumeElement = document.getElementById("resume-content");
+    if (!resumeElement) return;
 
-  const html = resumeElement.innerHTML;
+    const html = resumeElement.innerHTML;
 
-  const res = await fetch("/api/download-pdf", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ html }),
-  });
+    const res = await fetch("/api/download-pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ html }),
+    });
 
-  if (!res.ok) {
-    console.error("Failed to generate PDF");
-    return;
-  }
+    if (!res.ok) {
+      console.error("Failed to generate PDF");
+      return;
+    }
 
-  const blob = await res.blob();
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "resume.pdf";
-  a.click();
-  window.URL.revokeObjectURL(url);
-};
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = (`${resumeTitle || "resume"}.pdf`);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
 
 
 
   return (
     <div className="flex items-center justify-between bg-[#ffffff] py-4 px-5 border-b border-[#CECECE] fixed top-0 left-0 w-full z-40">
-         {isModalOpen && (
+      {isModalOpen && (
         <div className="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-x-hidden z-50">
           <div className="bg-white   rounded shadow-lg max-h-[90vh] overflow-auto overflow-x-hidden">
-          
-             
-              <button
-                onClick={closeModal}
-                className="text-white fixed top-[2%] right-[25%] bg-indigo-200 rounded-full p-2 z-50 font-bold text-xl"
-              >
-                <X/>
-              </button>
-            
+
+
+            <button
+              onClick={closeModal}
+              className="text-white fixed top-[2%] right-[25%] bg-indigo-200 rounded-full p-2 z-50 font-bold text-xl"
+            >
+              <X />
+            </button>
+
             <div
               dangerouslySetInnerHTML={{ __html: htmlContent }}
               className="text-left"
@@ -107,12 +110,12 @@ const downloadPDF = async () => {
           <Image src={logo} alt="Logo" />
         </div>
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <Image src={pen} alt="Rename" />
-            <span className="text-[14px] text-[#707275]">My Resume001</span>
-          </div>
+          <RenameResume
+            initialTitle={resumeTitle}
+            onRename={(newTitle) => setResumeTitle(newTitle)}
+          />
           <div>
-            <Image src={plus} alt="Logo" />
+            <FiPlusCircle className="text-[22px] text-[#707275] cursor-pointer" />
           </div>
         </div>
       </div>
@@ -147,10 +150,10 @@ const downloadPDF = async () => {
           </div>
           <div className="bg-secondary rounded-3xl py-2 px-4 cursor-pointer flex items-center gap-2 shadow-md">
             <Image src={preview} alt="Preview" className="w-[15px]" />
-              <button  onClick={handlePreviewClick} className='text-white'>
-        Preview
-      </button>
-        {pdfUrl && <PdfPreviewModal pdfUrl={pdfUrl} onClose={() => setPdfUrl(null)} />}
+            <button onClick={handlePreviewClick} className='text-white'>
+              Preview
+            </button>
+            {pdfUrl && <PdfPreviewModal pdfUrl={pdfUrl} onClose={() => setPdfUrl(null)} />}
           </div>
           <span className="bg-[#D9D9D9] w-[2px] h-[30px]" />
           <div className="cursor-pointer">

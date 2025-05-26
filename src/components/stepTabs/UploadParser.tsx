@@ -9,7 +9,8 @@ import UploadImg from 'media/images/upload-file.webp'
 export default function UploadParser({ onComplete }: { onComplete: () => void }) {
     const [error, setError] = useState('');
     const [linkedinUrl, setLinkedinUrl] = useState('')
-    const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);       // For file upload
+    const [importing, setImporting] = useState(false);
     const [fileData, setFileData] = useState<{ name: string; file: File | null }>({
         name: "",
         file: null,
@@ -24,7 +25,7 @@ export default function UploadParser({ onComplete }: { onComplete: () => void })
                 name: file.name,
                 file: file,
             });
-            setLoading(true);
+            setUploading(true);
             try {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -32,14 +33,14 @@ export default function UploadParser({ onComplete }: { onComplete: () => void })
             } catch (err) {
                 console.error('File upload failed:', err);
             } finally {
-                setLoading(false);
+                setUploading(false);
             }
         } else {
             setFileData({
                 name: "",
                 file: null,
             });
-            setLoading(false);
+            setUploading(false);
         }
     };
 
@@ -76,7 +77,7 @@ export default function UploadParser({ onComplete }: { onComplete: () => void })
                                 onChange={handleFileChange}
                                 className="hidden"
                             />
-                            {loading ? (
+                            {uploading ? (
                                 <div className="flex items-center justify-center gap-2">
                                     <div className="animate-spin rounded-full h-2 w-2 border-t-2 border-purple-500"></div>
                                     <p className="text-[15px] font-medium text-slate-400">Uploading Resume</p>
@@ -123,7 +124,7 @@ export default function UploadParser({ onComplete }: { onComplete: () => void })
                                     className={`w-full h-[40px] px-2 text-[15px] font-normal placeholder:text-[15px] bg-transparent border ${error ? 'border-red-500' : 'border-hamzaPrimary'} rounded-md focus:outline-none`}
                                 />
 
-                                {loading ? (
+                                {importing ? (
                                     <div className="flex items-center justify-center gap-2 h-[40px]">
                                         <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-purple-500" />
                                         <p className="text-[15px] font-medium text-slate-400">Importing...</p>
@@ -132,7 +133,7 @@ export default function UploadParser({ onComplete }: { onComplete: () => void })
                                     (
                                         <button
                                             type="button"
-                                            disabled={!!error || loading || !linkedinUrl.trim()}
+                                            disabled={!!error || importing || !linkedinUrl.trim()}
                                             className={`text-[18px] font-medium tracking-wide text-white px-4 h-[40px] rounded-md capitalize transition-all duration-300 ${linkedinUrl.trim() && !error ? 'bg-hamzaPrimary border-hamzaPrimary' : 'bg-gray-400 border-gray-400 cursor-no-drop'}`}
                                             onClick={async () => {
                                                 const trimmedUrl = linkedinUrl.trim();
@@ -142,17 +143,17 @@ export default function UploadParser({ onComplete }: { onComplete: () => void })
                                                     return;
                                                 }
 
-                                                setLoading(true);
+                                                setImporting(true);
                                                 setError('');
 
                                                 const exists = await checkLinkedInExists(trimmedUrl);
 
                                                 if (!exists) {
                                                     setError('This LinkedIn profile does not exist or is inaccessible.');
-                                                    setLoading(false);
+                                                    setImporting(false);
                                                     return;
                                                 }
-                                                setLoading(false);
+                                                setImporting(false);
                                                 onComplete();
                                             }}
                                         >
@@ -171,7 +172,3 @@ export default function UploadParser({ onComplete }: { onComplete: () => void })
         </section>
     )
 }
-function setLoading(arg0: boolean) {
-    throw new Error('Function not implemented.')
-}
-

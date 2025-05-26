@@ -1,8 +1,6 @@
-"use client";
-import React, { useState } from "react";
 import Image from "next/image";
 // ===============
-import { CTA, LastStep } from "@/components";
+import { CTA } from "@/components";
 // ===============
 import template1 from 'media/images/resume-templates/Sleek Simplicity 1.webp'
 import template2 from 'media/images/resume-templates/Professional Polished 2.webp'
@@ -77,8 +75,8 @@ const SelectTemplates: React.FC<SelectTemplatesProps> = ({ onTemplateSelect }) =
                                 />
 
                                 {/*======= Overlay CTA =======*/}
-                                <div className="flex items-center justify-center w-full h-full bg-slate-800/90 absolute top-0 left-0 z-20 opacity-0 group-hover:opacity-100 transition-all duration-1000">
-                                    <div className="translate-y-56 group-hover:-translate-y-0 transition-all duration-1000">
+                                <div className="flex items-center justify-center w-full h-full bg-slate-800/90 absolute top-0 left-0 z-20 opacity-0 group-hover:opacity-100 transition-all duration-700">
+                                    <div className="translate-y-56 group-hover:-translate-y-0 transition-all duration-700">
                                         <CTA
                                             btn
                                             text="Use This Template"
