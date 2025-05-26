@@ -145,7 +145,7 @@ const AllEducation = ({
         {/* <Editor/> */}
         {educations.length > 0 &&
           educations.map((exp, index) => (
-            <div key={index} className={`relative pb-6`}>
+            <div key={index} className={`relative `}>
               <div className="flex flex-col mt-2 ">
                 {/* ====== Degree and Field of Study ====== */}
                 <div className="flex items-center justify-between">

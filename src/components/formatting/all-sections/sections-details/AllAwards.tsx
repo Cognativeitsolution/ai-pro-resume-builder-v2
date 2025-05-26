@@ -31,7 +31,9 @@ const AllAwards = ({
   const { userAwards } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [awards, setAwards] = useState<AwardType[]>([]);
+  const [awards, setAwards] = useState<AwardType[]>([{
+    title:""
+  }]);
 
   useEffect(() => {
     if (Array.isArray(userAwards) && userAwards.length > 0) {
@@ -133,11 +135,11 @@ const AllAwards = ({
         />
       )}
       <div className="grid grid-cols-2 gap-2 px-1 mb-2 ">
-        {awards.length > 0 ?
+        {awards.length > 0 &&
           awards.map((award, index) => (
             <div
               key={index}
-              className={`flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium px-1 py-1 transition-all duration-500 ease-in-out relative`}
+              className={`flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium px-1 transition-all duration-500 ease-in-out relative`}
               style={{
                 color: textColor,
                 border: hoveredIndex === index ? `1px solid #000` : '1px solid transparent',
@@ -155,13 +157,13 @@ const AllAwards = ({
             >
               <span style={{
                 color: textAltColor
-              }}> <FaAward /></span>
+              }}> <FaAward size={13}/></span>
               <input
                 value={award.title}
                 onChange={(e) => handleInputChange(index, e.target.value)}
-                onBlur={() => handleBlur(index)}
+                // onBlur={() => handleBlur(index)}
                 placeholder="Award Name"
-                className="bg-transparent text-sm truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out opacity-70 "
+                className="bg-transparent text-sm leading-7  truncate placeholder:text-sm focus:outline-none transition-all duration-500 ease-in-out opacity-70 "
                 style={{ color: textColor }}
                 autoFocus
               />
@@ -172,32 +174,7 @@ const AllAwards = ({
               </div>
             </div>
           ))
-          : (
-            <div
-              className="flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium  px-3 py-1"
-              style={{
-                // color: textColor,
-                border: `1px solid #000`,
-              }}
-            >
-              <span> <FaAward style={{
-                color: textAltColor
-              }} /></span>
-              <input
-                value={''}
-                onChange={(e) => handleAddFirstAward(e.target.value)}
-                placeholder="Award Name"
-                className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
-                style={{ color: textColor }}
-                autoFocus
-              />
-              <div className={`transition-all duration-300 ease-in-out transform right-2 top-1 absolute  `} >
-                <button onClick={handleRemoveSection} className="text-red-800">
-                  <RiDeleteBin6Line size={18} />
-                </button>
-              </div>
-            </div>
-          )}
+          }
       </div>
     </div>
   );

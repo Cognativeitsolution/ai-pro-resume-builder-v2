@@ -405,7 +405,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     </div>
                   ) : (
                     <h2
-                      className="text-[18px] font-semibold mb-1"
+                      className="text-[18px] font-semibold "
                       style={{ color: currentState.color }}
                     >
                       {highlightWords(section?.newSecName || section?.name)}

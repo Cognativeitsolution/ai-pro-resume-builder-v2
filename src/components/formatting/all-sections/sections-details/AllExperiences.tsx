@@ -160,7 +160,7 @@ const AllExperiences = ({
       {/* ===== Education Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
         {experiences.map((exp, index) => (
-          <div key={index} className={`relative pb-6`}>
+          <div key={index} className={`relative `}>
             <div className="flex flex-col mt-2">
               {/* ====== Job Title ====== */}
               <div className="flex items-center justify-between">
