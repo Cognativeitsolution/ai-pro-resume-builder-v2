@@ -128,7 +128,7 @@ const AllAwards = ({
   }, [awards, dispatch, data.id]);
   return (
     <div ref={containerRef}
-      className={`flex flex-col py-5 ${editable ? 'bg-white' : ''}`}
+      className={`flex flex-col mt-1 ${editable ? 'bg-white rounded-sm' : ''}`}
       onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
@@ -140,7 +140,7 @@ const AllAwards = ({
           showDot={true}
         />
       )}
-      <div className="grid grid-cols-2 gap-2 px-1 mb-2 ">
+      <div className="grid grid-cols-2 gap-1 mb-2">
         {awards.length > 0 &&
           awards.map((award, index) => (
             <div

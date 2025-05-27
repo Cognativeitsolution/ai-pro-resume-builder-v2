@@ -110,13 +110,13 @@ const AllTechnicalSkills = ({
   };
 
   return (
-    <div ref={containerRef} className={`px-1 py-5 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`px-1 py-5 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white rounded-sm' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={false}
           onCopy={handleAddTechnicalSkill}
           onDelete={handleRemoveSection}
-          position={`-top-[125px] right-[70px]  `}
+          position={`-top-[154px] right-[72px] `}
           mainClass={`transition-all rotate-90 duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
           dotClass={`top-[30px] left-[48px]`}
@@ -158,11 +158,13 @@ const AllTechnicalSkills = ({
                 style={{ color: textAltColor, }}
                 autoFocus
               />
-              {hoveredIndex === index && (
-                <button onClick={() => handleDeleteTechnicalSkill(index)} className="opacity-70 hover:opacity-100">
-                  <RiDeleteBin6Line size={18} style={{ color: textAltColor, }} />
-                </button>
-              )}
+              <div className="w-6 relative">
+                <div className={`transition-all duration-300 ease-in-out transform absolute right-0 -top-2 ${hoveredIndex === index ? 'translate-x-0 opacity-100' : 'translate-x-3 opacity-0'}`} >
+                  <button onClick={() => handleDeleteTechnicalSkill(index)} className="text-red-600">
+                    <RiDeleteBin6Line size={18} style={{ color: textAltColor }} />
+                  </button>
+                </div>
+              </div>
             </div>
           ))
           : (

@@ -151,7 +151,7 @@ const AllCustomSection = ({
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col pt-2 ${editable && "bg-white"}`}
+      className={`flex flex-col pt-2 ${editable && "bg-white rounded-sm"}`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
@@ -170,10 +170,8 @@ const AllCustomSection = ({
         {customSections.length > 0 &&
           customSections.map((exp, index) => (
             <div key={index}>
-              <div className="flex flex-col mt-2">
-
+              <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
                 <div className="flex items-center justify-between gap-1">
-
                   {/* ====== Icon ====== */}
                   {hasField("Icon") && (
                     <FaHome className="mb-1 text-indigo-600" size={iconSize} />

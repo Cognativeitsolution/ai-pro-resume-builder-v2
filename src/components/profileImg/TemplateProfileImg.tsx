@@ -8,11 +8,12 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { IoResizeOutline } from 'react-icons/io5';
 import { FiMinus, FiPlus } from 'react-icons/fi';
 
-const TemplateProfileImg = () => {
+const TemplateProfileImg = ({ bgColor }: any) => {
     const dispatch = useDispatch();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const imageSrc = useSelector((state: RootState) => state.profileImage.image);
-    const [showProfileIcn, setShowProfileIcn] = useState(true);
+    const [editable, setEditable] = useState(true);
+    const [showTooltip, setShowTooltip] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -41,7 +42,7 @@ const TemplateProfileImg = () => {
 
     const handleRemoveProfileImg = () => {
         dispatch(setProfileImage(''));
-        setShowProfileIcn(false);
+        setEditable(false);
     }
 
     const handleResizeProfileImg = () => {
@@ -86,26 +87,25 @@ const TemplateProfileImg = () => {
         window.addEventListener('mouseup', handleMouseUp);
     };
 
-    if (!showProfileIcn) return null;
+    if (!editable) return null;
 
     return (
-        <div className="flex flex-col items-center mb-6">
+        <div className="flex flex-col items-center mb-6 relative">
+            {/* Container that shows avatar and clips overflow */}
             <div
-                className="relative mx-auto  min-w-[140px] min-h-[140px] h-[160px] w-[160px] max-w-[200px] max-h-[200px] rounded-full overflow-hidden cursor-pointer"
+                className="relative mx-auto min-w-[140px] min-h-[140px] h-[160px] w-[160px] max-w-[200px] max-h-[200px] rounded-full overflow-hidden"
                 onWheel={(e) => {
                     if (isResizing) {
                         e.preventDefault();
-                        setScale(prev => e.deltaY > 0 ?
-                            Math.max(0.5, prev - 0.1) :
-                            Math.min(3, prev + 0.1));
+                        setScale((prev) => (e.deltaY > 0 ? Math.max(0.5, prev - 0.1) : Math.min(3, prev + 0.1)));
                     }
                 }}
             >
                 <div
-                    className="relative w-full h-full"
+                    className="absolute z-20 w-full h-full"
                     style={{
                         transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                        cursor: isResizing ? 'move' : 'pointer'
+                        cursor: isResizing ? 'move' : 'pointer',
                     }}
                     onMouseDown={handleMouseDown}
                 >
@@ -126,36 +126,40 @@ const TemplateProfileImg = () => {
                     onChange={handleFileChange}
                     className="hidden"
                 />
-
-                <div className="absolute top-2 right-8 z-50 bg-gray-200 border rounded-full p-1" onClick={handleRemoveProfileImg}>
-                    <AiOutlineClose className='z-[99999]' />
-                </div>
-                <div
-                    className="absolute top-10 right-8 z-50 bg-gray-200 border rounded-full p-1"
-                    onClick={handleResizeProfileImg}
-                    style={{ backgroundColor: isResizing ? '#4CAF50' : '#E5E7EB' }}
-                >
-                    <IoResizeOutline className='z-[99999]' />
-                </div>
             </div>
 
+            {/* Control Buttons outside of overflow-hidden */}
+            <div
+                className="absolute top-2 right-10 z-30 bg-gray-200 border rounded-full p-1 cursor-pointer"
+                onClick={handleResizeProfileImg}
+                style={{ backgroundColor: isResizing ? '#4CAF50' : '#5C6BC0' }}
+            >
+                <IoResizeOutline className="text-white font-bold" />
+            </div>
+
+            <div
+                className="absolute top-[90px] right-2 z-30 bg-gray-400 border rounded-3xl p-2 cursor-pointer"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+                onClick={handleRemoveProfileImg}
+            >
+                <AiOutlineClose className="text-black font-bold text-3xl" />
+            </div>
+
+            {showTooltip && (
+                <div className="absolute top-[140px] right-0 z-30 bg-black text-white text-xs rounded px-2 py-1">
+                    Remove Profile Image
+                </div>
+            )}
+
+            {/* Resize Controls */}
             {showResizeControls && (
                 <div className="flex items-center gap-3 mt-3 p-2 bg-gray-100 rounded-lg">
-                    <button
-                        onClick={handleZoomOut}
-                        className="p-2 rounded-full hover:bg-gray-200"
-                        title="Zoom Out"
-                    >
+                    <button onClick={handleZoomOut} className="p-2 rounded-full hover:bg-gray-200" title="Zoom Out">
                         <FiMinus />
                     </button>
-                    <span className="text-sm w-16 text-center">
-                        {Math.round(scale * 100)}%
-                    </span>
-                    <button
-                        onClick={handleZoomIn}
-                        className="p-2 rounded-full hover:bg-gray-200"
-                        title="Zoom In"
-                    >
+                    <span className="text-sm w-16 text-center">{Math.round(scale * 100)}%</span>
+                    <button onClick={handleZoomIn} className="p-2 rounded-full hover:bg-gray-200" title="Zoom In">
                         <FiPlus />
                     </button>
                     <button
@@ -168,10 +172,9 @@ const TemplateProfileImg = () => {
                 </div>
             )}
 
-            {isResizing && (
-                <div className="text-xs text-gray-200 mt-1">\ Drag image to reposition | Scroll to zoom </div>
-            )}
+            {isResizing && <div className="text-xs text-gray-300 mt-1">Drag image to reposition | Scroll to zoom</div>}
         </div>
+
     )
 }
 

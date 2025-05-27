@@ -47,10 +47,9 @@ const AllHeader = ({ data = {} }: AllHeaderType) => {
     return (
         <div ref={containerRef}
             className={`border p-4 relative flex flex-col gap-4 
-            ${editable && 'bg-white'}`} onClick={handleEditableSection}
+            ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}
         >
             <h1>{data?.name}</h1>
-
             <div className="mt-1 flex flex-wrap gap-2">
                 <input
                     value={inputData}
