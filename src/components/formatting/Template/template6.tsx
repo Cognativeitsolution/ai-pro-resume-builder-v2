@@ -155,10 +155,8 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
       return (
         <span
           key={index}
-          className={`
-                        ${isSpellingMistake ? "text-red-500" : ""}
-                        ${isGrammarMistake ? "bg-blue-200 underline" : ""}
-                    `}
+          className={`${isSpellingMistake ? "text-red-500" : ""}
+                        ${isGrammarMistake ? "bg-blue-200 underline" : ""}`}
         >
           {word}{" "}
         </span>
@@ -175,22 +173,22 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
         return (
           <AllSoftSkills
             data={section}
-            textColor="#fff"
+            textColor=""
             textAltColor="#000"
-            templateColor="#fff"
-            editableAltBG="bg-gray-900/80"
-            isPillStyle={true}
+            templateColor="#000"
+            dotClass="hidden"
+            position="top-[192px] left-[130px]"
           />
         );
       case "Technical Skills":
         return (
           <AllTechnicalSkills
             data={section}
-            textColor="#fff"
+            textColor=""
             textAltColor="#000"
-            templateColor="#fff"
-            editableAltBG="bg-gray-900/80"
-            isPillStyle={true}
+            templateColor="#000"
+            dotClass="hidden"
+            position="top-[192px] left-[130px]"
           />
         );
       case "Certificate":
@@ -206,6 +204,8 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            term2={true}
+            position="top-[192px] left-[130px]"
           />
         );
       case "Experience":
@@ -217,6 +217,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            term2={true}
           />
         );
       case "Projects":

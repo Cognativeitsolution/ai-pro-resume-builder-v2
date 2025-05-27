@@ -42,7 +42,7 @@ export default function RootLayout({ children }: any) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${primary.variable} font-primary `} cz-shortcut-listen="true">
+      <body className={`${primary.variable} font-primary bg-[#fafcff]`} cz-shortcut-listen="true">
         <ReduxProvider>
           <Suspense>
             <ConditionalLayout>

@@ -31,6 +31,8 @@ type AllExperienceType = {
   templateColor?: string;
   fontSize?: any;
   fontFamily?: any;
+  term2?: any;
+  term3?: any;
 };
 
 const AllExperiences = ({
@@ -40,6 +42,8 @@ const AllExperiences = ({
   templateColor,
   fontSize,
   fontFamily,
+  term2,
+  term3,
 }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -168,7 +172,7 @@ const AllExperiences = ({
           <div key={index} className={`relative `}>
             <div className="flex flex-col mt-2">
               {/* ====== Job Title ====== */}
-              <div className="flex items-center justify-between">
+              <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
                 <div className="w-full">
                   <EditableField
                     html={exp.title || ""}
@@ -185,7 +189,8 @@ const AllExperiences = ({
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
-                <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                {term3 ? null :
+                  <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start"} />}
               </div>
               {/* ====== Location ====== */}
               <div className="w-full">
@@ -206,6 +211,10 @@ const AllExperiences = ({
                     }}
                   />
                 </div>
+                {term3 ?
+                  <div className={`flex flex-col items-start justify-start text-left `}>
+                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start"} />
+                  </div> : null}
               </div>
               {/* ====== Company Name ====== */}
               <div className="flex items-center justify-between">

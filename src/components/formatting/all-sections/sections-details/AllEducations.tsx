@@ -33,6 +33,7 @@ type AllEducationType = {
   fontFamily?: any;
   term2?: any;
   term3?: any;
+  position?: any;
 };
 
 const AllEducation = ({
@@ -44,6 +45,7 @@ const AllEducation = ({
   fontFamily,
   term2,
   term3,
+  position
 }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -143,7 +145,7 @@ const AllEducation = ({
         isTextEditor={true}
         onCopy={handleAddEducation}
         onDelete={handleRemoveSection}
-        position={`top-1 right-0 `}
+        position={position ? position : `top-1 right-0 `}
         mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
         showDot={true}
       />
@@ -155,7 +157,7 @@ const AllEducation = ({
             <div key={index} className={`relative `}>
               <div className="flex flex-col mt-2 ">
                 {/* ====== Degree and Field of Study ====== */}
-                <div className={`flex ${term2 ? "flex-col" : "flex-row items-center justify-between"}`}>
+                <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
                   <div className="w-full">
                     <EditableField
                       html={exp.degree}
@@ -172,7 +174,8 @@ const AllEducation = ({
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
-                  <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                  {term3 ? null :
+                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start"} />}
                 </div>
                 {/* ====== Location ====== */}
                 <div className="w-full">
@@ -193,6 +196,10 @@ const AllEducation = ({
                       }}
                     />
                   </div>
+                  {term3 ?
+                    <div className={`flex flex-col items-start justify-start text-left `}>
+                      <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start"} />
+                    </div> : null}
                 </div>
                 {/* ====== School or University ====== */}
                 <div className="flex items-center justify-between">

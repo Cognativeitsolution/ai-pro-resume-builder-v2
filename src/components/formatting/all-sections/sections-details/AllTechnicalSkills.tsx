@@ -21,6 +21,8 @@ type AllTechnicalSkillsProps = {
   isPillStyle?: any;
   pillBg?: any;
   pillRounded?: any;
+  dotClass?: any;
+  position?: any;
 };
 
 const AllTechnicalSkills = ({
@@ -31,7 +33,9 @@ const AllTechnicalSkills = ({
   editableAltBG,
   isPillStyle,
   pillBg,
-  pillRounded
+  pillRounded,
+  dotClass,
+  position
 }: AllTechnicalSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -110,83 +114,81 @@ const AllTechnicalSkills = ({
   };
 
   return (
-    <div ref={containerRef} className={`px-1 py-5 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`px-1 py-5 relative ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={false}
           onCopy={handleAddTechnicalSkill}
           onDelete={handleRemoveSection}
-          position={`-top-[125px] right-[70px]  `}
+          position={position ? position : `-top-[125px] right-[70px]`}
           mainClass={`transition-all rotate-90 duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
-          dotClass={`top-[30px] left-[48px]`}
+          dotClass={dotClass ? dotClass : `top-[30px] left-[48px]`}
         />
       )}
       <div className="flex flex-wrap gap-2 ">
-        {technicalskills.length > 0 ?
-          technicalskills.map((skill, index) => (
-            <div
-              key={index}
-              className={`flex items-center gap-2 
+        {technicalskills.length > 0 ? technicalskills.map((skill, index) => (
+          <div
+            key={index}
+            className={`flex items-center gap-2 
               ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
               font-medium px-3  transition-all duration-500 ease-in-out 
               ${hoveredIndex === index ? 'pr-5' : ''}`}
-              style={{
-                color: textColor,
-                background: isPillStyle && pillBg ? pillBg : textColor,
-                border: isPillStyle && `1px solid ${textColor}`,
-                borderBottom: `2px solid ${textColor}`,
-                borderRadius: pillRounded
-              }}
-              onMouseOver={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                  setHoveredIndex(index);
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                  setHoveredIndex(null);
-                }
-              }}
-            >
-              <input
-                value={skill.title}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                onBlur={() => handleBlur(index)}
-                placeholder="Technical Skill"
-                className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70"
-                style={{ color: textAltColor, }}
-                autoFocus
-              />
-              {hoveredIndex === index && (
-                <button onClick={() => handleDeleteTechnicalSkill(index)} className="opacity-70 hover:opacity-100">
-                  <RiDeleteBin6Line size={18} style={{ color: textAltColor, }} />
-                </button>
-              )}
-            </div>
-          ))
-          : (
-            <div
-              className={`flex items-center gap-2 
+            style={{
+              color: textColor,
+              background: isPillStyle && pillBg ? pillBg : textColor,
+              border: isPillStyle && `1px solid ${textColor}`,
+              borderBottom: `2px solid ${textColor}`,
+              borderRadius: pillRounded
+            }}
+            onMouseOver={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                setHoveredIndex(index);
+              }
+            }}
+            onMouseOut={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                setHoveredIndex(null);
+              }
+            }}
+          >
+            <input
+              value={skill.title}
+              onChange={(e) => handleInputChange(index, e.target.value)}
+              onBlur={() => handleBlur(index)}
+              placeholder="Technical Skill"
+              className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70"
+              style={{ color: textAltColor, }}
+              autoFocus
+            />
+            {hoveredIndex === index && (
+              <button onClick={() => handleDeleteTechnicalSkill(index)} className="opacity-70 hover:opacity-100">
+                <RiDeleteBin6Line size={18} style={{ color: textAltColor, }} />
+              </button>
+            )}
+          </div>
+        )) : (
+          <div
+            className={`flex items-center gap-2 
             ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
             font-medium px-3 py-1 transition-all duration-500 ease-in-out `}
-              style={{
-                color: textColor,
-                background: isPillStyle && pillBg ? pillBg : textColor,
-                border: isPillStyle && `1px solid ${textColor}`,
-                borderBottom: `2px solid ${textColor}`,
-                borderRadius: isPillStyle
-              }}
-            >
-              <input
-                value={''}
-                onChange={(e) => handleAddFirstTechnicalSkill(e.target.value)}
-                placeholder="Technical Skill"
-                className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
-                style={{ color: textAltColor, }}
-              />
-            </div>
-          )}
+            style={{
+              color: textColor,
+              background: isPillStyle && pillBg ? pillBg : textColor,
+              border: isPillStyle && `1px solid ${textColor}`,
+              borderBottom: `2px solid ${textColor}`,
+              borderRadius: isPillStyle
+            }}
+          >
+            <input
+              value={''}
+              onChange={(e) => handleAddFirstTechnicalSkill(e.target.value)}
+              placeholder="Technical Skill"
+              className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
+              style={{ color: textAltColor, }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

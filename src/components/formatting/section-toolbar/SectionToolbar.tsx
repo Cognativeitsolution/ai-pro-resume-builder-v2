@@ -72,7 +72,7 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
                 </div>
             ) : null}
 
-            <div className={`flex items-center gap-2 px-5 py-2 absolute ${position}bg-slate-900/70  bg-opacity-80 backdrop-blur-md shadow-md rounded-full border ${className}`}>
+            <div className={`flex items-center gap-2 px-5 py-2 absolute ${position} bg-slate-900/70  bg-opacity-80 backdrop-blur-md shadow-md rounded-full border ${className}`}>
                 <button className="cursor-pointer" onClick={onCopy}>
                     <LucideCopyPlus
                         size={18}

@@ -25,6 +25,8 @@ type AllSoftSkillsProps = {
   isPillStyle?: any;
   pillBg?: any;
   pillRounded?: any;
+  dotClass?: any;
+  position?: any;
 };
 
 const AllSoftSkills = ({
@@ -36,6 +38,8 @@ const AllSoftSkills = ({
   isPillStyle,
   pillBg,
   pillRounded,
+  dotClass,
+  position
 }: AllSoftSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -129,7 +133,7 @@ const AllSoftSkills = ({
   return (
     <div
       ref={containerRef}
-      className={`px-1 py-5 ${editable === true
+      className={`px-1 py-5 relative ${editable === true
         ? editableAltBG
           ? editableAltBG
           : "bg-white"
@@ -143,10 +147,10 @@ const AllSoftSkills = ({
           isTextEditor={false}
           onCopy={handleAddSoftSkill}
           onDelete={handleRemoveSection}
-          position={`-top-[125px] right-[70px]  `}
+          position={position ? position : `-top-[125px] right-[70px]`}
           mainClass={`transition-all rotate-90 duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
-          dotClass={`top-[30px] left-[48px]`}
+          dotClass={dotClass ? dotClass : `top-[30px] left-[48px]`}
         />
       )}
       <div className="flex flex-wrap gap-2 ">
