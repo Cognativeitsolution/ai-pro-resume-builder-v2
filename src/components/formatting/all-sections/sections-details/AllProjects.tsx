@@ -135,7 +135,7 @@ const AllProjects = ({
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col pt-2 ${editable ? 'bg-white' : ''}`}
+      className={`flex flex-col pt-2 ${editable ? 'bg-white rounded-sm' : ''}`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
@@ -154,7 +154,7 @@ const AllProjects = ({
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
         {projects.map((project, index) => (
           <div key={index} className={`relative`}>
-            <div className="flex flex-col mt-2">
+            <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
               {/* ====== Degree and Field of Study ====== */}
               <div className="flex items-center justify-between">
                 <div className="w-full">

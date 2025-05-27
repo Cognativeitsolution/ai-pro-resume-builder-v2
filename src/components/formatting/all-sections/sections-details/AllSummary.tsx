@@ -46,7 +46,7 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
     }, [data?.description]);
 
     return (
-        <div ref={containerRef} className={`p-1 relative flex flex-col gap-4 ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+        <div ref={containerRef} className={`p-1 relative flex flex-col gap-4 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
             <div className="flex flex-wrap gap-2">
                 {editable ?
                     <textarea

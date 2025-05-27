@@ -190,25 +190,24 @@ const AllSoftSkills = ({
                 autoFocus
               />
 
-              {hoveredIndex === index && (
-                <button
-                  onClick={() => {
-                    console.log(index)
-                    if (index > 0) return handleDeleteSoftSkill(index);
-                    return handleRemoveSection()
-                  }}
-                  className="opacity-70 hover:opacity-100"
-                >
-                  <RiDeleteBin6Line size={18} style={{ color: textAltColor }} />
-                </button>
-              )}
+              <div className="w-6 relative">
+                <div className={`transition-all duration-300 ease-in-out transform absolute right-0 -top-2  ${hoveredIndex === index ? 'translate-x-0 opacity-100' : 'translate-x-3 opacity-0'}`} >
+                  <button
+                    onClick={() => {
+                      if (index > 0) return handleDeleteSoftSkill(index);
+                      return handleRemoveSection();
+                    }}
+                    className="text-red-600"
+                  >
+                    <RiDeleteBin6Line size={18} style={{ color: textAltColor }} />
+                  </button>
+                </div>
+              </div>
             </div>
           ))
           : (
             <div
-              className={`flex items-center gap-2 
-            ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
-            font-medium px-3 py-1 transition-all duration-500 ease-in-out `}
+              className={`flex items-center gap-2 ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px]  font-medium px-3 py-1 transition-all duration-500 ease-in-out `}
               style={{
                 color: textColor,
                 background: isPillStyle && pillBg ? pillBg : textColor,
