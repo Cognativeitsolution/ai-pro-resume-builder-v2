@@ -38,14 +38,7 @@ body {
   border-radius: 20px;
 }
 
-/* @media print {
-  .page {
-    page-break-after: always;
-    break-after: page;
-  }
-} */
 
-/* Print-specific page break handling */
 @media print {
   .break-after-page {
     page-break-after: always;
@@ -55,4 +48,13 @@ body {
     page-break-inside: avoid;
     break-inside: avoid;
   }
+}
+.page-break {
+  display: block;
+  height: 1px;
+  background: transparent;
+  page-break-before: always;
+  break-before: page;
+  margin-top: 200px;
+  border-top: 2px dashed gray;
 }
