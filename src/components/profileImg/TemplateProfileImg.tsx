@@ -1,14 +1,18 @@
-import { RootState } from '@/redux/store';
-import Image from 'next/image'
 import React, { useRef, useState } from 'react'
+import Image from 'next/image'
+// ============
+import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
 import { setProfileImage } from "@/redux/slices/profileImageSlice";
-import { AiOutlineClose } from 'react-icons/ai';
-import { IoResizeOutline } from 'react-icons/io5';
+// ============
+import { IoClose, IoEyeOffSharp } from 'react-icons/io5';
+import { IoMdCrop } from 'react-icons/io';
 import { FiMinus, FiPlus } from 'react-icons/fi';
+import { FaCloudUploadAlt } from 'react-icons/fa';
+// ============
+import placeHolderImg from "media/images/profile.webp";
 
-const TemplateProfileImg = ({ bgColor }: any) => {
+const TemplateProfileImg = () => {
     const dispatch = useDispatch();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const imageSrc = useSelector((state: RootState) => state.profileImage.image);
@@ -91,9 +95,8 @@ const TemplateProfileImg = ({ bgColor }: any) => {
 
     return (
         <div className="flex flex-col items-center mb-6 relative">
-            {/* Container that shows avatar and clips overflow */}
-            <div
-                className="relative mx-auto min-w-[140px] min-h-[140px] h-[160px] w-[160px] max-w-[200px] max-h-[200px] rounded-full overflow-hidden"
+            {/*====== Container that shows avatar and clips overflow ======*/}
+            <div className="relative mx-auto min-w-[140px] min-h-[140px] h-[160px] w-[160px] max-w-[200px] max-h-[200px] rounded-full overflow-hidden group"
                 onWheel={(e) => {
                     if (isResizing) {
                         e.preventDefault();
@@ -101,8 +104,7 @@ const TemplateProfileImg = ({ bgColor }: any) => {
                     }
                 }}
             >
-                <div
-                    className="absolute z-20 w-full h-full"
+                <div className="w-full h-full"
                     style={{
                         transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                         cursor: isResizing ? 'move' : 'pointer',
@@ -115,8 +117,21 @@ const TemplateProfileImg = ({ bgColor }: any) => {
                         width={200}
                         height={200}
                         className="w-full h-full object-cover rounded-full"
-                        onClick={handleImageClick}
                     />
+
+                    <div className="w-full h-full flex items-center justify-center gap-2 bg-zinc-600/80 rounded-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                        <div className="bg-indigo-400 border rounded-full p-2 cursor-pointer translate-y-40 group-hover:translate-y-0 transition-all duration-500">
+                            {!imageSrc ? (
+                                <FaCloudUploadAlt className="text-[20px] text-white" onClick={handleImageClick} />
+                            ) : (
+                                <IoMdCrop className="text-[20px] text-white" onClick={handleResizeProfileImg} />
+                            )}
+                        </div>
+
+                        <div className="bg-indigo-400 border rounded-full p-2 cursor-pointer translate-y-40 group-hover:translate-y-0 transition-all duration-500">
+                            <IoEyeOffSharp className="text-[20px] text-white" onClick={handleRemoveProfileImg} />
+                        </div>
+                    </div>
                 </div>
 
                 <input
@@ -129,32 +144,16 @@ const TemplateProfileImg = ({ bgColor }: any) => {
             </div>
 
             {/* Control Buttons outside of overflow-hidden */}
-            <div
-                className="absolute top-2 right-10 z-30 bg-gray-200 border rounded-full p-1 cursor-pointer"
-                onClick={handleResizeProfileImg}
-                style={{ backgroundColor: isResizing ? '#4CAF50' : '#5C6BC0' }}
-            >
-                <IoResizeOutline className="text-white font-bold" />
-            </div>
-
-            <div
-                className="absolute top-[90px] right-2 z-30 bg-gray-400 border rounded-3xl p-2 cursor-pointer"
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-                onClick={handleRemoveProfileImg}
-            >
-                <AiOutlineClose className="text-black font-bold text-3xl" />
-            </div>
-
             {showTooltip && (
-                <div className="absolute top-[140px] right-0 z-30 bg-black text-white text-xs rounded px-2 py-1">
+                <div className="absolute top-32 right-12 z-30 bg-black text-white text-xs rounded px-2 py-1">
                     Remove Profile Image
                 </div>
             )}
 
             {/* Resize Controls */}
             {showResizeControls && (
-                <div className="flex items-center gap-3 mt-3 p-2 bg-gray-100 rounded-lg">
+                <div className="flex items-center gap-3 mt-3 p-2 bg-gray-100 rounded-lg relative">
+                    <IoClose className="text-[20px] p-0.5 text-white absolute -right-2 -top-3 bg-indigo-400 rounded-full cursor-pointer" onClick={handleResizeProfileImg} />
                     <button onClick={handleZoomOut} className="p-2 rounded-full hover:bg-gray-200" title="Zoom Out">
                         <FiMinus />
                     </button>
