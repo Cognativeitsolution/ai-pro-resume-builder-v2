@@ -30,6 +30,7 @@ import AllCustomSection from "../all-sections/sections-details/AllCustomSections
 import Logo from "media/assets/logo_resume_white.svg";
 import Watermark from "@/components/common/watermark/watermark";
 import { placeHolderImage } from "@/constant/placeholder-image-base64";
+import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
 const A4_HEIGHT_PX = 1122;
 const PAGE_PADDING = 60; // adjust based on your layout padding
 
@@ -488,24 +489,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
-            <div className="flex justify-center mb-6 w-40 h-40 mx-auto rounded-full overflow-hidden cursor-pointer">
-
-              <Image
-                src={imageSrc || placeHolderImage}
-                alt="Profile"
-                width={160}
-                height={160}
-                className="w-full"
-                onClick={handleImageClick}
-              />
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </div>
+            <TemplateProfileImg bgColor={currentState.color} />
 
             {/* Contact Info */}
             <div className="flex flex-col gap-2">
@@ -518,7 +502,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
               >
                 <span className="text-xl">Contact Info</span>
               </div>
-              <hr className="mt-2" />
+              <hr className="-mt-1" />
               {[
                 { name: "Phone", icon: <Phone size={16} /> },
                 { name: "Email", icon: <Mail size={16} /> },

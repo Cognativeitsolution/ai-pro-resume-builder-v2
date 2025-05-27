@@ -116,13 +116,13 @@ const AllLanguages = ({
   };
 
   return (
-    <div ref={containerRef} className={`px-1 py-4 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`px-1 py-4 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white rounded-sm' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={false}
           onCopy={handleAddLanguage}
           onDelete={handleRemoveSection}
-          position={`-top-[125px] right-[70px]  `}
+          position={`-top-[154px] right-[68px] `}
           mainClass={`transition-all rotate-90 duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
           dotClass={`top-[30px] left-[48px]`}
@@ -135,19 +135,21 @@ const AllLanguages = ({
             languages.map((lang, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between">
-                  <input
-                    value={lang.title}
-                    onChange={(e) => handleInputChange(index, e.target.value)}
-                    onBlur={() => handleBlur(index)}
-                    placeholder="Language"
-                    className="text-base placeholder:text-base focus:outline-none bg-transparent"
-                    style={{
-                      color: textColor,
-                      fontSize: fontSize,
-                      fontFamily: fontFamily
-                    }}
-                    autoFocus
-                  />
+                  <div>
+                    <input
+                      value={lang.title}
+                      onChange={(e) => handleInputChange(index, e.target.value)}
+                      onBlur={() => handleBlur(index)}
+                      placeholder="Language"
+                      className="text-base w-10/12 placeholder:text-base focus:outline-none bg-transparent"
+                      style={{
+                        color: textColor,
+                        fontSize: fontSize,
+                        fontFamily: fontFamily
+                      }}
+                      autoFocus
+                    />
+                  </div>
                   {editingIndex === index && lang.title.trim() !== "" && (
                     <div className="flex gap-2">
                       <div className="text-sm opacity-65"
@@ -203,7 +205,6 @@ const AllLanguages = ({
                     disabled={true}
                     className="w-full opacity-80"
                     style={{ accentColor: textAltColor }}
-
                   />
                 </div>
               </div>

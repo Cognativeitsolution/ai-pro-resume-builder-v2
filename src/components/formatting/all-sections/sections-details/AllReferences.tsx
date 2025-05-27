@@ -107,7 +107,7 @@ const AllReferences = ({
   };
 
   return (
-    <div ref={containerRef} className={`flex flex-col py-5  ${editable && 'bg-white'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col mt-1 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={true}
@@ -118,10 +118,10 @@ const AllReferences = ({
           showDot={true}
         />
       )}
-      <div className="flex flex-col gap-1 px-1 ">
+      <div className="flex flex-col gap-1">
         {references.length > 0 && (
           references.map((cert, index) => (
-            <div key={index} className='flex justify-between gap-2  rounded-sm px-2 transition-all duration-500 ease-in-out relative' style={{
+            <div key={index} className='flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative' style={{
               color: textColor,
               border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
             }}
@@ -136,8 +136,7 @@ const AllReferences = ({
                 }
               }}>
               {/* ====== Job Name ====== */}
-              <div className="flex items-center gap-4  " >
-
+              <div className="flex items-center gap-4" >
                 <input
                   value={cert.name}
                   onChange={(e) => handleInputChange(index, 'name', e.target.value)}
@@ -148,7 +147,8 @@ const AllReferences = ({
                 />
                 <div className="h-[2px] w-5" style={{
                   background: textAltColor
-                }}></div>
+                }}>
+                </div>
 
                 <input
                   type="text"
