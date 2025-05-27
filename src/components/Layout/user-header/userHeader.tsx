@@ -2,19 +2,17 @@
 // ============
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { jsPDF } from 'jspdf';
+
 import { FaAngleDown } from 'react-icons/fa6';
 import logo from 'media/builderIcons/logo.svg';
-import html2canvas from "html2canvas"
-import pen from 'media/builderIcons/pen.svg';
-import plus from 'media/builderIcons/plus.svg';
+
 import right from 'media/builderIcons/right.svg';
 import left from 'media/builderIcons/left.svg';
 import download from 'media/builderIcons/download.svg';
 import preview from 'media/builderIcons/preview.svg';
 import crown from 'media/builderIcons/crown.svg';
 import user from 'media/builderIcons/user.svg';
-import { generatePdfPreview } from '@/utils/pdf-preview';
+
 import PdfPreviewModal from '@/components/common/modal/pdf-preview-modal';
 import { X } from 'lucide-react';
 import RenameResume from '@/components/formatting/renameResume/RenameResume';
@@ -89,7 +87,7 @@ const UserHeader = (props: HeaderProps) => {
     <div className="flex items-center justify-between bg-[#ffffff] py-4 px-5 border-b border-[#CECECE] fixed top-0 left-0 w-full z-40">
       {isModalOpen && (
         <div className="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-x-hidden z-50">
-          <div className="bg-white   rounded shadow-lg max-h-[90vh] overflow-auto overflow-x-hidden">
+          <div className="bg-transparent   rounded shadow-lg max-h-[90vh] overflow-auto overflow-x-hidden">
 
 
             <button
