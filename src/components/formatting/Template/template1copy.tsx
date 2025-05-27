@@ -481,7 +481,7 @@ useEffect(() => {
       {pages.map((page, pageIndex) => (
         <div
           key={pageIndex}
-          className={`relative  grid grid-cols-12 border shadow-xl  ${!editMode && "bg-white"} `}
+          className={`relative  grid grid-cols-12 border shadow-xl mb-2 ${!editMode && "bg-white"} `}
           style={{ height: "297mm", width: "210mm", pageBreakAfter: "always" }}
         >
           {/* Left Column */}
@@ -602,7 +602,7 @@ useEffect(() => {
                   >
                     <span className="text-xl">Contact Info</span>
                   </div>
-                  <hr className="mt-2" />
+                  <hr className="" />
                   {[
                     { name: "Phone", icon: <Phone size={16} /> },
                     { name: "Email", icon: <Mail size={16} /> },

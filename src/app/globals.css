@@ -58,3 +58,12 @@ body {
   margin-top: 200px;
   border-top: 2px dashed gray;
 }
+/* Custom class to hide scrollbar */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
