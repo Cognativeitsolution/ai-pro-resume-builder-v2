@@ -85,25 +85,26 @@ const UserHeader = (props: HeaderProps) => {
 
   return (
     <div className="flex items-center justify-between bg-[#ffffff] py-4 px-5 border-b border-[#CECECE] fixed top-0 left-0 w-full z-40">
-      {isModalOpen && (
-        <div className="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-x-hidden z-50">
-          <div className="bg-transparent   rounded shadow-lg max-h-[90vh] overflow-auto overflow-x-hidden">
+ {isModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-x-hidden z-0">
+    <div className="relative bg-transparent rounded max-h-[90vh] overflow-auto overflow-x-hidden p-4 hide-scrollbar">
+
+      <button
+        onClick={closeModal}
+        className="absolute top-2 right-2 bg-indigo-200 rounded-full p-2 text-black font-bold text-xl z-50"
+      >
+        <X />
+      </button>
+
+      <div
+        dangerouslySetInnerHTML={{ __html: htmlContent }}
+        className="text-left"
+      />
+    </div>
+  </div>
+)}
 
 
-            <button
-              onClick={closeModal}
-              className="text-white fixed top-[2%] right-[25%] bg-indigo-200 rounded-full p-2 z-50 font-bold text-xl"
-            >
-              <X />
-            </button>
-
-            <div
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-              className="text-left"
-            />
-          </div>
-        </div>
-      )}
       <div className="flex items-center gap-12">
         <div>
           <Image src={logo} alt="Logo" />
