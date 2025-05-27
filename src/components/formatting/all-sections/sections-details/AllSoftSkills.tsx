@@ -150,7 +150,7 @@ const AllSoftSkills = ({
         />
       )}
       <div className="flex flex-wrap gap-2 ">
-        {softskills.length > 0 &&
+        {softskills.length > 0 ?
           softskills.map((skill, index) => (
             <div
               key={index}
@@ -199,7 +199,29 @@ const AllSoftSkills = ({
                 </button>
               )}
             </div>
-          ))}
+          ))
+          : (
+            <div
+              className={`flex items-center gap-2 
+            ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
+            font-medium px-3 py-1 transition-all duration-500 ease-in-out `}
+              style={{
+                color: textColor,
+                background: isPillStyle && pillBg ? pillBg : textColor,
+                border: isPillStyle && `1px solid ${textColor}`,
+                borderBottom: `2px solid ${textColor}`,
+                borderRadius: isPillStyle
+              }}
+            >
+              <input
+                value={''}
+                onChange={(e) => handleAddFirstSoftSkill(e.target.value)}
+                placeholder="Soft Skill"
+                className="bg-transparent text-sm placeholder:text-sm focus:outline-none "
+                style={{ color: textAltColor, }}
+              />
+            </div>
+          )}
       </div>
     </div>
   );

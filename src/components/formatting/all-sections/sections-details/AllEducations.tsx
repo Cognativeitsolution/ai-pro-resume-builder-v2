@@ -31,6 +31,8 @@ type AllEducationType = {
   templateColor?: string;
   fontSize?: any;
   fontFamily?: any;
+  term2?: any;
+  term3?: any;
 };
 
 const AllEducation = ({
@@ -40,6 +42,8 @@ const AllEducation = ({
   templateColor,
   fontSize,
   fontFamily,
+  term2,
+  term3,
 }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -151,7 +155,7 @@ const AllEducation = ({
             <div key={index} className={`relative `}>
               <div className="flex flex-col mt-2 ">
                 {/* ====== Degree and Field of Study ====== */}
-                <div className="flex items-center justify-between">
+                <div className={`flex ${term2 ? "flex-col" : "flex-row items-center justify-between"}`}>
                   <div className="w-full">
                     <EditableField
                       html={exp.degree}
