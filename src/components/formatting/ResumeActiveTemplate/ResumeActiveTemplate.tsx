@@ -6,11 +6,13 @@ import { useSelector } from "react-redux";
 import Template1 from "../Template/template1";
 import Template2 from "../Template/template2";
 import Template3 from "../Template/template3";
+import Template6 from "../Template/template6";
 import Template8 from "../Template/template8";
 import Template9 from "../Template/template9";
 import Template10 from "../Template/template10";
 import { IoSettingsOutline } from "react-icons/io5";
 import CustomSwitch from "@/components/common/switch/switch";
+import Template1Copy from "../Template/template1copy";
 
 type CurrentState = {
   fontSize: string;
@@ -36,10 +38,14 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     switch (selectedTemplate) {
       case "template1":
         return <Template1 currentState={currentState} updateState={updateState} />;
+      case "Template1copy":
+        return <Template1Copy currentState={currentState} updateState={updateState} />;
       case "template2":
         return <Template2 currentState={currentState} updateState={updateState} />;
       case "template3":
         return <Template3 currentState={currentState} updateState={updateState} />;
+      case "template6":
+        return <Template6 currentState={currentState} updateState={updateState} />;
       case "template8":
         return <Template8 currentState={currentState} updateState={updateState} />;
       case "template9":

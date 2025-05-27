@@ -37,11 +37,12 @@ import TemplateImage30 from 'media/assets/resume_template_images/template_30.web
 // Template metadata array
 const templateData = [
     { id: 'template1', name: 'Sleek Simplicity', image: TemplateImage1 },
-    { id: 'template2', name: 'Professional Polished', image: TemplateImage2 },
-    { id: 'template3', name: 'Elegant Executive', image: TemplateImage3 },
+    { id: 'Template1copy', name: 'Sleek Simplicity', image: TemplateImage1 },
+    // { id: 'template2', name: 'Professional Polished', image: TemplateImage2 },
+    // { id: 'template3', name: 'Elegant Executive', image: TemplateImage3 },
     // { id: 'template4', name: 'Creative Infusion', image: TemplateImage4 },
     // { id: 'template5', name: 'Classic Professional', image: TemplateImage5 },
-    // { id: 'template6', name: 'Career Catalyst', image: TemplateImage6 },
+    { id: 'template6', name: 'Career Catalyst', image: TemplateImage6 },
     // { id: 'template7', name: 'Innovative Edge', image: TemplateImage7 },
     { id: 'template8', name: 'Dynamic Designer', image: TemplateImage8 },
     { id: 'template9', name: 'Bold Statement', image: TemplateImage9 },
