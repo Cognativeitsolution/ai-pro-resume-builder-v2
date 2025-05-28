@@ -33,7 +33,11 @@ type AllEducationType = {
   fontFamily?: any;
   term2?: any;
   term3?: any;
-  position?: any;
+  dotPosition?: any;
+  isVerticleHeader?: any;
+  headerPosition?: any;
+  textEditorPosition?: any;
+  isDot?: any;
 };
 
 const AllEducation = ({
@@ -45,7 +49,11 @@ const AllEducation = ({
   fontFamily,
   term2,
   term3,
-  position
+  dotPosition,
+  isVerticleHeader,
+  headerPosition,
+  textEditorPosition,
+  isDot
 }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -145,9 +153,13 @@ const AllEducation = ({
         isTextEditor={true}
         onCopy={handleAddEducation}
         onDelete={handleRemoveSection}
-        position={position ? position : `top-1 right-0 `}
         mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+        isVerticleHeader={isVerticleHeader}
+        textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
+        headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
         showDot={true}
+        dotPosition={dotPosition}
+        isDot={isDot}
       />
       {/* ===== Education Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">

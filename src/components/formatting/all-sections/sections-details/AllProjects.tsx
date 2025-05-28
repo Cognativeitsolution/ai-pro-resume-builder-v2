@@ -29,6 +29,11 @@ type AllProjectsType = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  dotPosition?: any;
+  isVerticleHeader?: any;
+  headerPosition?: any;
+  textEditorPosition?: any;
+  isDot?: any;
 };
 
 const AllProjects = ({
@@ -36,6 +41,11 @@ const AllProjects = ({
   textColor = "#000",
   textAltColor = "",
   templateColor,
+  dotPosition,
+  isVerticleHeader,
+  headerPosition,
+  textEditorPosition,
+  isDot
 }: AllProjectsType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -144,9 +154,13 @@ const AllProjects = ({
           isTextEditor={true}
           onCopy={handleAddProject}
           onDelete={handleRemoveSection}
-          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          isVerticleHeader={isVerticleHeader}
+          textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
+          headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
           showDot={true}
+          dotPosition={dotPosition}
+          isDot={isDot}
         />
       )}
 

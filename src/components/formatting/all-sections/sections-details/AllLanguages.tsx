@@ -20,6 +20,10 @@ type AllLanguagesProps = {
   editableAltBG?: string;
   fontSize?: any;
   fontFamily?: any;
+  dotPosition?: any;
+  isVerticleHeader?: any;
+  headerPosition?: any;
+  isDot?: any;
 };
 
 const AllLanguages = ({
@@ -30,6 +34,10 @@ const AllLanguages = ({
   editableAltBG,
   fontSize,
   fontFamily,
+  dotPosition,
+  isVerticleHeader,
+  headerPosition,
+  isDot
 }: AllLanguagesProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -116,16 +124,20 @@ const AllLanguages = ({
   };
 
   return (
-    <div ref={containerRef} className={`px-1 py-4 ${editable === true ? editableAltBG ? editableAltBG : 'bg-white rounded-sm' : 'bg-transparent'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`px-1 py-4 relative ${editable === true ? editableAltBG ? editableAltBG : 'bg-white rounded-sm' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={false}
           onCopy={handleAddLanguage}
           onDelete={handleRemoveSection}
-          position={`-top-[154px] right-[68px] `}
-          mainClass={`transition-all rotate-90 duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          isVerticleHeader={isVerticleHeader}
+          headerPosition={headerPosition}
+          // position={`-top-[154px] right-[68px] `}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
-          dotClass={`top-[30px] left-[48px]`}
+          dotPosition={dotPosition}
+          isDot={isDot}
+          // dotPosition={`top-[30px] left-[48px]`}
         />
       )}
 

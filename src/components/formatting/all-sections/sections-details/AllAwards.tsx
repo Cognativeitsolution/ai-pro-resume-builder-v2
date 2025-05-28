@@ -21,7 +21,11 @@ type AllAwardsProps = {
   templateColor: string;
   fontSize?: any;
   fontFamily?: any;
-
+  dotPosition?: any;
+  isVerticleHeader?: any;
+  headerPosition?: any;
+  textEditorPosition?: any;
+  isDot?: any;
 };
 
 const AllAwards = ({
@@ -31,6 +35,11 @@ const AllAwards = ({
   templateColor,
   fontSize,
   fontFamily,
+  dotPosition,
+  isVerticleHeader,
+  headerPosition,
+  textEditorPosition,
+  isDot
 }: any) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -135,9 +144,13 @@ const AllAwards = ({
           isTextEditor={true}
           onCopy={handleAddAward}
           onDelete={handleRemoveSection}
-          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          isVerticleHeader={isVerticleHeader}
+          textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
+          headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
           showDot={true}
+          dotPosition={dotPosition}
+          isDot={isDot}
         />
       )}
       <div className="grid grid-cols-2 gap-1 mb-2">
