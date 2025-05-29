@@ -10,6 +10,7 @@ import { addNewSection } from "@/redux/slices/addSectionSlice";
 import { ResumeActiveTemplate, TextEditor, UserHeader } from "@/components";
 import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
 import { TabProvider } from "@/app/configs/store/EditorTabContext";
+import ImagePopup from "../popup/ImagePopup";
 
 
 const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
@@ -65,7 +66,7 @@ const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
         }));
     }, [availableSections]);
 
-    const { popup, togglePopup } = usePopup();
+    const { popup, togglePopup, imagePopup, toggleImagePopup } = usePopup();
 
     const handleAddSection = (newSection: any) => {
         dispatch(addNewSection(newSection));
@@ -75,8 +76,8 @@ const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
     return (
         <>
             <TabProvider>
-                {/* {sectionData?.locked && <AddSectionClipPath />} */}
                 {popup && <Popup handleAddSec={handleAddSection} sectionData={sectionData} />}
+                {imagePopup && <ImagePopup />}
 
                 <UserHeader
                     currentState={currentState}

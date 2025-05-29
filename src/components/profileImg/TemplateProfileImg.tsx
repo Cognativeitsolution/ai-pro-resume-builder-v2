@@ -1,94 +1,30 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 // ============
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setProfileImage } from "@/redux/slices/profileImageSlice";
+import { ProfileImage } from '@/constant/ProfileImage';
 // ============
-import { IoClose, IoEyeOffSharp } from 'react-icons/io5';
-import { IoMdCrop } from 'react-icons/io';
-import { FiMinus, FiPlus } from 'react-icons/fi';
+import { IoEyeOffSharp } from 'react-icons/io5';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 // ============
-import placeHolderImg from "media/images/profile.webp";
+import usePopup from '@/app/configs/store/Popup';
 
 const TemplateProfileImg = () => {
     const dispatch = useDispatch();
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const imageSrc = useSelector((state: RootState) => state.profileImage.image);
     const [editable, setEditable] = useState(true);
-    const [showTooltip, setShowTooltip] = useState(false);
-    const [isResizing, setIsResizing] = useState(false);
-    const [scale, setScale] = useState(1);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [showResizeControls, setShowResizeControls] = useState(false);
 
-    const handleImageClick = () => {
-        if (!isResizing) {
-            fileInputRef.current?.click();
-        }
-    };
+    const { imagePopup, toggleImagePopup } = usePopup();
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && file.type.startsWith("image/")) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                if (typeof reader.result === "string") {
-                    dispatch(setProfileImage(reader.result));
-                    setScale(1);
-                    setPosition({ x: 0, y: 0 });
-                }
-            };
-            reader.readAsDataURL(file);
-        }
+    const popupHandle = () => {
+        toggleImagePopup(!imagePopup);
     };
 
     const handleRemoveProfileImg = () => {
         dispatch(setProfileImage(''));
         setEditable(false);
-    }
-
-    const handleResizeProfileImg = () => {
-        setIsResizing(!isResizing);
-        setShowResizeControls(!showResizeControls);
-    }
-
-    const handleZoomIn = () => {
-        setScale(prev => Math.min(3, prev + 0.1));
-    }
-
-    const handleZoomOut = () => {
-        setScale(prev => Math.max(0.5, prev - 0.1));
-    }
-
-    const handleResetSize = () => {
-        setScale(1);
-        setPosition({ x: 0, y: 0 });
-    }
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!isResizing) return;
-
-        const startPos = {
-            x: e.clientX - position.x,
-            y: e.clientY - position.y
-        };
-
-        const handleMouseMove = (moveEvent: MouseEvent) => {
-            setPosition({
-                x: moveEvent.clientX - startPos.x,
-                y: moveEvent.clientY - startPos.y
-            });
-        };
-
-        const handleMouseUp = () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleMouseUp);
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleMouseUp);
     };
 
     if (!editable) return null;
@@ -96,23 +32,10 @@ const TemplateProfileImg = () => {
     return (
         <div className="flex flex-col items-center mb-6 relative">
             {/*====== Container that shows avatar and clips overflow ======*/}
-            <div className="relative mx-auto min-w-[140px] min-h-[140px] h-[160px] w-[160px] max-w-[200px] max-h-[200px] rounded-full overflow-hidden group"
-                onWheel={(e) => {
-                    if (isResizing) {
-                        e.preventDefault();
-                        setScale((prev) => (e.deltaY > 0 ? Math.max(0.5, prev - 0.1) : Math.min(3, prev + 0.1)));
-                    }
-                }}
-            >
-                <div className="w-full h-full"
-                    style={{
-                        transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                        cursor: isResizing ? 'move' : 'pointer',
-                    }}
-                    onMouseDown={handleMouseDown}
-                >
+            <div className="relative mx-auto min-w-[140px] min-h-[140px] h-[160px] w-[160px] max-w-[200px] max-h-[200px] rounded-full overflow-hidden group">
+                <div className="w-full h-full" >
                     <Image
-                        src={imageSrc || placeHolderImg}
+                        src={imageSrc || ProfileImage}
                         alt="Profile"
                         width={200}
                         height={200}
@@ -121,11 +44,7 @@ const TemplateProfileImg = () => {
 
                     <div className="w-full h-full flex items-center justify-center gap-2 bg-zinc-600/80 rounded-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
                         <div className="bg-indigo-400 border rounded-full p-2 cursor-pointer translate-y-40 group-hover:translate-y-0 transition-all duration-500">
-                            {!imageSrc ? (
-                                <FaCloudUploadAlt className="text-[20px] text-white" onClick={handleImageClick} />
-                            ) : (
-                                <IoMdCrop className="text-[20px] text-white" onClick={handleResizeProfileImg} />
-                            )}
+                            <FaCloudUploadAlt className="text-[20px] text-white" onClick={popupHandle} />
                         </div>
 
                         <div className="bg-indigo-400 border rounded-full p-2 cursor-pointer translate-y-40 group-hover:translate-y-0 transition-all duration-500">
@@ -133,48 +52,9 @@ const TemplateProfileImg = () => {
                         </div>
                     </div>
                 </div>
-
-                <input
-                    type="file"
-                    accept="image/*"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    className="hidden"
-                />
             </div>
-
-            {/* Control Buttons outside of overflow-hidden */}
-            {showTooltip && (
-                <div className="absolute top-32 right-12 z-30 bg-black text-white text-xs rounded px-2 py-1">
-                    Remove Profile Image
-                </div>
-            )}
-
-            {/* Resize Controls */}
-            {showResizeControls && (
-                <div className="flex items-center gap-3 mt-3 p-2 bg-gray-100 rounded-lg relative">
-                    <IoClose className="text-[20px] p-0.5 text-white absolute -right-2 -top-3 bg-indigo-400 rounded-full cursor-pointer" onClick={handleResizeProfileImg} />
-                    <button onClick={handleZoomOut} className="p-2 rounded-full hover:bg-gray-200" title="Zoom Out">
-                        <FiMinus />
-                    </button>
-                    <span className="text-sm w-16 text-center">{Math.round(scale * 100)}%</span>
-                    <button onClick={handleZoomIn} className="p-2 rounded-full hover:bg-gray-200" title="Zoom In">
-                        <FiPlus />
-                    </button>
-                    <button
-                        onClick={handleResetSize}
-                        className="text-xs px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
-                        title="Reset Size"
-                    >
-                        Reset
-                    </button>
-                </div>
-            )}
-
-            {isResizing && <div className="text-xs text-gray-300 mt-1">Drag image to reposition | Scroll to zoom</div>}
         </div>
-
-    )
-}
+    );
+};
 
 export default TemplateProfileImg;
