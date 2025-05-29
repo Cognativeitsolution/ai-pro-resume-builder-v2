@@ -56,7 +56,7 @@ const AllSummary = ({ data = {}, textColor = "#000",
     }, [data?.description]);
 
     return (
-        <div ref={containerRef} className={`p-1 border-4 relative flex flex-col gap-4 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
+        <div ref={containerRef} className={`p-1 relative flex flex-col gap-4 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
             <div className="flex flex-wrap gap-2">
                 {editable ?
                     <EditableField
