@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 // ============
 import { FaPlus } from 'react-icons/fa6';
-import { IoClose } from 'react-icons/io5';
+// import { IoClose } from 'react-icons/io5';
 import { FiMinus, FiPlus } from 'react-icons/fi';
 // ============
 import { useDispatch } from 'react-redux';
