@@ -1,13 +1,23 @@
 "use client";
+import EditableField from '@/components/editor/editable-field';
 import { addUserSummary, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 type AllSummaryType = {
     data?: any;
+    textColor?: string;
+    textAltColor?: string;
+    templateColor?: string;
+    fontSize?: any;
+    fontFamily?: any;
 };
 
-const AllSummary = ({ data = {} }: AllSummaryType) => {
+const AllSummary = ({ data = {}, textColor = "#000",
+    textAltColor = "#000",
+    templateColor,
+    fontSize,
+    fontFamily, }: AllSummaryType) => {
     const dispatch = useDispatch();
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -46,16 +56,28 @@ const AllSummary = ({ data = {} }: AllSummaryType) => {
     }, [data?.description]);
 
     return (
-        <div ref={containerRef} className={`p-1 relative flex flex-col gap-4 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
+        <div ref={containerRef} className={`p-1 border-4 relative flex flex-col gap-4 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
             <div className="flex flex-wrap gap-2">
                 {editable ?
-                    <textarea
-                        value={inputData}
-                        className="w-full min-h-[80px]  bg-transparent text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                    <EditableField
+                        html={inputData}
                         onChange={handleDataChange}
-                        placeholder='Full Name'
-                    /> :
-                    <p className="w-full min-h-[80px]  text-[14px] rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0">
+                        placeholder="Description"
+                        className="bg-transparent"
+                        style={{
+                            color: textColor,
+                            fontSize: fontSize,
+                            fontFamily: fontFamily,
+                        }}
+                    />
+                    :
+                    <p className="w-full rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                        style={{
+                            color: textColor,
+                            fontSize: fontSize,
+                            fontFamily: fontFamily,
+                        }}
+                    >
                         {inputData}
                     </p>
                 }
