@@ -31,7 +31,7 @@ import AllCustomSection from "../all-sections/sections-details/AllCustomSections
 import Watermark from "@/components/common/watermark/watermark";
 import { placeHolderImage } from "@/constant/placeholder-image-base64";
 
-const A4_HEIGHT_PX = 1400; // A4 height in pixels (approx. at 96 DPI)
+const A4_HEIGHT_PX = 1500; // A4 height in pixels (approx. at 96 DPI)
 const PAGE_PADDING = 60; // adjust based on your layout padding
 const CONTENT_HEIGHT_PER_PAGE = A4_HEIGHT_PX - 2 ;
 // Define a type for a page
@@ -61,7 +61,7 @@ const Template1Copy = ({ currentState, updateState }: ResumePreviewProps) => {
   const { addedSections, sectionBgColor, editMode } = useSelector(
     (state: any) => state.addSection
   );
-
+console.log(currentState.fontSize)
   const { spellCheck, grammarCheck } = useSelector(
     (state: any) => state.ImproveText
   );
@@ -461,7 +461,6 @@ useEffect(() => {
         break;
       }
     }
-
     setPages(newPages);
   };
 
@@ -470,19 +469,20 @@ useEffect(() => {
 
   return (
     <div
-      className="resume-container flex flex-col gap-4 items-center"
+      className="resume-container flex flex-col gap-4 items-center "
       id="resume-content"
       style={{
         padding: `${currentState.padding || 0}px`,
         backgroundColor: editMode ? templateBgColor : undefined,
         transition: "background-color 0.3s ease-in-out",
+        
       }}
     >
       {pages.map((page, pageIndex) => (
         <div
           key={pageIndex}
-          className={`relative  grid grid-cols-12 border shadow-xl mb-2 ${!editMode && "bg-white"} `}
-          style={{ height: "297mm", width: "210mm", pageBreakAfter: "always" }}
+          className={`relative  grid grid-cols-12 mb-2 overflow-x-hidden  shadow-xl  ${!editMode && "bg-white"} `}
+          style={{ height: "352mm", width: "250mm", pageBreakAfter: "always" }}
         >
           {/* Left Column */}
           <div className="col-span-8 pr-8" style={{ padding: "30px" }}>
@@ -568,7 +568,7 @@ useEffect(() => {
           {/* Right Column */}
           <div
             className="col-span-4 px-2 z-10"
-            style={{ backgroundColor: currentState.color, height: "297mm" }}
+            style={{ backgroundColor: currentState.color, height: "352mm" }}
           >
             {/* Profile Image (only on the first page) */}
             {pageIndex === 0 && (

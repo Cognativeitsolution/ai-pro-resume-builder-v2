@@ -46,7 +46,7 @@ export default function EditableField({
         ref={ref}
         contentEditable
         suppressContentEditableWarning
-        className={`min-h-[1.5rem] w-full transition-all duration-500 ease-in-out focus:outline focus:outline-[0.1px] rounded-sm ${className}`}
+        className={` w-full transition-all duration-500 ease-in-out focus:outline  focus:outline-[0.1px] rounded-sm text-sm ${className}`}
         onFocus={() => setIsFocused(true)}
         onBlur={handleBlur}
         style={style}
