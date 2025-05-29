@@ -187,7 +187,7 @@ const AllEducation = ({
                   </div>
                   {/* ====== Date Picker ====== */}
                   {term3 ? null :
-                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start"} />}
+                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} />}
                 </div>
                 {/* ====== Location ====== */}
                 <div className="w-full">
@@ -209,7 +209,7 @@ const AllEducation = ({
                     />
                   </div>
                   {term3 ?
-                    <div className={`flex flex-col items-start justify-start text-left `}>
+                    <div className={`flex flex-col items-start justify-start text-left  mb-1`}>
                       <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start"} />
                     </div> : null}
                 </div>

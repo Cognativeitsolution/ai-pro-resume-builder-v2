@@ -203,7 +203,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         return <AllCertificates data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
-           />;
+        // term2={true}
+        />;
       case "Education":
         return (
           <AllEducations
@@ -213,6 +214,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+          // term2={true}
           />
         );
       case "Experience":
@@ -224,6 +226,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+          // term2={true}
           />
         );
       case "Projects":
@@ -233,6 +236,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+          // term2={true}
           />
         );
       case "Awards":
@@ -280,6 +284,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
+          // term2={true}
           />
         );
       default:
@@ -499,9 +504,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
-            <TemplateProfileImg 
+            <TemplateProfileImg
             // bgColor={currentState.color}
-             />
+            />
 
             {/* Contact Info */}
             <div className="flex flex-col gap-2">

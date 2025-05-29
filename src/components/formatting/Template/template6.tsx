@@ -243,6 +243,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            term2={true}
             headerPosition="top-[30px] -left-[50px]"
             textEditorPosition='top-1 right-0'
             isVerticleHeader={true}

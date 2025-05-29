@@ -17,6 +17,7 @@ interface SectionToolbarProps {
     mainClass?: string;
     isTextEditor?: any;
     dotPosition?: any;
+    isHeader?: any;
     isVerticleHeader?: any;
     isVerticleTextEditor?: any;
     isDot?: any;
@@ -32,6 +33,7 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
     mainClass,
     isTextEditor,
     dotPosition,
+    isHeader = true,
     isVerticleHeader = false,
     isVerticleTextEditor = false,
     isDot
@@ -80,7 +82,7 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
                 </div>
             ) : null}
 
-            <div className={`flex gap-2 absolute ${isVerticleHeader === true ? 'flex-col py-5 px-2 ' : 'items-center px-5 py-2 '} ${headerPosition} bg-slate-900/70  bg-opacity-80 backdrop-blur-md shadow-md rounded-full border ${className}`}>
+            {isHeader ? <div className={`flex gap-2 absolute ${isVerticleHeader === true ? 'flex-col py-5 px-2 ' : 'items-center px-5 py-2 '} ${headerPosition} bg-slate-900/70  bg-opacity-80 backdrop-blur-md shadow-md rounded-full border ${className}`}>
                 <button className="cursor-pointer" onClick={onCopy}>
                     <LucideCopyPlus
                         size={18}
@@ -102,10 +104,10 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
 
                 {showDot && (
                     <div
-                        className={`absolute h-3 w-3 border rounded-full bg-white border-slate-700 ${isDot === true ? 'block' : 'hidden' }   ${dotPosition ? dotPosition : 'top-3 -left-2'}`}
+                        className={`absolute h-3 w-3 border rounded-full bg-white border-slate-700 ${isDot === true ? 'block' : 'hidden'}   ${dotPosition ? dotPosition : 'top-3 -left-2'}`}
                     />
                 )}
-            </div>
+            </div> : null}
         </div>
     );
 };

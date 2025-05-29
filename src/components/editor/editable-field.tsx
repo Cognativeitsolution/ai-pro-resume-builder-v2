@@ -12,7 +12,7 @@ export default function EditableField({
   html: string;
   onChange: (val: string) => void;
   placeholder?: string;
-  placeholderClassName?: string;
+  placeholderClassName?: string | boolean;
   className?: string;
   style?: CSSProperties;
 }) {
