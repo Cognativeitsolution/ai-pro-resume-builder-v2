@@ -1,9 +1,11 @@
 "use client";
 import EditableField from '@/components/editor/editable-field';
 import { addUserSummary, sectionEditMode } from '@/redux/slices/addSectionSlice';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { JSX, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
+import Image from 'next/image';
+import AIImage from 'media/assets/artificial-intelligence.png'
 
 type AllSummaryType = {
     data?: any;
@@ -15,6 +17,7 @@ type AllSummaryType = {
     textEditorPosition?: any;
     dotPosition?: any;
     isDot?: any;
+    highlightSpellingMistakes?: (text: string) => JSX.Element[];
 };
 
 const AllSummary = ({ data = {}, textColor = "#000",
@@ -24,7 +27,8 @@ const AllSummary = ({ data = {}, textColor = "#000",
     fontFamily,
     textEditorPosition,
     dotPosition,
-    isDot
+    isDot,
+    highlightSpellingMistakes
 
 }: AllSummaryType) => {
     const dispatch = useDispatch();
@@ -64,6 +68,8 @@ const AllSummary = ({ data = {}, textColor = "#000",
         }
     }, [data?.description]);
 
+
+
     return (
         <div ref={containerRef} className={`p-1 flex flex-col ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
             {editable && (
@@ -82,6 +88,7 @@ const AllSummary = ({ data = {}, textColor = "#000",
                 {editable ?
                     <EditableField
                         html={inputData}
+                        // dangerouslySetInnerHTML={{ __html: highlightSpellingMistakes(inputData) }}
                         onChange={handleDataChange}
                         placeholder="Description"
                         className="bg-transparent"
@@ -99,12 +106,23 @@ const AllSummary = ({ data = {}, textColor = "#000",
                             fontFamily: fontFamily,
                         }}
                     >
-                        {inputData}
+                        {/* {inputData} */}
+                        {highlightSpellingMistakes ? highlightSpellingMistakes(inputData) : inputData}
                     </p>
                 }
             </div>
-
-        </div>
+            {editable && (
+                <div className={`absolute top-16 -left-[30px] transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                    <button
+                        className="flex justify-center items-center"
+                    >
+                        <Image src={AIImage} alt="ai" width={28} height={28} />
+                    </button>
+                </div>
+            )}
+        </div >
     )
 };
 

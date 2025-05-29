@@ -450,28 +450,25 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
               className={`flex flex-col ${headerEditable && "bg-white"}`}
               onClick={handleEditableSectionHeader}
             >
-              <input
-                name="name"
-                placeholder="Name"
-                value={headerData.name}
+              <EditableField
+                html={headerData.name}
                 onChange={(e) => handleChangeHeader(e, "name")}
-                className="outline-none bg-transparent font-semibold text-zinc-900"
+                placeholder="Name"
                 style={{
-                  fontSize: scaleFont(30, currentState.fontSize),
+                  fontSize: scaleFont(25, currentState.fontSize),
                   fontFamily: currentState.fontFamily,
                 }}
+                className="bg-transparent"
               />
-              <input
-                name="designation"
-                value={headerData.designation}
-                placeholder="Designation"
+              <EditableField
+                html={headerData.designation}
                 onChange={(e) => handleChangeHeader(e, "designation")}
-                className="w-full rounded bg-transparent placeholder:text-lg focus:outline-none focus:ring-0 focus:border-0"
+                placeholder="designation"
                 style={{
                   fontSize: scaleFont(18, currentState.fontSize),
                   fontFamily: currentState.fontFamily,
-                  color: currentState.color,
                 }}
+                className="bg-transparent"
               />
               <div className="flex flex-wrap gap-y-2 pt-2">
                 {[
@@ -527,7 +524,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-8">
           {/* Left Column */}
           <div className="col-span-6 ">
             {/* Left Sections */}
@@ -578,22 +575,6 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             {/* Right Sections */}
             {rightSections?.length > 0 &&
               rightSections.map((section: any, index: number) => (
-                // <div key={index} className="pt-4 relative section-to-break">
-                //   <div className="border-b text-black">
-                //     <h2 className="text-lg font-semibold mb-1 ">
-                //       {highlightWords(section?.newSecName || section?.name)}
-                //     </h2>
-                //   </div>
-                //   <div className="">
-                //     {section?.name === "Summary" ? <EditableField
-                //       html={section.description}
-                //       onChange={(val) => HandleChangeSectionName(val)}
-                //       className="bg-transparent text-left text-sm"
-                //       style={{
-                //         color: currentState.color,
-                //       }}
-                //     /> : renderSection(section)}</div>
-                // </div>
                 <div key={index} className="pt-4 relative section-to-break">
                   <div className="border-b">
                     {section?.name === "Custom Section" ? (
