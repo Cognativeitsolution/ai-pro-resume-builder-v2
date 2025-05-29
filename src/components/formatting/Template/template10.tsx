@@ -1,7 +1,7 @@
 "use client";
 //=============
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import axios from "axios"; 
 import Image from "next/image";
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -144,9 +144,9 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft Skills":
-                return <AllSoftSkills data={section} textColor="" textAltColor="#000" templateColor="#000" />;
+                return <AllSoftSkills data={section} textColor="" textAltColor="#000" templateColor="#000" headerPosition="-top-[30px] -left-[50px]" isVerticleHeader={true} isDot={false} />;
             case "Technical Skills":
-                return <AllTechnicalSkills data={section} textColor="" textAltColor="#000" templateColor="#000" />;
+                return <AllTechnicalSkills data={section} textColor="" textAltColor="#000" templateColor="#000" headerPosition="-top-[30px] -left-[50px]" isVerticleHeader={true} isDot={false} />;
             case "Certificate":
                 return <AllCertificates data={section} textAltColor="#F54A00" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Education":
@@ -160,7 +160,7 @@ const Template10 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "References":
                 return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={currentState.color} />;
             case "Languages":
-                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
+                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} headerPosition="-top-[30px] -left-[50px]" isVerticleHeader={true} isDot={false} />;
             case "Custom Section":
                 return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} iconSize={scaleFont(22, currentState.fontSize)} />;
             default:

@@ -18,13 +18,23 @@ type AllSummaryType = {
   textColor?: string;
   textAltColor: string;
   templateColor: string;
+  dotPosition?: any;
+  isVerticleHeader?: any;
+  headerPosition?: any;
+  textEditorPosition?: any;
+  isDot?: any;
 };
 
 const AllReferences = ({
   data = {},
   textColor = '#fff',
   textAltColor,
-  templateColor
+  templateColor,
+  dotPosition,
+  isVerticleHeader,
+  headerPosition,
+  textEditorPosition,
+  isDot
 }: AllSummaryType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -113,9 +123,13 @@ const AllReferences = ({
           isTextEditor={true}
           onCopy={handleAddReference}
           onDelete={handleRemoveSection}
-          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          isVerticleHeader={isVerticleHeader}
+          textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
+          headerPosition={headerPosition ? headerPosition :  `top-1 right-0`}
           showDot={true}
+          dotPosition={dotPosition}
+          isDot={isDot}
         />
       )}
       <div className="flex flex-col gap-1">

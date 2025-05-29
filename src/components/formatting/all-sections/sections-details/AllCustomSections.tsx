@@ -31,6 +31,11 @@ type AllCustomSectionType = {
   fontSize?: any;
   fontFamily?: any;
   iconSize?: any;
+  dotPosition?: any;
+  isVerticleHeader?: any;
+  headerPosition?: any;
+  textEditorPosition?: any;
+  isDot?: any;
 };
 
 const AllCustomSection = ({
@@ -39,7 +44,12 @@ const AllCustomSection = ({
   textColor = "#000",
   fontSize,
   fontFamily,
-  iconSize
+  iconSize,
+  dotPosition,
+  isVerticleHeader,
+  headerPosition,
+  textEditorPosition,
+  isDot
 }: AllCustomSectionType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -160,9 +170,13 @@ const AllCustomSection = ({
           isTextEditor={true}
           onCopy={handleAddCustomSection}
           onDelete={handleRemoveSection}
-          position={`top-1 right-0 `}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          isVerticleHeader={isVerticleHeader}
+          textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
+          headerPosition={headerPosition ? headerPosition :  `top-1 right-0`}
           showDot={true}
+          dotPosition={dotPosition}
+          isDot={isDot}
         />
       )}
       {/* ===== Section Box ===== */}

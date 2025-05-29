@@ -180,6 +180,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor="#fff"
             editableAltBG="bg-gray-900/80"
             isPillStyle={true}
+            headerPosition="-top-[30px] -right-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Technical Skills":
@@ -191,12 +194,16 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor="#fff"
             editableAltBG="bg-gray-900/80"
             isPillStyle={true}
+            headerPosition="-top-[30px] -right-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Certificate":
         return <AllCertificates data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
-          fontFamily={currentState.fontFamily} />;
+          fontFamily={currentState.fontFamily}
+           />;
       case "Education":
         return (
           <AllEducations
@@ -258,6 +265,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             editableAltBG="bg-gray-900/80"
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            headerPosition="-top-[30px] -right-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Custom Section":
@@ -489,7 +499,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
-            <TemplateProfileImg bgColor={currentState.color} />
+            <TemplateProfileImg 
+            // bgColor={currentState.color}
+             />
 
             {/* Contact Info */}
             <div className="flex flex-col gap-2">

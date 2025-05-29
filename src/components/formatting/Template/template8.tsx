@@ -149,9 +149,9 @@ const Template8 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "Summary":
                 return <AllSummary data={section} />;
             case "Soft Skills":
-                return <AllSoftSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" pillBg="transparent" isPillStyle={true} />;
+                return <AllSoftSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" pillBg="transparent" isPillStyle={true} headerPosition="-top-[43px] right-[0px]" />;
             case "Technical Skills":
-                return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" pillBg="transparent" isPillStyle={true} />;
+                return <AllTechnicalSkills data={section} textColor="#000" textAltColor="#000" templateColor="#000" pillBg="transparent" isPillStyle={true}  headerPosition="-top-[43px] right-[0px]" />;
             case "Certificate":
                 return <AllCertificates data={section} textAltColor={currentState?.color} fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
             case "Education":
@@ -165,7 +165,7 @@ const Template8 = ({ currentState, updateState }: ResumePreviewProps) => {
             case "References":
                 return <AllReferences data={section} textColor="#000" templateColor={currentState.color} textAltColor={currentState.color} />;
             case "Languages":
-                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} />;
+                return <AllLanguages data={section} textColor="#000" textAltColor={currentState.color} templateColor="#3358c5" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily}  headerPosition="-top-[43px] right-[0px]" />;
             case "Custom Section":
                 return <AllCustomSection secNewNames={secName} data={section} textColor="#000" templateColor="#fff" fontSize={scaleFont(16, currentState.fontSize)} fontFamily={currentState.fontFamily} iconSize={scaleFont(22, currentState.fontSize)} />;
             default:

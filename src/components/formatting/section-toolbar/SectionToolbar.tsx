@@ -11,22 +11,30 @@ interface SectionToolbarProps {
     onDelete?: () => void;
     onMoveUp?: () => void;
     className?: string;
-    position?: string;
+    headerPosition?: string;
+    textEditorPosition?: string;
     showDot?: boolean;
     mainClass?: string;
     isTextEditor?: any;
-    dotClass?: any;
+    dotPosition?: any;
+    isVerticleHeader?: any;
+    isVerticleTextEditor?: any;
+    isDot?: any;
 }
 
 const SectionToolbar: React.FC<SectionToolbarProps> = ({
     onCopy,
     onDelete,
     className = '',
-    position = 'top-8 right-0',
+    headerPosition,
+    textEditorPosition,
     showDot = true,
     mainClass,
     isTextEditor,
-    dotClass,
+    dotPosition,
+    isVerticleHeader = false,
+    isVerticleTextEditor = false,
+    isDot
 }) => {
     const { setActiveTabContext } = useEditorTab();
 
@@ -37,8 +45,8 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
         <div className={mainClass}>
 
             {isTextEditor ? (
-                <div className="absolute flex px-6 py-2 flex-wrap gap-3 top-1 left-[25%] bg-slate-900/70
-                 bg-opacity-80 backdrop-blur-md shadow-xl rounded-full border border-white/20">
+                <div className={`absolute flex px-6 py-2 flex-wrap gap-3 ${isVerticleTextEditor === true ? '' : ''} ${textEditorPosition ? textEditorPosition : 'top-1 left-[25%]'} bg-slate-900/70
+                 bg-opacity-80 backdrop-blur-md shadow-xl rounded-full border border-white/20`}>
                     <button onClick={() => execCommand("bold")} className="btn">
                         <Bold
                             size={18}
@@ -72,7 +80,7 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
                 </div>
             ) : null}
 
-            <div className={`flex items-center gap-2 px-5 py-2 absolute ${position} bg-slate-900/70  bg-opacity-80 backdrop-blur-md shadow-md rounded-full border ${className}`}>
+            <div className={`flex gap-2 absolute ${isVerticleHeader === true ? 'flex-col py-5 px-2 ' : 'items-center px-5 py-2 '} ${headerPosition} bg-slate-900/70  bg-opacity-80 backdrop-blur-md shadow-md rounded-full border ${className}`}>
                 <button className="cursor-pointer" onClick={onCopy}>
                     <LucideCopyPlus
                         size={18}
@@ -82,23 +90,21 @@ const SectionToolbar: React.FC<SectionToolbarProps> = ({
                 <button className="cursor-pointer" onClick={onDelete}>
                     <RiDeleteBin6Line
                         size={18}
-                        className={`text-white ${dotClass && '-rotate-90'} hover:text-gray-200 hover:scale-110 transition-transform duration-300`}
+                        className={`text-white hover:text-gray-200 hover:scale-110 transition-transform duration-300`}
                     />
                 </button>
                 <button className="cursor-pointer" onClick={() => setActiveTabContext("Rearrange")}>
                     <ImMoveUp
                         size={18}
-                        className={`text-white ${dotClass && '-rotate-90'} hover:text-gray-200 hover:scale-110 transition-transform duration-300`}
+                        className={`text-white hover:text-gray-200 hover:scale-110 transition-transform duration-300`}
                     />
                 </button>
 
                 {showDot && (
                     <div
-                        className={`absolute h-3 w-3 border rounded-full bg-white border-slate-700 ${dotClass ? dotClass : ' top-3 -left-2'}`}
+                        className={`absolute h-3 w-3 border rounded-full bg-white border-slate-700 ${isDot === true ? 'block' : 'hidden' }   ${dotPosition ? dotPosition : 'top-3 -left-2'}`}
                     />
                 )}
-
-
             </div>
         </div>
     );

@@ -176,8 +176,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor="#000"
             templateColor="#000"
-            dotClass="hidden"
-            position="top-[192px] left-[130px]"
+            dotPosition="hidden"
+            headerPosition="-top-[30px] -left-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Technical Skills":
@@ -187,14 +189,21 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor="#000"
             templateColor="#000"
-            dotClass="hidden"
-            position="top-[192px] left-[130px]"
+            dotPosition="hidden"
+            headerPosition="-top-[30px] -left-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Certificate":
         return <AllCertificates data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
-          fontFamily={currentState.fontFamily} />;
+          fontFamily={currentState.fontFamily}
+          headerPosition="top-[30px] -left-[50px]"
+          textEditorPosition='top-1 right-0'
+          isVerticleHeader={true}
+          isDot={false}
+        />;
       case "Education":
         return (
           <AllEducations
@@ -205,7 +214,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             term2={true}
-            position="top-[192px] left-[130px]"
+            headerPosition="top-[30px] -left-[50px]"
+            textEditorPosition='top-1 right-0'
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Experience":
@@ -218,6 +230,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             term2={true}
+            headerPosition="top-[30px] -left-[50px]"
+            textEditorPosition='top-1 right-0'
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Projects":
@@ -227,6 +243,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            headerPosition="top-[30px] -left-[50px]"
+            textEditorPosition='top-1 right-0'
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Awards":
@@ -239,6 +259,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             iconSize={scaleFont(13, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            headerPosition="top-[30px] -left-[50px]"
+            textEditorPosition='top-1 right-0'
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "References":
@@ -248,17 +272,24 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor="#000"
             templateColor={currentState.color}
             textAltColor={currentState.color}
+            headerPosition="top-[30px] -left-[50px]"
+            textEditorPosition='top-1 right-0'
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Languages":
         return (
           <AllLanguages
             data={section}
-            textColor="#fff"
+            textColor="#000"
             templateColor="#3358c5"
-            editableAltBG="bg-gray-900/80"
+            // editableAltBG="bg-gray-900/80"
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            headerPosition="-top-[30px] -left-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Custom Section":
@@ -271,6 +302,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
+            headerPosition="top-[30px] -left-[50px]"
+            textEditorPosition='top-1 right-0'
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       default:
@@ -286,7 +321,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
     };
     return `${base * (scaleMap[size] || 1)}px`;
   };
-  const rightSideSections = ["Summary", "Certificate", "References"];
+  const rightSideSections = ["Summary", "Certificate", "References", "Awards", "Custom Section"];
   const leftSections = addedSections?.filter(
     (section: any) => !rightSideSections.includes(section?.name)
   );

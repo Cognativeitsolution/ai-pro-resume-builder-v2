@@ -14,15 +14,17 @@ type TechnicalSkillType = {
 
 type AllTechnicalSkillsProps = {
   data?: { id: any };
-  textColor?: string;
+  textColor?: string; 
   textAltColor?: string;
   templateColor?: string;
   editableAltBG?: string;
   isPillStyle?: any;
   pillBg?: any;
   pillRounded?: any;
-  dotClass?: any;
-  position?: any;
+  dotPosition?: any;
+  isVerticleHeader?: any;
+  headerPosition?: any;
+  isDot?: any;
 };
 
 const AllTechnicalSkills = ({
@@ -34,8 +36,10 @@ const AllTechnicalSkills = ({
   isPillStyle,
   pillBg,
   pillRounded,
-  dotClass,
-  position
+  dotPosition,
+  isVerticleHeader,
+  headerPosition,
+  isDot
 }: AllTechnicalSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -120,10 +124,12 @@ const AllTechnicalSkills = ({
           isTextEditor={false}
           onCopy={handleAddTechnicalSkill}
           onDelete={handleRemoveSection}
-          position={position ? position : `-top-[125px] right-[70px]`}
-          mainClass={`transition-all rotate-90 duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          isVerticleHeader={isVerticleHeader}
+          headerPosition={headerPosition}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           showDot={true}
-          dotClass={dotClass ? dotClass : `top-[30px] left-[48px]`}
+          dotPosition={dotPosition}
+          isDot={isDot}
         />
       )}
       <div className="flex flex-wrap gap-2 ">
