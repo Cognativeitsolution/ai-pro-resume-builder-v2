@@ -1,17 +1,27 @@
 import { NextRequest } from "next/server";
 import puppeteer from "puppeteer-core";
-
+import chromium from "@sparticuz/chromium-min";
 export async function POST(req: NextRequest) {
   try {
     const { html } = await req.json(); // You pass raw HTML from the frontend
+    let browser;
+    if(process.env.NODE_ENV == "production"){
+       const browser = await puppeteer.launch({
+            args: chromium.args,
+            executablePath: await chromium.executablePath(),
+            headless: chromium.headless,
+        });
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      channel: 'chrome', // works with puppeteer-core if you have Chrome installed
-    });
+    }else{
+      browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        channel: 'chrome',
+      });
+    }
 
-    const page = await browser.newPage();
+
+    const page = await browser?.newPage();
 
     // Add Tailwind CDN to HTML head
     const styledHtml = `
@@ -28,10 +38,10 @@ export async function POST(req: NextRequest) {
       </html>
     `;
 
-    await page.setContent(styledHtml, { waitUntil: 'networkidle0' });
+    await page?.setContent(styledHtml, { waitUntil: 'networkidle0' });
 
-    const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
-    await browser.close();
+    const pdfBuffer = await page?.pdf({ format: 'A4', printBackground: true });
+    await browser?.close();
 
     return new Response(pdfBuffer, {
       headers: {

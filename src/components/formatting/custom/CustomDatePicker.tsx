@@ -86,7 +86,7 @@ const CustomDatePicker: React.FC<Props> = ({ onChange, dateAlign }) => {
     return (
         <div className={`relative w-[200px] flex items-center ${dateAlign ? dateAlign : "justify-end"} gap-2`} ref={wrapperRef}>
             <button
-                className="text-[12px] flex items-center gap-1"
+                className="text-xs flex items-center gap-1"
                 onClick={() => setShowPicker(!showPicker)}
             >
                 <FaCalendarAlt />
