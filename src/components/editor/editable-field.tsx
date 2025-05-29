@@ -10,9 +10,9 @@ export default function EditableField({
   style = {},
 }: {
   html: string;
-  onChange: (val: string) => void;
+  onChange: (val: any) => void;
   placeholder?: string;
-  placeholderClassName?: string;
+  placeholderClassName?: string | boolean;
   className?: string;
   style?: CSSProperties;
 }) {
@@ -36,7 +36,7 @@ export default function EditableField({
     <div className="relative w-full">
       {/* Placeholder */}
       {(!html || html === '<br>') && !isFocused && (
-        <div className={`absolute top-0 text-gray-400 pointer-events-none text-sm ${placeholderClassName}`}>
+        <div className={`absolute top-0 text-gray-400 pointer-events-none text-sm ${placeholderClassName}`} style={style}>
           {placeholder}
         </div>
       )}

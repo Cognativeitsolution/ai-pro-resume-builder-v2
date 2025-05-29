@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { improveText } from "@/utils/improveText";
 
 
 type SectionType = {
@@ -89,7 +90,7 @@ const initialState: AddSectionState = {
     {
       id: 2,
       name: "Summary",
-      description: "Briefly explain why you're a great fit for the role - use the AI assistant to tailor this summary for each job posting.",
+      description: "Briefly expln why yu're a great fit for the role - use the AI assistant to tailor this summary for each job posting.",
       locked: true,
     },
 
@@ -139,12 +140,23 @@ export const addSectionSlice = createSlice({
       const { sectionId, detail } = action.payload;
       state.userHeader = detail
     },
+    // addUserSummary: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
+    //   const { sectionId, detail } = action.payload;
+    //   const section = state.addedSections.find(sec => sec.id === sectionId);
+    //   if (section) {
+    //     section.description = detail;
+    //   }
+    // },
     addUserSummary: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
+      const improved = typeof detail === 'string' ? improveText(detail) : detail;
+
       const section = state.addedSections.find(sec => sec.id === sectionId);
       if (section) {
-        section.description = detail;
+        section.description = improved;
       }
+
+      state.userSummary = improved;
     },
     addUserSoft_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
@@ -158,10 +170,32 @@ export const addSectionSlice = createSlice({
       const { sectionId, detail } = action.payload;
       state.userProjects = detail;
     },
+    // addUserEducation: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
+    //   const { sectionId, detail } = action.payload;
+    //   state.userEducation = detail;
+
+    //   const section = state.addedSections.find(sec => sec.id === sectionId);
+    //   if (section) {
+    //     (section as any).detail = detail;
+    //   }
+    // },
     addUserEducation: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      console.log(action)
-      state.userEducation = detail;
+
+      // Optional: Map over each item and improve the text fields
+      const improved = detail.map((edu: any) => ({
+        ...edu,
+        degree: improveText(edu.degree || ""),
+        schoolName: improveText(edu.schoolName || ""),
+        location: improveText(edu.location || ""),
+      }));
+
+      state.userEducation = improved;
+
+      const section = state.addedSections.find(sec => sec.id === sectionId);
+      if (section) {
+        (section as any).detail = improved;
+      }
     },
     addUserExperience: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;

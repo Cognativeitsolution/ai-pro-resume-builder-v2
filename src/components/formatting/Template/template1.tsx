@@ -2,7 +2,6 @@
 // ============
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import Image from "next/image";
 // ============
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,10 +9,7 @@ import { setProfileImage } from "@/redux/slices/profileImageSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
 import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
 // ============
-import * as FaIcons from "react-icons/fa";
 import { BookUser, Mail, Phone } from "lucide-react";
-// ============
-import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
 // ============
 import AllSummary from "../all-sections/sections-details/AllSummary";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
@@ -25,11 +21,8 @@ import AllLanguages from "../all-sections/sections-details/AllLanguages";
 import AllTechnicalSkills from "../all-sections/sections-details/AllTechnicalSkills";
 import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
-import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
-import Logo from "media/assets/logo_resume_white.svg";
 import Watermark from "@/components/common/watermark/watermark";
-import { placeHolderImage } from "@/constant/placeholder-image-base64";
 import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
 const A4_HEIGHT_PX = 1122;
 const PAGE_PADDING = 60; // adjust based on your layout padding
@@ -70,20 +63,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
-  //============= all sections
-  const getAllText = () => {
-    return addedSections
-      ?.map((section: any) => {
-        if (typeof section?.content === "string") return section.content;
-        if (Array.isArray(section?.content)) {
-          return section.content
-            .map((item: any) => Object.values(item).join(" "))
-            .join(" ");
-        }
-        return "";
-      })
-      .join("\n");
-  };
+
 
   useEffect(() => {
     setSecName("Custom Section");
@@ -94,7 +74,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     console.log(data);
     setSecName(data);
   };
-  const fullText = getAllText();
 
   // ===================
   useEffect(() => {
@@ -102,6 +81,52 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   }, [editMode, sectionBgColor]);
 
   //============= improve text logic
+
+  //============= all sections
+  // const getAllText = () => {
+  //   return addedSections
+  //     ?.map((section: any) => {
+  //       console.log(section, "section========================>")
+  //       if (typeof section?.content === "string") return section.content;
+  //       if (Array.isArray(section?.content)) {
+  //         return section.content
+  //           .map((item: any) => Object.values(item).join(" "))
+  //           .join(" ");
+  //       }
+  //       return "";
+  //     })
+  //     .join("\n");
+  // };
+
+  const getAllText = () => {
+    return addedSections
+      ?.map((section: any) => {
+        // Education
+        if (section.name === "Education" && Array.isArray(section.detail)) {
+          return section.detail
+            .map((edu: any) =>
+              [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
+            )
+            .join(" ");
+        }
+
+        // Generic string description support
+        if (typeof section.description === "string") return section.description;
+
+        // Fallback for array-based description
+        if (Array.isArray(section.description)) {
+          return section.description
+            .map((item: any) => Object.values(item).join(" "))
+            .join(" ");
+        }
+
+        return "";
+      })
+      .join("\n");
+  };
+
+  const fullText = getAllText();
+
   useEffect(() => {
     const fetchCorrections = async () => {
       if (!spellCheck && !grammarCheck) return;
@@ -155,11 +180,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
       return (
         <span
           key={index}
-          className={`
-                        ${isSpellingMistake ? "text-red-500" : ""}
-                        ${isGrammarMistake ? "bg-blue-200 underline" : ""}
-                    `}
-        >
+          className={`${isSpellingMistake ? "text-red-500" : ""}
+                      ${isGrammarMistake ? "bg-blue-200 underline" : ""} `}>
           {word}{" "}
         </span>
       );
@@ -170,7 +192,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const renderSection = (section: any) => {
     switch (section?.name) {
       case "Summary":
-        return <AllSummary data={section} />;
+        return <AllSummary data={section} highlightSpellingMistakes={highlightWords} />;
       case "Soft Skills":
         return (
           <AllSoftSkills
@@ -203,7 +225,8 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         return <AllCertificates data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
-           />;
+          term3={true}
+        />;
       case "Education":
         return (
           <AllEducations
@@ -213,6 +236,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            term3={true}
           />
         );
       case "Experience":
@@ -224,6 +248,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            term3={true}
           />
         );
       case "Projects":
@@ -233,6 +258,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            term3={true}
           />
         );
       case "Awards":
@@ -280,9 +306,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
+            term3={true}
           />
         );
       default:
+        // return <p>{highlightWords(section?.content || "")}</p>;
         return <p>{highlightWords(section?.content || "")}</p>;
     }
   };
@@ -499,9 +527,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
-            <TemplateProfileImg 
+            <TemplateProfileImg
             // bgColor={currentState.color}
-             />
+            />
 
             {/* Contact Info */}
             <div className="flex flex-col gap-2">

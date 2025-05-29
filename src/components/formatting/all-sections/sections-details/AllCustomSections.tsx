@@ -12,6 +12,7 @@ import {
 } from "@/redux/slices/addSectionSlice";
 import EditableField from "@/components/editor/editable-field";
 import { FaHome } from 'react-icons/fa';
+import { IoLocationSharp } from "react-icons/io5";
 
 type CustomSectionType = {
   title: string;
@@ -30,6 +31,8 @@ type AllCustomSectionType = {
   secNewNames?: any;
   fontSize?: any;
   fontFamily?: any;
+  term2?: any;
+  term3?: any;
   iconSize?: any;
   dotPosition?: any;
   isVerticleHeader?: any;
@@ -44,6 +47,8 @@ const AllCustomSection = ({
   textColor = "#000",
   fontSize,
   fontFamily,
+  term2,
+  term3,
   iconSize,
   dotPosition,
   isVerticleHeader,
@@ -173,7 +178,7 @@ const AllCustomSection = ({
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
           textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
-          headerPosition={headerPosition ? headerPosition :  `top-1 right-0`}
+          headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
           showDot={true}
           dotPosition={dotPosition}
           isDot={isDot}
@@ -185,18 +190,47 @@ const AllCustomSection = ({
           customSections.map((exp, index) => (
             <div key={index}>
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
-                <div className="flex items-center justify-between gap-1">
-                  {/* ====== Icon ====== */}
-                  {hasField("Icon") && (
-                    <FaHome className="mb-1 text-indigo-600" size={iconSize} />
-                  )}
+                <div
+                  // className="flex items-center justify-between gap-1"
+                  className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}
+                >
+                  <div className="flex items-center justify-between gap-1">
+                    {/* ====== Icon ====== */}
+                    {hasField("Icon") && (
+                      <FaHome className="mb-1 text-indigo-600 h-4 w-8" size={iconSize} />
+                    )}
 
-                  {/* ====== Job Title ====== */}
-                  {hasField("Title") && (
+                    {/* ====== Job Title ====== */}
+                    {hasField("Title") && (
+                      <EditableField
+                        html={exp.title || ""}
+                        onChange={(val) => handleInputChange(index, "title", val)}
+                        placeholder="Title"
+                        className="bg-transparent"
+                        placeholderClassName=""
+                        style={{
+                          fontSize: fontSize,
+                          fontFamily: fontFamily,
+                        }}
+                      />
+                    )}
+                  </div>
+
+                  {/* ====== Date Picker ====== */}
+                  {hasField("Date") && (
+                    term3 ? null :
+                      <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} />
+                  )}
+                </div>
+                {/* ====== Location ====== */}
+                {hasField("Location") && (
+                  <div className="flex items-center justify-start gap-1 ">
+                    {/* ====== Icon ====== */}
+                    <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
                     <EditableField
-                      html={exp.title || ""}
-                      onChange={(val) => handleInputChange(index, "title", val)}
-                      placeholder="Title"
+                      html={exp.location || ""}
+                      onChange={(val) => handleInputChange(index, "location", val)}
+                      placeholder="Location"
                       className="bg-transparent"
                       placeholderClassName=""
                       style={{
@@ -204,26 +238,14 @@ const AllCustomSection = ({
                         fontFamily: fontFamily,
                       }}
                     />
-                  )}
+                  </div>
+                )}
 
-                  {/* ====== Date Picker ====== */}
-                  {hasField("Date") && (
-                    <CustomDatePicker onChange={(dates) => console.log(dates)} />
-                  )}
-                </div>
-                {/* ====== Location ====== */}
-                {hasField("Location") && (
-                  <EditableField
-                    html={exp.location || ""}
-                    onChange={(val) => handleInputChange(index, "location", val)}
-                    placeholder="Location"
-                    className="bg-transparent"
-                    placeholderClassName=""
-                    style={{
-                      fontSize: fontSize,
-                      fontFamily: fontFamily,
-                    }}
-                  />
+                {/* ====== Date Picker ====== */}
+                {hasField("Date") && (
+                  term3 ?
+                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start  mb-1"} />
+                    : null
                 )}
                 {/* ====== Description ====== */}
 
@@ -245,7 +267,7 @@ const AllCustomSection = ({
               </div>
               {/* ====== Delete Button ====== */}
               {editable && (
-                <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
+                <div className={`absolute bottom-0 -right-[27px] transition-all duration-300 ease-in-out
                 ${editable ? 'opacity-100 ' : 'opacity-0 '}
               `}>
                   <button

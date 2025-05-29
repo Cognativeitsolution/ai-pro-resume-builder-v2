@@ -174,7 +174,7 @@ const AllExperiences = ({
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
           textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
-          headerPosition={headerPosition ? headerPosition :  `top-1 right-0`}
+          headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
           showDot={true}
           dotPosition={dotPosition}
           isDot={isDot}
@@ -204,7 +204,7 @@ const AllExperiences = ({
                 </div>
                 {/* ====== Date Picker ====== */}
                 {term3 ? null :
-                  <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start"} />}
+                  <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} />}
               </div>
               {/* ====== Location ====== */}
               <div className="w-full">
@@ -227,7 +227,7 @@ const AllExperiences = ({
                 </div>
                 {term3 ?
                   <div className={`flex flex-col items-start justify-start text-left `}>
-                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start"} />
+                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start mb-1"} />
                   </div> : null}
               </div>
               {/* ====== Company Name ====== */}

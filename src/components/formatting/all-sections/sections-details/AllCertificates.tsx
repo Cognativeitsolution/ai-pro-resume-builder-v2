@@ -27,6 +27,8 @@ type AllSummaryType = {
   templateColor?: string;
   fontSize?: any;
   fontFamily?: any;
+  term2?: any;
+  term3?: any;
   dotPosition?: any;
   isVerticleHeader?: any;
   headerPosition?: any;
@@ -41,6 +43,8 @@ const AllCertificates = ({
   templateColor,
   fontSize,
   fontFamily,
+  term2,
+  term3,
   dotPosition,
   isVerticleHeader,
   headerPosition,
@@ -144,7 +148,7 @@ const AllCertificates = ({
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
           textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
-          headerPosition={headerPosition ? headerPosition :  `top-1 right-0`}
+          headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
           showDot={true}
           dotPosition={dotPosition}
           isDot={isDot}
@@ -156,7 +160,7 @@ const AllCertificates = ({
             <div key={index} className="relative ">
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
                 {/* ====== Job Title ====== */}
-                <div className="flex items-center justify-between">
+                <div className={`flex ${term2 || term3 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
                   <div className="w-full">
                     <EditableField
                       html={cert.title || ""}
@@ -173,7 +177,7 @@ const AllCertificates = ({
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
-                  <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                  <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 || term3 && "justify-start  mb-1"} />
                 </div>
                 {/* ====== Company Name ====== */}
                 <div className="w-full">
