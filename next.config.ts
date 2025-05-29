@@ -8,9 +8,9 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental:{
-       serverComponentsExternalPackages: ['puppeteer-core'],
-  }
+  serverExternalPackages: ['puppeteer-core']
+
+  
 };
 
 export default nextConfig;

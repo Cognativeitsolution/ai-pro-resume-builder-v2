@@ -31,7 +31,7 @@ import AllCustomSection from "../all-sections/sections-details/AllCustomSections
 import Watermark from "@/components/common/watermark/watermark";
 import { placeHolderImage } from "@/constant/placeholder-image-base64";
 
-const A4_HEIGHT_PX = 1500; // A4 height in pixels (approx. at 96 DPI)
+const A4_HEIGHT_PX = 1300; // A4 height in pixels (approx. at 96 DPI)
 const PAGE_PADDING = 60; // adjust based on your layout padding
 const CONTENT_HEIGHT_PER_PAGE = A4_HEIGHT_PX - 2 ;
 // Define a type for a page
@@ -61,6 +61,8 @@ const Template1Copy = ({ currentState, updateState }: ResumePreviewProps) => {
   const { addedSections, sectionBgColor, editMode } = useSelector(
     (state: any) => state.addSection
   );
+
+   const endPageRef = useRef<HTMLDivElement>(null)
 console.log(currentState.fontSize)
   const { spellCheck, grammarCheck } = useSelector(
     (state: any) => state.ImproveText
@@ -161,8 +163,8 @@ console.log(currentState.fontSize)
         <span
           key={index}
           className={`
-                        ${isSpellingMistake ? "text-red-500" : ""}
-                        ${isGrammarMistake ? "bg-blue-200 underline" : ""}
+           ${isSpellingMistake ? "text-red-500" : ""}  
+           ${isGrammarMistake ? "bg-blue-200 underline" : ""}
                     `}
         >
           {word}{" "}
@@ -391,7 +393,7 @@ useEffect(() => {
       if (section.name === "Technical Skills" || section.name === "Soft Skills" || section.name === "Languages") return 120;
       if (section.name === "Awards" || section.name === "References") return 100;
       if (section.name === "Custom Section") return 150;
-      return 100; // Default placeholder for other sections
+      return 100; 
     };
 
     // Combine all sections, preserving their original order and column assignment
@@ -467,6 +469,10 @@ useEffect(() => {
   generatePages();
 }, [addedSections, headerData]); // Regenerate pages when sections or header data change
 
+
+const paginatedFunction = () =>{
+
+}
   return (
     <div
       className="resume-container flex flex-col gap-4 items-center "
@@ -480,9 +486,10 @@ useEffect(() => {
     >
       {pages.map((page, pageIndex) => (
         <div
+        id={`page-${pageIndex}`}
           key={pageIndex}
           className={`relative  grid grid-cols-12 mb-2 overflow-x-hidden  shadow-xl  ${!editMode && "bg-white"} `}
-          style={{ height: "352mm", width: "250mm", pageBreakAfter: "always" }}
+          style={{ height: "270mm", width: "210mm", pageBreakAfter: "always" }}
         >
           {/* Left Column */}
           <div className="col-span-8 pr-8" style={{ padding: "30px" }}>
@@ -556,7 +563,7 @@ useEffect(() => {
             ) : (
               pageIndex === 0 && <p>No sections added yet.</p> // Only show message on first page
             )}
-
+              <div ref={endPageRef} ></div>
             <Watermark />
             {loading && (
               <p className="text-gray-500 mt-4">
@@ -568,7 +575,7 @@ useEffect(() => {
           {/* Right Column */}
           <div
             className="col-span-4 px-2 z-10"
-            style={{ backgroundColor: currentState.color, height: "352mm" }}
+            style={{ backgroundColor: currentState.color, height: "270mm" }}
           >
             {/* Profile Image (only on the first page) */}
             {pageIndex === 0 && (
