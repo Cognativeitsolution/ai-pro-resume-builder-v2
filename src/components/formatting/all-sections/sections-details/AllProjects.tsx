@@ -16,6 +16,7 @@ import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
 import { TiDelete } from "react-icons/ti";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
+import { IoLocationSharp } from "react-icons/io5";
 
 type ProjectType = {
   projectName: string;
@@ -29,6 +30,8 @@ type AllProjectsType = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  term2?: any;
+  term3?: any;
   dotPosition?: any;
   isVerticleHeader?: any;
   headerPosition?: any;
@@ -41,6 +44,8 @@ const AllProjects = ({
   textColor = "#000",
   textAltColor = "",
   templateColor,
+  term2,
+  term3,
   dotPosition,
   isVerticleHeader,
   headerPosition,
@@ -170,7 +175,7 @@ const AllProjects = ({
           <div key={index} className={`relative`}>
             <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
               {/* ====== Degree and Field of Study ====== */}
-              <div className="flex items-center justify-between">
+              <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
                 <div className="w-full">
                   <EditableField
                     html={project.projectName || ""}
@@ -185,12 +190,36 @@ const AllProjects = ({
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
-                <CustomDatePicker onChange={(dates) => console.log(dates)} />
+                {term3 ? null :
+                  <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start mb-1"} />
+                }
               </div>
-              {/* ====== Project URL ====== */}
-              <div className="flex items-center justify-between">
-                <div className="w-full">
+              <div>
+                <div>
+                  {/* ====== Location ====== */}
+                  <div className="flex items-center justify-start gap-1 ">
+                    {/* ====== Icon ====== */}
+                    <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                    <EditableField
+                      html={project.location || ""}
+                      onChange={(val) =>
+                        handleInputChange(index, "location", val)
+                      }
+                      placeholder="Location"
+                      className={`text-[16px] bg-transparent`}
+                      style={{
+                        color: textColor
+                      }}
+                    />
+                  </div>
+                  {term3 ?
+                    <div className={`flex flex-col items-start justify-start text-left  mb-1`}>
+                      <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start"} />
+                    </div> : null}
+                </div>
 
+                {/* ====== Project URL ====== */}
+                <div className="w-full">
                   <EditableField
                     html={project.projectUrl || ""}
                     onChange={(val) =>
@@ -203,21 +232,7 @@ const AllProjects = ({
                     }}
                   />
                 </div>
-                {/* ====== Location ====== */}
-                <div className="w-full">
-                  <EditableField
-                    html={project.location || ""}
-                    onChange={(val) =>
-                      handleInputChange(index, "location", val)
-                    }
-                    placeholder="Location"
-                    className="text-[16px] bg-transparent text-right"
-                    placeholderClassName="right-0"
-                    style={{
-                      color: textColor
-                    }}
-                  />
-                </div>
+
               </div>
               {/* ====== Description ====== */}
               <div>

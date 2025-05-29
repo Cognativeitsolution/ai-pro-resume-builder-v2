@@ -3,6 +3,7 @@ import EditableField from '@/components/editor/editable-field';
 import { addUserSummary, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import SectionToolbar from '../../section-toolbar/SectionToolbar';
 
 type AllSummaryType = {
     data?: any;
@@ -11,13 +12,21 @@ type AllSummaryType = {
     templateColor?: string;
     fontSize?: any;
     fontFamily?: any;
+    textEditorPosition?: any;
+    dotPosition?: any;
+    isDot?: any;
 };
 
 const AllSummary = ({ data = {}, textColor = "#000",
     textAltColor = "#000",
     templateColor,
     fontSize,
-    fontFamily, }: AllSummaryType) => {
+    fontFamily,
+    textEditorPosition,
+    dotPosition,
+    isDot
+
+}: AllSummaryType) => {
     const dispatch = useDispatch();
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -56,7 +65,19 @@ const AllSummary = ({ data = {}, textColor = "#000",
     }, [data?.description]);
 
     return (
-        <div ref={containerRef} className={`p-1 relative flex flex-col gap-4 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
+        <div ref={containerRef} className={`p-1 flex flex-col ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
+            {editable && (
+                <SectionToolbar
+                    isTextEditor={true}
+                    mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+                    isVerticleHeader="hidden"
+                    textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
+                    isHeader={false}
+                    showDot={true}
+                    dotPosition={dotPosition}
+                    isDot={isDot}
+                />
+            )}
             <div className="flex flex-wrap gap-2">
                 {editable ?
                     <EditableField
