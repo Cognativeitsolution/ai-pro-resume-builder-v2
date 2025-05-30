@@ -14,7 +14,6 @@ import { ProfileImage } from '@/constant/ProfileImage';
 // ============
 import { CustomButton } from '@/components';
 
-
 const ImagePopup = () => {
     const dispatch = useDispatch();
     const fileInputRef = useRef<HTMLInputElement>(null);
