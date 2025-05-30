@@ -17,7 +17,7 @@ type AllSummaryType = {
     textEditorPosition?: any;
     dotPosition?: any;
     isDot?: any;
-    highlightSpellingMistakes?: (text: string) => JSX.Element[];
+    highlightText?: (text: string) => string;
 };
 
 const AllSummary = ({ data = {}, textColor = "#000",
@@ -28,7 +28,7 @@ const AllSummary = ({ data = {}, textColor = "#000",
     textEditorPosition,
     dotPosition,
     isDot,
-    highlightSpellingMistakes
+    highlightText
 
 }: AllSummaryType) => {
     const dispatch = useDispatch();
@@ -86,9 +86,19 @@ const AllSummary = ({ data = {}, textColor = "#000",
             )}
             <div className="flex flex-wrap gap-2">
                 {editable ?
+                    // <EditableField
+                    //     html={inputData}
+                    //     onChange={handleDataChange}
+                    //     placeholder="Description"
+                    //     className="bg-transparent"
+                    //     style={{
+                    //         color: textColor,
+                    //         fontSize: fontSize,
+                    //         fontFamily: fontFamily,
+                    //     }}
+                    // />
                     <EditableField
                         html={inputData}
-                        // dangerouslySetInnerHTML={{ __html: highlightSpellingMistakes(inputData) }}
                         onChange={handleDataChange}
                         placeholder="Description"
                         className="bg-transparent"
@@ -97,18 +107,22 @@ const AllSummary = ({ data = {}, textColor = "#000",
                             fontSize: fontSize,
                             fontFamily: fontFamily,
                         }}
+                        highlightText={highlightText}
                     />
                     :
-                    <p className="w-full rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
+                    <p
+                        className="w-full rounded focus:outline-none focus:ring-0 focus:border-0"
                         style={{
                             color: textColor,
                             fontSize: fontSize,
                             fontFamily: fontFamily,
                         }}
-                    >
-                        {/* {inputData} */}
-                        {highlightSpellingMistakes ? highlightSpellingMistakes(inputData) : inputData}
-                    </p>
+                        dangerouslySetInnerHTML={{
+                            __html: highlightText ? highlightText(inputData) : inputData,
+                        }}
+                    />
+                    //     {highlightText ? highlightText(inputData) : inputData}
+                    // </p>
                 }
             </div>
             {editable && (

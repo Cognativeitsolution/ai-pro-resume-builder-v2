@@ -103,6 +103,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
       ?.map((section: any) => {
         // Education
         if (section.name === "Education" && Array.isArray(section.detail)) {
+          console.log("EDUCATION DEBUG", section.detail);
           return section.detail
             .map((edu: any) =>
               [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
@@ -171,28 +172,26 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   }, [spellCheck, grammarCheck, fullText]);
 
   //============= Highlight function
-  const highlightWords = (text: string) => {
-    return text.split(/\s+/).map((word, index) => {
+
+  const highlightChange = (text: string) => {
+    return text.split(/\s+/).map((word) => {
       const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
       const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
       const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
 
-      return (
-        <span
-          key={index}
-          className={`${isSpellingMistake ? "text-red-500" : ""}
-                      ${isGrammarMistake ? "bg-blue-200 underline" : ""} `}>
-          {word}{" "}
-        </span>
-      );
-    });
+      let spanClass = '';
+      if (isSpellingMistake) spanClass += 'text-red-500 ';
+      if (isGrammarMistake) spanClass += 'bg-blue-200 underline';
+
+      return `<span class="${spanClass.trim()}">${word}</span>`;
+    }).join(' ');
   };
 
   // ========== Render Sections
   const renderSection = (section: any) => {
     switch (section?.name) {
       case "Summary":
-        return <AllSummary data={section} highlightSpellingMistakes={highlightWords} />;
+        return <AllSummary data={section} highlightText={highlightChange} />;
       case "Soft Skills":
         return (
           <AllSoftSkills
@@ -225,7 +224,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         return <AllCertificates data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
-          term3={true}
         />;
       case "Education":
         return (
@@ -236,7 +234,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-            term3={true}
+          // highlightText={highlightChange}
           />
         );
       case "Experience":
@@ -248,7 +246,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-            term3={true}
           />
         );
       case "Projects":
@@ -258,7 +255,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
-            term3={true}
           />
         );
       case "Awards":
@@ -306,12 +302,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
-            term3={true}
           />
         );
       default:
         // return <p>{highlightWords(section?.content || "")}</p>;
-        return <p>{highlightWords(section?.content || "")}</p>;
+        return <p>{highlightChange(section?.content || "")}</p>;
     }
   };
 
@@ -331,23 +326,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     rightSideSections.includes(section?.name)
   );
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const imageSrc = useSelector((state: RootState) => state.profileImage.image);
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          dispatch(setProfileImage(reader.result));
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleEditableSection = () => {
     setEditable(true);
@@ -501,9 +479,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                     <h2
                       className="text-lg font-semibold "
                       style={{ color: currentState.color }}
-                    >
-                      {highlightWords(section?.newSecName || section?.name)}
-                    </h2>
+                      dangerouslySetInnerHTML={{
+                        __html: highlightChange(section?.newSecName || section?.name),
+                      }}
+                    />
                   )}
                 </div>
                 <div className="">{renderSection(section)}</div>
@@ -592,9 +571,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         />
                       </div>
                     ) : (
-                      <h2 className="text-lg font-semibold mb-1">
-                        {highlightWords(section?.newSecName || section?.name)}
-                      </h2>
+                      <h2 className="text-lg font-semibold mb-1"
+                        dangerouslySetInnerHTML={{
+                          __html: highlightChange(section?.newSecName || section?.name),
+                        }}
+                      />
                     )}
                   </div>
                   <div className="">{renderSection(section)}</div>
