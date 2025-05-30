@@ -5,6 +5,8 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
 import { addUserLanguages, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
+import { moveItem } from '@/utils/moveUpDown';
+import { ImMoveDown, ImMoveUp } from 'react-icons/im';
 
 type LanguageType = {
   title: string;
@@ -122,7 +124,17 @@ const AllLanguages = ({
       setLanguages(updated);
     }
   };
+  const handleMoveUp = (index: number) => {
+    if (index <= 0) return;
+    const updated = moveItem(languages, index, index - 1);
+    setLanguages(updated);
+  };
 
+  const handleMoveDown = (index: number) => {
+    if (index >= languages.length - 1) return;
+    const updated = moveItem(languages, index, index + 1);
+    setLanguages(updated);
+  };
   return (
     <div ref={containerRef} className={`px-1 py-4 relative ${editable === true ? editableAltBG ? editableAltBG : 'bg-white rounded-sm' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
@@ -137,7 +149,7 @@ const AllLanguages = ({
           showDot={true}
           dotPosition={dotPosition}
           isDot={isDot}
-          // dotPosition={`top-[30px] left-[48px]`}
+        // dotPosition={`top-[30px] left-[48px]`}
         />
       )}
 
@@ -175,6 +187,20 @@ const AllLanguages = ({
                       >
                         <RiDeleteBin6Line size={20} />
                       </button>
+                      {languages?.length > 1 && <button
+                        onClick={() => handleMoveUp(index)}
+                        className="opacity-65 hover:opacity-100"
+                        style={{ color: textColor }}
+                      >
+                        <ImMoveUp size={20} />
+                      </button>}
+                      {languages?.length > 1 && <button
+                        onClick={() => handleMoveDown(index)}
+                        className="opacity-65 hover:opacity-100"
+                        style={{ color: textColor }}
+                      >
+                        <ImMoveDown size={20} />
+                      </button>}
                     </div>
                   )}
                 </div>

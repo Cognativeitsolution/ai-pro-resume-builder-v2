@@ -7,6 +7,8 @@ import { AddUserReferences, removeSection, sectionEditMode } from '@/redux/slice
 import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
+import { moveItem } from '@/utils/moveUpDown';
+import { ImMoveDown, ImMoveUp } from 'react-icons/im';
 
 type ReferenceType = {
   name: string;
@@ -115,7 +117,17 @@ const AllReferences = ({
       setReferences([{ name: trimmedValue, contact: '' }]);
     }
   };
+  const handleMoveUp = (index: number) => {
+    if (index <= 0) return;
+    const updated = moveItem(references, index, index - 1);
+    setReferences(updated);
+  };
 
+  const handleMoveDown = (index: number) => {
+    if (index >= references.length - 1) return;
+    const updated = moveItem(references, index, index + 1);
+    setReferences(updated);
+  };
   return (
     <div ref={containerRef} className={`flex flex-col mt-1 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
       {editable && (
@@ -126,7 +138,7 @@ const AllReferences = ({
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
           textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
-          headerPosition={headerPosition ? headerPosition :  `top-1 right-0`}
+          headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
           showDot={true}
           dotPosition={dotPosition}
           isDot={isDot}
@@ -174,17 +186,28 @@ const AllReferences = ({
                 />
               </div>
               {editable && (
-                <div className={`absolute bottom-0 right-0 transition-all duration-300 ease-in-out
-                ${editable ? 'opacity-100 ' : 'opacity-0 '}
-              `}>
-                  <button
-                    onClick={() => {
-                      if (references.length > 1) return handleDelete(index)
-                      return handleRemoveSection()
-                    }}
-                    className=" text-red-800/90 text-sm w-6 h-[2rem] flex justify-center items-center rounded-l-sm"
+                <div className={`absolute bottom-0 -right-8 gap-1 flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                  {references?.length > 1 &&
+                    <button
+                      onClick={() => handleMoveUp(index)}
+                      className="bg-indigo-600/15 backdrop-blur-lg rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                      title="Move up"
+                    >
+                      <ImMoveUp size={14} />
+                    </button>}
+                  {references?.length > 1 && <button
+                    onClick={() => handleMoveDown(index)}
+                    className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Move Down"
                   >
-                    <RiDeleteBin6Line size={16} />
+                    <ImMoveDown size={14} />
+                  </button>}
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="bg-red-800/15 backdrop-blur-lg rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Delete"
+                  >
+                    <RiDeleteBin6Line size={14} />
                   </button>
                 </div>
               )}
