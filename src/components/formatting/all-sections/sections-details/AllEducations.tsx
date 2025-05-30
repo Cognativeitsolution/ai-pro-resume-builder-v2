@@ -40,6 +40,7 @@ type AllEducationType = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllEducation = ({
@@ -55,7 +56,8 @@ const AllEducation = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -196,6 +198,7 @@ const AllEducation = ({
                         fontFamily: fontFamily,
                       }}
                       className="bg-transparent"
+                      highlightText={highlightText}
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
@@ -219,6 +222,7 @@ const AllEducation = ({
                         fontSize: fontSize,
                         fontFamily: fontFamily,
                       }}
+                      highlightText={highlightText}
                     />
                   </div>
                   {term3 ?
@@ -242,6 +246,7 @@ const AllEducation = ({
                         fontSize: fontSize,
                         fontFamily: fontFamily,
                       }}
+                      highlightText={highlightText}
                     />
                   </div>
 
