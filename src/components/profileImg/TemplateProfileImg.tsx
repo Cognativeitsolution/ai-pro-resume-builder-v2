@@ -3,27 +3,26 @@ import Image from 'next/image'
 // ============
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { setProfileImage } from "@/redux/slices/profileImageSlice";
 import { ProfileImage } from '@/constant/ProfileImage';
 // ============
 import { IoEyeOffSharp } from 'react-icons/io5';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 // ============
 import usePopup from '@/app/configs/store/Popup';
+import { removeProfileImage } from "@/redux/slices/profileImageSlice";
 
 const TemplateProfileImg = () => {
     const dispatch = useDispatch();
-    const imageSrc = useSelector((state: RootState) => state.profileImage.image);
     const [editable, setEditable] = useState(true);
-
     const { imagePopup, toggleImagePopup } = usePopup();
+    const imageData = useSelector((state: RootState) => state.profileImage);
 
     const popupHandle = () => {
         toggleImagePopup(!imagePopup);
     };
 
     const handleRemoveProfileImg = () => {
-        dispatch(setProfileImage(''));
+        dispatch(removeProfileImage());
         setEditable(false);
     };
 
@@ -33,13 +32,14 @@ const TemplateProfileImg = () => {
         <div className="flex flex-col items-center mb-6 relative">
             {/*====== Container that shows avatar and clips overflow ======*/}
             <div className="relative mx-auto min-w-[140px] min-h-[140px] h-[160px] w-[160px] max-w-[200px] max-h-[200px] rounded-full overflow-hidden group">
-                <div className="w-full h-full" >
+                <div className="w-full h-full">
                     <Image
-                        src={imageSrc || ProfileImage}
+                        src={imageData.image || ProfileImage}
                         alt="Profile"
                         width={200}
                         height={200}
-                        className="w-full h-full object-cover rounded-full"
+                        className="w-full h-full object-cover"
+                        style={{ transform: `scale(${imageData.scale}) translate(${imageData.position.x}px, ${imageData.position.y}px) rotate(${imageData.rotation}deg)` }}
                     />
 
                     <div className="w-full h-full flex items-center justify-center gap-2 bg-zinc-600/80 rounded-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-all duration-500">

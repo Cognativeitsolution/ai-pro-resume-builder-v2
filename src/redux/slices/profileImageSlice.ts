@@ -1,25 +1,38 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ProfileImageState {
-    image: string | null; // base64 URL
+    image: string;
+    scale: number;
+    position: { x: number; y: number };
+    rotation: number;
 }
 
 const initialState: ProfileImageState = {
-    image: null,
+    image: '',
+    scale: 1,
+    position: { x: 0, y: 0 },
+    rotation: 0,
 };
 
 const profileImageSlice = createSlice({
     name: 'profileImage',
     initialState,
     reducers: {
-        setProfileImage: (state, action: PayloadAction<string>) => {
-            state.image = action.payload;
+        setProfileImage(state, action: PayloadAction<ProfileImageState>) {
+            state.image = action.payload.image;
+            state.scale = action.payload.scale;
+            state.position = action.payload.position;
+            state.rotation = action.payload.rotation;
         },
-        clearProfileImage: (state) => {
-            state.image = null;
-        },
+
+        removeProfileImage(state) {
+            state.image = '';
+            state.scale = 1;
+            state.position = { x: 0, y: 0 };
+            state.rotation = 0;
+        }
     },
 });
 
-export const { setProfileImage, clearProfileImage } = profileImageSlice.actions;
+export const { setProfileImage, removeProfileImage } = profileImageSlice.actions;
 export default profileImageSlice.reducer;
