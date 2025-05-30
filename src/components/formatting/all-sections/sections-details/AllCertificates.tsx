@@ -13,6 +13,7 @@ import { TiDelete } from "react-icons/ti";
 import CustomDatePicker from "../../custom/CustomDatePicker";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
+import { ImMoveDown, ImMoveUp } from "react-icons/im";
 
 type CertificateType = {
   title: string;
@@ -134,7 +135,24 @@ const AllCertificates = ({
     const updated = certificates.filter((_, i) => i !== index);
     setCertificates(updated);
   };
+  const moveItem = (arr: any[], from: number, to: number) => {
+    const updated = [...arr];
+    const [movedItem] = updated.splice(from, 1);
+    updated.splice(to, 0, movedItem);
+    return updated;
+  };
 
+  const handleMoveUp = (index: number) => {
+    if (index <= 0) return;
+    const updated = moveItem(certificates, index, index - 1);
+    setCertificates(updated);
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index >= certificates.length - 1) return;
+    const updated = moveItem(certificates, index, index + 1);
+    setCertificates(updated);
+  };
   return (
     <div
       ref={containerRef}
@@ -212,14 +230,28 @@ const AllCertificates = ({
                 </div>
               </div>
               {editable && (
-                <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
-                ${editable ? 'opacity-100 ' : 'opacity-0 '}
-              `}>
+                <div className={`absolute bottom-0 -right-8 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                  {certificates?.length > 1 &&
+                    <button
+                      onClick={() => handleMoveUp(index)}
+                      className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                      title="Move up"
+                    >
+                      <ImMoveUp size={14} />
+                    </button>}
+                  {certificates?.length > 1 && <button
+                    onClick={() => handleMoveDown(index)}
+                    className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Move Down"
+                  >
+                    <ImMoveDown size={14} />
+                  </button>}
                   <button
                     onClick={() => handleDelete(index)}
-                    className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
+                    className="bg-red-800/15 backdrop-blur-lg rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Delete"
                   >
-                    <RiDeleteBin6Line size={16} />
+                    <RiDeleteBin6Line size={14} />
                   </button>
                 </div>
               )}

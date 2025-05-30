@@ -16,6 +16,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
 import { IoLocationSharp } from "react-icons/io5";
+import { ImMoveDown, ImMoveUp } from "react-icons/im";
+import { moveItem } from "@/utils/moveUpDown";
 
 type ExperienceType = {
   title: string;
@@ -158,7 +160,17 @@ const AllExperiences = ({
       setExperiences([newSkill]);
     }
   };
+  const handleMoveUp = (index: number) => {
+    if (index <= 0) return;
+    const updated = moveItem(experiences, index, index - 1);
+    setExperiences(updated);
+  };
 
+  const handleMoveDown = (index: number) => {
+    if (index >= experiences.length - 1) return;
+    const updated = moveItem(experiences, index, index + 1);
+    setExperiences(updated);
+  };
   return (
     <div
       ref={containerRef}
@@ -282,14 +294,28 @@ const AllExperiences = ({
             </div>
             {/* ====== Delete Button ====== */}
             {editable && (
-              <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
-                ${editable ? 'opacity-100 ' : 'opacity-0 '}
-              `}>
-                <button
-                  className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
-                  onClick={() => handleDelete(index)}
+              <div className={`absolute bottom-0 -right-8 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                {experiences?.length > 1 &&
+                  <button
+                    onClick={() => handleMoveUp(index)}
+                    className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Move up"
+                  >
+                    <ImMoveUp size={14} />
+                  </button>}
+                {experiences?.length > 1 && <button
+                  onClick={() => handleMoveDown(index)}
+                  className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                  title="Move Down"
                 >
-                  <RiDeleteBin6Line size={16} />
+                  <ImMoveDown size={14} />
+                </button>}
+                <button
+                  onClick={() => handleDelete(index)}
+                  className="bg-red-800/15 backdrop-blur-lg rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                  title="Delete"
+                >
+                  <RiDeleteBin6Line size={14} />
                 </button>
               </div>
             )}
