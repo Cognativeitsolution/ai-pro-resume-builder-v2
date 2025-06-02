@@ -104,30 +104,6 @@ const AllReferences = ({
     setReferences(updated);
   };
 
-  // const handleBlur = (index: number) => {
-  //   if (references[index]?.name.trim() === '') {
-  //     const updated = references.filter((_, i) => i !== index);
-  //     setReferences(updated);
-  //   }
-  // };
-
-  const handleAddFirstReference = (value: string) => {
-    const trimmedValue = value.trim();
-    if (trimmedValue !== '') {
-      setReferences([{ name: trimmedValue, contact: '' }]);
-    }
-  };
-  const handleMoveUp = (index: number) => {
-    if (index <= 0) return;
-    const updated = moveItem(references, index, index - 1);
-    setReferences(updated);
-  };
-
-  const handleMoveDown = (index: number) => {
-    if (index >= references.length - 1) return;
-    const updated = moveItem(references, index, index + 1);
-    setReferences(updated);
-  };
   return (
     <div ref={containerRef} className={`flex flex-col mt-1 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
       {editable && (
@@ -187,21 +163,6 @@ const AllReferences = ({
               </div>
               {editable && (
                 <div className={`absolute bottom-0 -right-8 gap-1 flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
-                  {references?.length > 1 &&
-                    <button
-                      onClick={() => handleMoveUp(index)}
-                      className="bg-indigo-600/15 backdrop-blur-lg rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
-                      title="Move up"
-                    >
-                      <ImMoveUp size={14} />
-                    </button>}
-                  {references?.length > 1 && <button
-                    onClick={() => handleMoveDown(index)}
-                    className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
-                    title="Move Down"
-                  >
-                    <ImMoveDown size={14} />
-                  </button>}
                   <button
                     onClick={() => handleDelete(index)}
                     className="bg-red-800/15 backdrop-blur-lg rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
