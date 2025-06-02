@@ -58,7 +58,7 @@ const AllCustomSection = ({
 }: AllCustomSectionType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userCustomSections, addedSections } = useSelector(
+  const { userCustomSections, addedSections, showIcons } = useSelector(
     (state: RootState) => state.addSection
   );
   const [editable, setEditable] = useState<boolean>(false);
@@ -196,7 +196,7 @@ const AllCustomSection = ({
                 >
                   <div className="flex items-center justify-between gap-1">
                     {/* ====== Icon ====== */}
-                    {hasField("Icon") && (
+                    {hasField("Icon") && showIcons && (
                       <FaHome className="mb-1 text-indigo-600 h-4 w-8" size={iconSize} />
                     )}
 
@@ -226,7 +226,7 @@ const AllCustomSection = ({
                 {hasField("Location") && (
                   <div className="flex items-center justify-start gap-1 ">
                     {/* ====== Icon ====== */}
-                    <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                    {showIcons && <IoLocationSharp className="mb-1 text-indigo-600" size={14} />}
                     <EditableField
                       html={exp.location || ""}
                       onChange={(val) => handleInputChange(index, "location", val)}

@@ -61,7 +61,7 @@ const AllEducation = ({
 }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userEducation } = useSelector((state: RootState) => state.addSection);
+  const { userEducation, showIcons } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState<boolean>(false);
   const [educations, setEducations] = useState<EducationType[]>([{
     degree: "",
@@ -209,7 +209,7 @@ const AllEducation = ({
                 <div className="w-full">
                   <div className="flex items-center justify-start gap-1 ">
                     {/* ====== Icon ====== */}
-                    <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                    {showIcons && <IoLocationSharp className="mb-1 text-indigo-600" size={14} />}
                     <EditableField
                       html={exp.location || ""}
                       onChange={(val) =>

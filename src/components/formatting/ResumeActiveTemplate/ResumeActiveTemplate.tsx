@@ -1,7 +1,7 @@
 "use client";
 // ==============
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // ==============
 import Template1 from "../Template/template1";
 import Template2 from "../Template/template2";
@@ -14,6 +14,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import CustomSwitch from "@/components/common/switch/switch";
 import Template1Copy from "../Template/template1copy";
 import ResumeTemplate from "../Template/template";
+import { sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 
 type CurrentState = {
   fontSize: string;
@@ -34,6 +35,9 @@ type ResumePreviewProps = {
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
   const [showSettings, setShowSettings] = useState(false);
+  const [showProfilePic, setShowProfilePic] = useState(false);
+  const [showIcons, setShowIcons] = useState(false);
+  const dispatch = useDispatch();
 
   const renderTemplate = () => {
     switch (selectedTemplate) {
@@ -64,6 +68,12 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     console.log("Re-rendered due to selectedTemplate change:", selectedTemplate);
   }, [selectedTemplate]);
 
+  useEffect(() => {
+    console.log("Show icon toggled:", showProfilePic, showIcons);
+    dispatch(sectionShowIcons(showIcons))
+    dispatch(sectionShowProfile(showProfilePic))
+  }, [showIcons, showProfilePic]);
+
   return (
     <div className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto relative">
       {renderTemplate()}
@@ -76,9 +86,14 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
 
       {/* Dropdown */}
       {showSettings && (
-        <div className="absolute z top-9 -right-[163px] bg-blue-200/30 border border-indigo-200 text-sm text-black rounded-sm py-2 px-2 w-40">
-          <div className="cursor-pointer p-1 flex justify-between items-center gap-x-2">Show Icon <CustomSwitch /> </div>
-        </div>
+        <>
+          <div className="absolute top-1 z-10 right-[0px] bg-slate-900 border border-indigo-200 text-sm text-white rounded-sm py-2 px-2 w-40">
+            <div className="cursor-pointer p-1 flex justify-between items-center gap-x-2">Show Icon <CustomSwitch checked={showIcons} onChange={setShowIcons} /> </div>
+          </div>
+          <div className="absolute top-14 z-10 right-[0px] bg-slate-900 border border-indigo-200 text-sm text-white rounded-sm py-2 px-2 w-40">
+            <div className="cursor-pointer p-1 flex justify-between items-center gap-x-2">Show profile <CustomSwitch checked={showProfilePic} onChange={setShowProfilePic} /> </div>
+          </div>
+        </>
       )}
     </div>
   );
