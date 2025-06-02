@@ -420,9 +420,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
       }}
     >
 
-      <div style={{ minHeight: "297mm", width: "210mm" }} className="relative grid grid-cols-12 shadow-xl ">
+      <div style={{ minHeight: "297mm", width: "235mm" }} className="relative grid grid-cols-12 shadow-xl ">
         {/* Left Column */}
-        <div className="col-span-8  pr-8" style={{ padding: "30px" }} >
+        <div className="col-span-8" style={{ padding: "30px", paddingRight: "40px" }} >
           {/* Header */}
           <div
             ref={containerHeaderRef}
