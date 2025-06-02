@@ -1,16 +1,17 @@
 "use client";
 // ============
 import React, { useEffect, useState } from "react";
+// ============
 import { RootState } from "@/redux/store";
 import { useSelector, useDispatch } from "react-redux";
+import { addNewSection } from "@/redux/slices/addSectionSlice";
+// ============
+import usePopup from '@/app/configs/store/Popup';
+import { TabProvider } from "@/app/configs/store/EditorTabContext";
 // ============
 import Popup from '@/components/popup/Popup';
-import usePopup from '@/app/configs/store/Popup';
-import { addNewSection } from "@/redux/slices/addSectionSlice";
+import ImagePopup from "@/components/popup/ImagePopup";
 import { ResumeActiveTemplate, TextEditor, UserHeader } from "@/components";
-import AddSectionClipPath from '@/components/common/clipPath/addSectionClipPath';
-import { TabProvider } from "@/app/configs/store/EditorTabContext";
-import ImagePopup from "../popup/ImagePopup";
 
 
 const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
@@ -66,7 +67,7 @@ const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
         }));
     }, [availableSections]);
 
-    const { popup, togglePopup, imagePopup, toggleImagePopup } = usePopup();
+    const { popup, togglePopup, imagePopup } = usePopup();
 
     const handleAddSection = (newSection: any) => {
         dispatch(addNewSection(newSection));
@@ -86,11 +87,10 @@ const ResumeEditor = ({ sectionData }: { sectionData?: any }) => {
                     history={history}
                     future={future}
                 />
+
                 <div className="grid grid-cols-12 px-5 mt-28 mb-10">
                     <div className="col-span-4">
-
                         <TextEditor currentState={currentState} updateState={updateState} />
-
                     </div>
                     <div className="col-span-8">
                         <ResumeActiveTemplate

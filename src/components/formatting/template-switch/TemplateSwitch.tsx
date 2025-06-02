@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSelectedTemplate } from "@/redux/slices/template";
 import Image from "next/image";
 
@@ -75,17 +75,28 @@ const templateData = [
 function TemplateSwitch() {
     const dispatch = useDispatch();
 
+    // Get the selected template ID from Redux state
+    const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
+
     return (
         <div className="h-[600px] overflow-y-auto mt-4 pt-2">
             <div className="grid grid-cols-2 gap-3 pr-2">
                 {templateData.map((template) => (
                     <div
                         key={template.id}
-                        className="relative border border-indigo-400 rounded-sm shadow-md cursor-pointer group hover:bg-indigo-100 transition"
+                        className={`relative rounded-sm shadow-md cursor-pointer group transition ${selectedTemplate === template.id
+                            ? "border border-indigo-600"
+                            : "border border-indigo-400"
+                            } hover:bg-indigo-100`}
                     >
                         <Image src={template.image} alt={template.name} className="w-full" />
 
-                        <div className="w-full py-[6px] flex justify-center items-center text-sm bg-indigo-400 text-white">
+                        <div
+                            className={`w-full py-[6px] flex justify-center items-center text-sm text-white ${selectedTemplate === template.id
+                                ? "bg-indigo-600"
+                                : "bg-indigo-400"
+                                }`}
+                        >
                             {template.name}
                         </div>
 

@@ -137,7 +137,7 @@ const AllLanguages = ({
           showDot={true}
           dotPosition={dotPosition}
           isDot={isDot}
-          // dotPosition={`top-[30px] left-[48px]`}
+        // dotPosition={`top-[30px] left-[48px]`}
         />
       )}
 

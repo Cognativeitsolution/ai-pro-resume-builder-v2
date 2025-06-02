@@ -10,9 +10,9 @@ const ConditionalLayout = ({ children }: any) => {
   const [popup, setPopup] = useState(false);
   const [imagePopup, setImagePopup] = useState(false);
 
-  const togglePopup = (value?: boolean) => {
-    setPopup(prev => value !== undefined ? value : !prev);
-  };
+  const togglePopup = (e: any) => {
+    setPopup(!e)
+  }
 
   const toggleImagePopup = (value?: boolean) => {
     setImagePopup(prev => value !== undefined ? value : !prev);

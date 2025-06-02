@@ -17,6 +17,8 @@ import { TiDelete } from "react-icons/ti";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
 import { IoLocationSharp } from "react-icons/io5";
+import { moveItem } from "@/utils/moveUpDown";
+import { ImMoveDown, ImMoveUp } from "react-icons/im";
 
 type EducationType = {
   degree: string;
@@ -38,6 +40,7 @@ type AllEducationType = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllEducation = ({
@@ -53,7 +56,8 @@ const AllEducation = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -141,6 +145,17 @@ const AllEducation = ({
     };
   }, [educations, dispatch, data?.id]);
 
+  const handleMoveUp = (index: number) => {
+    if (index <= 0) return;
+    const updated = moveItem(educations, index, index - 1);
+    setEducations(updated);
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index >= educations.length - 1) return;
+    const updated = moveItem(educations, index, index + 1);
+    setEducations(updated);
+  };
   return (
     <div
       ref={containerRef}
@@ -183,6 +198,7 @@ const AllEducation = ({
                         fontFamily: fontFamily,
                       }}
                       className="bg-transparent"
+                      highlightText={highlightText}
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
@@ -206,6 +222,7 @@ const AllEducation = ({
                         fontSize: fontSize,
                         fontFamily: fontFamily,
                       }}
+                      highlightText={highlightText}
                     />
                   </div>
                   {term3 ?
@@ -229,6 +246,7 @@ const AllEducation = ({
                         fontSize: fontSize,
                         fontFamily: fontFamily,
                       }}
+                      highlightText={highlightText}
                     />
                   </div>
 
@@ -238,18 +256,31 @@ const AllEducation = ({
               </div>
               {/* ====== Delete Button ====== */}
               {editable && (
-                <div className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out
-                ${editable ? 'opacity-100 ' : 'opacity-0 '}
-              `}>
+                <div className={`absolute bottom-0 -right-8 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                  {educations?.length > 1 &&
+                    <button
+                      onClick={() => handleMoveUp(index)}
+                      className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                      title="Move up"
+                    >
+                      <ImMoveUp size={14} />
+                    </button>}
+                  {educations?.length > 1 && <button
+                    onClick={() => handleMoveDown(index)}
+                    className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Move Down"
+                  >
+                    <ImMoveDown size={14} />
+                  </button>}
                   <button
                     onClick={() => handleDelete(index)}
-                    className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
+                    className="bg-red-800/15 backdrop-blur-lg rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Delete"
                   >
-                    <RiDeleteBin6Line size={16} />
+                    <RiDeleteBin6Line size={14} />
                   </button>
                 </div>
               )}
-
             </div>
           )
           )}
