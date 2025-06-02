@@ -14,6 +14,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import CustomSwitch from "@/components/common/switch/switch";
 import Template1Copy from "../Template/template1copy";
 import ResumeTemplate from "../Template/template";
+import HuzaifaTemplate1 from "../Template/huzaifa-template";
 
 type CurrentState = {
   fontSize: string;
@@ -41,6 +42,8 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
         return <Template1 currentState={currentState} updateState={updateState} />;
       case "Template1copy":
         return <Template1Copy currentState={currentState} updateState={updateState} />;
+      case "HuzaifaTemplate":
+        return <HuzaifaTemplate1 currentState={currentState} updateState={updateState} />;
       case "template2":
         return <Template2 currentState={currentState} updateState={updateState} />;
       case "templateText":

@@ -36,7 +36,7 @@ const AllSummary = ({ data = {}, textColor = "#000",
 
     const [inputData, setInputData] = useState<string>('');
     const [editable, setEditable] = useState<boolean>(false);
-
+console.log(data)
     const handleDataChange = (e: any) => {
         setInputData(e.target.value);
     }
