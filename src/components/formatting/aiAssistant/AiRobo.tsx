@@ -6,7 +6,13 @@ import AIImage from 'media/images/ai.png'
 // ============
 import BotPopup from './BotPopup';
 
-const AiRobo = () => {
+type AiRoboProps = {
+    input?: boolean;
+    info?: string;
+    positionClass?: string;
+};
+
+const AiRobo = ({ positionClass, input, info }: AiRoboProps) => {
     const [showPopup, setShowPopup] = useState(false);
     const popupRef = useRef<HTMLDivElement | null>(null);
 
@@ -34,7 +40,7 @@ const AiRobo = () => {
             {!showPopup && (
                 <div
                     onClick={() => setShowPopup(true)}
-                    className="group absolute -left-[70px] hover:-left-[154px] top-14 cursor-pointer flex items-center justify-center transition-all duration-500"
+                    className={`group absolute ${positionClass} cursor-pointer flex items-center justify-center transition-all duration-500`}
                 >
                     <div className="absolute w-[14px] h-[14px] top-1 -right-[3px] opacity-100 z-[-1]">
                         <IoTriangle className="text-hamzaPrimary -rotate-[30deg]" />
@@ -53,7 +59,7 @@ const AiRobo = () => {
             {/*====== BotPopup ======*/}
             {showPopup && (
                 <div ref={popupRef}>
-                    <BotPopup />
+                    <BotPopup input={input} info={info} />
                 </div>
             )}
         </>

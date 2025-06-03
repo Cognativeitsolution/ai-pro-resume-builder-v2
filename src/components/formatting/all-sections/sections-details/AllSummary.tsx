@@ -126,7 +126,11 @@ const AllSummary = ({ data = {}, textColor = "#000",
                 }
             </div>
             {editable && (
-                <AiRobo />
+                <AiRobo
+                    input={true}
+                    positionClass="-left-[70px] hover:-left-[154px] top-14"
+                    info="Create a tailored summary. To start, provide a job title or paste an entire job posting below."
+                />
             )}
         </div>
     )
