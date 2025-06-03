@@ -61,7 +61,7 @@ const AllEducation = ({
 }: AllEducationType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userEducation } = useSelector((state: RootState) => state.addSection);
+  const { userEducation, showIcons } = useSelector((state: RootState) => state.addSection);
   const [inputData, setInputData] = useState<any>({});
   const [editable, setEditable] = useState<boolean>(false);
   const [educations, setEducations] = useState<EducationType[]>([{
@@ -227,7 +227,7 @@ const AllEducation = ({
                   <div className="w-full">
                     <div className="flex items-center justify-start gap-1 ">
                       {/* ====== Icon ====== */}
-                      <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                      {showIcons && <IoLocationSharp className="mb-1 text-indigo-600" size={14} />}
                       <EditableField
                         html={exp.location || ""}
                         onChange={(val) =>
@@ -274,7 +274,7 @@ const AllEducation = ({
                 </div>
                 {/* ====== Delete Button ====== */}
                 {editable && (
-                  <div className={`absolute bottom-0 -right-8 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                  <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
                     {educations?.length > 1 &&
                       <button
                         onClick={() => handleMoveUp(index)}

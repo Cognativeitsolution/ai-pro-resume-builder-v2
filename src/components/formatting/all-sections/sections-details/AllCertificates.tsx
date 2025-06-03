@@ -230,7 +230,7 @@ const AllCertificates = ({
                 </div>
               </div>
               {editable && (
-                <div className={`absolute bottom-0 -right-8 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
                   {certificates?.length > 1 &&
                     <button
                       onClick={() => handleMoveUp(index)}

@@ -118,6 +118,7 @@ const AllAwards = ({
       setAwards(updated);
     }
   };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -135,6 +136,7 @@ const AllAwards = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [awards, dispatch, data.id]);
+
   return (
     <div ref={containerRef}
       className={`flex flex-col mt-1 ${editable ? 'bg-white rounded-sm' : ''}`}

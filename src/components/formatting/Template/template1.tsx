@@ -24,6 +24,9 @@ import AllReferences from "../all-sections/sections-details/AllReferences";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 import Watermark from "@/components/common/watermark/watermark";
 import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
+import { Fa2, FaSection } from "react-icons/fa6";
+import { FaShoePrints } from "react-icons/fa";
+import { AiFillGold } from "react-icons/ai";
 const A4_HEIGHT_PX = 1122;
 const PAGE_PADDING = 60; // adjust based on your layout padding
 
@@ -44,7 +47,7 @@ type ResumePreviewProps = {
 
 const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const dispatch = useDispatch();
-  const { addedSections, sectionBgColor, editMode } = useSelector(
+  const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
     (state: any) => state.addSection
   );
 
@@ -63,6 +66,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
+  const [d, setD] = useState(false);
 
 
   useEffect(() => {
@@ -78,6 +82,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   // ===================
   useEffect(() => {
     setTemplateBgColor(sectionBgColor);
+    // setD(showProfilePic)
   }, [editMode, sectionBgColor]);
 
   //============= improve text logic
@@ -409,6 +414,12 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     setMeasured(true);
   }, [leftSections, measured]);
   console.log(pages)
+
+  // useEffect(() => {
+
+  // }, [showProfilePic])
+  console.log(showProfile, showIcons, "showProfilePicshowProfilePic");
+
   return (
     <div
       className="resume-container"
@@ -420,9 +431,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
       }}
     >
 
-      <div style={{ minHeight: "297mm", width: "210mm" }} className="relative grid grid-cols-12 shadow-xl ">
+      <div style={{ minHeight: "297mm", width: "235mm" }} className="relative grid grid-cols-12 shadow-xl ">
         {/* Left Column */}
-        <div className="col-span-8  pr-8" style={{ padding: "30px" }} >
+        <div className="col-span-8" style={{ padding: "30px", paddingRight: "40px" }} >
           {/* Header */}
           <div
             ref={containerHeaderRef}
@@ -476,13 +487,16 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                       />
                     </div>
                   ) : (
-                    <h2
-                      className="text-lg font-semibold "
-                      style={{ color: currentState.color }}
-                      dangerouslySetInnerHTML={{
-                        __html: highlightChange(section?.newSecName || section?.name),
-                      }}
-                    />
+                    <div className="flex items-center gap-1">
+                      {showIcons && <AiFillGold />}
+                      <h2
+                        className="text-lg font-semibold "
+                        style={{ color: currentState.color }}
+                        dangerouslySetInnerHTML={{
+                          __html: highlightChange(section?.newSecName || section?.name),
+                        }}
+                      />
+                    </div>
                   )}
                 </div>
                 <div className="">{renderSection(section)}</div>
@@ -506,10 +520,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
-            <TemplateProfileImg
+            {showProfile && <TemplateProfileImg
             // bgColor={currentState.color}
             />
-
+            }
             {/* Contact Info */}
             <div className="flex flex-col gap-2">
               <div

@@ -59,7 +59,7 @@ const AllExperiences = ({
 }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userExperiences } = useSelector(
+  const { userExperiences, showIcons } = useSelector(
     (state: RootState) => state.addSection
   );
   const [editable, setEditable] = useState<boolean>(false);
@@ -222,7 +222,7 @@ const AllExperiences = ({
               <div className="w-full">
                 <div className="flex items-center justify-start gap-1 ">
                   {/* ====== Icon ====== */}
-                  <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                  {showIcons && <IoLocationSharp className="mb-1 text-indigo-600" size={14} />}
                   <EditableField
                     html={exp.location || ""}
                     onChange={(val) =>
@@ -294,7 +294,7 @@ const AllExperiences = ({
             </div>
             {/* ====== Delete Button ====== */}
             {editable && (
-              <div className={`absolute bottom-0 -right-8 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+              <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
                 {experiences?.length > 1 &&
                   <button
                     onClick={() => handleMoveUp(index)}

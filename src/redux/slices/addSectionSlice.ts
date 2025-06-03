@@ -27,6 +27,8 @@ type AddSectionState = {
   userLanguages: any;
   sectionBgColor?: any;
   editMode?: any;
+  showIcons?: any;
+  showProfile?: any;
 };
 
 const initialState: AddSectionState = {
@@ -109,6 +111,8 @@ const initialState: AddSectionState = {
   userCustomSections: [],
   sectionBgColor: '#E7E9EB',
   editMode: false,
+  showIcons: false,
+  showProfile: false,
 };
 
 export const addSectionSlice = createSlice({
@@ -119,6 +123,14 @@ export const addSectionSlice = createSlice({
     sectionEditMode: (state, action) => {
       const section = action.payload;
       state.editMode = section;
+    },
+    sectionShowIcons: (state, action) => {
+      const section = action.payload;
+      state.showIcons = section;
+    },
+    sectionShowProfile: (state, action) => {
+      const section = action.payload;
+      state.showProfile = section;
     },
 
     addNewSection: (state, action: PayloadAction<SectionType>) => {
@@ -239,7 +251,7 @@ export const addSectionSlice = createSlice({
   },
 });
 
-export const { sectionEditMode, addUserAwards, addUserCustomSection, addUserLanguages, AddUserReferences, addNewSection, removeSection, reorderSections,
+export const { sectionShowIcons, sectionShowProfile, sectionEditMode, addUserAwards, addUserCustomSection, addUserLanguages, AddUserReferences, addNewSection, removeSection, reorderSections,
   addUserSoft_Skills, addUserTechnical_Skills, addUserProjects, addUserEducation, addUserExperience, addUserCertificates,
   addUserHeader, addUserSummary
 } =
