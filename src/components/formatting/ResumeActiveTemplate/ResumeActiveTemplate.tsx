@@ -1,6 +1,6 @@
 "use client";
 // ==============
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // ==============
 import Template1 from "../Template/template1";
@@ -15,6 +15,7 @@ import CustomSwitch from "@/components/common/switch/switch";
 import Template1Copy from "../Template/template1copy";
 import ResumeTemplate from "../Template/template";
 import { sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
+import { RootState } from "@/redux/store";
 
 type CurrentState = {
   fontSize: string;
@@ -34,11 +35,13 @@ type ResumePreviewProps = {
 
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
+  const { showProfile, isTempIcons, isTempProfile } = useSelector((state: RootState) => state.addSection);
+
   const [showSettings, setShowSettings] = useState(false);
   const [showProfilePic, setShowProfilePic] = useState(false);
-  const [showIcons, setShowIcons] = useState(false);
+  const [shoeAllIcons, setShoeAllIcons] = useState(false);
   const dispatch = useDispatch();
-
+  const settingsRef = useRef(null);
   const renderTemplate = () => {
     switch (selectedTemplate) {
       case "template1":
@@ -69,13 +72,26 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   }, [selectedTemplate]);
 
   useEffect(() => {
-    console.log("Show icon toggled:", showProfilePic, showIcons);
-    dispatch(sectionShowIcons(showIcons))
+    const handleClickOutside = (event: MouseEvent) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+        setShowSettings(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSettings]);
+
+  useEffect(() => {
+    dispatch(sectionShowIcons(shoeAllIcons))
     dispatch(sectionShowProfile(showProfilePic))
-  }, [showIcons, showProfilePic]);
+  }, [shoeAllIcons, showProfilePic]);
+
+  useEffect(() => {
+    setShowProfilePic(showProfile);
+  }, [showProfile]);
 
   return (
-    <div className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto relative">
+    <div ref={settingsRef} className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto relative">
       {renderTemplate()}
       <button className="cursor-pointer absolute top-0 -right-8 rounded-sm bg-slate-900/70 p-1" onClick={() => setShowSettings((prev) => !prev)}>
         <IoSettingsOutline
@@ -87,11 +103,9 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
       {/* Dropdown */}
       {showSettings && (
         <>
-          <div className="absolute top-1 z-10 right-[0px] bg-slate-900 border border-indigo-200 text-sm text-white rounded-sm py-2 px-2 w-40">
-            <div className="cursor-pointer p-1 flex justify-between items-center gap-x-2">Show Icon <CustomSwitch checked={showIcons} onChange={setShowIcons} /> </div>
-          </div>
-          <div className="absolute top-14 z-10 right-[0px] bg-slate-900 border border-indigo-200 text-sm text-white rounded-sm py-2 px-2 w-40">
-            <div className="cursor-pointer p-1 flex justify-between items-center gap-x-2">Show profile <CustomSwitch checked={showProfilePic} onChange={setShowProfilePic} /> </div>
+          <div className="absolute top-1 z-10 right-[0px] bg-gray-900 text-sm text-white divide-y-[1px] rounded-sm p-2 w-40">
+            <div className="cursor-pointer py-2 px-1 flex justify-between items-center gap-x-2">Show Icon <CustomSwitch size="sm" checked={shoeAllIcons} disableToogle={isTempIcons} onChange={setShoeAllIcons} /></div>
+            <div className="cursor-pointer py-2 px-1 flex justify-between items-center gap-x-2">Show profile <CustomSwitch size="sm" checked={showProfilePic} disableToogle={isTempProfile} onChange={setShowProfilePic} /> </div>
           </div>
         </>
       )}

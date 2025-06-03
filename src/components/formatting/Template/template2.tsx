@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 // Import all the reusable section components
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
@@ -11,6 +11,7 @@ import Image from "next/image";
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp"
 import AllSoftSkills from "../all-sections/sections-details/AllSoftSkills";
 import IconDropdown from "../icon-dropdown/IconDropdown";
+import { hideTemplateIcons, hideTemplateProfile } from "@/redux/slices/addSectionSlice";
 
 type CurrentState = {
     fontSize: any;
@@ -29,7 +30,10 @@ type ResumePreviewProps = {
 }
 
 const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
-    const addedSections = useSelector((state: any) => state.addSection.addedSections);
+    const { addedSections, sectionBgColor, editMode, showProfile, showIcons, isTempIcons, isTempProfile } = useSelector(
+        (state: any) => state.addSection
+    );
+    const dispatch = useDispatch();
 
     const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
     const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
@@ -138,6 +142,11 @@ const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
     const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
     const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 
+    useEffect(() => {
+        dispatch(hideTemplateIcons(true))
+        dispatch(hideTemplateProfile(true))
+    }, []);
+    console.log(isTempIcons, isTempProfile, "temp2222");
 
     return (
         <div id="resume-content" className="w-a4 h-a4 flex relative"
