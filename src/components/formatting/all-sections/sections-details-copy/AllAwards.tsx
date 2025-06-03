@@ -16,6 +16,7 @@ type AwardType = {
 
 type AllAwardsProps = {
   data?: { id: any };
+  onRemove:()=>void;
   textColor?: string;
   textAltColor: string;
   templateColor: string;
@@ -30,6 +31,7 @@ type AllAwardsProps = {
 
 const AllAwards = ({
   data = { id: '' },
+  onRemove,
   textColor = '#fff',
   textAltColor,
   templateColor,
@@ -102,6 +104,7 @@ const AllAwards = ({
 
   const handleRemoveSection = () => {
     dispatch(removeSection(data));
+    onRemove()
     dispatch(addUserAwards({ sectionId: data.id, detail: [] }));
   };
 

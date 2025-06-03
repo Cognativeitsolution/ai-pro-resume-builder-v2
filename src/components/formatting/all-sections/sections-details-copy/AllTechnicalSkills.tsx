@@ -14,6 +14,7 @@ type TechnicalSkillType = {
 
 type AllTechnicalSkillsProps = {
   data?: { id: any };
+  onRemove:()=>void
   textColor?: string; 
   textAltColor?: string;
   templateColor?: string;
@@ -29,6 +30,7 @@ type AllTechnicalSkillsProps = {
 
 const AllTechnicalSkills = ({
   data = { id: '' },
+  onRemove,
   textColor = '#fff',
   textAltColor,
   templateColor,
@@ -100,6 +102,7 @@ const AllTechnicalSkills = ({
 
   const handleRemoveSection = () => {
     dispatch(removeSection(data));
+    onRemove()
     dispatch(addUserTechnical_Skills({ sectionId: data.id, detail: [] }));
   };
 

@@ -68,7 +68,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   }, [selectedTemplate]);
 
   return (
-    <div className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto relative">
+    <div className=" min-h-full max-w-max mx-auto relative">
       {renderTemplate()}
       <button className="cursor-pointer absolute top-0 -right-8 rounded-sm bg-slate-900/70 p-1" onClick={() => setShowSettings((prev) => !prev)}>
         <IoSettingsOutline

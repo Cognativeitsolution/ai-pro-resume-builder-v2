@@ -22,6 +22,7 @@ type CertificateType = {
 
 type AllSummaryType = {
   data?: any;
+  onRemove: () =>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -38,6 +39,7 @@ type AllSummaryType = {
 
 const AllCertificates = ({
   data = {},
+  onRemove,
   textColor,
   textAltColor,
   templateColor,
@@ -112,6 +114,7 @@ const AllCertificates = ({
 
   const handleRemoveSection = () => {
     if (data) {
+      onRemove()
       dispatch(removeSection(data));
       dispatch(addUserCertificates({ sectionId: data.id, detail: [] }));
     }

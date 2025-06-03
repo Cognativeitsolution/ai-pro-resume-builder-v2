@@ -14,6 +14,7 @@ type LanguageType = {
 
 type AllLanguagesProps = {
   data?: { id: any };
+  onRemove:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -28,6 +29,7 @@ type AllLanguagesProps = {
 
 const AllLanguages = ({
   data = { id: '' },
+  onRemove,
   textColor = '#fff',
   textAltColor,
   templateColor,
@@ -104,6 +106,7 @@ const AllLanguages = ({
   };
 
   const handleRemoveSection = () => {
+    onRemove()
     dispatch(removeSection(data));
     dispatch(addUserLanguages({ sectionId: data.id, detail: [] }));
   };

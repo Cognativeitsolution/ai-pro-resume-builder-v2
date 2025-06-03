@@ -31,9 +31,9 @@ import AllCustomSection from "../all-sections/sections-details/AllCustomSections
 import Watermark from "@/components/common/watermark/watermark";
 import { placeHolderImage } from "@/constant/placeholder-image-base64";
 
-const A4_HEIGHT_PX = 1300; // A4 height in pixels (approx. at 96 DPI)
+const A4_HEIGHT_PX = 1400; // A4 height in pixels (approx. at 96 DPI)
 const PAGE_PADDING = 60; // adjust based on your layout padding
-const CONTENT_HEIGHT_PER_PAGE = A4_HEIGHT_PX - 2 ;
+const CONTENT_HEIGHT_PER_PAGE = A4_HEIGHT_PX  ;
 // Define a type for a page
 type Page = {
   left: any[];
@@ -475,7 +475,7 @@ const paginatedFunction = () =>{
 }
   return (
     <div
-      className="resume-container flex flex-col gap-4 items-center "
+      className="resume-container flex flex-col  items-center "
       id="resume-content"
       style={{
         padding: `${currentState.padding || 0}px`,
@@ -488,8 +488,8 @@ const paginatedFunction = () =>{
         <div
         id={`page-${pageIndex}`}
           key={pageIndex}
-          className={`relative  grid grid-cols-12 mb-2 overflow-x-hidden  shadow-xl  ${!editMode && "bg-white"} `}
-          style={{ height: "270mm", width: "210mm", pageBreakAfter: "always" }}
+          className={`relative  grid grid-cols-12 mb-8 overflow-x-hidden  shadow-xl  ${!editMode && "bg-white"} `}
+          style={{ height: "297mm", width: "210mm", pageBreakAfter: "always" }}
         >
           {/* Left Column */}
           <div className="col-span-8 pr-8" style={{ padding: "30px" }}>
@@ -575,7 +575,7 @@ const paginatedFunction = () =>{
           {/* Right Column */}
           <div
             className="col-span-4 px-2 z-10"
-            style={{ backgroundColor: currentState.color, height: "270mm" }}
+            style={{ backgroundColor: currentState.color, height: "297mm" }}
           >
             {/* Profile Image (only on the first page) */}
             {pageIndex === 0 && (

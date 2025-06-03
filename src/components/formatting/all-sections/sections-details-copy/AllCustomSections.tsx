@@ -25,6 +25,7 @@ type CustomSectionType = {
 
 type AllCustomSectionType = {
   data?: any;
+  onRemove:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -43,6 +44,7 @@ type AllCustomSectionType = {
 
 const AllCustomSection = ({
   secNewNames,
+  onRemove,
   data = {},
   textColor = "#000",
   fontSize,
@@ -108,6 +110,7 @@ const AllCustomSection = ({
   const handleRemoveSection = () => {
     if (data) {
       dispatch(removeSection(data));
+      onRemove()
       dispatch(
         addUserCustomSection({
           sectionId: data.id,

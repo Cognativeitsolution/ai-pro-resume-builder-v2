@@ -27,6 +27,7 @@ type ProjectType = {
 
 type AllProjectsType = {
   data?: any;
+  onRemove:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -41,6 +42,7 @@ type AllProjectsType = {
 
 const AllProjects = ({
   data = {},
+  onRemove,
   textColor = "#000",
   textAltColor = "",
   templateColor,
@@ -98,6 +100,7 @@ const AllProjects = ({
   // Remove the entire section from Redux and clear its data
   const handleRemoveSection = () => {
     if (data) {
+      onRemove()
       dispatch(removeSection(data));
       dispatch(addUserProjects({ sectionId: data.id, detail: [] }));
     }

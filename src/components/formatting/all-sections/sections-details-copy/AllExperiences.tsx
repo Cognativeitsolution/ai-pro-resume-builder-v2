@@ -26,6 +26,7 @@ type ExperienceType = {
 
 type AllExperienceType = {
   data?: any;
+  onRemove:() =>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -42,6 +43,7 @@ type AllExperienceType = {
 
 const AllExperiences = ({
   data = {},
+  onRemove,
   textColor = "#000",
   textAltColor = "#000",
   templateColor,
@@ -104,6 +106,7 @@ const AllExperiences = ({
   // Remove the entire section and reset associated experiences in the Redux store
   const handleRemoveSection = () => {
     if (data) {
+      onRemove()
       dispatch(removeSection(data));
       dispatch(
         addUserExperience({

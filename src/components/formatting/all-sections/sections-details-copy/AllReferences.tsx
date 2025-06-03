@@ -15,6 +15,7 @@ type ReferenceType = {
 
 type AllSummaryType = {
   data?: any;
+  onRemove:()=>void;
   textColor?: string;
   textAltColor: string;
   templateColor: string;
@@ -27,6 +28,7 @@ type AllSummaryType = {
 
 const AllReferences = ({
   data = {},
+  onRemove,
   textColor = '#fff',
   textAltColor,
   templateColor,
@@ -83,6 +85,7 @@ const AllReferences = ({
 
   const handleRemoveSection = () => {
     if (data) {
+      onRemove()
       dispatch(removeSection(data));
       dispatch(AddUserReferences({ sectionId: data.id, detail: [] }));
     }

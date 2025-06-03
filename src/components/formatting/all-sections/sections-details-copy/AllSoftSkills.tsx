@@ -18,6 +18,7 @@ type SoftSkillType = {
 
 type AllSoftSkillsProps = {
   data?: { id: any };
+  onRemove:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -33,6 +34,7 @@ type AllSoftSkillsProps = {
 
 const AllSoftSkills = ({
   data = { id: "" },
+  onRemove,
   textColor = "#fff",
   textAltColor,
   templateColor,
@@ -103,6 +105,7 @@ const AllSoftSkills = ({
 
   const handleRemoveSection = () => {
     dispatch(removeSection(data));
+    onRemove()
     dispatch(addUserSoft_Skills({ sectionId: data.id, detail: [] }));
   };
 

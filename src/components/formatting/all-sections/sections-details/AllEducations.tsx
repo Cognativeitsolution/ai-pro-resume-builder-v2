@@ -101,6 +101,7 @@ const AllEducation = ({
   // Remove the entire education section and reset its Redux data
   const handleRemoveSection = () => {
     if (data) {
+      console.log(data)
       dispatch(removeSection(data));
       dispatch(
         addUserEducation({
