@@ -41,7 +41,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   const [showProfilePic, setShowProfilePic] = useState(false);
   const [shoeAllIcons, setShoeAllIcons] = useState(false);
   const dispatch = useDispatch();
-  const settingsRef = useRef(null);
+  const settingsRef = useRef<HTMLDivElement | null>(null);
   const renderTemplate = () => {
     switch (selectedTemplate) {
       case "template1":
