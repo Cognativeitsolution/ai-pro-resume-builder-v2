@@ -10,7 +10,7 @@ export default function EditableField({
   style = {},
   highlightText
 }: {
-  html: string;
+  html: string | undefined;
   onChange: (val: any) => void;
   placeholder?: string;
   placeholderClassName?: string | boolean;
@@ -37,7 +37,8 @@ export default function EditableField({
   const handleBlur = () => {
     setIsFocused(false);
     if (ref.current) {
-      onChange(ref.current.innerHTML);
+      const plainText = ref.current.innerText;
+      onChange(plainText); // pass the clean value up
     }
   };
 

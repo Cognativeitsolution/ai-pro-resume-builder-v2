@@ -3,11 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 // ============
-import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfileImage } from "@/redux/slices/profileImageSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
-import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
+import { addUserHeader, hideTemplateIcons, hideTemplateProfile, sectionEditMode } from "@/redux/slices/addSectionSlice";
 // ============
 import { BookUser, Mail, Phone } from "lucide-react";
 // ============
@@ -24,11 +22,8 @@ import AllReferences from "../all-sections/sections-details/AllReferences";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 import Watermark from "@/components/common/watermark/watermark";
 import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
-import { Fa2, FaSection } from "react-icons/fa6";
-import { FaShoePrints } from "react-icons/fa";
 import { AiFillGold } from "react-icons/ai";
 const A4_HEIGHT_PX = 1122;
-const PAGE_PADDING = 60; // adjust based on your layout padding
 
 type CurrentState = {
   fontSize: any;
@@ -50,7 +45,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
     (state: any) => state.addSection
   );
-
   const { spellCheck, grammarCheck } = useSelector(
     (state: any) => state.ImproveText
   );
@@ -66,7 +60,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
-  const [d, setD] = useState(false);
 
 
   useEffect(() => {
@@ -82,27 +75,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   // ===================
   useEffect(() => {
     setTemplateBgColor(sectionBgColor);
-    // setD(showProfilePic)
   }, [editMode, sectionBgColor]);
 
   //============= improve text logic
 
   //============= all sections
-  // const getAllText = () => {
-  //   return addedSections
-  //     ?.map((section: any) => {
-  //       console.log(section, "section========================>")
-  //       if (typeof section?.content === "string") return section.content;
-  //       if (Array.isArray(section?.content)) {
-  //         return section.content
-  //           .map((item: any) => Object.values(item).join(" "))
-  //           .join(" ");
-  //       }
-  //       return "";
-  //     })
-  //     .join("\n");
-  // };
-
   const getAllText = () => {
     return addedSections
       ?.map((section: any) => {
@@ -178,8 +155,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
 
   //============= Highlight function
 
-  const highlightChange = (text: string) => {
-    return text.split(/\s+/).map((word) => {
+  const highlightChange = (text: any) => {
+    console.log(text, "text======>")
+    return text.split(/\s+/).map((word: any) => {
       const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
       const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
       const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
@@ -209,6 +187,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={highlightChange}
           />
         );
       case "Technical Skills":
@@ -223,12 +202,14 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={highlightChange}
           />
         );
       case "Certificate":
         return <AllCertificates data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
+          highlightText={highlightChange}
         />;
       case "Education":
         return (
@@ -239,7 +220,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-          // highlightText={highlightChange}
+            highlightText={highlightChange}
           />
         );
       case "Experience":
@@ -251,6 +232,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            highlightText={highlightChange}
           />
         );
       case "Projects":
@@ -260,6 +242,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            highlightText={highlightChange}
           />
         );
       case "Awards":
@@ -272,6 +255,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             iconSize={scaleFont(13, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            highlightText={highlightChange}
           />
         );
       case "References":
@@ -295,6 +279,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={highlightChange}
           />
         );
       case "Custom Section":
@@ -307,10 +292,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
+            highlightText={highlightChange}
           />
         );
       default:
-        // return <p>{highlightWords(section?.content || "")}</p>;
         return <p>{highlightChange(section?.content || "")}</p>;
     }
   };
@@ -415,10 +400,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   }, [leftSections, measured]);
   console.log(pages)
 
-  // useEffect(() => {
-
-  // }, [showProfilePic])
-  console.log(showProfile, showIcons, "showProfilePicshowProfilePic");
+  useEffect(() => {
+    dispatch(hideTemplateIcons(true))
+    dispatch(hideTemplateProfile(false))
+  }, []);
 
   return (
     <div

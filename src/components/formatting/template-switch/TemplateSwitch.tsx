@@ -39,7 +39,7 @@ const templateData = [
     { id: 'template1', name: 'Sleek Simplicity', image: TemplateImage1 },
     { id: 'Template1copy', name: 'Sleek Simplicity Copy', image: TemplateImage1 },
     { id: 'template2', name: 'Professional Polished', image: TemplateImage2 },
-    { id: 'templateText', name: 'templateText', image: TemplateImage2 },
+    // { id: 'templateText', name: 'templateText', image: TemplateImage2 },
     // { id: 'template3', name: 'Elegant Executive', image: TemplateImage3 },
     // { id: 'template4', name: 'Creative Infusion', image: TemplateImage4 },
     // { id: 'template5', name: 'Classic Professional', image: TemplateImage5 },

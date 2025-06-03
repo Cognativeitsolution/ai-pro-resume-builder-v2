@@ -1,7 +1,6 @@
 "use client";
 // ==============
 import React, { useEffect, useRef, useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
 // ==============
 import CustomDatePicker from "../../custom/CustomDatePicker";
 // ==============
@@ -12,8 +11,7 @@ import {
   removeSection,
   sectionEditMode,
 } from "@/redux/slices/addSectionSlice";
-import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
-import { TiDelete } from "react-icons/ti";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
 import { IoLocationSharp } from "react-icons/io5";
@@ -40,6 +38,7 @@ type AllProjectsType = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllProjects = ({
@@ -53,7 +52,8 @@ const AllProjects = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllProjectsType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -206,6 +206,7 @@ const AllProjects = ({
                     style={{
                       color: textAltColor ? textAltColor : textColor
                     }}
+                    highlightText={highlightText}
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -265,6 +266,7 @@ const AllProjects = ({
                   style={{
                     color: textColor
                   }}
+                  highlightText={highlightText}
                 />
               </div>
             </div>

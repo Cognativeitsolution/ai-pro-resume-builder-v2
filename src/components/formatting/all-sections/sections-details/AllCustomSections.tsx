@@ -39,6 +39,7 @@ type AllCustomSectionType = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: any) => any;
 };
 
 const AllCustomSection = ({
@@ -54,7 +55,8 @@ const AllCustomSection = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllCustomSectionType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -194,7 +196,7 @@ const AllCustomSection = ({
                   // className="flex items-center justify-between gap-1"
                   className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}
                 >
-                  <div className="flex items-center justify-between gap-1">
+                  <div className="flex items-center justify-between gap-1 w-full">
                     {/* ====== Icon ====== */}
                     {hasField("Icon") && showIcons && (
                       <FaHome className="mb-1 text-indigo-600 h-4 w-8" size={iconSize} />
@@ -202,17 +204,29 @@ const AllCustomSection = ({
 
                     {/* ====== Job Title ====== */}
                     {hasField("Title") && (
-                      <EditableField
-                        html={exp.title || ""}
-                        onChange={(val) => handleInputChange(index, "title", val)}
-                        placeholder="Title"
-                        className="bg-transparent"
-                        placeholderClassName=""
-                        style={{
-                          fontSize: fontSize,
-                          fontFamily: fontFamily,
-                        }}
-                      />
+                      editable ?
+                        <EditableField
+                          html={exp?.title || ""}
+                          onChange={(val) => handleInputChange(index, "title", val)}
+                          placeholder="Title"
+                          className="bg-transparent"
+                          placeholderClassName=""
+                          style={{
+                            fontSize: fontSize,
+                            fontFamily: fontFamily,
+                          }}
+                        />
+                        :
+                        <div
+                          className="bg-transparent min-w-[85px] h-[27px] w-full"
+                          style={{
+                            fontSize: fontSize,
+                            fontFamily: fontFamily,
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: highlightText ? highlightText(exp?.title) : exp?.title,
+                          }}
+                        />
                     )}
                   </div>
 
@@ -250,19 +264,30 @@ const AllCustomSection = ({
                 {/* ====== Description ====== */}
 
                 {hasField("Description") && (
-                  <EditableField
-                    html={exp.description || ""}
-                    onChange={(val) =>
-                      handleInputChange(index, "description", val)
-                    }
-                    placeholder="Description"
-                    className="bg-transparent"
-                    placeholderClassName=""
-                    style={{
-                      fontSize: fontSize,
-                      fontFamily: fontFamily,
-                    }}
-                  />
+                  editable ?
+                    <EditableField
+                      html={exp.description || ""}
+                      onChange={(val) =>
+                        handleInputChange(index, "description", val)
+                      }
+                      placeholder="Description"
+                      className="bg-transparent"
+                      placeholderClassName=""
+                      style={{
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
+                      }}
+                    /> :
+                    <div
+                      className="bg-transparent min-w-[85px] "
+                      style={{
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
+                      }}
+                      dangerouslySetInnerHTML={{
+                        __html: highlightText ? highlightText(exp?.description) : exp.description,
+                      }}
+                    />
                 )}
               </div>
               {/* ====== Delete Button ====== */}

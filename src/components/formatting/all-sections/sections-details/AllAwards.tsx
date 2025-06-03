@@ -26,6 +26,7 @@ type AllAwardsProps = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllAwards = ({
@@ -39,11 +40,12 @@ const AllAwards = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: any) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userAwards } = useSelector((state: RootState) => state.addSection);
+  const { userAwards, showIcons } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [awards, setAwards] = useState<AwardType[]>([{
@@ -176,22 +178,35 @@ const AllAwards = ({
                 }
               }}
             >
-              <span style={{
+              {showIcons && <span style={{
                 color: textAltColor
-              }}>{award.icon ? award.icon : <FaAward size={award.iconSize} />}</span>
-              <input
-                value={award.title}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                // onBlur={() => handleBlur(index)}
-                placeholder="Award Name"
-                className="bg-transparent leading-7  truncate focus:outline-none transition-all duration-500 ease-in-out opacity-70 "
-                style={{
-                  color: textColor,
-                  fontSize: fontSize,
-                  fontFamily: fontFamily,
-                }}
-                autoFocus
-              />
+              }}>{award.icon ? award.icon : <FaAward size={award.iconSize} />}</span>}
+              {editable ? (
+                <input
+                  value={award.title}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  // onBlur={() => handleBlur(index)}
+                  placeholder="Award Name"
+                  className="bg-transparent leading-7  truncate focus:outline-none transition-all duration-500 ease-in-out opacity-70 "
+                  style={{
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
+                  }}
+                  autoFocus
+                />)
+                : <div
+                  className="bg-transparent leading-7 h-[27px]  truncate focus:outline-none transition-all duration-500 ease-in-out opacity-70 min-w-[95px]"
+                  style={{
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: highlightText ? highlightText(award.title) : award.title,
+                  }}
+                />
+              }
               <div className={`transition-all duration-300 ease-in-out transform right-2 top-1 absolute  ${hoveredIndex === index ? 'translate-x-0 opacity-100' : 'translate-x-3 opacity-0'}`} >
                 <button onClick={() => handleDeleteAward(index)} className="text-red-600">
                   <RiDeleteBin6Line size={18} />

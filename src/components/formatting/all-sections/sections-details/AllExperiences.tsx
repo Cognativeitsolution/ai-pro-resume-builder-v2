@@ -1,7 +1,6 @@
 "use client";
 // ==============
 import React, { useEffect, useRef, useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
 // ==============
 import CustomDatePicker from "../../custom/CustomDatePicker";
 // ==============
@@ -18,6 +17,7 @@ import EditableField from "@/components/editor/editable-field";
 import { IoLocationSharp } from "react-icons/io5";
 import { ImMoveDown, ImMoveUp } from "react-icons/im";
 import { moveItem } from "@/utils/moveUpDown";
+import AiRobo from "../../aiAssistant/AiRobo";
 
 type ExperienceType = {
   title: string;
@@ -40,6 +40,7 @@ type AllExperienceType = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllExperiences = ({
@@ -55,7 +56,8 @@ const AllExperiences = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -212,6 +214,7 @@ const AllExperiences = ({
                       fontFamily: fontFamily,
                     }}
                     className="bg-transparent"
+                    highlightText={highlightText}
                   />
                 </div>
                 {/* ====== Date Picker ====== */}
@@ -263,20 +266,6 @@ const AllExperiences = ({
               </div>
               {/* ====== Description ====== */}
               <div>
-                {/* <textarea
-                  value={exp.description}
-                  disabled={!editable}
-                  onChange={(e) =>
-                    handleInputChange(index, "description", e.target.value)
-                  }
-                  placeholder="Description"
-                  style={{
-                    color: textColor,
-                    fontSize: fontSize,
-                    fontFamily: fontFamily,
-                  }}
-                  className="w-full text-[14px] bg-transparent placeholder:text-[14px] focus:outline focus:outline-[0.1px] focus:outline-indigo-600 "
-                ></textarea> */}
                 <EditableField
                   html={exp.description || ""}
                   onChange={(val) =>
@@ -289,7 +278,20 @@ const AllExperiences = ({
                     fontSize: fontSize,
                     fontFamily: fontFamily,
                   }}
+                  highlightText={highlightText}
                 />
+                {/* AI Assistant Button */}
+                {editable && (
+                  <AiRobo
+                    input={false}
+                    positionClass="-left-[75px] hover:-left-[159px] top-8"
+                    info={
+                      exp.title?.trim()
+                        ? "Generate ideas for new bullets."
+                        : "Please include more information in your resume and I will help you with improving and tailoring it."
+                    }
+                  />
+                )}
               </div>
             </div>
             {/* ====== Delete Button ====== */}

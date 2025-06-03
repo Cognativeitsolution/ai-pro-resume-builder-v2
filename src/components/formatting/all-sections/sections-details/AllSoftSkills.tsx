@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { TiDelete } from "react-icons/ti";
-import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { RootState } from "@/redux/store";
 import {
   addUserSoft_Skills,
@@ -14,7 +13,7 @@ import SectionToolbar from "../../section-toolbar/SectionToolbar";
 type SoftSkillType = {
   title: string;
   level?: number;
-}; 
+};
 
 type AllSoftSkillsProps = {
   data?: { id: any };
@@ -29,6 +28,7 @@ type AllSoftSkillsProps = {
   isVerticleHeader?: any;
   headerPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllSoftSkills = ({
@@ -43,7 +43,8 @@ const AllSoftSkills = ({
   dotPosition,
   isVerticleHeader,
   headerPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllSoftSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -186,15 +187,25 @@ const AllSoftSkills = ({
                 }
               }}
             >
-              <input
-                value={skill.title}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                onBlur={() => handleBlur(index)}
-                placeholder="Soft Skill"
-                className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70 "
-                style={{ color: textAltColor }}
-                autoFocus
-              />
+              {editable ? (
+                <input
+                  value={skill.title}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  onBlur={() => handleBlur(index)}
+                  placeholder="Soft Skill"
+                  className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70 "
+                  style={{ color: textAltColor }}
+                  autoFocus
+                />)
+                :
+                <div
+                  className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70"
+                  style={{ color: textAltColor }}
+                  dangerouslySetInnerHTML={{
+                    __html: highlightText ? highlightText(skill.title) : skill.title,
+                  }}
+                />
+              }
 
               <div className="w-6 relative">
                 <div className={`transition-all duration-300 ease-in-out transform absolute right-0 -top-2  ${hoveredIndex === index ? 'translate-x-0 opacity-100' : 'translate-x-3 opacity-0'}`} >

@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TiDelete } from 'react-icons/ti';
-import { RiAddCircleFill, RiDeleteBin6Line } from 'react-icons/ri';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
 import { addUserTechnical_Skills, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
@@ -14,7 +13,7 @@ type TechnicalSkillType = {
 
 type AllTechnicalSkillsProps = {
   data?: { id: any };
-  textColor?: string; 
+  textColor?: string;
   textAltColor?: string;
   templateColor?: string;
   editableAltBG?: string;
@@ -25,6 +24,7 @@ type AllTechnicalSkillsProps = {
   isVerticleHeader?: any;
   headerPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllTechnicalSkills = ({
@@ -39,7 +39,8 @@ const AllTechnicalSkills = ({
   dotPosition,
   isVerticleHeader,
   headerPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllTechnicalSkillsProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -158,15 +159,26 @@ const AllTechnicalSkills = ({
               }
             }}
           >
-            <input
-              value={skill.title}
-              onChange={(e) => handleInputChange(index, e.target.value)}
-              onBlur={() => handleBlur(index)}
-              placeholder="Technical Skill"
-              className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70"
-              style={{ color: textAltColor, }}
-              autoFocus
-            />
+            {editable ? (
+              <input
+                value={skill.title}
+                onChange={(e) => handleInputChange(index, e.target.value)}
+                onBlur={() => handleBlur(index)}
+                placeholder="Technical Skill"
+                className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70"
+                style={{ color: textAltColor, }}
+                autoFocus
+              />
+            )
+              :
+              <div
+                className="bg-transparent  text-sm truncate leading-8  focus:outline-none transition-all duration-500 ease-in-out w-[115px] opacity-70"
+                style={{ color: textAltColor }}
+                dangerouslySetInnerHTML={{
+                  __html: highlightText ? highlightText(skill.title) : skill.title,
+                }}
+              />
+            }
             {hoveredIndex === index && (
               <button onClick={() => handleDeleteTechnicalSkill(index)} className="opacity-70 hover:opacity-100">
                 <RiDeleteBin6Line size={18} style={{ color: textAltColor, }} />

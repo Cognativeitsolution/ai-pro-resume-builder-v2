@@ -8,8 +8,7 @@ import {
   removeSection,
   sectionEditMode,
 } from "@/redux/slices/addSectionSlice";
-import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
-import { TiDelete } from "react-icons/ti";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import CustomDatePicker from "../../custom/CustomDatePicker";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
@@ -35,6 +34,7 @@ type AllSummaryType = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllCertificates = ({
@@ -50,7 +50,8 @@ const AllCertificates = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllSummaryType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -192,6 +193,7 @@ const AllCertificates = ({
                         fontSize: fontSize,
                         fontFamily: fontFamily,
                       }}
+                      highlightText={highlightText}
                     />
                   </div>
                   {/* ====== Date Picker ====== */}
@@ -211,6 +213,7 @@ const AllCertificates = ({
                       fontSize: fontSize,
                       fontFamily: fontFamily,
                     }}
+                    highlightText={highlightText}
                   />
                 </div>
                 <div>
@@ -226,6 +229,7 @@ const AllCertificates = ({
                       fontSize: fontSize,
                       fontFamily: fontFamily,
                     }}
+                    highlightText={highlightText}
                   />
                 </div>
               </div>

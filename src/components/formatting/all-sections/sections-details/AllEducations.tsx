@@ -1,7 +1,6 @@
 "use client";
 // ==============
 import React, { useEffect, useRef, useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
 // ==============
 import CustomDatePicker from "../../custom/CustomDatePicker";
 // ==============
@@ -12,8 +11,7 @@ import {
   removeSection,
   sectionEditMode,
 } from "@/redux/slices/addSectionSlice";
-import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
-import { TiDelete } from "react-icons/ti";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
 import { IoLocationSharp } from "react-icons/io5";
@@ -79,8 +77,6 @@ const AllEducation = ({
       setEducations(userEducation);
     }
   }, [userEducation]);
-
-
 
   const handleContentChange = (
     index: number,
@@ -193,9 +189,9 @@ const AllEducation = ({
                       {/* {editable ? */}
                       <EditableField
                         html={exp.degree}
-                        onChange={(val) =>
-                          handleContentChange(index, "degree", val)
-                        }
+                        onChange={(val) => {
+                          handleContentChange(index, "degree", val);
+                        }}
                         placeholder="Degree and Field of Study"
                         style={{
                           color: textAltColor ? textAltColor : textColor,
@@ -205,19 +201,6 @@ const AllEducation = ({
                         className="bg-transparent"
                         highlightText={highlightText}
                       />
-                      {/* :
-                        <p
-                          style={{
-                            color: textAltColor ? textAltColor : textColor,
-                            fontSize: fontSize,
-                            fontFamily: fontFamily,
-                          }}
-                          className="bg-transparent"
-                          dangerouslySetInnerHTML={{
-                            __html: exp.degree,
-                          }}
-                        />
-                      } */}
                     </div>
                     {/* ====== Date Picker ====== */}
                     {term3 ? null :
@@ -229,10 +212,10 @@ const AllEducation = ({
                       {/* ====== Icon ====== */}
                       {showIcons && <IoLocationSharp className="mb-1 text-indigo-600" size={14} />}
                       <EditableField
-                        html={exp.location || ""}
-                        onChange={(val) =>
-                          handleContentChange(index, "location", val)
-                        }
+                        html={exp.location}
+                        onChange={(val) => {
+                          handleContentChange(index, "location", val);
+                        }}
                         placeholder="Location"
                         className="bg-transparent text-left "
                         style={{
@@ -253,10 +236,9 @@ const AllEducation = ({
                     <div className="w-full">
                       <EditableField
                         html={exp.schoolName}
-                        onChange={(val) =>
-                          handleContentChange(index, "schoolName"
-                            , val)
-                        }
+                        onChange={(val) => {
+                          handleContentChange(index, "schoolName", val);
+                        }}
                         placeholder="School or University"
                         className="bg-transparent"
                         style={{
