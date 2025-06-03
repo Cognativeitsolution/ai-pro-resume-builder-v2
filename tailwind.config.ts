@@ -52,12 +52,16 @@ export default {
         primaryCran: "#00caa5",
         primarySlate: "#343434",
       },
-       keyframes: {
+      keyframes: {
         fadeInUp: {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        "bounce-in-up": {
+        fadeInRight: {
+          '0%': { opacity: '0', transform: 'translateX(10px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        bounceInUp: {
           "0%": { transform: "translateY(50px)", opacity: "0" },
           "60%": { transform: "translateY(-10px)", opacity: "1" },
           "80%": { transform: "translateY(5px)" },
@@ -70,9 +74,9 @@ export default {
       },
       animation: {
         fadeInUp: "fadeInUp 0.5s ease-out forwards",
-        "bounce-in-up": "bounce-in-up 0.8s ease-out forwards",
-        rotate:
-          "rotate 50s cubic-bezier(0.8, 0.2, 0.2, 0.8) infinite alternate",
+        fadeInRight: 'fadeInRight 0.3s ease-out forwards',
+        bounceInUp: "bounceInUp 0.8s ease-out forwards",
+        rotate: "rotate 50s cubic-bezier(0.8, 0.2, 0.2, 0.8) infinite alternate",
       },
     },
   },

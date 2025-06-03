@@ -9,7 +9,7 @@ import DesignFont from "../DesignFont/DesignFont";
 import ImproveText from "../improveText/improveText";
 import AtsCheck from "../AtsCheck/AtsCheck";
 import ReArrange from "../rearrange/rearrange";
-import AiAssistant from "../aiAssistant/AiAssistant";
+import AiBot from "../aiAssistant/AiBot";
 // ===============
 import sections from 'media/builderIcons/sections.svg';
 import templetes from 'media/builderIcons/templetes.svg';
@@ -155,7 +155,7 @@ const TextEditor = (props: TextEditorProps) => {
           {/* ===== ATS Check ===== */}
           {activeTabContext === "ATS Check" && <AtsCheck />}
           {/* ===== AI Assistant ===== */}
-          {activeTabContext === "AI Assistant" && <AiAssistant />}
+          {activeTabContext === "AI Assistant" && <AiBot />}
           {/* ===== Summary Generator ===== */}
           {activeTabContext === "Summary Generator" && <div>Summary Generator Content</div>}
           {/* ===== Rearrange ===== */}
