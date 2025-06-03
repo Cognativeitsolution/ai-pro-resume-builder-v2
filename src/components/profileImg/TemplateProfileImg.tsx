@@ -10,12 +10,14 @@ import { FaCloudUploadAlt } from 'react-icons/fa';
 // ============
 import usePopup from '@/app/configs/store/Popup';
 import { removeProfileImage } from "@/redux/slices/profileImageSlice";
+import { sectionShowProfile } from '@/redux/slices/addSectionSlice';
 
 const TemplateProfileImg = () => {
     const dispatch = useDispatch();
     const [editable, setEditable] = useState(true);
     const { imagePopup, toggleImagePopup } = usePopup();
     const imageData = useSelector((state: RootState) => state.profileImage);
+    const { showProfile } = useSelector((state: RootState) => state.addSection);
 
     const popupHandle = () => {
         toggleImagePopup(!imagePopup);
@@ -23,11 +25,12 @@ const TemplateProfileImg = () => {
 
     const handleRemoveProfileImg = () => {
         dispatch(removeProfileImage());
+        dispatch(sectionShowProfile(false))
         setEditable(false);
     };
 
     if (!editable) return null;
-
+    if (!showProfile) return null;
     return (
         <div className="flex flex-col items-center mb-6 relative">
             {/*====== Container that shows avatar and clips overflow ======*/}
