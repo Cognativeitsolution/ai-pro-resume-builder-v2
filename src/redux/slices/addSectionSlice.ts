@@ -157,6 +157,7 @@ export const addSectionSlice = createSlice({
       }
 
       state.userSummary = improved;
+      console.log(improved, "improvedSummary")
     },
     addUserSoft_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
@@ -190,12 +191,14 @@ export const addSectionSlice = createSlice({
         location: improveText(edu.location || ""),
       }));
 
-      state.userEducation = improved;
-
       const section = state.addedSections.find(sec => sec.id === sectionId);
       if (section) {
         (section as any).detail = improved;
+        console.log(improved, "improvedEducation + 1111")
       }
+
+      state.userEducation = improved;
+      console.log(improved, "improvedEducation")
     },
     addUserExperience: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;

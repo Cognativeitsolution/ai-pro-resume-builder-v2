@@ -8,3 +8,17 @@ export function improveText(text: string): string {
         .join('. ')
         .trim();
 }
+
+// export function improveText(text: string): string {
+//     return text
+//         .split('.')
+//         .map(sentence => {
+//             const trimmed = sentence.trim();
+//             return trimmed.length > 0
+//                 ? trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase()
+//                 : '';
+//         })
+//         .filter(Boolean)
+//         .join('. ')
+//         .trim();
+// }
