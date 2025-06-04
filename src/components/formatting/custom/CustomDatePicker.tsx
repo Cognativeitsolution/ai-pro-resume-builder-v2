@@ -30,9 +30,7 @@ const CustomDatePicker: React.FC<Props> = ({ onChange, dateAlign }) => {
     const [toDate, setToDate] = useState<DateType>({ year: null, month: null });
     const [isPresent, setIsPresent] = useState(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const { showIcons } = useSelector(
-        (state: RootState) => state.addSection
-    );
+    const { showIcons } = useSelector((state: RootState) => state.addSection);
     // Generate a list of years from 2000 to current year
     const allYears = Array.from({ length: new Date().getFullYear() - 2000 + 1 }, (_, i) => 2000 + i);
     const [yearPage, setYearPage] = useState(0);
@@ -89,10 +87,7 @@ const CustomDatePicker: React.FC<Props> = ({ onChange, dateAlign }) => {
 
     return (
         <div className={`relative w-[200px] flex items-center ${dateAlign ? dateAlign : "justify-end"} gap-2`} ref={wrapperRef}>
-            <button
-                className="text-xs flex items-center gap-1"
-                onClick={() => setShowPicker(!showPicker)}
-            >
+            <button className={`text-sm flex items-center gap-1 ${displayText === 'Date' ? 'text-gray-400' : 'text-black'}`} onClick={() => setShowPicker(!showPicker)}>
                 {showIcons && <FaCalendarAlt />}
                 {displayText}
             </button>

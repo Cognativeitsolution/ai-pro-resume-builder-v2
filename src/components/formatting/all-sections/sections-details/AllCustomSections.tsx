@@ -1,18 +1,19 @@
 "use client";
+// ==============
 import React, { useEffect, useRef, useState } from "react";
+// ==============
+import { FaHome } from 'react-icons/fa';
 import { RiDeleteBin6Line } from "react-icons/ri";
-import CustomDatePicker from "../../custom/CustomDatePicker";
-import SectionToolbar from "../../section-toolbar/SectionToolbar";
+import { IoLocationSharp } from "react-icons/io5";
+// ==============
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  removeSection,
-  addUserCustomSection,
-  sectionEditMode,
-} from "@/redux/slices/addSectionSlice";
+import { removeSection, addUserCustomSection, sectionEditMode } from "@/redux/slices/addSectionSlice";
+// ==============
+import AiRobo from "../../aiAssistant/AiRobo";
+import CustomDatePicker from "../../custom/CustomDatePicker";
 import EditableField from "@/components/editor/editable-field";
-import { FaHome } from 'react-icons/fa';
-import { IoLocationSharp } from "react-icons/io5";
+import SectionToolbar from "../../section-toolbar/SectionToolbar";
 
 type CustomSectionType = {
   title: string;
@@ -87,7 +88,7 @@ const AllCustomSection = ({
 
 
 
-  // Handle input changes for each field in an customSections entry
+  //====== Handle input changes for each field in an customSections entry
   const handleInputChange = (
     index: number,
     field: keyof CustomSectionType,
@@ -98,7 +99,7 @@ const AllCustomSection = ({
     setCustomSection(updated);
   };
 
-  // Add a new blank customSections entry
+  //====== Add a new blank customSections entry
   const handleAddCustomSection = () => {
     setCustomSection([
       ...customSections,
@@ -106,7 +107,7 @@ const AllCustomSection = ({
     ]);
   };
 
-  // Remove the entire section and reset associated customSections in the Redux store
+  //====== Remove the entire section and reset associated customSections in the Redux store
   const handleRemoveSection = () => {
     if (data) {
       dispatch(removeSection(data));
@@ -120,7 +121,7 @@ const AllCustomSection = ({
     }
   };
 
-  // Delete a specific customSections entry by index
+  //====== Delete a specific customSections entry by index
   const handleDelete = (index: number) => {
     const updated = customSections.filter((_, i) => i !== index);
     setCustomSection(updated);
@@ -141,7 +142,7 @@ const AllCustomSection = ({
     setCustomSectionFields(arrayy)
   }, [userCustomSections, addedSections]);
 
-  // Detect click outside the component to disable editing and save data to Redux
+  //====== Detect click outside the component to disable editing and save data to Redux
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -186,16 +187,14 @@ const AllCustomSection = ({
           isDot={isDot}
         />
       )}
+
       {/* ===== Section Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
         {customSections.length > 0 &&
           customSections.map((exp, index) => (
             <div key={index}>
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
-                <div
-                  // className="flex items-center justify-between gap-1"
-                  className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}
-                >
+                <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
                   <div className="flex items-center justify-between gap-1 w-full">
                     {/* ====== Icon ====== */}
                     {hasField("Icon") && showIcons && (
@@ -204,29 +203,21 @@ const AllCustomSection = ({
 
                     {/* ====== Job Title ====== */}
                     {hasField("Title") && (
-                      editable ?
+                      <div className="flex items-center justify-start gap-1 w-full">
                         <EditableField
-                          html={exp?.title || ""}
+                          html={exp.title || ""}
                           onChange={(val) => handleInputChange(index, "title", val)}
                           placeholder="Title"
-                          className="bg-transparent"
-                          placeholderClassName=""
+                          className="bg-transparent !text-[15px]"
+                          placeholderClassName="!text-[15px]"
                           style={{
+                            color: textColor,
                             fontSize: fontSize,
                             fontFamily: fontFamily,
                           }}
+                          highlightText={highlightText}
                         />
-                        :
-                        <div
-                          className="bg-transparent min-w-[85px] h-[27px] w-full"
-                          style={{
-                            fontSize: fontSize,
-                            fontFamily: fontFamily,
-                          }}
-                          dangerouslySetInnerHTML={{
-                            __html: highlightText ? highlightText(exp?.title) : exp?.title,
-                          }}
-                        />
+                      </div>
                     )}
                   </div>
 
@@ -236,18 +227,20 @@ const AllCustomSection = ({
                       <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} />
                   )}
                 </div>
+
                 {/* ====== Location ====== */}
                 {hasField("Location") && (
-                  <div className="flex items-center justify-start gap-1 ">
+                  <div className="flex items-center justify-start gap-1">
                     {/* ====== Icon ====== */}
                     {showIcons && <IoLocationSharp className="mb-1 text-indigo-600" size={14} />}
                     <EditableField
                       html={exp.location || ""}
                       onChange={(val) => handleInputChange(index, "location", val)}
                       placeholder="Location"
-                      className="bg-transparent"
-                      placeholderClassName=""
+                      className="bg-transparent !text-[14px]"
+                      placeholderClassName="!text-[14px]"
                       style={{
+                        color: textColor,
                         fontSize: fontSize,
                         fontFamily: fontFamily,
                       }}
@@ -258,38 +251,43 @@ const AllCustomSection = ({
                 {/* ====== Date Picker ====== */}
                 {hasField("Date") && (
                   term3 ?
-                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start  mb-1"} />
+                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start mb-1"} />
                     : null
                 )}
-                {/* ====== Description ====== */}
 
+                {/* ====== Description ====== */}
                 {hasField("Description") && (
-                  editable ?
+                  <div className="flex items-center justify-start gap-1 w-full">
                     <EditableField
                       html={exp.description || ""}
-                      onChange={(val) =>
-                        handleInputChange(index, "description", val)
-                      }
+                      onChange={(val) => handleInputChange(index, "description", val)}
                       placeholder="Description"
-                      className="bg-transparent"
-                      placeholderClassName=""
+                      className="bg-transparent !text-[14px]"
+                      placeholderClassName="!text-[14px]"
                       style={{
+                        color: textColor,
                         fontSize: fontSize,
                         fontFamily: fontFamily,
                       }}
-                    /> :
-                    <div
-                      className="bg-transparent min-w-[85px] "
-                      style={{
-                        fontSize: fontSize,
-                        fontFamily: fontFamily,
-                      }}
-                      dangerouslySetInnerHTML={{
-                        __html: highlightText ? highlightText(exp?.description) : exp.description,
-                      }}
+                      highlightText={highlightText}
                     />
+                  </div>
                 )}
               </div>
+
+              {/*====== AI Assistant Button ======*/}
+              {editable && (
+                <AiRobo
+                  input={false}
+                  positionClass="-left-[70px] hover:-left-[154px] top-20"
+                  info={
+                    exp.title?.trim()
+                      ? "Generate ideas for new bullets."
+                      : "Please include more information in your resume and I will help you with improving and tailoring it."
+                  }
+                />
+              )}
+
               {/* ====== Delete Button ====== */}
               {editable && (
                 <div className={`absolute bottom-0 -right-[27px] transition-all duration-300 ease-in-out

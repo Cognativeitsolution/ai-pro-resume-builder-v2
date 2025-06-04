@@ -2,22 +2,20 @@
 // ==============
 import React, { useEffect, useRef, useState } from "react";
 // ==============
-import CustomDatePicker from "../../custom/CustomDatePicker";
-// ==============
-import { RootState } from "@/redux/store";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addUserProjects,
-  removeSection,
-  sectionEditMode,
-} from "@/redux/slices/addSectionSlice";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import SectionToolbar from "../../section-toolbar/SectionToolbar";
-import EditableField from "@/components/editor/editable-field";
 import { IoLocationSharp } from "react-icons/io5";
 import { ImMoveUp } from 'react-icons/im';
 import { ImMoveDown } from 'react-icons/im';
+// ==============
+import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { addUserProjects, removeSection, sectionEditMode } from "@/redux/slices/addSectionSlice";
 import { moveItem } from "@/utils/moveUpDown";
+// ==============
+import AiRobo from "../../aiAssistant/AiRobo";
+import CustomDatePicker from "../../custom/CustomDatePicker";
+import EditableField from "@/components/editor/editable-field";
+import SectionToolbar from "../../section-toolbar/SectionToolbar";
 
 type ProjectType = {
   projectName: string;
@@ -31,6 +29,8 @@ type AllProjectsType = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  fontSize?: any;
+  fontFamily?: any;
   term2?: any;
   term3?: any;
   dotPosition?: any;
@@ -46,6 +46,8 @@ const AllProjects = ({
   textColor = "#000",
   textAltColor = "",
   templateColor,
+  fontSize,
+  fontFamily,
   term2,
   term3,
   dotPosition,
@@ -72,14 +74,15 @@ const AllProjects = ({
     setEditable(true);
     dispatch(sectionEditMode(true));
   };
-  // Sync local state with Redux store when userProjects changes
+
+  //====== Sync local state with Redux store when userProjects changes
   useEffect(() => {
     if (Array.isArray(userProjects) && userProjects.length > 0) {
       setProjects(userProjects);
     }
   }, [userProjects]);
 
-  // Handle changes in the project fields (e.g., name, description)
+  //====== Handle changes in the project fields (e.g., name, description)
   const handleInputChange = (
     index: number,
     field: keyof ProjectType,
@@ -90,7 +93,7 @@ const AllProjects = ({
     setProjects(updated);
   };
 
-  // Add a new, empty project entry to the list
+  //====== Add a new, empty project entry to the list
   const handleAddProject = () => {
     setProjects([
       ...projects,
@@ -98,7 +101,7 @@ const AllProjects = ({
     ]);
   };
 
-  // Remove the entire section from Redux and clear its data
+  //====== Remove the entire section from Redux and clear its data
   const handleRemoveSection = () => {
     if (data) {
       dispatch(removeSection(data));
@@ -106,7 +109,7 @@ const AllProjects = ({
     }
   };
 
-  // Delete a specific project from the list based on index
+  //====== Delete a specific project from the list based on index
   const handleDelete = (index: number) => {
     if (projects?.length <= 1 && index === 0) {
       handleRemoveSection();
@@ -119,7 +122,7 @@ const AllProjects = ({
 
   };
 
-  // Handle clicks outside the component to exit edit mode and save data to Redux
+  //====== Handle clicks outside the component to exit edit mode and save data to Redux
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -133,10 +136,10 @@ const AllProjects = ({
       }
     };
 
-    // Attach listener on mount
+    //====== Attach listener on mount
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Clean up on unmount
+    //====== Clean up on unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -188,7 +191,7 @@ const AllProjects = ({
         />
       )}
 
-      {/* ===== Education Box ===== */}
+      {/* ===== Project Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
         {projects.map((project, index) => (
           <div key={index} className={`relative`}>
@@ -202,9 +205,12 @@ const AllProjects = ({
                       handleInputChange(index, "projectName", val)
                     }
                     placeholder="Project Name"
-                    className="text-[16px] bg-transparent"
+                    className="bg-transparent !text-[15px]"
+                    placeholderClassName="!text-[15px]"
                     style={{
-                      color: textAltColor ? textAltColor : textColor
+                      color: textAltColor ? textAltColor : textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
                     }}
                     highlightText={highlightText}
                   />
@@ -226,9 +232,12 @@ const AllProjects = ({
                         handleInputChange(index, "location", val)
                       }
                       placeholder="Location"
-                      className={`text-[16px] bg-transparent`}
+                      className="bg-transparent !text-[14px]"
+                      placeholderClassName="!text-[14px]"
                       style={{
-                        color: textColor
+                        color: textColor,
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
                       }}
                     />
                   </div>
@@ -246,14 +255,17 @@ const AllProjects = ({
                       handleInputChange(index, "projectUrl", val)
                     }
                     placeholder="Project Url"
-                    className="text-[16px] bg-transparent"
+                    className="bg-transparent !text-[14px]"
+                    placeholderClassName="!text-[14px]"
                     style={{
-                      color: textColor
+                      color: textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
                     }}
                   />
                 </div>
-
               </div>
+
               {/* ====== Description ====== */}
               <div>
                 <EditableField
@@ -262,16 +274,32 @@ const AllProjects = ({
                     handleInputChange(index, "description", val)
                   }
                   placeholder="Description"
-                  className="text-[16px] bg-transparent"
+                  className="bg-transparent !text-[14px]"
+                  placeholderClassName="!text-[14px]"
                   style={{
-                    color: textColor
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
                   }}
                   highlightText={highlightText}
                 />
               </div>
             </div>
-            {/* ====== Delete Button ====== */}
 
+            {/*====== AI Assistant Button ======*/}
+            {editable && (
+              <AiRobo
+                input={false}
+                positionClass="-left-[75px] hover:-left-[159px] top-8"
+                info={
+                  project.projectName?.trim()
+                    ? "Generate ideas for new bullets."
+                    : "Please include more information in your resume and I will help you with improving and tailoring it."
+                }
+              />
+            )}
+
+            {/* ====== Delete Button ====== */}
             {editable && (
               <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
                 {projects?.length > 1 &&

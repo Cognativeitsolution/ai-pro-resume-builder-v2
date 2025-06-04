@@ -20,6 +20,8 @@ type AllSummaryType = {
   textColor?: string;
   textAltColor: string;
   templateColor: string;
+  fontSize?: any;
+  fontFamily?: any;
   dotPosition?: any;
   isVerticleHeader?: any;
   headerPosition?: any;
@@ -32,6 +34,8 @@ const AllReferences = ({
   textColor = '#fff',
   textAltColor,
   templateColor,
+  fontSize,
+  fontFamily,
   dotPosition,
   isVerticleHeader,
   headerPosition,
@@ -149,10 +153,14 @@ const AllReferences = ({
                 <input
                   value={cert.name}
                   onChange={(e) => handleInputChange(index, 'name', e.target.value)}
-                  // onBlur={() => handleBlur(index)}
                   placeholder="Reference Name"
                   type='text'
-                  className="w-[50%] bg-transparent leading-8 text-sm  rounded  placeholder:text-gray-600 focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-[50%] bg-transparent text-sm leading-8 rounded placeholder:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-0 focus:border-0"
+                  style={{
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
+                  }}
                 />
                 <div className="h-[2px] w-5" style={{
                   background: textAltColor
@@ -163,9 +171,13 @@ const AllReferences = ({
                   type="text"
                   value={cert.contact}
                   placeholder="Reference Contact"
-                  // onBlur={() => handleBlur(index)}
                   onChange={(e) => handleInputChange(index, 'contact', e.target.value)}
-                  className="w-full bg-transparent text-sm leading-8 rounded  focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
+                  className="w-full bg-transparent text-sm leading-8 rounded placeholder:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-0 focus:border-0"
+                  style={{
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
+                  }}
                 />
               </div>
               {editable && (
