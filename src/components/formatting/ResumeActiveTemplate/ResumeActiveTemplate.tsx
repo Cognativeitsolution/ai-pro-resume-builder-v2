@@ -16,6 +16,7 @@ import Template1Copy from "../Template/template1copy";
 import ResumeTemplate from "../Template/template";
 import { sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 import { RootState } from "@/redux/store";
+import axios from "axios";
 
 type CurrentState = {
   fontSize: string;
@@ -36,16 +37,127 @@ type ResumePreviewProps = {
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
   const { showProfile, isTempIcons, isTempProfile } = useSelector((state: RootState) => state.addSection);
+  const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
+  const settingsRef = useRef<HTMLDivElement | null>(null);
+  const dispatch = useDispatch();
 
   const [showSettings, setShowSettings] = useState(false);
   const [showProfilePic, setShowProfilePic] = useState(false);
   const [shoeAllIcons, setShoeAllIcons] = useState(false);
-  const dispatch = useDispatch();
-  const settingsRef = useRef<HTMLDivElement | null>(null);
+
+  const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
+  const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
+
+  // font size 
+  const scaleFont = (base: number, size: string) => {
+    const scaleMap: Record<string, number> = {
+      small: 0.85,
+      medium: 1,
+      large: 1.2,
+    };
+    return `${base * (scaleMap[size] || 1)}px`;
+  };
+
+  // improve Text 
+
+
+  const getAllText = () => {
+    return addedSections
+      ?.map((section: any) => {
+        // Education
+        if (section.name === "Education" && Array.isArray(section.detail)) {
+          console.log("EDUCATION DEBUG", section.detail);
+          return section.detail
+            .map((edu: any) =>
+              [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
+            )
+            .join(" ");
+        }
+
+        // Generic string description support
+        if (typeof section.description === "string") return section.description;
+
+        // Fallback for array-based description
+        if (Array.isArray(section.description)) {
+          return section.description
+            .map((item: any) => Object.values(item).join(" "))
+            .join(" ");
+        }
+
+        return "";
+      })
+      .join("\n");
+  };
+
+  const fullText = getAllText();
+
+  useEffect(() => {
+    const fetchCorrections = async () => {
+      if (!spellCheck && !grammarCheck) return;
+      // setLoading(true);
+      try {
+        let spellingMistakes: string[] = [];
+        let grammarMistakes: string[] = [];
+
+        if (spellCheck) {
+          const spellResponse = await axios.post(
+            "https://ai.spellcheck.aiproresume.com/api/v1/spell-correction",
+            { text: fullText },
+            { headers: { "Content-Type": "application/json" } }
+          );
+          spellingMistakes =
+            spellResponse.data?.data?.map(
+              (item: any) => item?.misspelledWord
+            ) || [];
+        }
+
+        if (grammarCheck) {
+          const grammarResponse = await axios.post(
+            "https://ai.grmcheck.aiproresume.com/api/v1/grammar-correction",
+            { text: fullText },
+            { headers: { "Content-Type": "application/json" } }
+          );
+          grammarMistakes =
+            grammarResponse.data?.data?.map((item: any) => item?.wrongWords) ||
+            [];
+        }
+
+        setIncorrectWords(spellingMistakes);
+        setGrammarErrors(grammarMistakes);
+      } catch (err) {
+        console.error("Error during API call:", err);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchCorrections();
+  }, [spellCheck, grammarCheck, fullText]);
+
+  //============= Highlight function
+
+  const highlightChange = (text: string) => {
+    return text.split(/\s+/).map((word) => {
+      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
+      const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
+      const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
+
+      let spanClass = '';
+      if (isSpellingMistake) spanClass += 'text-red-500 ';
+      if (isGrammarMistake) spanClass += 'bg-blue-200 underline';
+
+      if (isSpellingMistake || isGrammarMistake) {
+        return `<span class="${spanClass.trim()}">${word}</span>`;
+      } else {
+        return word;
+      }
+    }).join(' ');
+  };
+  // template redering
   const renderTemplate = () => {
     switch (selectedTemplate) {
       case "template1":
-        return <Template1 currentState={currentState} updateState={updateState} />;
+        return <Template1 currentState={currentState} scaleFont={scaleFont} highlightChange={highlightChange} />;
       case "Template1copy":
         return <Template1Copy currentState={currentState} updateState={updateState} />;
       case "template2":
@@ -63,9 +175,11 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
       case "template10":
         return <Template10 currentState={currentState} updateState={updateState} />;
       default:
-        return <Template1 currentState={currentState} updateState={updateState} />;
+        return <Template1 currentState={currentState} scaleFont={scaleFont} highlightChange={highlightChange} />;
     }
   };
+
+
 
   useEffect(() => {
     console.log("Re-rendered due to selectedTemplate change:", selectedTemplate);

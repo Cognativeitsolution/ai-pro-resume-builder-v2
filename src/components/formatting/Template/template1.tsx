@@ -37,20 +37,15 @@ type CurrentState = {
 
 type ResumePreviewProps = {
   currentState: CurrentState;
-  updateState: (newState: CurrentState) => void;
+  scaleFont: any;
+  highlightChange: any;
 };
 
-const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
+const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
     (state: any) => state.addSection
   );
-  const { spellCheck, grammarCheck } = useSelector(
-    (state: any) => state.ImproveText
-  );
-  const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
-  const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [secName, setSecName] = useState("");
   const [templateBgColor, setTemplateBgColor] = useState<any>("");
   const [editable, setEditable] = useState<boolean>(false);
@@ -60,114 +55,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
-
-
-  useEffect(() => {
-    setSecName("Custom Section");
-  }, []);
-
   const [pages, setPages] = useState<any[][]>([]);
+
   const HandleChangeSectionName = (data: any) => {
     console.log(data);
     setSecName(data);
-  };
-
-  // ===================
-  useEffect(() => {
-    setTemplateBgColor(sectionBgColor);
-  }, [editMode, sectionBgColor]);
-
-  //============= improve text logic
-
-  //============= all sections
-  const getAllText = () => {
-    return addedSections
-      ?.map((section: any) => {
-        // Education
-        if (section.name === "Education" && Array.isArray(section.detail)) {
-          console.log("EDUCATION DEBUG", section.detail);
-          return section.detail
-            .map((edu: any) =>
-              [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
-            )
-            .join(" ");
-        }
-
-        // Generic string description support
-        if (typeof section.description === "string") return section.description;
-
-        // Fallback for array-based description
-        if (Array.isArray(section.description)) {
-          return section.description
-            .map((item: any) => Object.values(item).join(" "))
-            .join(" ");
-        }
-
-        return "";
-      })
-      .join("\n");
-  };
-
-  const fullText = getAllText();
-
-  useEffect(() => {
-    const fetchCorrections = async () => {
-      if (!spellCheck && !grammarCheck) return;
-      setLoading(true);
-      try {
-        let spellingMistakes: string[] = [];
-        let grammarMistakes: string[] = [];
-
-        if (spellCheck) {
-          const spellResponse = await axios.post(
-            "https://ai.spellcheck.aiproresume.com/api/v1/spell-correction",
-            { text: fullText },
-            { headers: { "Content-Type": "application/json" } }
-          );
-          spellingMistakes =
-            spellResponse.data?.data?.map(
-              (item: any) => item?.misspelledWord
-            ) || [];
-        }
-
-        if (grammarCheck) {
-          const grammarResponse = await axios.post(
-            "https://ai.grmcheck.aiproresume.com/api/v1/grammar-correction",
-            { text: fullText },
-            { headers: { "Content-Type": "application/json" } }
-          );
-          grammarMistakes =
-            grammarResponse.data?.data?.map((item: any) => item?.wrongWords) ||
-            [];
-        }
-
-        setIncorrectWords(spellingMistakes);
-        setGrammarErrors(grammarMistakes);
-      } catch (err) {
-        console.error("Error during API call:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCorrections();
-  }, [spellCheck, grammarCheck, fullText]);
-
-  //============= Highlight function
-
-  const highlightChange = (text: any) => {
-    console.log(text, "text======>")
-    return text.split(/\s+/).map((word: any) => {
-      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
-      const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
-      const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
-
-      let spanClass = '';
-      if (isSpellingMistake) spanClass += 'text-red-500 ';
-      if (isGrammarMistake) spanClass += 'bg-blue-200 underline';
-
-      return `<span class="${spanClass.trim()}">${word}</span>`;
-    }).join(' ');
   };
 
   // ========== Render Sections
@@ -300,30 +192,31 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     }
   };
 
-  const scaleFont = (base: number, size: string) => {
-    const scaleMap: Record<string, number> = {
-      small: 0.85,
-      medium: 1,
-      large: 1.2,
-    };
-    return `${base * (scaleMap[size] || 1)}px`;
-  };
   const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
   const leftSections = addedSections?.filter(
     (section: any) => !rightSideSections.includes(section?.name)
   );
+
   const rightSections = addedSections?.filter((section: any) =>
     rightSideSections.includes(section?.name)
   );
-
 
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true));
   };
+
   const handleEditableSectionHeader = () => {
     setHeaderEditable(true);
     dispatch(sectionEditMode(true));
+  };
+
+  const handleChangeHeader = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: "name" | "designation"
+  ) => {
+    const value = e.target.value;
+    setHeaderData((prev) => ({ ...prev, [key]: value }));
   };
 
   useEffect(() => {
@@ -361,14 +254,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     dispatch(setColumn(true));
   }, [addedSections]);
 
-  const handleChangeHeader = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    key: "name" | "designation"
-  ) => {
-    const value = e.target.value;
-    setHeaderData((prev) => ({ ...prev, [key]: value }));
-  };
-
   // Step 1: Measure section heights
   useEffect(() => {
     if (measured) return;
@@ -404,6 +289,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     dispatch(hideTemplateIcons(true))
     dispatch(hideTemplateProfile(false))
   }, []);
+
+  useEffect(() => {
+    setSecName("Custom Section");
+  }, []);
+
+  // ===================
+  useEffect(() => {
+    setTemplateBgColor(sectionBgColor);
+  }, [editMode, sectionBgColor]);
 
   return (
     <div
@@ -491,11 +385,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             <p>No sections added yet.</p>
           )}
           <Watermark />
-          {loading && (
+          {/* {loading && (
             <p className="text-gray-500 mt-4">
               Checking for spelling/grammar errors...
             </p>
-          )}
+          )} */}
         </div>
 
         {/* Right Column */}
