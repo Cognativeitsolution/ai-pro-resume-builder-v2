@@ -44,6 +44,9 @@ const AllSummary = ({ data = {}, textColor = "#000",
         setEditable(true);
         dispatch(sectionEditMode(true))
     }
+    const handleSpellingCorrection = () => {
+
+    }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -127,9 +130,12 @@ const AllSummary = ({ data = {}, textColor = "#000",
             </div>
             {editable && (
                 <AiRobo
-                    input={true}
                     positionClass="-left-[70px] hover:-left-[154px] top-14"
-                    info="Create a tailored summary. To start, provide a job title or paste an entire job posting below."
+                    info={highlightText ? highlightText(inputData) : inputData}
+                    popupTitle={highlightText ? "Spelling Correction" : "AI Assistant"}
+                    popupTitleBtn="Apply"
+                    popupTheme="red"
+                    onClickPopup={handleSpellingCorrection}
                 />
             )}
         </div>

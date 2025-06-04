@@ -44,7 +44,6 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   const [showSettings, setShowSettings] = useState(false);
   const [showProfilePic, setShowProfilePic] = useState(false);
   const [shoeAllIcons, setShoeAllIcons] = useState(false);
-
   const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
   const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
 
@@ -59,8 +58,6 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   };
 
   // improve Text 
-
-
   const getAllText = () => {
     return addedSections
       ?.map((section: any) => {
@@ -135,7 +132,6 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   }, [spellCheck, grammarCheck, fullText]);
 
   //============= Highlight function
-
   const highlightChange = (text: string) => {
     return text.split(/\s+/).map((word) => {
       const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
@@ -153,6 +149,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
       }
     }).join(' ');
   };
+
   // template redering
   const renderTemplate = () => {
     switch (selectedTemplate) {

@@ -8,11 +8,16 @@ import BotPopup from './BotPopup';
 
 type AiRoboProps = {
     input?: boolean;
-    info?: string;
+    list?: any[] | string;
+    info?: any;
     positionClass?: string;
+    popupTitle?: string;
+    popupTheme?: any;
+    popupTitleBtn?: string;
+    onClickPopup?: () => void;
 };
 
-const AiRobo = ({ positionClass, input, info }: AiRoboProps) => {
+const AiRobo = ({ positionClass, list, input, info, popupTitle, popupTheme, popupTitleBtn, onClickPopup }: AiRoboProps) => {
     const [showPopup, setShowPopup] = useState(false);
     const popupRef = useRef<HTMLDivElement | null>(null);
 
@@ -59,7 +64,7 @@ const AiRobo = ({ positionClass, input, info }: AiRoboProps) => {
             {/*====== BotPopup ======*/}
             {showPopup && (
                 <div ref={popupRef}>
-                    <BotPopup input={input} info={info} />
+                    <BotPopup input={input} list={list} info={info} popupTitle={popupTitle} popupTheme={popupTheme} popupTitleBtn={popupTitleBtn} onClickPopup={onClickPopup} />
                 </div>
             )}
         </>
