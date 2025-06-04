@@ -120,7 +120,7 @@ const AllReferences = ({
     dispatch(sectionEditMode(true));
   };
   return (
-    <div ref={containerRef} className={`flex flex-col mt-1 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col mt-1`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={true}
@@ -139,7 +139,8 @@ const AllReferences = ({
         {references.length > 0 && (
           references.map((cert, index) => (
             <div key={index}
-              className='flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative'
+              onClick={() => handleEditableIndex(index)}
+              className={`${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'}  flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative`}
               style={{
                 color: textColor,
                 border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
