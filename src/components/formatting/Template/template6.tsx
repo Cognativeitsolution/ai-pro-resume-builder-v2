@@ -341,7 +341,12 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === "string") {
-          dispatch(setProfileImage(reader.result));
+          dispatch(setProfileImage({
+            image: reader.result,
+            scale: 1,
+            position: { x: 0, y: 0 },
+            rotation: 0,
+          }));
         }
       };
       reader.readAsDataURL(file);

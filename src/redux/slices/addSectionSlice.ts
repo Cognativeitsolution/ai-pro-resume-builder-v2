@@ -8,6 +8,7 @@ type SectionType = {
   locked?: boolean;
   description?: string;
   newSecName?: any;
+  icon?: any
 };
 
 type AddSectionState = {
@@ -96,6 +97,7 @@ const initialState: AddSectionState = {
       name: "Summary",
       description: "Briefly expln why yu're a great fit for the role - use the AI assistant to tailor this summary for each job posting.",
       locked: true,
+      icon: "FaSummary"
     },
 
   ],
@@ -193,7 +195,14 @@ export const addSectionSlice = createSlice({
     // },
     addUserTechnical_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      const improved = typeof detail === 'string' ? improveText(detail) : detail;
+      // const improved = typeof detail === 'string' ? improveText(detail) : detail;
+
+
+      // Optional: Map over each item and improve the text fields
+      const improved = detail.map((edu: any) => ({
+        ...edu,
+        title: improveText(edu.title || ""),
+      }));
 
       state.userTechnical_Skills = improved;
       console.log(improved, "improvedTechnical_Skills")
