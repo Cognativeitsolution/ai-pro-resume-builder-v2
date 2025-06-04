@@ -8,8 +8,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  serverExternalPackages: ['puppeteer-core']
-
+  serverExternalPackages: ['puppeteer-core'],
+reactStrictMode:false
   
 };
 

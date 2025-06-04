@@ -1,7 +1,5 @@
 "use client";
-
 import React, { useEffect, useRef, useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
 import CustomDatePicker from "../../custom/CustomDatePicker";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,40 +8,43 @@ import {
   removeSection,
   sectionEditMode,
 } from "@/redux/slices/addSectionSlice";
-import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
-import { TiDelete } from "react-icons/ti";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
 import { IoLocationSharp } from "react-icons/io5";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
-type EducationType = {
+type EducationDetail = {
   degree: string;
   schoolName: string;
   location?: string;
 };
 
 type AllEducationType = {
-  data?: any;
-  registerVariantRef:(variantEl: HTMLElement, variantIndex: number) => void
-  onRemove: () => void; 
+  data: { id: number; name: string; detail: EducationDetail[] };
+
+  onRemove: () => void;
+  onDelete: () => void;
+  onAdd: () => void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
   fontSize?: any;
   fontFamily?: any;
-  term2?: any;
-  term3?: any;
+  term2?: boolean;
+  term3?: boolean;
   dotPosition?: any;
-  isVerticleHeader?: any;
-  headerPosition?: any;
-  textEditorPosition?: any;
-  isDot?: any;
+  isVerticleHeader?: boolean;
+  headerPosition?: string;
+  textEditorPosition?: string;
+  isDot?: boolean;
 };
 
 const AllEducation = ({
-  data = {},
-  registerVariantRef,
-  onRemove, 
+  data,
+
+  onRemove,
+  onDelete,
+  onAdd,
   textColor = "#000",
   textAltColor,
   templateColor,
@@ -61,70 +62,36 @@ const AllEducation = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { userEducation } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState<boolean>(false);
-  const [educations, setEducations] = useState<EducationType[]>([
-    {
-      degree: "",
-      schoolName: "",
-      location: "",
-    },
-  ]);
-
-  useEffect(() => {
-    if (Array.isArray(userEducation) && userEducation.length > 0) {
-      setEducations(userEducation);
-    }
-  }, [userEducation]);
 
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true));
   };
 
-  const handleContentChange = (
-    index: number,
-    field: keyof EducationType,
-    value: string
-  ) => {
-    const updated = [...educations];
-    updated[index] = { ...updated[index], [field]: value };
-    setEducations(updated);
-  };
+  // Remove entire section
+  const handleRemove = (index: number) => {
 
-  // Add a new blank education entry
-  const handleAddEducation = () => {
-    setEducations([
-      ...educations,
-      { degree: "", location: "", schoolName: "" },
-    ]);
-  };
 
-  // Remove the entire education section and reset its Redux data
-  const handleRemove = () => {
-    if (data) {
-      // Update Redux state
-       onRemove()
-      dispatch(removeSection(data));
-      dispatch(
-        addUserEducation({
-          sectionId: data.id,
-          detail: [],
-        })
-      );
+    if(data.detail.length == 1){
+      onDelete();
+    
+    return
     }
-  };
 
-  // Delete a single education entry by index
-  const handleDelete = (index: number) => {
-    if (educations?.length <= 1 && index === 0) {
-      handleRemove();
-     
-    } else {
-      const updated = educations.filter((_, i) => i !== index);
-      setEducations(updated);
-    }
+    onRemove()
+  
   };
-
-  // Handle click outside the section to save changes and exit edit mode
+  const handleDel = () => {
+    onDelete();
+    dispatch(removeSection(data));
+    dispatch(
+      addUserEducation({
+        sectionId: data.id,
+        detail: [],
+      })
+    );
+  };
+  // When user clicks outside this section, persist all details to Redux
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -136,7 +103,7 @@ const AllEducation = ({
         dispatch(
           addUserEducation({
             sectionId: data.id,
-            detail: educations,
+            detail: data.detail,
           })
         );
       }
@@ -146,7 +113,13 @@ const AllEducation = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [educations, dispatch, data?.id]);
+  }, [data.detail, dispatch, data.id]);
+
+useEffect(() => {
+  if (data.detail.length === 0) {
+    onAdd();
+  }
+}, []);
 
   return (
     <div
@@ -154,128 +127,152 @@ const AllEducation = ({
       className={`flex flex-col pt-2 ${editable ? "bg-white rounded-sm" : ""}`}
       onClick={handleEditableSection}
     >
-      {/* ====== Add and Delete Section Buttons ====== */}
+      {/* ====== Toolbar with Add / Remove ====== */}
       <SectionToolbar
         isTextEditor={true}
-        onCopy={handleAddEducation}
-        onDelete={handleRemove} // Use the updated handleRemove function
+        onCopy={() => {
+          onAdd();
+        }}
+        onDelete={handleDel}
         mainClass={`transition-all duration-500 ease-in-out ${
-          editable ? "block " : "hidden"
+          editable ? "block" : "hidden"
         }`}
         isVerticleHeader={isVerticleHeader}
-        textEditorPosition={
-          textEditorPosition ? textEditorPosition : `top-1 left-[25%]`
-        }
-        headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
+        textEditorPosition={textEditorPosition ?? `top-1 left-[25%]`}
+        headerPosition={headerPosition ?? `top-1 right-0`}
         showDot={true}
         dotPosition={dotPosition}
         isDot={isDot}
       />
-      {/* ===== Education Box ===== */}
+
+      {/* ====== Render each detail() from data.detail ====== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
-        {educations.length > 0 &&
-          educations.map((exp, index) => (
-            <div key={index} className={`relative border border-red-500`}
-                ref={(el) => {
-      if (el && typeof registerVariantRef === 'function') {
-        registerVariantRef(el, index);
-      }
-    }}
-            >
-              <div className={`flex flex-col ${index === 0 ? "mt-0" : "mt-2"}`}>
-                {/* ====== Degree and Field of Study ====== */}
-                <div
-                  className={`flex ${
-                    term2
-                      ? "flex-col items-start justify-start text-left"
-                      : "flex-row items-center justify-between"
-                  }`}
-                >
-                  <div className="w-full">
-                    <EditableField
-                      html={exp.degree}
-                      onChange={(val) => handleContentChange(index, "degree", val)}
-                      placeholder="Degree and Field of Study"
-                      style={{
-                        color: textAltColor ? textAltColor : textColor,
-                        fontSize: fontSize,
-                        fontFamily: fontFamily,
-                      }}
-                      className="bg-transparent"
-                    />
-                  </div>
-                  {/* ====== Date Picker ====== */}
-                  {term3 ? null : (
+        {data.detail.map((exp, index) => (
+          <div
+            key={index}
+            className="relative"
+          >
+            <div className={`flex flex-col ${index === 0 ? "mt-0" : "mt-2"}`}>
+              {/* Degree / Field of Study */}
+              <div
+                className={`flex ${
+                  term2
+                    ? "flex-col items-start justify-start text-left"
+                    : "flex-row items-center justify-between"
+                }`}
+              >
+                <div className="w-full">
+                  <EditableField
+                    html={exp.degree}
+                    onChange={(val) => {
+                      const updated = [...data.detail];
+                      updated[index] = { ...updated[index], degree: val };
+                      dispatch(
+                        addUserEducation({
+                          sectionId: data.id,
+                          detail: updated,
+                        })
+                      );
+                    }}
+                    placeholder="Degree and Field of Study"
+                    style={{
+                      color: textAltColor ?? textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
+                    }}
+                    className="bg-transparent"
+                  />
+                </div>
+                {term3 ? null : (
+                  <CustomDatePicker
+                    onChange={(dates) => console.log(dates)}
+                    dateAlign={term2 ? "justify-start mb-1" : undefined}
+                  />
+                )}
+              </div>
+
+              {/* Location */}
+              <div className="w-full">
+                <div className="flex items-center justify-start gap-1">
+                  <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                  <EditableField
+                    html={exp.location || ""}
+                    onChange={(val) => {
+                      const updated = [...data.detail];
+                      updated[index] = { ...updated[index], location: val };
+                      dispatch(
+                        addUserEducation({
+                          sectionId: data.id,
+                          detail: updated,
+                        })
+                      );
+                    }}
+                    placeholder="Location"
+                    className="bg-transparent text-left"
+                    style={{
+                      color: textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
+                    }}
+                  />
+                </div>
+                {term3 && (
+                  <div className="flex flex-col items-start justify-start text-left mb-1">
                     <CustomDatePicker
                       onChange={(dates) => console.log(dates)}
-                      dateAlign={term2 && "justify-start mb-1"}
+                      dateAlign="justify-start"
                     />
-                  )}
-                </div>
-                {/* ====== Location ====== */}
+                  </div>
+                )}
+              </div>
+
+              {/* School or University */}
+              <div className="flex items-center justify-between">
                 <div className="w-full">
-                  <div className="flex items-center justify-start gap-1">
-                    {/* ====== Icon ====== */}
-                    <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
-                    <EditableField
-                      html={exp.location || ""}
-                      onChange={(val) => handleContentChange(index, "location", val)}
-                      placeholder="Location"
-                      className="bg-transparent text-left"
-                      style={{
-                        color: textColor,
-                        fontSize: fontSize,
-                        fontFamily: fontFamily,
-                      }}
-                    />
-                  </div>
-                  {term3 ? (
-                    <div
-                      className={`flex flex-col items-start justify-start text-left mb-1`}
-                    >
-                      <CustomDatePicker
-                        onChange={(dates) => console.log(dates)}
-                        dateAlign={term3 && "justify-start"}
-                      />
-                    </div>
-                  ) : null}
-                </div>
-                {/* ====== School or University ====== */}
-                <div className="flex items-center justify-between">
-                  <div className="w-full">
-                    <EditableField
-                      html={exp.schoolName}
-                      onChange={(val) =>
-                        handleContentChange(index, "schoolName", val)
-                      }
-                      placeholder="School or University"
-                      className="bg-transparent"
-                      style={{
-                        color: textColor,
-                        fontSize: fontSize,
-                        fontFamily: fontFamily,
-                      }}
-                    />
-                  </div>
+                  <EditableField
+                    html={exp.schoolName}
+                    onChange={(val) => {
+                      const updated = [...data.detail];
+                      updated[index] = {
+                        ...updated[index],
+                        schoolName: val,
+                      };
+                      dispatch(
+                        addUserEducation({
+                          sectionId: data.id,
+                          detail: updated,
+                        })
+                      );
+                    }}
+                    placeholder="School or University"
+                    className="bg-transparent"
+                    style={{
+                      color: textColor,
+                      fontSize: fontSize,
+                      fontFamily: fontFamily,
+                    }}
+                  />
                 </div>
               </div>
-              {/* ====== Delete Button ====== */}
-              {editable && (
-                <div
-                  className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out ${
-                    editable ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  <button
-                    onClick={() => handleDelete(index)}
-                    className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
-                  >
-                    <RiDeleteBin6Line size={16} />
-                  </button>
-                </div>
-              )}
             </div>
-          ))}
+
+            {/* Delete Button for this entry */}
+            {editable && (
+              <div
+                className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out ${
+                  editable ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <button
+                  onClick={()=>handleRemove(index)}
+                  className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
+                >
+                  <RiDeleteBin6Line size={16} />
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -26,8 +26,10 @@ type ProjectType = {
 };
 
 type AllProjectsType = {
-  data?: any;
-  onRemove:()=>void;
+  data: { id: number; name: string; detail: ProjectType[] };
+    onRemove: () => void;
+  onDelete: () => void;
+  onAdd: () => void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -41,8 +43,10 @@ type AllProjectsType = {
 };
 
 const AllProjects = ({
-  data = {},
+  data,
   onRemove,
+  onAdd,
+  onDelete,
   textColor = "#000",
   textAltColor = "",
   templateColor,
@@ -71,14 +75,13 @@ const AllProjects = ({
     setEditable(true);
     dispatch(sectionEditMode(true));
   };
-  // Sync local state with Redux store when userProjects changes
+
   useEffect(() => {
     if (Array.isArray(userProjects) && userProjects.length > 0) {
       setProjects(userProjects);
     }
   }, [userProjects]);
 
-  // Handle changes in the project fields (e.g., name, description)
   const handleInputChange = (
     index: number,
     field: keyof ProjectType,
@@ -89,7 +92,6 @@ const AllProjects = ({
     setProjects(updated);
   };
 
-  // Add a new, empty project entry to the list
   const handleAddProject = () => {
     setProjects([
       ...projects,
@@ -97,25 +99,24 @@ const AllProjects = ({
     ]);
   };
 
-  // Remove the entire section from Redux and clear its data
   const handleRemoveSection = () => {
     if (data) {
-      onRemove()
+      onDelete()
       dispatch(removeSection(data));
       dispatch(addUserProjects({ sectionId: data.id, detail: [] }));
     }
   };
 
-  // Delete a specific project from the list based on index
   const handleDelete = (index: number) => {
     if (projects?.length <= 1 && index === 0) {
       handleRemoveSection();
+      return
     }
     const updated = projects.filter((_, i) => i !== index);
+    onRemove()
     setProjects(updated);
   };
 
-  // Handle clicks outside the component to exit edit mode and save data to Redux
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -129,10 +130,8 @@ const AllProjects = ({
       }
     };
 
-    // Attach listener on mount
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Clean up on unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -149,6 +148,11 @@ const AllProjects = ({
       setProjects([newSkill]);
     }
   };
+useEffect(() => {
+  if (data.detail.length === 0) {
+    onAdd();
+  }
+}, []);
 
   return (
     <div
@@ -160,7 +164,7 @@ const AllProjects = ({
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={handleAddProject}
+          onCopy={()=>onAdd()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
@@ -174,7 +178,7 @@ const AllProjects = ({
 
       {/* ===== Education Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
-        {projects.map((project, index) => (
+        {data.detail.map((project, index) => (
           <div key={index} className={`relative`}>
             <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
               {/* ====== Degree and Field of Study ====== */}

@@ -25,8 +25,10 @@ type ExperienceType = {
 };
 
 type AllExperienceType = {
-  data?: any;
-  onRemove:() =>void;
+  data: {id:number ; name:string; detail:ExperienceType[]};
+   onRemove: () => void;
+  onDelete: () => void;
+  onAdd: () => void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -42,8 +44,10 @@ type AllExperienceType = {
 };
 
 const AllExperiences = ({
-  data = {},
+  data ,
   onRemove,
+  onDelete,
+  onAdd,
   textColor = "#000",
   textAltColor = "#000",
   templateColor,
@@ -77,14 +81,13 @@ const AllExperiences = ({
     dispatch(sectionEditMode(true));
   };
 
-  // Sync local state with Redux store whenever userExperiences changes
   useEffect(() => {
     if (Array.isArray(userExperiences) && userExperiences.length > 0) {
       setExperiences(userExperiences);
     }
   }, [userExperiences]);
 
-  // Handle input changes for each field in an experience entry
+
   const handleInputChange = (
     index: number,
     field: keyof ExperienceType,
@@ -95,7 +98,6 @@ const AllExperiences = ({
     setExperiences(updated);
   };
 
-  // Add a new blank experience entry
   const handleAddExperience = () => {
     setExperiences([
       ...experiences,
@@ -106,7 +108,7 @@ const AllExperiences = ({
   // Remove the entire section and reset associated experiences in the Redux store
   const handleRemoveSection = () => {
     if (data) {
-      onRemove()
+      onDelete()
       dispatch(removeSection(data));
       dispatch(
         addUserExperience({
@@ -117,16 +119,25 @@ const AllExperiences = ({
     }
   };
 
-  // Delete a specific experience entry by index
+
+useEffect(()=>{
+if(data.detail.length ==0 ){
+  onAdd()
+}
+
+},[])
+  
   const handleDelete = (index: number) => {
-    if (experiences?.length <= 1 && index === 0) {
+    
+    if (data.detail?.length == 1) {
       handleRemoveSection();
+      return
     }
-    experiences?.length <= 1 && index === 0 && handleRemoveSection()
+    onRemove()
     const updated = experiences.filter((_, i) => i !== index);
     setExperiences(updated);
   };
-  // Detect click outside the component to disable editing and save data to Redux
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -172,7 +183,7 @@ const AllExperiences = ({
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={handleAddExperience}
+          onCopy={()=>onAdd()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
@@ -185,7 +196,7 @@ const AllExperiences = ({
       )}
       {/* ===== Education Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
-        {experiences.map((exp, index) => (
+        {data.detail.map((exp, index) => (
           <div key={index} className={`relative `}>
             <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
               {/* ====== Job Title ====== */}

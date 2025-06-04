@@ -1,16 +1,10 @@
 "use client";
-// ============
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
-// ============
-import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfileImage } from "@/redux/slices/profileImageSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
 import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
-// ============
 import { BookUser, Mail, Phone } from "lucide-react";
-// ============
 import AllSummary from "../all-sections/sections-details-copy/AllSummary";
 import AllCertificates from "../all-sections/sections-details-copy/AllCertificates";
 import AllEducations from "../all-sections/sections-details-copy/AllEducations";
@@ -89,44 +83,32 @@ type leftSection =
   | { id: 5; name: "Projects"; detail: ProjectDetail[] };
 
 type rightSection =
-  | { name: "Summary"; description: string }
-  | { name: "Education"; detail: EducationDetail[] }
-  | { name: "Experience"; detail: ExperienceDetail[] }
-  | { name: "Certificate"; detail: CertificationDetail[] }
-  | { name: "Awards"; detail: AwardDetail[] }
-  | { name: "References"; detail: ReferenceDetail[] }
-  | { name: "Custom Section"; detail: CustomSectionDetail[] }
-  | { name: "Projects"; detail: ProjectDetail[] };
+  | { id: 6; name: "Soft Skills"; detail: any[] }
+  | { id: 7; name: "Technical Skills"; detail: any[] }
+  | { id: 10; name: "Languages"; detail: any[] };
 
 type ResumePreviewProps = {
   currentState: CurrentState;
   updateState: (newState: CurrentState) => void;
 };
-
+type ResumeSection = {
+  id: number;
+  name: string;
+  description?: string;
+  detail?: any[];
+};
 type Page = {
-  left: leftSection[];
-  right: rightSection[];
+  left: ResumeSection[];
+  right: ResumeSection[];
 };
 
 const HuzaifaTemplate1 = ({
   currentState,
-  updateState,
 }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const { addedSections, sectionBgColor, editMode } = useSelector(
     (state: any) => state.addSection
   );
-  const {
-    userExperiences,
-    userEducation,
-    userCertificates,
-    userSummary,
-    userAwards,
-    userReferences,
-    userCustomSections,
-    userSoft_Skills
-  } = useSelector((state: RootState) => state.addSection);
-
   const { spellCheck, grammarCheck } = useSelector(
     (state: any) => state.ImproveText
   );
@@ -134,8 +116,10 @@ const HuzaifaTemplate1 = ({
   const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [secName, setSecName] = useState("");
-
-const variantRefs = useRef<{ [pageIdx: number]: { [sectionIdx: number]: HTMLElement[] } }>({});
+  const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
+  const variantRefs = useRef<{
+    [pageIdx: number]: { [sectionIdx: number]: HTMLElement[] };
+  }>({});
 
   const [templateBgColor, setTemplateBgColor] = useState<any>("");
   const [editable, setEditable] = useState<boolean>(false);
@@ -143,8 +127,9 @@ const variantRefs = useRef<{ [pageIdx: number]: { [sectionIdx: number]: HTMLElem
   const containerHeaderRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
-  const sectionRefs = useRef<(HTMLDivElement | null)[][]>([]); // Refs for sections per page
-  const watermarkRefs = useRef<(HTMLDivElement | null)[]>([]); // Refs for watermarks per page
+  const leftRef = useRef<(HTMLDivElement | null)[]>([]);
+  const rightRef = useRef<(HTMLDivElement | null)[]>([]);
+  const watermarkRefs = useRef<(HTMLDivElement | null)[]>([]); 
   const [pages, setPages] = useState<Page[]>([
     {
       left: [],
@@ -152,262 +137,236 @@ const variantRefs = useRef<{ [pageIdx: number]: { [sectionIdx: number]: HTMLElem
     },
   ]);
 
-// useEffect(() => {
-//   sectionRefs.current = pages.map((page) =>
-//     Array(page.left.length + page.right.length).fill(null)
-//   );
-//   watermarkRefs.current = Array(pages.length).fill(null);
-// }, [pages]);
-
-  const mapToSection = (section: any): leftSection => {
-    switch (section.name) {
-      case "Summary":
-        return { id: 2, name: "Summary", description: section.description || "" };
-      case "Education":
-        return { id: 3, name: "Education", detail: [] };
-      case "Experience":
-        return { id: 4, name: "Experience", detail: [] };
-      case "Certificate":
-        return { id: 8, name: "Certificate", detail: [] };
-      case "Awards":
-        return { id: 9, name: "Awards", detail: [] };
-      case "References":
-        return { id: 11, name: "References", detail: [] };
-      case "Custom Section":
-        return { id: 12, name: "Custom Section", detail: [] };
-      case "Projects":
-        return { id: 5, name: "Projects", detail: [] };
-      default:
-        throw new Error("Unknown section type: " + section.name);
-    }
-  };
-
-  const pushToPages = (addedSections: any[]) => {
-    setPages((prevPages) => {
-      const existingSectionNames = new Set(
-        prevPages.flatMap((page) =>
-          [...page.left, ...page.right].map((section) => section.name)
-        )
-      );
-
-      const newSections = addedSections
-        .filter((section) => !existingSectionNames.has(section.name))
-        .map(mapToSection);
-
-      if (newSections.length === 0) return prevPages;
-
-      const updatedFirstPage = {
-        ...prevPages[0],
-        left: [...prevPages[0].left, ...newSections],
-      };
-
-      return [updatedFirstPage, ...prevPages.slice(1)];
-    });
-  };
-  useEffect(() => {
-    const pushAndCheckOverlap = () => {
-      // Step 1: Push new sections to pages
-      setPages((prevPages) => {
-        const existingSectionNames = new Set(
-          prevPages.flatMap((page) =>
-            [...page.left, ...page.right].map((section) => section.name)
-          )
-        );
-
-        const newSections = addedSections
-          .filter((section: any) => !existingSectionNames.has(section.name))
-          .map(mapToSection);
-
-        if (newSections.length === 0) return prevPages;
-
-        // Ensure we always have at least one page to add to
-        const pagesToUpdate = prevPages.length > 0 ? [...prevPages] : [{ left: [], right: [] }];
-
-        const updatedFirstPage = {
-          ...pagesToUpdate[0],
-          left: [...pagesToUpdate[0].left, ...newSections],
-        };
-
-        return [updatedFirstPage, ...pagesToUpdate.slice(1)];
-      });
-
-      // Step 2: Check for overlaps
-      setPages((prevPages) => {
-        let newPages = JSON.parse(JSON.stringify(prevPages)); // Deep copy to avoid direct mutation issues
-        let hasOverlap = false;
-
-        newPages.forEach((page:any, pageIndex:any) => {
-          const watermark = watermarkRefs.current[pageIndex];
-          if (!watermark) return;
-
-          const pageContainer = watermark.parentElement?.parentElement;
-          if (!pageContainer) return;
-
-          const pageRect = pageContainer.getBoundingClientRect();
-          const pageBottom = pageRect.bottom;
-          const watermarkRect = watermark.getBoundingClientRect();
-          const containerBottom = Math.min(watermarkRect.top, pageBottom);
-
-          if (containerBottom === 0) {
-            console.log("Watermark position not set for page", pageIndex);
-            return;
-          }
-
-          let sectionsMovedInCurrentPage = false;
-
-          // Check left column sections
-          const currentLeftSections = [...newPages[pageIndex].left]; // Use the latest state of sections
-          for (let i = 0; i < currentLeftSections.length; i++) {
-            const sectionRef = sectionRefs.current[pageIndex]?.[i];
-            console.log(sectionRef , "--------------->section ref all when"); // Keep for debugging if needed
-            if (!sectionRef) continue;
-
-            const sectionRect = sectionRef.getBoundingClientRect();
-            const sectionBottom = sectionRect.bottom;
-
-            if (sectionBottom > containerBottom) {
-              console.log(
-                `Overflow detected in left column, page ${pageIndex}, section ${currentLeftSections[i].name}`
-              );
-              const sectionsToMove = currentLeftSections.slice(i);
-              newPages[pageIndex].left = currentLeftSections.slice(0, i); // Remove from current page
-
-              if (pageIndex + 1 >= newPages.length) {
-                newPages.push({ left: [], right: [] });
-              }
-              newPages[pageIndex + 1].left = [
-                ...newPages[pageIndex + 1].left, // Keep existing sections on the next page
-                ...sectionsToMove,
-              ];
-              sectionsMovedInCurrentPage = true;
-              hasOverlap = true;
-              break; // Stop checking left column for this page, as sections have been moved
-            }
-          }
-
-          if (sectionsMovedInCurrentPage) {
-            // If sections moved from left, it might affect the right column's position
-            // or indicate the page is full. For simplicity in this logic, we move on.
-            // If you have inter-column dependencies on the *same* page, you might need a more complex re-evaluation here.
-            return;
-          }
-
-
-          // Check right column sections
-          const currentRightSections = [...newPages[pageIndex].right]; // Use the latest state of sections
-          for (let i = 0; i < currentRightSections.length; i++) {
-            // Adjust index for right column sections if you store them sequentially in sectionRefs.
-            // Assuming sectionRefs[pageIndex] contains all sections (left then right).
-            const sectionRef = sectionRefs.current[pageIndex]?.[prevPages[pageIndex].left.length + i];
-            if (!sectionRef) continue;
-
-            const sectionRect = sectionRef.getBoundingClientRect();
-            const sectionBottom = sectionRect.bottom;
-
-            if (sectionBottom > containerBottom) {
-              console.log(
-                `Overflow detected in right column, page ${pageIndex}, section ${currentRightSections[i].name}`
-              );
-              const sectionsToMove = currentRightSections.slice(i);
-              newPages[pageIndex].right = currentRightSections.slice(0, i); // Remove from current page
-
-              if (pageIndex + 1 >= newPages.length) {
-                newPages.push({ left: [], right: [] });
-              }
-              newPages[pageIndex + 1].right = [
-                ...newPages[pageIndex + 1].right, // Keep existing sections on the next page
-                ...sectionsToMove,
-              ];
-              hasOverlap = true;
-              break; // Stop checking right column for this page
-            }
-          }
-        });
-
-        // FIX: Clean up empty pages unconditionally after all overlap checks and movements
-        let cleanedPages = newPages.filter(
-          (page:any) => page.left.length > 0 || page.right.length > 0
-        );
-
-        // Ensure there's always at least one page, even if it's empty
-        if (cleanedPages.length === 0) {
-          cleanedPages = [{ left: [], right: [] }];
-        }
-
-        // Only return the cleaned pages.
-        // The `hasOverlap` flag can be used if you need to trigger a re-run
-        // or for debugging, but the `setPages` itself should always reflect the cleaned state.
-        // A deep comparison is more robust to prevent unnecessary renders,
-        // but for now, returning `cleanedPages` directly is fine if rendering cost isn't prohibitive.
-        // If no overlap happened and the pages are identical, React might optimize the re-render.
-        return cleanedPages;
-      });
-    };
-
-    // Run immediately after mount or when dependencies change
-    // Using a setTimeout of 0 to ensure DOM is painted before measurement
-    const timer = setTimeout(() => {
-      pushAndCheckOverlap();
-    }, 0);
-
-    // Observe DOM changes
-    // This is crucial for reacting to content size changes.
-    const observer = new ResizeObserver((entries) => {
-      // console.log("ResizeObserver triggered", entries); // Debugging
-      // Only re-run if something relevant to our layout changed.
-      // A simple check like `hasOverlap` can be used, or you can run `pushAndCheckOverlap` unconditionally.
-      // Running it unconditionally is safer as it covers cases where content shrinks.
-      pushAndCheckOverlap();
-    });
-
-    // Observe all section refs and watermark refs
-    // Ensure that refs are consistently available before observing.
-    // This might be tricky with dynamic content. You might need to re-observe
-    // whenever pages/sections are added/removed.
-    watermarkRefs.current.forEach((ref) => ref && observer.observe(ref));
-
-    // Observe all currently rendered section elements
-    sectionRefs.current.forEach((pageRefs) => {
-      pageRefs?.forEach((ref) => ref && observer.observe(ref));
-    });
-
-
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-      // Clear refs on unmount to prevent memory leaks, though not strictly necessary for simple cases.
-      watermarkRefs.current = [];
-      sectionRefs.current = [];
-    };
-  }, [addedSections, headerData, currentState.fontSize, secName]);
-  useEffect(() => {
-    pushToPages(addedSections);
-  }, [addedSections]);
-
   useEffect(() => {
     setSecName("Custom Section");
   }, []);
 
+  useEffect(() => {
+    if (pages.length > 1) {
+    }
+  }, []);
 
-useEffect(()=>{
+  const handleDelSection = (
+    sectionToRemove: string,
+    pageIndex: number,
+    side: "left" | "right"
+  ) => {
+    setPages((prev) => {
+      const updatedPages = [...prev];
+      const page = updatedPages[pageIndex];
 
-  if(pages.length > 1){
-    
-  }
-},[])
+      if (!page) return prev;
 
-  const handleRemoveSection = (sectionToRemove: any, pageIndex: number) => {
-    setPages((prevPages) => {
-      const newPages = [...prevPages];
-      const page = newPages[pageIndex];
-      if (page) {
-        page.left = page.left.filter((sec) => sec.name !== sectionToRemove);
-        page.right = page.right.filter((sec) => sec.name !== sectionToRemove);
-        return newPages;
+      const updatedSideSections = page[side].filter(
+        (sec) => sec.name !== sectionToRemove
+      );
+      updatedPages[pageIndex] = {
+        ...page,
+        [side]: updatedSideSections,
+      };
+      if (
+        pageIndex > 0 &&
+        updatedPages[pageIndex].left.length +
+          updatedPages[pageIndex].right.length <=
+          1
+      ) {
+        updatedPages.splice(pageIndex, 1);
       }
-      return prevPages;
+
+      return updatedPages;
     });
   };
+
+  const handleRemoveSection = (
+    sectionToRemove: string,
+    pageIndex: number,
+    side: "left" | "right"
+  ) => {
+    setPages((prevPages) => {
+      const newPages = prevPages.map((pg) => ({ ...pg }));
+      const page = newPages[pageIndex];
+      if (!page) return prevPages;
+
+      const removeOneOrSection = (sections: any[]) => {
+        return sections
+          .map((sec) => {
+            if (sec.name !== sectionToRemove) {
+              return sec;
+            }
+
+            if (
+              Array.isArray((sec as any).detail) &&
+              (sec as any).detail.length > 1
+            ) {
+              return {
+                ...sec,
+                detail: (sec as any).detail.slice(
+                  0,
+                  (sec as any).detail.length - 1
+                ),
+              };
+            }
+            return null;
+          })
+          .filter((sec) => sec !== null);
+      };
+
+      if (side === "left") {
+        page.left = removeOneOrSection(page.left);
+      } else {
+        page.right = removeOneOrSection(page.right);
+      }
+
+      return newPages;
+    });
+
+  };
+
+
+  const handleAddSectionToPages = (
+    secName: string,
+    pageIndex: number,
+    side: "left" | "right"
+  ) => {
+    const leftSec = leftRef.current[pageIndex]?.getBoundingClientRect();
+    const rightSec = rightRef.current[pageIndex]?.getBoundingClientRect();
+    const watermarkTop =
+      watermarkRefs.current[pageIndex]?.getBoundingClientRect()?.top;
+    let pgIndex = 0;
+    if (side == "left") {
+      pgIndex =
+        leftSec?.bottom && watermarkTop && leftSec.bottom + 120 > watermarkTop
+          ? pageIndex + 1
+          : pageIndex;
+    }
+    if (side == "right") {
+      pgIndex =
+        rightSec?.bottom && watermarkTop && rightSec.bottom + 120 > watermarkTop
+          ? pageIndex + 1
+          : pageIndex;
+    }
+
+    setPages((prevPages) => {
+      const updatedPages = [...prevPages];
+
+      if (!updatedPages[pgIndex]) {
+        updatedPages[pgIndex] = { left: [], right: [] };
+      }
+
+      const clonedSections = [...updatedPages[pgIndex][side]];
+      const sectionIndex = clonedSections.findIndex((s) => s.name === secName);
+      console.log(sectionIndex, clonedSections);
+
+      let newDetailItem: any = {};
+      switch (secName) {
+        case "Education":
+          newDetailItem = { degree: "", schoolName: "", location: "" };
+          break;
+        case "Experience":
+          newDetailItem = {
+            title: "",
+            description: "",
+            companyName: "",
+            location: "",
+          };
+          break;
+        case "Certificate":
+          newDetailItem = {
+            description: "",
+            institutionName: "",
+            title: "",
+          };
+          break;
+        case "Awards":
+          newDetailItem = { title: "" };
+          break;
+        case "References":
+          newDetailItem = { name: "", contact: "" };
+          break;
+        case "Custom Section":
+          newDetailItem = {
+            companyName: "",
+            description: "",
+            title: "",
+            location: "",
+            icon: "",
+          };
+          break;
+        case "Projects":
+          newDetailItem = {
+            description: "",
+            projectName: "",
+            projectUrl: "",
+            location: "",
+          };
+          break;
+        case "Soft Skills":
+        case "Technical Skills":
+        case "Languages":
+          newDetailItem = {};
+          break;
+        default:
+          newDetailItem = {};
+      }
+
+      if (sectionIndex !== -1) {
+
+        const section = clonedSections[sectionIndex];
+        const existingDetail = Array.isArray(section.detail)
+          ? section.detail
+          : [];
+
+        clonedSections[sectionIndex] = {
+          ...section,
+          detail: [...existingDetail, newDetailItem],
+        };
+      } else {
+ 
+        clonedSections.push({
+          id: Date.now(),
+          name: secName,
+          detail: [newDetailItem],
+        });
+      }
+
+      updatedPages[pgIndex][side] = clonedSections;
+      return updatedPages;
+    });
+  };
+
+  useEffect(() => {
+    setPages((prevPages) => {
+      const updatedPages = [...prevPages];
+
+      const existingSectionNames = new Set(
+        updatedPages.flatMap((page) =>
+          [...page.left, ...page.right].map((sec) => sec.name)
+        )
+      );
+
+      const newSections = addedSections.filter(
+        (section: any) => !existingSectionNames.has(section.name)
+      );
+
+      if (newSections.length === 0) return prevPages;
+
+      newSections.forEach((section: any) => {
+        const side = rightSideSections.includes(section.name)
+          ? "right"
+          : "left";
+        const firstPage = updatedPages[0];
+
+        const sectionData = {
+          ...section,
+          detail: Array.isArray(section.detail) ? section.detail : [],
+        };
+
+        firstPage[side].push(sectionData);
+      });
+
+      return updatedPages;
+    });
+  }, [addedSections]);
 
   const HandleChangeSectionName = (data: any) => {
     setSecName(data);
@@ -423,7 +382,9 @@ useEffect(()=>{
         if (section.name === "Education" && Array.isArray(section.detail)) {
           return section.detail
             .map((edu: any) =>
-              [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
+              [edu.degree, edu.schoolName, edu.location]
+                .filter(Boolean)
+                .join(" ")
             )
             .join(" ");
         }
@@ -505,7 +466,11 @@ useEffect(()=>{
     });
   };
 
-  const renderSection = (section: any, pageIndex: number, registerVariantRef?: (variantEl: HTMLElement, variantIndex: number) => void) => {
+  const renderSection = (
+    section: leftSection | rightSection,
+    pageIndex: number,
+    registerVariantRef?: (variantEl: HTMLElement, variantIndex: number) => void
+  ) => {
     switch (section?.name) {
       case "Summary":
         return (
@@ -525,8 +490,14 @@ useEffect(()=>{
             isPillStyle={true}
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "right")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "right")}
             isDot={false}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "right")
+            }
           />
         );
       case "Technical Skills":
@@ -540,8 +511,14 @@ useEffect(()=>{
             isPillStyle={true}
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "right")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "right")}
             isDot={false}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "right")
+            }
           />
         );
       case "Certificate":
@@ -550,16 +527,27 @@ useEffect(()=>{
             data={section}
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "left")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "left")}
             term3={true}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "left")
+            }
           />
         );
       case "Education":
         return (
           <AllEducations
             data={section}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
-            registerVariantRef={registerVariantRef!}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "left")
+            }
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "left")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "left")}
             textColor=""
             textAltColor=""
             templateColor=""
@@ -576,9 +564,15 @@ useEffect(()=>{
             textAltColor=""
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "left")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "left")}
             fontFamily={currentState.fontFamily}
             term3={true}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "left")
+            }
           />
         );
       case "Projects":
@@ -589,7 +583,13 @@ useEffect(()=>{
             textAltColor=""
             templateColor=""
             term3={true}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "left")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "left")}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "left")
+            }
           />
         );
       case "Awards":
@@ -602,7 +602,13 @@ useEffect(()=>{
             fontSize={scaleFont(16, currentState.fontSize)}
             iconSize={scaleFont(13, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "left")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "left")}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "left")
+            }
           />
         );
       case "References":
@@ -612,7 +618,13 @@ useEffect(()=>{
             textColor="#000"
             templateColor={currentState.color}
             textAltColor={currentState.color}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "left")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "left")}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "left")
+            }
           />
         );
       case "Languages":
@@ -627,7 +639,13 @@ useEffect(()=>{
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "right")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "right")}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "right")
+            }
           />
         );
       case "Custom Section":
@@ -641,7 +659,13 @@ useEffect(()=>{
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
             term3={true}
-            onRemove={() => handleRemoveSection(section.name, pageIndex)}
+            onAdd={() =>
+              handleAddSectionToPages(section.name, pageIndex, "left")
+            }
+            onDelete={() => handleDelSection(section.name, pageIndex, "left")}
+            onRemove={() =>
+              handleRemoveSection(section.name, pageIndex, "left")
+            }
           />
         );
       default:
@@ -657,8 +681,6 @@ useEffect(()=>{
     };
     return `${base * (scaleMap[size] || 1)}px`;
   };
-
-  const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
 
   const handleEditableSection = () => {
     setEditable(true);
@@ -726,10 +748,16 @@ useEffect(()=>{
         <div
           key={idx}
           style={{ height: "297mm", width: "210mm" }}
-          className={`relative grid mb-4 grid-cols-12 shadow-xl ${!editMode && "bg-white"}`}
+          className={`relative grid mb-4 grid-cols-12  shadow-xl ${
+            !editMode && "bg-white"
+          }`}
         >
           {/* Left Column */}
-          <div className="col-span-8 pr-8 mb-14" style={{ padding: "30px" }}>
+          <div
+            ref={(el) => void (leftRef.current[idx] = el)}
+            className="col-span-8 pr-8 mb-14 border border-red-400 h-fit"
+            style={{ padding: "20px" }}
+          >
             {idx === 0 && (
               <div
                 ref={containerHeaderRef}
@@ -764,21 +792,14 @@ useEffect(()=>{
 
             {section.left?.length > 0 ? (
               section.left.map((leftSec: any, index: number) => (
-                <div
-                  key={index}
-                  ref={(el) => {
-                    if (!sectionRefs.current[idx]) {
-                      sectionRefs.current[idx] = [];
-                    }
-                    sectionRefs.current[idx][index] = el;
-                  }}
-                  className="pt-4 relative section-to-break"
-                >
+                <div key={index} className="pt-4 relative section-to-break">
                   <div className="border-b">
                     {leftSec?.name === "Custom Section" ? (
                       <div
                         ref={containerRef}
-                        className={`flex flex-col pt-2 ${editable && "bg-white"}`}
+                        className={`flex flex-col pt-2 ${
+                          editable && "bg-white"
+                        }`}
                         onClick={handleEditableSection}
                       >
                         <input
@@ -786,7 +807,9 @@ useEffect(()=>{
                           className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
                           style={{ color: currentState.color }}
                           value={secName}
-                          onChange={(e) => HandleChangeSectionName(e.target.value)}
+                          onChange={(e) =>
+                            HandleChangeSectionName(e.target.value)
+                          }
                         />
                       </div>
                     ) : (
@@ -798,22 +821,25 @@ useEffect(()=>{
                       </h2>
                     )}
                   </div>
-                  <div>{renderSection(leftSec, idx , (variantEl) => {
-  if (!variantRefs.current[idx]) variantRefs.current[idx] = {};
-  if (!variantRefs.current[idx][index]) variantRefs.current[idx][index] = [];
-  variantRefs.current[idx][index].push(variantEl);
-})}</div>
+                  <div>
+                    {renderSection(leftSec, idx, (variantEl) => {
+                      if (!variantRefs.current[idx])
+                        variantRefs.current[idx] = {};
+                      if (!variantRefs.current[idx][index])
+                        variantRefs.current[idx][index] = [];
+                      variantRefs.current[idx][index].push(variantEl);
+                    })}
+                  </div>
                 </div>
               ))
             ) : (
-              <p>No sections added yet.</p>
+            null
             )}
-          <div
-              ref={(el) => void(watermarkRefs.current[idx] = el)}
-              style={{ position: "absolute", bottom: "10px", left: "30px", width: "calc(100% - 60px)" }}
-            >
-              <Watermark />
-            </div>
+            <div
+              ref={(el) => void (watermarkRefs.current[idx] = el)}
+              className="absolute bottom-14 left-0  w-full border border-red-400"
+            ></div>
+            <Watermark />
             {loading && (
               <p className="text-gray-500 mt-4">
                 Checking for spelling/grammar errors...
@@ -823,64 +849,63 @@ useEffect(()=>{
 
           {/* Right Column */}
           <div
-            className="col-span-4 px-2 z-10"
+            className="col-span-4 px-2 z-10 "
             style={{ backgroundColor: currentState.color, height: "297mm" }}
           >
-            {idx== 0 && 
-            <div className="p-3 py-12">
-              <TemplateProfileImg />
-              <div className="flex flex-col gap-2">
-                <div
-                  className="text-start text-white flex items-center gap-2"
-                  style={{
-                    fontSize: scaleFont(24, currentState.fontSize),
-                    fontFamily: currentState.fontFamily,
-                  }}
-                >
-                  <span className="text-xl">Contact Info</span>
-                </div>
-                <hr className="-mt-1" />
-                {[
-                  { name: "Phone", icon: <Phone size={16} /> },
-                  { name: "Email", icon: <Mail size={16} /> },
-                ].map((placeholder, idx) => (
-                  <div key={idx} className="flex items-center gap-2 text-white">
-                    <div className="self-center">{placeholder.icon}</div>
+            {idx == 0 && (
+              <div className="p-3 py-12">
+                <TemplateProfileImg />
+                <div className="flex flex-col gap-2">
+                  <div
+                    className="text-start text-white flex items-center gap-2"
+                    style={{
+                      fontSize: scaleFont(24, currentState.fontSize),
+                      fontFamily: currentState.fontFamily,
+                    }}
+                  >
+                    <span className="text-xl">Contact Info</span>
+                  </div>
+                  <hr className="-mt-1" />
+                  {[
+                    { name: "Phone", icon: <Phone size={16} /> },
+                    { name: "Email", icon: <Mail size={16} /> },
+                  ].map((placeholder, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center gap-2 text-white"
+                    >
+                      <div className="self-center">{placeholder.icon}</div>
+                      <input
+                        placeholder={placeholder.name}
+                        className="w-full placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
+                      />
+                    </div>
+                  ))}
+                  <div className="flex items-start gap-2 text-white">
+                    <BookUser size={16} className="self-center" />
                     <input
-                      placeholder={placeholder.name}
+                      placeholder="Address"
                       className="w-full placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
                     />
                   </div>
-                ))}
-                <div className="flex items-start gap-2 text-white">
-                  <BookUser size={16} className="self-center" />
-                  <input
-                    placeholder="Address"
-                    className="w-full placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
-                  />
                 </div>
               </div>
-            </div>
-            }
+            )}
 
-            <div className="p-3">
+            <div
+              ref={(el) => void (rightRef.current[idx] = el)}
+              className="p-3  border border-white"
+            >
               {section.right?.length > 0 &&
                 section.right.map((rightSec: any, index: number) => (
-                  <div
-                    key={index}
-                    ref={(el) => {
-                      if (!sectionRefs.current[idx]) {
-                        sectionRefs.current[idx] = [];
-                      }
-                      sectionRefs.current[idx][section.left.length + index] = el;
-                    }}
-                    className="pt-4 relative section-to-break"
-                  >
+                  <div key={index} className="pt-4 relative section-to-break">
                     <div className="border-b text-white">
                       {rightSec?.name === "Custom Section" ? (
                         <div
                           ref={containerRef}
-                          className={`flex flex-col pt-2 ${editable && "bg-white"}`}
+                          className={`flex flex-col pt-2 ${
+                            editable && "bg-white"
+                          }`}
                           onClick={handleEditableSection}
                         >
                           <input
@@ -888,12 +913,16 @@ useEffect(()=>{
                             className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
                             style={{ color: currentState.color }}
                             value={secName}
-                            onChange={(e) => HandleChangeSectionName(e.target.value)}
+                            onChange={(e) =>
+                              HandleChangeSectionName(e.target.value)
+                            }
                           />
                         </div>
                       ) : (
                         <h2 className="text-lg font-semibold mb-1">
-                          {highlightWords(rightSec?.newSecName || rightSec?.name)}
+                          {highlightWords(
+                            rightSec?.newSecName || rightSec?.name
+                          )}
                         </h2>
                       )}
                     </div>

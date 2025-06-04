@@ -44,7 +44,7 @@ export default function EditableField({
   return (
     <div className="relative w-full">
       {/* Placeholder */}
-      {(!html || html === '<br>') && !isFocused && (
+      {(!html || html === '<br>' || html === "") && !isFocused && (
         <div className={`absolute top-0 text-gray-400 pointer-events-none  ${placeholderClassName}`} style={style}>
           {placeholder}
         </div>

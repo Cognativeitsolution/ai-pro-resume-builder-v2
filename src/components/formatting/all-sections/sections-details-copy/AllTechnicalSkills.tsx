@@ -13,8 +13,10 @@ type TechnicalSkillType = {
 };
 
 type AllTechnicalSkillsProps = {
-  data?: { id: any };
+  data: { id: number; name:string; detail:TechnicalSkillType[] };
   onRemove:()=>void
+  onDelete:()=>void
+  onAdd:()=>void
   textColor?: string; 
   textAltColor?: string;
   templateColor?: string;
@@ -29,8 +31,10 @@ type AllTechnicalSkillsProps = {
 };
 
 const AllTechnicalSkills = ({
-  data = { id: '' },
+  data,
   onRemove,
+  onDelete,
+  onAdd,
   textColor = '#fff',
   textAltColor,
   templateColor,
@@ -87,9 +91,10 @@ const AllTechnicalSkills = ({
   };
 
   const handleDeleteTechnicalSkill = (index: number) => {
-    if (technicalskills?.length <= 1 && index === 0) {
+    if (technicalskills?.length == 1 ) {
       handleRemoveSection();
     }
+    onRemove()
     const updated = technicalskills.filter((_, i) => i !== index);
     setTechnicalSkills(updated);
   };
@@ -102,7 +107,7 @@ const AllTechnicalSkills = ({
 
   const handleRemoveSection = () => {
     dispatch(removeSection(data));
-    onRemove()
+    onDelete()
     dispatch(addUserTechnical_Skills({ sectionId: data.id, detail: [] }));
   };
 
@@ -120,12 +125,21 @@ const AllTechnicalSkills = ({
     }
   };
 
+
+
+  useEffect(() => {
+  if (data.detail.length === 0) {
+    onAdd();
+  }
+}, []);
+
+
   return (
     <div ref={containerRef} className={`px-1 py-5 relative ${editable === true ? editableAltBG ? editableAltBG : 'bg-white' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={false}
-          onCopy={handleAddTechnicalSkill}
+          onCopy={()=>onAdd()}
           onDelete={handleRemoveSection}
           isVerticleHeader={isVerticleHeader}
           headerPosition={headerPosition}
@@ -136,7 +150,7 @@ const AllTechnicalSkills = ({
         />
       )}
       <div className="flex flex-wrap gap-2 ">
-        {technicalskills.length > 0 ? technicalskills.map((skill, index) => (
+        {data.detail.length > 0 ? data.detail.map((skill, index) => (
           <div
             key={index}
             className={`flex items-center gap-2 

@@ -16,6 +16,8 @@ type ReferenceType = {
 type AllSummaryType = {
   data?: any;
   onRemove:()=>void;
+  onDelete:()=>void;
+  onAdd:()=>void;
   textColor?: string;
   textAltColor: string;
   templateColor: string;
@@ -29,6 +31,8 @@ type AllSummaryType = {
 const AllReferences = ({
   data = {},
   onRemove,
+  onDelete,
+  onAdd,
   textColor = '#fff',
   textAltColor,
   templateColor,
@@ -85,7 +89,7 @@ const AllReferences = ({
 
   const handleRemoveSection = () => {
     if (data) {
-      onRemove()
+      onDelete()
       dispatch(removeSection(data));
       dispatch(AddUserReferences({ sectionId: data.id, detail: [] }));
     }
@@ -98,9 +102,11 @@ const AllReferences = ({
   };
 
   const handleDelete = (index: number) => {
-    if (references?.length <= 1 && index === 0) {
+    if (references?.length <= 1) {
       handleRemoveSection();
+      
     }
+    onRemove()
     const updated = references.filter((_, i) => i !== index);
     setReferences(updated);
   };
@@ -119,12 +125,19 @@ const AllReferences = ({
     }
   };
 
+useEffect(() => {
+  if (data.detail.length === 0) {
+    onAdd();
+  }
+}, []);
+
+
   return (
     <div ref={containerRef} className={`flex flex-col mt-1 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={handleAddReference}
+          onCopy={()=>onAdd()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
@@ -136,8 +149,8 @@ const AllReferences = ({
         />
       )}
       <div className="flex flex-col gap-1">
-        {references.length > 0 && (
-          references.map((cert, index) => (
+        {data.detail.length > 0 && (
+          data.detail.map((cert:any, index:number) => (
             <div key={index} className='flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative' style={{
               color: textColor,
               border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
@@ -182,8 +195,8 @@ const AllReferences = ({
               `}>
                   <button
                     onClick={() => {
-                      if (references.length > 1) return handleDelete(index)
-                      return handleRemoveSection()
+                      handleDelete(index)
+                     
                     }}
                     className=" text-red-800/90 text-sm w-6 h-[2rem] flex justify-center items-center rounded-l-sm"
                   >

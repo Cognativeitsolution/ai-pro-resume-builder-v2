@@ -17,8 +17,10 @@ type SoftSkillType = {
 }; 
 
 type AllSoftSkillsProps = {
-  data?: { id: any };
+  data: {  id: number; name: string; detail: any[]  };
   onRemove:()=>void;
+  onAdd:()=>void;
+  onDelete:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -33,8 +35,10 @@ type AllSoftSkillsProps = {
 };
 
 const AllSoftSkills = ({
-  data = { id: "" },
+  data ,
   onRemove,
+  onAdd,
+  onDelete,
   textColor = "#fff",
   textAltColor,
   templateColor,
@@ -105,7 +109,7 @@ const AllSoftSkills = ({
 
   const handleRemoveSection = () => {
     dispatch(removeSection(data));
-    onRemove()
+    onDelete()
     dispatch(addUserSoft_Skills({ sectionId: data.id, detail: [] }));
   };
 
@@ -119,6 +123,7 @@ const AllSoftSkills = ({
     if (softskills?.length <= 1 && index === 0) {
       handleRemoveSection();
     }
+    onRemove()
     const updated = softskills.filter((_, i) => i !== index);
     setSoftSkills(updated);
   };
@@ -137,6 +142,9 @@ const AllSoftSkills = ({
     }
   };
 
+  useEffect(()=>{
+
+  },[])
   return (
     <div
       ref={containerRef}
@@ -163,8 +171,8 @@ const AllSoftSkills = ({
         />
       )}
       <div className="flex flex-wrap gap-2 ">
-        {softskills.length > 0 ?
-          softskills.map((skill, index) => (
+        {data?.detail?.length > 0 ?
+          data?.detail?.map((skill, index) => (
             <div
               key={index}
               className={`flex items-center gap-2 

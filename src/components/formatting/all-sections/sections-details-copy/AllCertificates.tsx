@@ -21,8 +21,10 @@ type CertificateType = {
 };
 
 type AllSummaryType = {
-  data?: any;
+  data: {id:number; name:string; detail: CertificateType[]}
   onRemove: () =>void;
+  onDelete: () =>void;
+  onAdd: () =>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -38,8 +40,10 @@ type AllSummaryType = {
 };
 
 const AllCertificates = ({
-  data = {},
+  data,
   onRemove,
+  onDelete,
+  onAdd,
   textColor,
   textAltColor,
   templateColor,
@@ -114,7 +118,7 @@ const AllCertificates = ({
 
   const handleRemoveSection = () => {
     if (data) {
-      onRemove()
+      onDelete()
       dispatch(removeSection(data));
       dispatch(addUserCertificates({ sectionId: data.id, detail: [] }));
     }
@@ -133,10 +137,19 @@ const AllCertificates = ({
   const handleDelete = (index: number) => {
     if (certificates?.length <= 1 && index === 0) {
       handleRemoveSection();
+
     }
     const updated = certificates.filter((_, i) => i !== index);
     setCertificates(updated);
+    onRemove()
   };
+
+useEffect(() => {
+  if (data.detail.length === 0) {
+    onAdd();
+  }
+}, []);
+
 
   return (
     <div
@@ -146,7 +159,7 @@ const AllCertificates = ({
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={handleAddCertificate}
+          onCopy={()=>onAdd()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
@@ -158,8 +171,8 @@ const AllCertificates = ({
         />
       )}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
-        {certificates.length > 0 &&
-          certificates.map((cert, index) => (
+        {data.detail.length > 0 &&
+          data.detail.map((cert, index) => (
             <div key={index} className="relative ">
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
                 {/* ====== Job Title ====== */}

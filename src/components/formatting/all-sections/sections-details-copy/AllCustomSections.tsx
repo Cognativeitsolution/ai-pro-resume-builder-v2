@@ -26,6 +26,8 @@ type CustomSectionType = {
 type AllCustomSectionType = {
   data?: any;
   onRemove:()=>void;
+  onDelete:()=>void;
+  onAdd:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -45,6 +47,8 @@ type AllCustomSectionType = {
 const AllCustomSection = ({
   secNewNames,
   onRemove,
+  onDelete,
+  onAdd,
   data = {},
   textColor = "#000",
   fontSize,
@@ -110,7 +114,7 @@ const AllCustomSection = ({
   const handleRemoveSection = () => {
     if (data) {
       dispatch(removeSection(data));
-      onRemove()
+      onDelete()
       dispatch(
         addUserCustomSection({
           sectionId: data.id,
@@ -121,8 +125,18 @@ const AllCustomSection = ({
     }
   };
 
+useEffect(() => {
+  if (data.detail.length === 0) {
+    onAdd();
+  }
+}, []);
+
   // Delete a specific customSections entry by index
   const handleDelete = (index: number) => {
+    if(data.detail.length == 1){
+      handleRemoveSection()
+    }
+    onRemove()
     const updated = customSections.filter((_, i) => i !== index);
     setCustomSection(updated);
   };
@@ -176,7 +190,7 @@ const AllCustomSection = ({
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={handleAddCustomSection}
+          onCopy={()=>onAdd()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
@@ -189,8 +203,8 @@ const AllCustomSection = ({
       )}
       {/* ===== Section Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
-        {customSections.length > 0 &&
-          customSections.map((exp, index) => (
+        {data.detail.length > 0 &&
+          data.detail.map((exp:any, index:number) => (
             <div key={index}>
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
                 <div
@@ -276,8 +290,8 @@ const AllCustomSection = ({
                   <button
                     className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
                     onClick={() => {
-                      if (index > 0) return handleDelete(index);
-                      return handleRemoveSection()
+                   handleDelete(index);
+                    
                     }}
                   >
                     <RiDeleteBin6Line size={16} />

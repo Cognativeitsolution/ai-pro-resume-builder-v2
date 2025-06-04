@@ -15,8 +15,10 @@ type AwardType = {
 };
 
 type AllAwardsProps = {
-  data?: { id: any };
+  data: { id: number; name:string; detail: AwardType[]};
   onRemove:()=>void;
+  onDelete:()=>void;
+  onAdd:()=>void;
   textColor?: string;
   textAltColor: string;
   templateColor: string;
@@ -30,8 +32,10 @@ type AllAwardsProps = {
 };
 
 const AllAwards = ({
-  data = { id: '' },
+  data ,
   onRemove,
+  onDelete,
+  onAdd,
   textColor = '#fff',
   textAltColor,
   templateColor,
@@ -92,6 +96,7 @@ const AllAwards = ({
     if (awards?.length <= 1 && index === 0) {
       handleRemoveSection();
     }
+    onRemove()
     const updated = awards.filter((_, i) => i !== index);
     setAwards(updated);
   };
@@ -104,7 +109,7 @@ const AllAwards = ({
 
   const handleRemoveSection = () => {
     dispatch(removeSection(data));
-    onRemove()
+    onDelete()
     dispatch(addUserAwards({ sectionId: data.id, detail: [] }));
   };
 
@@ -138,6 +143,13 @@ const AllAwards = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [awards, dispatch, data.id]);
+
+ useEffect(() => {
+  if (data.detail.length === 0) {
+    onAdd();
+  }
+}, []);
+
   return (
     <div ref={containerRef}
       className={`flex flex-col mt-1 ${editable ? 'bg-white rounded-sm' : ''}`}
@@ -145,7 +157,7 @@ const AllAwards = ({
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={handleAddAward}
+          onCopy={()=>onAdd()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
@@ -157,8 +169,8 @@ const AllAwards = ({
         />
       )}
       <div className="grid grid-cols-2 gap-1 mb-2">
-        {awards.length > 0 &&
-          awards.map((award, index) => (
+        {data.detail.length > 0 &&
+          data.detail.map((award:any, index:number) => (
             <div
               key={index}
               className={`flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium px-1 transition-all duration-500 ease-in-out relative`}

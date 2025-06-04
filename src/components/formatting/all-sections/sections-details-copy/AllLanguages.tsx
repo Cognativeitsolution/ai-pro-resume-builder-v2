@@ -13,8 +13,10 @@ type LanguageType = {
 };
 
 type AllLanguagesProps = {
-  data?: { id: any };
+  data: { id: number ; name:string; detail: LanguageType[] };
   onRemove:()=>void;
+  onDelete:()=>void;
+  onAdd:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -28,8 +30,10 @@ type AllLanguagesProps = {
 };
 
 const AllLanguages = ({
-  data = { id: '' },
+  data ,
   onRemove,
+  onDelete,
+  onAdd,
   textColor = '#fff',
   textAltColor,
   templateColor,
@@ -87,6 +91,8 @@ const AllLanguages = ({
     if (languages?.length <= 1 && index === 0) {
       handleRemoveSection();
     }
+
+    onRemove()
     const updated = languages.filter((_, i) => i !== index);
     setLanguages(updated);
   };
@@ -106,7 +112,7 @@ const AllLanguages = ({
   };
 
   const handleRemoveSection = () => {
-    onRemove()
+    onDelete()
     dispatch(removeSection(data));
     dispatch(addUserLanguages({ sectionId: data.id, detail: [] }));
   };
@@ -126,12 +132,19 @@ const AllLanguages = ({
     }
   };
 
+  useEffect(() => {
+  if (data.detail.length === 0) {
+    onAdd();
+  }
+}, []);
+
+
   return (
     <div ref={containerRef} className={`px-1 py-4 relative ${editable === true ? editableAltBG ? editableAltBG : 'bg-white rounded-sm' : 'bg-transparent'}`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={false}
-          onCopy={handleAddLanguage}
+          onCopy={()=>onAdd()}
           onDelete={handleRemoveSection}
           isVerticleHeader={isVerticleHeader}
           headerPosition={headerPosition}
@@ -146,8 +159,8 @@ const AllLanguages = ({
 
       <div className="px-1 flex flex-col gap-4 relative">
         <div className="flex flex-col gap-3">
-          {languages.length > 0 ? (
-            languages.map((lang, index) => (
+          {data.detail.length > 0 ? (
+            data.detail.map((lang:any, index:number) => (
               <div key={index}>
                 <div className="flex items-center justify-between">
                   <div>
@@ -189,7 +202,7 @@ const AllLanguages = ({
                       min="0"
                       max="100"
                       value={lang.level ?? 0}
-                      disabled={lang.title.trim() !== "" ? false : true}
+                      disabled={lang.title !== "" ? false : true}
                       onChange={(e) => handleLevelChange(index, Number(e.target.value))}
                       className="w-full opacity-80"
                       style={{ accentColor: textAltColor }}
