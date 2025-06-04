@@ -173,25 +173,49 @@ export const addSectionSlice = createSlice({
       const { sectionId, detail } = action.payload;
       const improved = typeof detail === 'string' ? improveText(detail) : detail;
 
-      const section = state.addedSections.find(sec => sec.id === sectionId);
-      if (section) {
-        section.description = improved;
-      }
-
       state.userSummary = improved;
       console.log(improved, "improvedSummary")
     },
+    // addUserSoft_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
+    //   const { sectionId, detail } = action.payload;
+    //   state.userSoft_Skills = detail;
+    // },
     addUserSoft_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      state.userSoft_Skills = detail;
+      const improved = typeof detail === 'string' ? improveText(detail) : detail;
+
+      state.userSoft_Skills = improved;
+      console.log(improved, "improvedSoft_Skills")
     },
+    // addUserTechnical_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
+    //   const { sectionId, detail } = action.payload;
+    //   state.userTechnical_Skills = detail;
+    // },
     addUserTechnical_Skills: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      state.userTechnical_Skills = detail;
+      const improved = typeof detail === 'string' ? improveText(detail) : detail;
+
+      state.userTechnical_Skills = improved;
+      console.log(improved, "improvedTechnical_Skills")
     },
+    // addUserProjects: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
+    //   const { sectionId, detail } = action.payload;
+    //   state.userProjects = detail;
+    // },
     addUserProjects: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      state.userProjects = detail;
+
+      // Optional: Map over each item and improve the text fields
+      const improved = detail.map((edu: any) => ({
+        ...edu,
+        projectName: improveText(edu.projectName || ""),
+        description: improveText(edu.description || ""),
+        projectUrl: edu.projectUrl || "",
+        location: edu.location || "",
+      }));
+
+      state.userProjects = improved;
+      console.log(improved, "improvedProjects")
     },
     // addUserEducation: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
     //   const { sectionId, detail } = action.payload;
@@ -209,42 +233,93 @@ export const addSectionSlice = createSlice({
       const improved = detail.map((edu: any) => ({
         ...edu,
         degree: improveText(edu.degree || ""),
-        schoolName: improveText(edu.schoolName || ""),
-        location: improveText(edu.location || ""),
+        schoolName: edu.schoolName || "",
+        location: edu.location || "",
       }));
-
-      const section = state.addedSections.find(sec => sec.id === sectionId);
-      if (section) {
-        (section as any).detail = improved;
-        console.log(improved, "improvedEducation + 1111")
-      }
 
       state.userEducation = improved;
       console.log(improved, "improvedEducation")
     },
+    // addUserExperience: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
+    //   const { sectionId, detail } = action.payload;
+    //   state.userExperiences = detail;
+    // },
+
     addUserExperience: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      state.userExperiences = detail;
+      // Optional: Map over each item and improve the text fields
+      const improved = detail.map((edu: any) => ({
+        ...edu,
+        title: improveText(edu.title || ""),
+        description: improveText(edu.description || ""),
+        companyName: edu.companyName || "",
+        location: edu.location || "",
+      }));
+
+      state.userExperiences = improved;
+      console.log(improved, "improvedExperience")
     },
+    // addUserCertificates: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
+    //   const { sectionId, detail } = action.payload;
+    //   state.userCertificates = detail;
+    // },
     addUserCertificates: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      state.userCertificates = detail;
+
+      // Optional: Map over each item and improve the text fields
+      const improved = detail.map((edu: any) => ({
+        ...edu,
+        title: improveText(edu.title || ""),
+        description: improveText(edu.description || ""),
+        institutionName: edu.institutionName || "",
+      }));
+
+      state.userCertificates = improved;
+      console.log(improved, "improvedCertificates")
     },
     AddUserReferences: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
       state.userReferences = detail;
     },
+    // addUserLanguages: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
+    //   const { sectionId, detail } = action.payload;
+    //   state.userLanguages = detail
+    // },
     addUserLanguages: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {
       const { sectionId, detail } = action.payload;
-      state.userLanguages = detail
+      const improved = typeof detail === 'string' ? improveText(detail) : detail;
+
+      state.userLanguages = improved;
+      console.log(improved, "improvedLanguages")
     },
+    // addUserCustomSection: (state, action: PayloadAction<{ sectionId: number; detail: any, newSecName?: any }>) => {
+    //   const { sectionId, detail, newSecName } = action.payload;
+    //   state.userCustomSections = detail
+    //   const section = state.addedSections.find(sec => sec.id === sectionId);
+    //   if (section) {
+    //     section.newSecName = newSecName;
+    //   }
+    // },
     addUserCustomSection: (state, action: PayloadAction<{ sectionId: number; detail: any, newSecName?: any }>) => {
       const { sectionId, detail, newSecName } = action.payload;
-      state.userCustomSections = detail
+
       const section = state.addedSections.find(sec => sec.id === sectionId);
       if (section) {
         section.newSecName = newSecName;
       }
+
+      // Optional: Map over each item and improve the text fields
+      const improved = detail.map((edu: any) => ({
+        ...edu,
+        title: improveText(edu.title || ""),
+        description: improveText(edu.description || ""),
+        companyName: edu.companyName || "",
+        sectionFields: edu.sectionFields || "",
+      }));
+
+      state.userCustomSections = improved;
+      console.log(improved, "improvedCustomSection")
+
     },
 
     addUserAwards: (state, action: PayloadAction<{ sectionId: number; detail: any }>) => {

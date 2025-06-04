@@ -5,6 +5,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { RootState } from '@/redux/store';
 import { addUserTechnical_Skills, removeSection, sectionEditMode } from '@/redux/slices/addSectionSlice';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
+import EditableField from '@/components/editor/editable-field';
 
 type TechnicalSkillType = {
   title: string;
@@ -16,6 +17,8 @@ type AllTechnicalSkillsProps = {
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
+  fontSize?: any;
+  fontFamily?: any;
   editableAltBG?: string;
   isPillStyle?: any;
   pillBg?: any;
@@ -32,6 +35,8 @@ const AllTechnicalSkills = ({
   textColor = '#fff',
   textAltColor,
   templateColor,
+  fontSize,
+  fontFamily,
   editableAltBG,
   isPillStyle,
   pillBg,
@@ -137,7 +142,7 @@ const AllTechnicalSkills = ({
         {technicalskills.length > 0 ? technicalskills.map((skill, index) => (
           <div
             key={index}
-            className={`flex items-center gap-2 
+            className={`flex items-center gap-2 !h-[30px]
               ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
               font-medium px-3  transition-all duration-500 ease-in-out 
               ${hoveredIndex === index ? 'pr-5' : ''}`}
@@ -159,7 +164,22 @@ const AllTechnicalSkills = ({
               }
             }}
           >
-            {editable ? (
+            <EditableField
+              html={skill.title}
+              onChange={(e) =>
+                handleInputChange(index, e.target.value)
+              }
+              placeholder="Soft Skill"
+              placeholderClassName="text-sm mt-[6px]"
+              className="bg-transparent text-sm truncate leading-8 focus:outline-none transition-all duration-500 ease-in-out !min-w-[75px] opacity-70"
+              style={{
+                color: textAltColor,
+                fontSize: fontSize,
+                fontFamily: fontFamily,
+              }}
+              highlightText={highlightText}
+            />
+            {/* {editable ? (
               <input
                 value={skill.title}
                 onChange={(e) => handleInputChange(index, e.target.value)}
@@ -178,7 +198,7 @@ const AllTechnicalSkills = ({
                   __html: highlightText ? highlightText(skill.title) : skill.title,
                 }}
               />
-            }
+            } */}
             {hoveredIndex === index && (
               <button onClick={() => handleDeleteTechnicalSkill(index)} className="opacity-70 hover:opacity-100">
                 <RiDeleteBin6Line size={18} style={{ color: textAltColor, }} />
