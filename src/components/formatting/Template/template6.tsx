@@ -464,7 +464,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             >
               <EditableField
                 html={headerData.name}
-                onChange={(e) => handleChangeHeader(e, "name")}
+                onChange={(e: any) => handleChangeHeader(e, "name")}
                 placeholder="Name"
                 style={{
                   fontSize: scaleFont(25, currentState.fontSize),
@@ -474,7 +474,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
               />
               <EditableField
                 html={headerData.designation}
-                onChange={(e) => handleChangeHeader(e, "designation")}
+                onChange={(e: any) => handleChangeHeader(e, "designation")}
                 placeholder="designation"
                 style={{
                   fontSize: scaleFont(18, currentState.fontSize),
