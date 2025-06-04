@@ -3,7 +3,7 @@ import MainSliderImage2 from "media/assets/home_slider/slider_2.webp";
 import MainSliderImage3 from "media/assets/home_slider/slider_3.webp";
 import MainSliderImage4 from "media/assets/home_slider/slider_4.webp";
 import MainSliderImage5 from "media/assets/home_slider/slider_5.webp";
-// ===========
+
 const images = [
   MainSliderImage1,
   MainSliderImage2,
