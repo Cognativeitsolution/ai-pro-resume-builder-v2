@@ -62,6 +62,7 @@ const AllExperiences = ({
     (state: RootState) => state.addSection
   );
   const [editable, setEditable] = useState<boolean>(false);
+  const [editableIndex, setEditableIndex] = useState<any>();
   const [experiences, setExperiences] = useState<ExperienceType[]>([
     {
       title: "",
@@ -170,10 +171,14 @@ const AllExperiences = ({
     const updated = moveItem(experiences, index, index + 1);
     setExperiences(updated);
   };
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col pt-2 ${editable ? 'bg-white rounded-sm' : ''}`}
+      className={`flex flex-col pt-2`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
@@ -195,7 +200,10 @@ const AllExperiences = ({
       {/* ===== Experience Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
         {experiences.map((exp, index) => (
-          <div key={index} className={`relative `}>
+          <div key={index}
+            className={`relative ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'} transition-colors duration-300 rounded-lg p-2`}
+            onClick={() => handleEditableIndex(index)}
+          >
             <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
               {/* ====== Job Title ====== */}
               <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>

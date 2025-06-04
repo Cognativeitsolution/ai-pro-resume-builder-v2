@@ -51,6 +51,7 @@ const AllReferences = ({
     contact: "",
   }]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [editableIndex, setEditableIndex] = useState<any>();
 
   useEffect(() => {
     if (Array.isArray(userReferences) && userReferences.length > 0) {
@@ -114,7 +115,10 @@ const AllReferences = ({
   //     setReferences(updated);
   //   }
   // };
-
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
   return (
     <div ref={containerRef} className={`flex flex-col mt-1 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
       {editable && (
@@ -134,10 +138,12 @@ const AllReferences = ({
       <div className="flex flex-col gap-1">
         {references.length > 0 && (
           references.map((cert, index) => (
-            <div key={index} className='flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative' style={{
-              color: textColor,
-              border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
-            }}
+            <div key={index}
+              className='flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative'
+              style={{
+                color: textColor,
+                border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
+              }}
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
                   setHoveredIndex(index);

@@ -79,7 +79,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
           highlightText={highlightChange}
-          textColor="#fff"
+          textColor=""
         />;
       case "Soft Skills":
         return (
