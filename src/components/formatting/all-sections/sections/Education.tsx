@@ -9,7 +9,9 @@ const Education = ({ sectionData, handleAddSec }: { sectionData: any, handleAddS
     handleAddSec({
       id: 3,
       name: "Education",
-      description: ""
+      description: "",
+      icon: "FaEducation"
+
     })
   };
 

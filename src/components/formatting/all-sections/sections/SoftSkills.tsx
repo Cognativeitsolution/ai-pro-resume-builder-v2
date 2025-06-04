@@ -10,7 +10,9 @@ const SoftSkills = ({ sectionData, handleAddSec }: { sectionData: any, handleAdd
       id: 6,
       name: "Soft Skills",
       description: "",
-      locked: false
+      locked: false,
+      icon: "FaSoftSkills"
+
     })
   };
 

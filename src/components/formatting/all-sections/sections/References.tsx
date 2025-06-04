@@ -10,7 +10,8 @@ const References = ({ sectionData, handleAddSec }: { sectionData: any, handleAdd
     handleAddSec({
       id: 11,
       name: "References",
-      description: ""
+      description: "",
+      icon: "FaReferences"
     })
   };
 

@@ -9,6 +9,7 @@ const Experience = ({ sectionData, handleAddSec }: { sectionData: any, handleAdd
       id: 4,
       name: "Experience",
       description: "",
+      icon: "FaExperience"
     })
   };
 

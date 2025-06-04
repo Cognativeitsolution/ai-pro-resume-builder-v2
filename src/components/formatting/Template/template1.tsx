@@ -1,11 +1,10 @@
 "use client";
 // ============
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 // ============
 import { useDispatch, useSelector } from "react-redux";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
-import { addUserHeader, hideTemplateIcons, hideTemplateProfile, sectionEditMode } from "@/redux/slices/addSectionSlice";
+import { addUserHeader, hideTemplateIcons, hideTemplateProfile, sectionEditMode, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 // ============
 import { BookUser, Mail, Phone } from "lucide-react";
 // ============
@@ -22,7 +21,17 @@ import AllReferences from "../all-sections/sections-details/AllReferences";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 import Watermark from "@/components/common/watermark/watermark";
 import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
-import { AiFillGold } from "react-icons/ai";
+import { FaSchool } from "react-icons/fa";
+import { GrUserExpert } from "react-icons/gr";
+import { GrProjects } from "react-icons/gr";
+import { GiSkills } from "react-icons/gi";
+import { PiCertificateBold } from "react-icons/pi";
+import { LiaAwardSolid } from "react-icons/lia";
+import { HiMiniLanguage } from "react-icons/hi2";
+import { VscReferences } from "react-icons/vsc";
+import { MdOutlineSummarize } from "react-icons/md";
+import { BsSignIntersectionSide } from "react-icons/bs";
+
 const A4_HEIGHT_PX = 1122;
 
 type CurrentState = {
@@ -66,7 +75,12 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
   const renderSection = (section: any) => {
     switch (section?.name) {
       case "Summary":
-        return <AllSummary data={section} highlightText={highlightChange} />;
+        return <AllSummary data={section}
+          fontSize={scaleFont(16, currentState.fontSize)}
+          fontFamily={currentState.fontFamily}
+          highlightText={highlightChange}
+          textColor="#fff"
+        />;
       case "Soft Skills":
         return (
           <AllSoftSkills
@@ -135,6 +149,8 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             textAltColor=""
             templateColor=""
             highlightText={highlightChange}
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Awards":
@@ -154,9 +170,11 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
         return (
           <AllReferences
             data={section}
-            textColor="#000"
+            textColor=""
             templateColor={currentState.color}
             textAltColor={currentState.color}
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Languages":
@@ -179,7 +197,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
           <AllCustomSection
             secNewNames={secName}
             data={section}
-            textColor="#000"
+            textColor=""
             templateColor="#fff"
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
@@ -218,7 +236,19 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
     const value = e.target.value;
     setHeaderData((prev) => ({ ...prev, [key]: value }));
   };
-
+  const sectionHeaderIcons: any = {
+    FaEducation: <FaSchool />,
+    FaExperience: <GrUserExpert />,
+    FaProject: <GrProjects />,
+    FaSoftSkills: <GiSkills />,
+    FaTechnicalSkills: <GiSkills />,
+    FaCertificates: <PiCertificateBold />,
+    FaAwards: <LiaAwardSolid />,
+    FaLanguages: <HiMiniLanguage />,
+    FaReferences: <VscReferences />,
+    FaCustomSection: <BsSignIntersectionSide />,
+    FaSummary: <MdOutlineSummarize />,
+  };
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -286,9 +316,9 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
   console.log(pages)
 
   useEffect(() => {
-    dispatch(hideTemplateIcons(true))
+    dispatch(hideTemplateIcons(false))
     dispatch(hideTemplateProfile(false))
-  }, []);
+  }, [showProfile, showIcons]);
 
   useEffect(() => {
     setSecName("Custom Section");
@@ -352,7 +382,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
                   {section?.name === "Custom Section" ? (
                     <div
                       ref={containerRef}
-                      className={`flex flex-col pt-2 ${editable && "bg-white"}`}
+                      className={`flex flex-col ${editable && "bg-white"}`}
                       onClick={handleEditableSection}
                     >
                       <input
@@ -367,7 +397,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
                     </div>
                   ) : (
                     <div className="flex items-center gap-1">
-                      {showIcons && <AiFillGold />}
+                      {showIcons ? sectionHeaderIcons[section.icon] ?? "No Icon" : ""}
                       <h2
                         className="text-lg font-semibold "
                         style={{ color: currentState.color }}
@@ -464,11 +494,15 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
                         />
                       </div>
                     ) : (
-                      <h2 className="text-lg font-semibold mb-1"
-                        dangerouslySetInnerHTML={{
-                          __html: highlightChange(section?.newSecName || section?.name),
-                        }}
-                      />
+
+                      <div className="flex items-center gap-1">
+                        {showIcons ? sectionHeaderIcons[section.icon] ?? "No Icon" : ""}
+                        <h2 className="text-lg font-semibold mb-1"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightChange(section?.newSecName || section?.name),
+                          }}
+                        />
+                      </div>
                     )}
                   </div>
                   <div className="">{renderSection(section)}</div>
@@ -476,6 +510,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
               ))}
           </div>
         </div>
+
       </div>
     </div>
   );

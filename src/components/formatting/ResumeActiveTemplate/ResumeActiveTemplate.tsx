@@ -36,7 +36,7 @@ type ResumePreviewProps = {
 
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
-  const { showProfile, isTempIcons, isTempProfile } = useSelector((state: RootState) => state.addSection);
+  const { showIcons, showProfile, isTempIcons, isTempProfile } = useSelector((state: RootState) => state.addSection);
   const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
   const settingsRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
@@ -179,8 +179,6 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     }
   };
 
-
-
   useEffect(() => {
     console.log("Re-rendered due to selectedTemplate change:", selectedTemplate);
   }, [selectedTemplate]);
@@ -202,8 +200,9 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
 
   useEffect(() => {
     setShowProfilePic(showProfile);
-  }, [showProfile]);
-
+    setShoeAllIcons(showIcons);
+  }, [showProfile, showIcons]);
+  // console.log(showProfile, showIcons, "showIconsshowIconsshowIconsshowIcons");
   return (
     <div ref={settingsRef} className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto relative">
       {renderTemplate()}
