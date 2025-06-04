@@ -2,25 +2,22 @@
 // ==============
 import React, { useEffect, useRef, useState } from "react";
 // ==============
-import CustomDatePicker from "../../custom/CustomDatePicker";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoLocationSharp } from "react-icons/io5";
+import { ImMoveDown, ImMoveUp } from "react-icons/im";
 // ==============
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addUserEducation,
-  removeSection,
-  sectionEditMode,
-} from "@/redux/slices/addSectionSlice";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import SectionToolbar from "../../section-toolbar/SectionToolbar";
-import EditableField from "@/components/editor/editable-field";
-import { IoLocationSharp } from "react-icons/io5";
+import { addUserEducation, removeSection, sectionEditMode } from "@/redux/slices/addSectionSlice";
 import { moveItem } from "@/utils/moveUpDown";
-import { ImMoveDown, ImMoveUp } from "react-icons/im";
+// ==============
+import CustomDatePicker from "../../custom/CustomDatePicker";
+import EditableField from "@/components/editor/editable-field";
+import SectionToolbar from "../../section-toolbar/SectionToolbar";
 
 type EducationType = {
-  degree: string;
   schoolName: string;
+  degree: string;
   location?: string;
 };
 
@@ -89,7 +86,7 @@ const AllEducation = ({
     setEducations(updated);
   };
 
-  // Add a new blank education entry
+  //====== Add a new blank education entry
   const handleAddEducation = () => {
     setEducations([
       ...educations,
@@ -97,7 +94,7 @@ const AllEducation = ({
     ]);
   };
 
-  // Remove the entire education section and reset its Redux data
+  //====== Remove the entire education section and reset its Redux data
   const handleRemoveSection = () => {
     if (data) {
       dispatch(removeSection(data));
@@ -110,7 +107,7 @@ const AllEducation = ({
     }
   };
 
-  // Delete a single education entry by index
+  //====== Delete a single education entry by index
   const handleDelete = (index: number) => {
     if (educations?.length <= 1 && index === 0) {
       handleRemoveSection();
@@ -120,7 +117,7 @@ const AllEducation = ({
     setEducations(updated);
   };
 
-  // Handle click outside the section to save changes and exit edit mode
+  //====== Handle click outside the section to save changes and exit edit mode
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -155,15 +152,11 @@ const AllEducation = ({
     const updated = moveItem(educations, index, index + 1);
     setEducations(updated);
   };
-  return (
-    <div
-      ref={containerRef}
-      className={`flex flex-col pt-2 ${editable ? 'bg-white rounded-sm' : ''}`}
 
-    >
+  return (
+    <div ref={containerRef} className={`flex flex-col pt-2 ${editable ? 'bg-white rounded-sm' : ''}`}>
       <div onClick={handleEditableSection}>
         {/* ====== Add and Delete Section Buttons ====== */}
-
         <SectionToolbar
           isTextEditor={true}
           onCopy={handleAddEducation}
@@ -193,19 +186,22 @@ const AllEducation = ({
                           handleContentChange(index, "degree", val);
                         }}
                         placeholder="Degree and Field of Study"
+                        className="bg-transparent !text-[15px]"
+                        placeholderClassName="!text-[15px]"
                         style={{
                           color: textAltColor ? textAltColor : textColor,
                           fontSize: fontSize,
                           fontFamily: fontFamily,
                         }}
-                        className="bg-transparent"
                         highlightText={highlightText}
                       />
                     </div>
+
                     {/* ====== Date Picker ====== */}
                     {term3 ? null :
                       <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} />}
                   </div>
+
                   {/* ====== Location ====== */}
                   <div className="w-full">
                     <div className="flex items-center justify-start gap-1 ">
@@ -217,20 +213,23 @@ const AllEducation = ({
                           handleContentChange(index, "location", val);
                         }}
                         placeholder="Location"
-                        className="bg-transparent text-left "
+                        className="bg-transparent text-left !text-[14px]"
+                        placeholderClassName="!text-[14px]"
                         style={{
                           color: textColor,
                           fontSize: fontSize,
                           fontFamily: fontFamily,
                         }}
-                        highlightText={highlightText}
                       />
                     </div>
+
+                    {/* ====== Date Picker ====== */}
                     {term3 ?
                       <div className={`flex flex-col items-start justify-start text-left  mb-1`}>
                         <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start"} />
                       </div> : null}
                   </div>
+
                   {/* ====== School or University ====== */}
                   <div className="flex items-center justify-between">
                     <div className="w-full">
@@ -240,20 +239,18 @@ const AllEducation = ({
                           handleContentChange(index, "schoolName", val);
                         }}
                         placeholder="School or University"
-                        className="bg-transparent"
+                        className="bg-transparent !text-[14px]"
+                        placeholderClassName="!text-[14px]"
                         style={{
                           color: textColor,
                           fontSize: fontSize,
                           fontFamily: fontFamily,
                         }}
-                        highlightText={highlightText}
                       />
                     </div>
-
-
-
                   </div>
                 </div>
+
                 {/* ====== Delete Button ====== */}
                 {editable && (
                   <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
