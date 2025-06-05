@@ -310,7 +310,7 @@ const AllProjects = ({
             )}
 
             {/* ====== Delete Button ====== */}
-            {editable && (
+            {editable && editableIndex === index && (
               <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
                 {projects?.length > 1 &&
                   <button

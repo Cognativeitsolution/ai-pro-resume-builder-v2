@@ -224,7 +224,7 @@ const AllCustomSection = ({
           customSections.map((exp, index) => (
             <div key={index}
               onClick={() => handleEditableIndex(index)}
-              className={`p-2 ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'}`}
+              className={`p-2 relative ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'}`}
             >
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
                 <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
@@ -312,7 +312,7 @@ const AllCustomSection = ({
               {editable && editableIndex === index && (
                 <AiRobo
                   input={false}
-                  positionClass="-left-[70px] hover:-left-[154px] top-20"
+                  positionClass="-left-[70px] hover:-left-[154px] top-5"
                   info={
                     exp.title?.trim()
                       ? "Generate ideas for new bullets."
