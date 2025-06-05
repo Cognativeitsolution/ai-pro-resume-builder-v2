@@ -157,6 +157,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
         return <Template1 currentState={currentState} scaleFont={scaleFont} incorrectTextChange={highlightChange} />;
       case "Template1copy":
         return <Template1Copy currentState={currentState} updateState={updateState} />;
+    
       case "template2":
         return <Template2 currentState={currentState} updateState={updateState} />;
       case "templateText":

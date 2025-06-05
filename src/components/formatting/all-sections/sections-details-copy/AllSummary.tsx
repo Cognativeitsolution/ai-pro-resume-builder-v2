@@ -1,12 +1,11 @@
 "use client";
 import EditableField from '@/components/editor/editable-field';
 import { addUserSummary, sectionEditMode } from '@/redux/slices/addSectionSlice';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { JSX, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
-import AiRobo from '../../aiAssistant/AiRobo';
-import axios from 'axios';
-
+import Image from 'next/image';
+import AIImage from 'media/assets/artificial-intelligence.png'
 
 type AllSummaryType = {
     data?: any;
@@ -18,8 +17,7 @@ type AllSummaryType = {
     textEditorPosition?: any;
     dotPosition?: any;
     isDot?: any;
-    highlightText?: (text: string) => string;
-    correctText?: (text: string) => string;
+    highlightSpellingMistakes?: (text: string) => JSX.Element[];
 };
 
 const AllSummary = ({ data = {}, textColor = "#000",
@@ -30,17 +28,15 @@ const AllSummary = ({ data = {}, textColor = "#000",
     textEditorPosition,
     dotPosition,
     isDot,
-    highlightText,
-    correctText,
+    highlightSpellingMistakes
 
 }: AllSummaryType) => {
     const dispatch = useDispatch();
     const containerRef = useRef<HTMLDivElement>(null);
-    const [inputData, setInputData] = useState<string>('');
-    const [inputData2, setInputData2] = useState<string>('');
-    const [editable, setEditable] = useState<boolean>(false);
-    const [correctedWords, setCorrectedWords] = useState<string[]>([])
 
+    const [inputData, setInputData] = useState<string>('');
+    const [editable, setEditable] = useState<boolean>(false);
+console.log(data)
     const handleDataChange = (e: any) => {
         setInputData(e.target.value);
     }
@@ -50,21 +46,6 @@ const AllSummary = ({ data = {}, textColor = "#000",
         setEditable(true);
         dispatch(sectionEditMode(true))
     }
-
-    const handleSpellingCorrection = () => {
-        setInputData(inputData2);
-        setInputData2("");
-    };
-
-    const highlightCorrectedWords = (text: string): string => {
-        return text.split(/\s+/).map(word => {
-            const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
-            if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
-                return `<span class="text-blue-500">${word}</span>`;
-            }
-            return word;
-        }).join(" ");
-    };
 
 
     useEffect(() => {
@@ -90,34 +71,7 @@ const AllSummary = ({ data = {}, textColor = "#000",
         }
     }, [data?.description]);
 
-    useEffect(() => {
-        if (data?.description) {
-            const runSpellCorrection = async () => {
-                try {
-                    const res = await axios.post('https://ai.spellcheck.aiproresume.com/api/v1/spell-correction', {
-                        text: data.description
-                    });
 
-                    const correctedData = res.data?.data;
-                    let newText = data.description;
-                    const corrected: string[] = [];
-
-                    correctedData.forEach(({ misspelledWord, correctedWord }: any) => {
-                        const regex = new RegExp(`\\b${misspelledWord}\\b`, 'gi');
-                        newText = newText.replace(regex, correctedWord);
-                        corrected.push(correctedWord);
-                    });
-
-                    setCorrectedWords(corrected);
-                    setInputData2(newText);
-                } catch (err) {
-                    console.error("Initial spell correction error:", err);
-                }
-            };
-
-            runSpellCorrection();
-        }
-    }, [data?.description]);
 
 
     return (
@@ -138,6 +92,7 @@ const AllSummary = ({ data = {}, textColor = "#000",
                 {editable ?
                     <EditableField
                         html={inputData}
+                        // dangerouslySetInnerHTML={{ __html: highlightSpellingMistakes(inputData) }}
                         onChange={handleDataChange}
                         placeholder="Description"
                         className="bg-transparent"
@@ -146,36 +101,35 @@ const AllSummary = ({ data = {}, textColor = "#000",
                             fontSize: fontSize,
                             fontFamily: fontFamily,
                         }}
-                        highlightText={highlightText}
                     />
                     :
-                    <p
-                        className="w-full rounded focus:outline-none focus:ring-0 focus:border-0"
+                    <p className="w-full rounded placeholder:text-[14px] focus:outline-none focus:ring-0 focus:border-0"
                         style={{
                             color: textColor,
                             fontSize: fontSize,
                             fontFamily: fontFamily,
                         }}
-                        dangerouslySetInnerHTML={{
-                            __html: highlightText ? highlightText(inputData) : inputData,
-                        }}
-                    />
+                    >
+                        {/* {inputData} */}
+                        {highlightSpellingMistakes ? highlightSpellingMistakes(inputData) : inputData}
+                    </p>
                 }
             </div>
 
         
             {editable && (
-                <AiRobo
-                    positionClass="-left-[70px] hover:-left-[154px] top-14"
-                    info={highlightCorrectedWords(inputData2) !== "" ? highlightCorrectedWords(inputData2) : "no spell mistake found"}
-                    popupTitle={highlightText ? "Spelling Correction" : "AI Assistant"}
-                    popupTitleBtn="Apply"
-                    popupTheme="red"
-                    onClickPopup={handleSpellingCorrection}
-                />
+                <div className={`absolute top-16 -left-[30px] transition-all duration-300 ease-in-out
+                ${editable ? 'opacity-100 ' : 'opacity-0 '}
+              `}>
+                    <button
+                        className="flex justify-center items-center"
+                    >
+                        <Image src={AIImage} alt="ai" width={28} height={28} />
+                    </button>
+                </div>
             )}
-        </div>
+        </div >
     )
 };
 
-export default AllSummary; 
+export default AllSummary;
