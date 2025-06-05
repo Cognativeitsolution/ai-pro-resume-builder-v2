@@ -60,6 +60,7 @@ const AllCertificates = ({
     (state: RootState) => state.addSection
   );
   const [editable, setEditable] = useState(false);
+  const [editableIndex, setEditableIndex] = useState<any>();
   const [certificates, setCertificates] = useState<CertificateType[]>([
     {
       description: "",
@@ -107,10 +108,13 @@ const AllCertificates = ({
   };
 
   const handleAddCertificate = () => {
+    const newIndex = certificates.length;
     setCertificates([
       ...certificates,
       { title: "", description: "", institutionName: "" },
     ]);
+    setEditableIndex(newIndex);
+    dispatch(sectionEditMode(true));
   };
 
   const handleRemoveSection = () => {
@@ -155,10 +159,15 @@ const AllCertificates = ({
     const updated = moveItem(certificates, index, index + 1);
     setCertificates(updated);
   };
+
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col pt-2  ${editable && "bg-white rounded-sm"} `}
+      className={`flex flex-col`}
       onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
@@ -174,10 +183,13 @@ const AllCertificates = ({
           isDot={isDot}
         />
       )}
-      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
+      <div className="flex flex-col gap-3 divide-y-[1px] mb-2">
         {certificates.length > 0 &&
           certificates.map((cert, index) => (
-            <div key={index} className="relative ">
+            <div key={index}
+              onClick={() => handleEditableIndex(index)}
+              className={`${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'} relative p-2`}
+            >
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
                 {/* ====== Certificate Title ====== */}
                 <div className={`flex ${term2 || term3 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
@@ -240,7 +252,7 @@ const AllCertificates = ({
                   />
 
                   {/*====== AI Assistant Button ======*/}
-                  {editable && (
+                  {editable && editableIndex === index && (
                     <AiRobo
                       input={false}
                       positionClass="-left-[75px] hover:-left-[159px] top-5"

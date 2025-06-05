@@ -154,7 +154,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   const renderTemplate = () => {
     switch (selectedTemplate) {
       case "template1":
-        return <Template1 currentState={currentState} scaleFont={scaleFont} highlightChange={highlightChange} />;
+        return <Template1 currentState={currentState} scaleFont={scaleFont} incorrectTextChange={highlightChange} />;
       case "Template1copy":
         return <Template1Copy currentState={currentState} updateState={updateState} />;
       case "template2":
@@ -172,7 +172,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
       case "template10":
         return <Template10 currentState={currentState} updateState={updateState} />;
       default:
-        return <Template1 currentState={currentState} scaleFont={scaleFont} highlightChange={highlightChange} />;
+        return <Template1 currentState={currentState} scaleFont={scaleFont} incorrectTextChange={highlightChange} />;
     }
   };
 
@@ -201,7 +201,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   }, [showProfile, showIcons]);
   // console.log(showProfile, showIcons, "showIconsshowIconsshowIconsshowIcons");
   return (
-    <div ref={settingsRef} className="bg-[#ffffff] border border-gray-300 min-h-full max-w-max mx-auto relative">
+    <div ref={settingsRef} className="min-h-full max-w-max mx-auto relative">
       {renderTemplate()}
       <button className="cursor-pointer absolute top-0 -right-8 rounded-sm bg-slate-900/70 p-1" onClick={() => setShowSettings((prev) => !prev)}>
         <IoSettingsOutline

@@ -97,10 +97,13 @@ const AllExperiences = ({
 
   //====== Add a new blank experience entry
   const handleAddExperience = () => {
+    const newIndex = experiences.length;
     setExperiences([
       ...experiences,
       { title: "", description: "", companyName: "", location: "" },
     ]);
+    setEditableIndex(newIndex);
+    dispatch(sectionEditMode(true));
   };
 
   //====== Remove the entire section and reset associated experiences in the Redux store
@@ -198,10 +201,10 @@ const AllExperiences = ({
       )}
 
       {/* ===== Experience Box ===== */}
-      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
         {experiences.map((exp, index) => (
           <div key={index}
-            className={`relative ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'} transition-colors duration-300 rounded-lg p-2`}
+            className={`relative ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'} p-2 transition-colors duration-300`}
             onClick={() => handleEditableIndex(index)}
           >
             <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
@@ -295,7 +298,7 @@ const AllExperiences = ({
                 />
 
                 {/*====== AI Assistant Button ======*/}
-                {editable && (
+                {editable && editableIndex === index && (
                   <AiRobo
                     input={false}
                     positionClass="-left-[75px] hover:-left-[159px] top-8"

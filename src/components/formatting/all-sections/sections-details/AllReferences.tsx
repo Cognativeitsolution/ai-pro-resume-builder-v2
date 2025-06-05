@@ -85,7 +85,10 @@ const AllReferences = ({
     dispatch(sectionEditMode(true))
   }
   const handleAddReference = () => {
+    const newIndex = references.length;
     setReferences([...references, { name: '', contact: '' }]);
+    setEditableIndex(newIndex);
+    dispatch(sectionEditMode(true));
   };
 
   const handleRemoveSection = () => {
@@ -140,7 +143,8 @@ const AllReferences = ({
           references.map((cert, index) => (
             <div key={index}
               onClick={() => handleEditableIndex(index)}
-              className={`${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'}  flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative`}
+              className={`${editable && editableIndex === index ? 'bg-white rounded-sm ' : 'bg-transparent'}
+              flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative`}
               style={{
                 color: textColor,
                 border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',

@@ -47,10 +47,11 @@ type CurrentState = {
 type ResumePreviewProps = {
   currentState: CurrentState;
   scaleFont: any;
-  highlightChange: any;
+  incorrectTextChange?: any;
+  correctTextChange?: any;
 };
 
-const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewProps) => {
+const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextChange }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
     (state: any) => state.addSection
@@ -78,7 +79,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
         return <AllSummary data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
-          highlightText={highlightChange}
+          highlightText={incorrectTextChange}
           textColor=""
         />;
       case "Soft Skills":
@@ -93,7 +94,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
-            highlightText={highlightChange}
+            highlightText={incorrectTextChange}
           />
         );
       case "Technical Skills":
@@ -108,14 +109,14 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
-            highlightText={highlightChange}
+            highlightText={incorrectTextChange}
           />
         );
       case "Certificate":
         return <AllCertificates data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
-          highlightText={highlightChange}
+          highlightText={incorrectTextChange}
         />;
       case "Education":
         return (
@@ -126,7 +127,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-            highlightText={highlightChange}
+            highlightText={incorrectTextChange}
           />
         );
       case "Experience":
@@ -138,7 +139,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-            highlightText={highlightChange}
+            highlightText={incorrectTextChange}
           />
         );
       case "Projects":
@@ -148,7 +149,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             textColor=""
             textAltColor=""
             templateColor=""
-            highlightText={highlightChange}
+            highlightText={incorrectTextChange}
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
           />
@@ -163,7 +164,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             fontSize={scaleFont(16, currentState.fontSize)}
             iconSize={scaleFont(13, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-            highlightText={highlightChange}
+            highlightText={incorrectTextChange}
           />
         );
       case "References":
@@ -189,7 +190,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
-            highlightText={highlightChange}
+            highlightText={incorrectTextChange}
           />
         );
       case "Custom Section":
@@ -202,11 +203,11 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
-            highlightText={highlightChange}
+            highlightText={incorrectTextChange}
           />
         );
       default:
-        return <p>{highlightChange(section?.content || "")}</p>;
+        return <p>{incorrectTextChange(section?.content || "")}</p>;
     }
   };
 
@@ -340,7 +341,8 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
       }}
     >
 
-      <div style={{ minHeight: "297mm", width: "235mm" }} className="relative grid grid-cols-12 shadow-xl ">
+      <div style={{ minHeight: "332mm", width: "235mm" }}
+        className={`relative grid grid-cols-12  shadow-xl ${editMode ? "bg-transparent" : "bg-white"}`}>
         {/* Left Column */}
         <div className="col-span-8" style={{ padding: "30px", paddingRight: "40px" }} >
           {/* Header */}
@@ -402,7 +404,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
                         className="text-lg font-semibold "
                         style={{ color: currentState.color }}
                         dangerouslySetInnerHTML={{
-                          __html: highlightChange(section?.newSecName || section?.name),
+                          __html: incorrectTextChange(section?.newSecName || section?.name),
                         }}
                       />
                     </div>
@@ -499,7 +501,7 @@ const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewPr
                         {showIcons ? sectionHeaderIcons[section.icon] ?? "No Icon" : ""}
                         <h2 className="text-lg font-semibold mb-1"
                           dangerouslySetInnerHTML={{
-                            __html: highlightChange(section?.newSecName || section?.name),
+                            __html: incorrectTextChange(section?.newSecName || section?.name),
                           }}
                         />
                       </div>
