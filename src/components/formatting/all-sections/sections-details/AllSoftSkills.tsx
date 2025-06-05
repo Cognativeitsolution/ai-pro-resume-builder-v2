@@ -133,14 +133,14 @@ const AllSoftSkills = ({
           isDot={isDot}
         />
       )}
-      <div className="flex flex-wrap gap-1 ">
+      <div className="w-full flex flex-wrap gap-2 ">
         {softskills.map((skill, index) => (
           <div
             key={index}
-            className={`flex items-center gap-2 !h-[30px]
+            className={`flex items-center gap-2 !h-[30px] 
               ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
               font-medium px-3  transition-all duration-500 ease-in-out 
-              ${hoveredIndex === index ? 'pr-5' : ''}`}
+              ${hoveredIndex === index ? 'max-w-[55%]' : 'max-w-[40%]'}`}
             style={{
               color: textColor,
               background: isPillStyle && pillBg ? pillBg : textColor,
@@ -165,7 +165,7 @@ const AllSoftSkills = ({
               // onBlur={() => handleBlur(index)}
               placeholder="Soft Skill"
               placeholderClassName="text-sm mt-[6px]"
-              className="bg-transparent text-sm truncate leading-8 focus:outline-none transition-all duration-500 ease-in-out !min-w-[85px] opacity-70"
+              className="bg-transparent text-sm truncate leading-8 focus:outline-none transition-all duration-500 ease-in-out w-[75px] max-w-[85px] opacity-70"
               style={{
                 color: textAltColor,
                 fontSize: fontSize,

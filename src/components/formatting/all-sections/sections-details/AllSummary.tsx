@@ -31,7 +31,6 @@ const AllSummary = ({ data = {}, textColor = "#000",
     dotPosition,
     isDot,
     highlightText,
-    correctText,
 
 }: AllSummaryType) => {
     const dispatch = useDispatch();
