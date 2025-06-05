@@ -59,6 +59,7 @@ const AllEducation = ({
   const { userEducation, showIcons } = useSelector((state: RootState) => state.addSection);
   const [inputData, setInputData] = useState<any>({});
   const [editable, setEditable] = useState<boolean>(false);
+  const [editableIndex, setEditableIndex] = useState<any>();
   const [educations, setEducations] = useState<EducationType[]>([{
     degree: "",
     schoolName: "",
@@ -88,10 +89,13 @@ const AllEducation = ({
 
   //====== Add a new blank education entry
   const handleAddEducation = () => {
+    const newIndex = educations.length;
     setEducations([
       ...educations,
       { degree: "", location: "", schoolName: "" },
     ]);
+    setEditableIndex(newIndex);
+    dispatch(sectionEditMode(true));
   };
 
   //====== Remove the entire education section and reset its Redux data
@@ -115,6 +119,10 @@ const AllEducation = ({
     const updated = educations.filter((_, i) => i !== index);
     console.log(updated)
     setEducations(updated);
+  };
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
   };
 
   //====== Handle click outside the section to save changes and exit edit mode
@@ -154,7 +162,7 @@ const AllEducation = ({
   };
 
   return (
-    <div ref={containerRef} className={`flex flex-col pt-2 ${editable ? 'bg-white rounded-sm' : ''}`}>
+    <div ref={containerRef} className={`flex flex-col pt-2`}>
       <div onClick={handleEditableSection}>
         {/* ====== Add and Delete Section Buttons ====== */}
         <SectionToolbar
@@ -170,11 +178,14 @@ const AllEducation = ({
           isDot={isDot}
         />
         {/* ===== Education Box ===== */}
-        <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
+        <div className="flex flex-col gap-3 divide-y-[1px] mb-2">
           {/* <Editor/> */}
           {educations.length > 0 &&
             educations.map((exp, index) => (
-              <div key={index} className={`relative `}>
+              <div key={index}
+                onClick={() => handleEditableIndex(index)}
+                className={`relative p-2 ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'}`}
+              >
                 <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
                   {/* ====== Degree and Field of Study ====== */}
                   <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
@@ -250,7 +261,6 @@ const AllEducation = ({
                     </div>
                   </div>
                 </div>
-
                 {/* ====== Delete Button ====== */}
                 {editable && (
                   <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>

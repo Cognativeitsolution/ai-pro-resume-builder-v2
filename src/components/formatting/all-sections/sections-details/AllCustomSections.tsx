@@ -14,6 +14,7 @@ import AiRobo from "../../aiAssistant/AiRobo";
 import CustomDatePicker from "../../custom/CustomDatePicker";
 import EditableField from "@/components/editor/editable-field";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
+import { ImMoveDown, ImMoveUp } from "react-icons/im";
 
 type CustomSectionType = {
   title: string;
@@ -66,6 +67,8 @@ const AllCustomSection = ({
   );
   const [editable, setEditable] = useState<boolean>(false);
   const [customSectionFields, setCustomSectionFields] = useState<any>();
+  const [editableIndex, setEditableIndex] = useState<any>();
+
   const [customSections, setCustomSection] = useState<CustomSectionType[]>([
     {
       companyName: "",
@@ -86,8 +89,6 @@ const AllCustomSection = ({
     dispatch(sectionEditMode(true));
   };
 
-
-
   //====== Handle input changes for each field in an customSections entry
   const handleInputChange = (
     index: number,
@@ -101,10 +102,13 @@ const AllCustomSection = ({
 
   //====== Add a new blank customSections entry
   const handleAddCustomSection = () => {
+    const newIndex = customSections.length;
     setCustomSection([
       ...customSections,
       { title: "", description: "", companyName: "", location: "", icon: "" },
     ]);
+    setEditableIndex(newIndex);
+    dispatch(sectionEditMode(true));
   };
 
   //====== Remove the entire section and reset associated customSections in the Redux store
@@ -123,6 +127,9 @@ const AllCustomSection = ({
 
   //====== Delete a specific customSections entry by index
   const handleDelete = (index: number) => {
+    if (customSections?.length <= 1 && index === 0) {
+      handleRemoveSection();
+    }
     const updated = customSections.filter((_, i) => i !== index);
     setCustomSection(updated);
   };
@@ -166,10 +173,33 @@ const AllCustomSection = ({
     };
   }, [customSections, dispatch, data?.id, secNewNames]);
 
+  const moveItem = (arr: any[], from: number, to: number) => {
+    const updated = [...arr];
+    const [movedItem] = updated.splice(from, 1);
+    updated.splice(to, 0, movedItem);
+    return updated;
+  };
+
+  const handleMoveUp = (index: number) => {
+    if (index <= 0) return;
+    const updated = moveItem(customSections, index, index - 1);
+    setCustomSection(updated);
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index >= customSections.length - 1) return;
+    const updated = moveItem(customSections, index, index + 1);
+    setCustomSection(updated);
+  };
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
+
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col pt-2 ${editable && "bg-white rounded-sm"}`}
+      className={`flex flex-col pt-2`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
@@ -189,10 +219,13 @@ const AllCustomSection = ({
       )}
 
       {/* ===== Section Box ===== */}
-      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
+      <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
         {customSections.length > 0 &&
           customSections.map((exp, index) => (
-            <div key={index}>
+            <div key={index}
+              onClick={() => handleEditableIndex(index)}
+              className={`p-2 ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'}`}
+            >
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
                 <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
                   <div className="flex items-center justify-between gap-1 w-full">
@@ -276,7 +309,7 @@ const AllCustomSection = ({
               </div>
 
               {/*====== AI Assistant Button ======*/}
-              {editable && (
+              {editable && editableIndex === index && (
                 <AiRobo
                   input={false}
                   positionClass="-left-[70px] hover:-left-[154px] top-20"
@@ -289,20 +322,32 @@ const AllCustomSection = ({
               )}
 
               {/* ====== Delete Button ====== */}
-              {editable && (
-                <div className={`absolute bottom-0 -right-[27px] transition-all duration-300 ease-in-out
-                ${editable ? 'opacity-100 ' : 'opacity-0 '}
-              `}>
-                  <button
-                    className="bg-red-800/20 shadow-md rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center"
-                    onClick={() => {
-                      if (index > 0) return handleDelete(index);
-                      return handleRemoveSection()
-                    }}
+              {editable && editableIndex === index && (
+                <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                  {customSections?.length > 1 &&
+                    <button
+                      onClick={() => handleMoveUp(index)}
+                      className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                      title="Move up"
+                    >
+                      <ImMoveUp size={14} />
+                    </button>}
+                  {customSections?.length > 1 && <button
+                    onClick={() => handleMoveDown(index)}
+                    className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Move Down"
                   >
-                    <RiDeleteBin6Line size={16} />
+                    <ImMoveDown size={14} />
+                  </button>}
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="bg-red-800/15 backdrop-blur-lg rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Delete"
+                  >
+                    <RiDeleteBin6Line size={14} />
                   </button>
-                </div>)}
+                </div>
+              )}
             </div>
           ))}
       </div>

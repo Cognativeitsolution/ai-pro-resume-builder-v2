@@ -28,6 +28,7 @@ type AddSectionState = {
   userLanguages: any;
   sectionBgColor?: any;
   editMode?: any;
+
   showIcons?: any;
   showProfile?: any;
   isTempIcons?: any;
@@ -125,10 +126,7 @@ export const addSectionSlice = createSlice({
   name: "addSection",
   initialState,
   reducers: {
-    sectionEditMode: (state, action) => {
-      const section = action.payload;
-      state.editMode = section;
-    },
+
     sectionShowIcons: (state, action) => {
       const section = action.payload;
       state.showIcons = section;
@@ -144,6 +142,16 @@ export const addSectionSlice = createSlice({
     hideTemplateProfile: (state, action) => {
       const section = action.payload;
       state.isTempProfile = section;
+    },
+
+
+
+
+
+
+    sectionEditMode: (state, action) => {
+      const section = action.payload;
+      state.editMode = section;
     },
     addNewSection: (state, action: PayloadAction<SectionType>) => {
       const section = action.payload;

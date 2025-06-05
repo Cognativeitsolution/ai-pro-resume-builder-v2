@@ -441,7 +441,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
     dispatch(hideTemplateProfile(true))
   }, [showProfile, showIcons]);
 
-  console.log(pages)
+  // console.log(pages)
+
+  console.log(showProfile, showIcons, "Temp2 showProfile, showIcons");
+
   return (
     <div
       className="resume-container"

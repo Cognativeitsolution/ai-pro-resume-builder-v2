@@ -47,6 +47,7 @@ const AllLanguages = ({
   const [editable, setEditable] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [languages, setLanguages] = useState<LanguageType[]>([]);
+  const [editableIndex, setEditableIndex] = useState<any>();
 
   useEffect(() => {
     if (Array.isArray(userLanguages) && userLanguages.length > 0) {
@@ -80,7 +81,10 @@ const AllLanguages = ({
     dispatch(sectionEditMode(true))
   }
   const handleAddLanguage = () => {
+    const newIndex = languages.length;
     setLanguages([...languages, { title: '', level: 0 }]);
+    setEditableIndex(newIndex);
+    dispatch(sectionEditMode(true));
   };
 
   const handleDeleteLanguage = (index: number) => {
@@ -124,9 +128,14 @@ const AllLanguages = ({
       setLanguages(updated);
     }
   };
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
 
   return (
-    <div ref={containerRef} className={`px-1 py-4 relative ${editable === true ? editableAltBG ? editableAltBG : 'bg-white rounded-sm' : 'bg-transparent'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`px-1 py-4 relative`}
+      onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={false}
@@ -147,7 +156,9 @@ const AllLanguages = ({
         <div className="flex flex-col gap-3">
           {languages.length > 0 ? (
             languages.map((lang, index) => (
-              <div key={index}>
+              <div key={index}
+                onClick={() => handleEditableIndex(index)}
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     {editable ? (

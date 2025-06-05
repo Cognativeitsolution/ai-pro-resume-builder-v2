@@ -48,6 +48,8 @@ const AllAwards = ({
   const { userAwards, showIcons } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [editableIndex, setEditableIndex] = useState<any>();
+
   const [awards, setAwards] = useState<AwardType[]>([{
     title: ""
   }]);
@@ -79,13 +81,20 @@ const AllAwards = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [awards, dispatch, data.id]);
 
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true))
   }
 
   const handleAddAward = () => {
+    const newIndex = awards.length;
     setAwards([...awards, { title: '' }]);
+    setEditableIndex(newIndex);
+    dispatch(sectionEditMode(true));
   };
 
   const handleDeleteAward = (index: number) => {
@@ -141,7 +150,7 @@ const AllAwards = ({
 
   return (
     <div ref={containerRef}
-      className={`flex flex-col mt-1 ${editable ? 'bg-white rounded-sm' : ''}`}
+      className={`flex flex-col mt-1 `}
       onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
@@ -162,7 +171,8 @@ const AllAwards = ({
           awards.map((award, index) => (
             <div
               key={index}
-              className={`flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium px-1 transition-all duration-500 ease-in-out relative`}
+              onClick={() => handleEditableIndex(index)}
+              className={`${editable && editableIndex === index ? 'bg-white' : 'bg-transparent'} flex items-center gap-2 rounded-lg backdrop-blur-[40px] font-medium px-1 transition-all duration-500 ease-in-out relative`}
               style={{
                 color: textColor,
                 border: hoveredIndex === index ? `1px solid #000` : '1px solid transparent',

@@ -61,6 +61,8 @@ const AllProjects = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { userProjects, showIcons } = useSelector((state: RootState) => state.addSection);
   const [editable, setEditable] = useState<boolean>(false);
+  const [editableIndex, setEditableIndex] = useState<any>();
+
   const [projects, setProjects] = useState<ProjectType[]>([
     {
       description: "",
@@ -95,10 +97,13 @@ const AllProjects = ({
 
   //====== Add a new, empty project entry to the list
   const handleAddProject = () => {
+    const newIndex = projects.length;
     setProjects([
       ...projects,
       { projectName: "", description: "", projectUrl: "", location: "" },
     ]);
+    setEditableIndex(newIndex);
+    dispatch(sectionEditMode(true));
   };
 
   //====== Remove the entire section from Redux and clear its data
@@ -119,7 +124,6 @@ const AllProjects = ({
   };
   const handleRearrange = (index: number) => {
     console.log(index, "pppppppppppppppppppppppppppp");
-
   };
 
   //====== Handle clicks outside the component to exit edit mode and save data to Redux
@@ -168,11 +172,15 @@ const AllProjects = ({
     const updated = moveItem(projects, index, index + 1);
     setProjects(updated);
   };
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
 
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col pt-2 ${editable ? 'bg-white rounded-sm' : ''}`}
+      className={`flex flex-col pt-2`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
@@ -194,7 +202,9 @@ const AllProjects = ({
       {/* ===== Project Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
         {projects.map((project, index) => (
-          <div key={index} className={`relative`}>
+          <div key={index}
+            onClick={() => handleEditableIndex(index)}
+            className={`relative p-2 ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'}`}>
             <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
               {/* ====== Degree and Field of Study ====== */}
               <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
@@ -287,7 +297,7 @@ const AllProjects = ({
             </div>
 
             {/*====== AI Assistant Button ======*/}
-            {editable && (
+            {editable && editableIndex === index && (
               <AiRobo
                 input={false}
                 positionClass="-left-[75px] hover:-left-[159px] top-8"
