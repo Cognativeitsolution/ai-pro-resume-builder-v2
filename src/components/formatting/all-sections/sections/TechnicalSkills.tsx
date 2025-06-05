@@ -10,7 +10,8 @@ const TechnicalSkills = ({ sectionData, handleAddSec }: { sectionData: any, hand
       id: 7,
       name: "Technical Skills",
       description: "",
-      locked: false
+      locked: false,
+      icon: "FaTechnicalSkills"
     })
   };
 

@@ -10,7 +10,8 @@ const Awards = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec:
     handleAddSec({
       id: 9,
       name: "Awards",
-      description: ""
+      description: "",
+      icon: "FaAwards"
     })
   };
 

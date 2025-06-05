@@ -15,27 +15,37 @@ import { CgClose } from "react-icons/cg";
 import LoadingSkeleton from "@/components/loadingSkeleton/loadingSkeleton";
 import { RootState } from "@/redux/store";
 
-type propsType = {
+type PropsType = {
   doubleColumn?: boolean | string;
 };
 
-
-const DndExample = ({ doubleColumn }: propsType) => {
+const DndExample = ({ doubleColumn }: PropsType) => {
   const dispatch = useDispatch();
   const addedSections = useSelector(
     (state: any) => state.addSection.addedSections
   );
-  const rightSideSections = useSelector((state: RootState) => state.rearrange.list);
+  const rightSideSections = useSelector(
+    (state: RootState) => state.rearrange.list
+  );
 
-  // const rightSideSections = ["Technical Skills", "Soft Skills", "Languages", "References"];
-  const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
-  const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
+  if (!addedSections.length) return <LoadingSkeleton />;
 
+  const leftSections = addedSections.filter(
+    (section: any) => !rightSideSections.includes(section.name)
+  );
+  const rightSections = addedSections.filter((section: any) =>
+    rightSideSections.includes(section.name)
+  );
 
-  const mid = Math.ceil(addedSections.length / 2);
+  const getColumnComponents = (sectionList: any[]) => {
+    const locked = sectionList.filter((section) => section.locked);
+    const unlocked = sectionList.filter((section) => !section.locked);
+    return { locked, unlocked };
+  };
+
   const cards = [
-    { id: "left", components: leftSections },
-    { id: "right", components: rightSections },
+    { id: "left", ...getColumnComponents(leftSections) },
+    { id: "right", ...getColumnComponents(rightSections) },
   ];
 
   const onDragEnd = (result: DropResult) => {
@@ -45,51 +55,57 @@ const DndExample = ({ doubleColumn }: propsType) => {
     const sourceCol = source.droppableId;
     const destCol = destination.droppableId;
 
-    // Prevent moving between left/right columns
     if (sourceCol !== destCol) return;
 
-    const updatedSections: any = [...addedSections];
+    const sourceList = sourceCol === "left" ? leftSections : rightSections;
+    const otherList = sourceCol === "left" ? rightSections : leftSections;
 
-    // Get actual section arrays based on column
-    const targetGroup =
-      sourceCol === "left"
-        ? addedSections.filter((section: any) => !rightSideSections.includes(section.name))
-        : addedSections.filter((section: any) => rightSideSections.includes(section.name));
+    const { locked, unlocked } = getColumnComponents(sourceList);
 
-    const startIdx = addedSections.findIndex((s: any) => s.id === targetGroup[source.index]?.id);
-    const endIdx = addedSections.findIndex((s: any) => s.id === targetGroup[destination.index]?.id);
+    const reorderedUnlocked = [...unlocked];
+    const [movedItem] = reorderedUnlocked.splice(source.index, 1);
+    reorderedUnlocked.splice(destination.index, 0, movedItem);
 
-    if (startIdx === -1 || endIdx === -1) return;
+    // Merge locked and unlocked sections keeping locked items in their original positions
+    const merged = [...sourceList];
+    let unlockedIndex = 0;
 
-    const [removed] = updatedSections.splice(startIdx, 1);
-    updatedSections.splice(endIdx, 0, removed);
+    for (let i = 0; i < merged.length; i++) {
+      if (!merged[i].locked) {
+        merged[i] = reorderedUnlocked[unlockedIndex++];
+      }
+    }
 
-    dispatch(reorderSections(updatedSections));
+    const newOrder: any =
+      sourceCol === "left" ? [...merged, ...otherList] : [...otherList, ...merged];
+
+    dispatch(reorderSections(newOrder));
   };
-  // old middle work end
-
-  if (!addedSections.length) return <LoadingSkeleton />;
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div
-        className={`grid ${doubleColumn
-          ? "grid-cols-2 gap-4"
-          : "grid-cols-1"
+        className={`grid ${doubleColumn ? "grid-cols-2 gap-4" : "grid-cols-1"
           }`}
       >
         {cards.map((col) => (
-          <Droppable
-            key={col.id}
-            droppableId={col.id}
-            type="ITEM"
-          >
+          <Droppable key={col.id} droppableId={col.id} type="ITEM">
             {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {col.components.map((component: any, index: any) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {/* Render locked items (not draggable) */}
+                {col.locked.map((component: any) => (
+                  <div
+                    key={component.id}
+                    className="bg-gray-200 border rounded-lg p-3 my-2 text-center text-[14px] flex items-center justify-between opacity-50 cursor-not-allowed"
+                  >
+                    <Lock size={18} className="text-slate-800" />
+                    {component.name}
+                    <div></div>
+                  </div>
+                ))}
+
+                {/* Render unlocked items (draggable) */}
+                {col.unlocked.map((component: any, index: number) => (
                   <Draggable
                     key={component.id.toString()}
                     draggableId={component.id.toString()}
@@ -98,28 +114,13 @@ const DndExample = ({ doubleColumn }: propsType) => {
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
-                        {...(!component.locked
-                          ? {
-                            ...provided.draggableProps,
-                            ...provided.dragHandleProps,
-                          }
-                          : {})}
-                        className={`bg-gray-200 border rounded-lg p-3 my-2 text-center text-[14px] flex items-center justify-between ${component.locked
-                          ? "opacity-50 cursor-not-allowed"
-                          : "cursor-pointer hover:bg-[#9885FF] hover:text-white"
-                          }`}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="bg-gray-200 border rounded-lg p-3 my-2 text-center text-[14px] flex items-center justify-between cursor-pointer hover:bg-[#9885FF] hover:text-white"
                       >
-                        {component.locked ? (
-                          <Lock size={18} className="text-slate-800" />
-                        ) : (
-                          <Image
-                            src={Add}
-                            alt="Add"
-                            width={16}
-                          />
-                        )}
+                        <Image src={Add} alt="Add" width={16} />
                         {component.name}
-                        {!component.locked ? <CgClose /> : <div></div>}
+                        <CgClose />
                       </div>
                     )}
                   </Draggable>

@@ -24,6 +24,7 @@ type AllLanguagesProps = {
   isVerticleHeader?: any;
   headerPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllLanguages = ({
@@ -37,7 +38,8 @@ const AllLanguages = ({
   dotPosition,
   isVerticleHeader,
   headerPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllLanguagesProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -148,19 +150,30 @@ const AllLanguages = ({
               <div key={index}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <input
-                      value={lang.title}
-                      onChange={(e) => handleInputChange(index, e.target.value)}
-                      onBlur={() => handleBlur(index)}
-                      placeholder="Language"
-                      className="text-base w-10/12 placeholder:text-base focus:outline-none bg-transparent"
-                      style={{
-                        color: textColor,
-                        fontSize: fontSize,
-                        fontFamily: fontFamily
-                      }}
-                      autoFocus
-                    />
+                    {editable ? (
+                      <input
+                        value={lang.title}
+                        onChange={(e) => handleInputChange(index, e.target.value)}
+                        onBlur={() => handleBlur(index)}
+                        placeholder="Language"
+                        className="text-base w-10/12 placeholder:text-base focus:outline-none bg-transparent"
+                        style={{
+                          color: textColor,
+                          fontSize: fontSize,
+                          fontFamily: fontFamily
+                        }}
+                        autoFocus
+                      />
+                    )
+                      :
+                      <div
+                        className="text-base text-white placeholder:text-base focus:outline-none bg-transparent"
+                        style={{ color: textAltColor }}
+                        dangerouslySetInnerHTML={{
+                          __html: highlightText ? highlightText(lang.title) : lang.title,
+                        }}
+                      />
+                    }
                   </div>
                   {editingIndex === index && lang.title.trim() !== "" && (
                     <div className="flex gap-2">

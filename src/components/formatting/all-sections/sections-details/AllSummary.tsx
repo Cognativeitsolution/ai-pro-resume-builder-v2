@@ -4,8 +4,8 @@ import { addUserSummary, sectionEditMode } from '@/redux/slices/addSectionSlice'
 import React, { JSX, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
-import Image from 'next/image';
-import AIImage from 'media/assets/artificial-intelligence.png'
+import AiRobo from '../../aiAssistant/AiRobo';
+
 
 type AllSummaryType = {
     data?: any;
@@ -45,6 +45,9 @@ const AllSummary = ({ data = {}, textColor = "#000",
     const handleEditableSection = () => {
         setEditable(true);
         dispatch(sectionEditMode(true))
+    }
+    const handleSpellingCorrection = () => {
+
     }
 
 
@@ -132,17 +135,16 @@ const AllSummary = ({ data = {}, textColor = "#000",
 
         
             {editable && (
-                <div className={`absolute top-16 -left-[30px] transition-all duration-300 ease-in-out
-                ${editable ? 'opacity-100 ' : 'opacity-0 '}
-              `}>
-                    <button
-                        className="flex justify-center items-center"
-                    >
-                        <Image src={AIImage} alt="ai" width={28} height={28} />
-                    </button>
-                </div>
+                <AiRobo
+                    positionClass="-left-[70px] hover:-left-[154px] top-14"
+                    info={highlightText ? highlightText(inputData) : inputData}
+                    popupTitle={highlightText ? "Spelling Correction" : "AI Assistant"}
+                    popupTitleBtn="Apply"
+                    popupTheme="red"
+                    onClickPopup={handleSpellingCorrection}
+                />
             )}
-        </div >
+        </div>
     )
 };
 

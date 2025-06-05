@@ -9,7 +9,8 @@ const Languages = ({ sectionData, handleAddSec }: { sectionData: any, handleAddS
     handleAddSec({
       id: 10,
       name: "Languages",
-      description: ""
+      description: "",
+      icon: "FaLanguages",
     })
   };
 

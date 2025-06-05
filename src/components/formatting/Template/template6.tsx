@@ -8,7 +8,7 @@ import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileImage } from "@/redux/slices/profileImageSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
-import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
+import { addUserHeader, hideTemplateIcons, hideTemplateProfile, sectionEditMode, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 // ============
 import * as FaIcons from "react-icons/fa";
 import { BookUser, Mail, Phone } from "lucide-react";
@@ -51,7 +51,7 @@ type ResumePreviewProps = {
 
 const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
   const dispatch = useDispatch();
-  const { addedSections, sectionBgColor, editMode } = useSelector(
+  const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
     (state: any) => state.addSection
   );
 
@@ -341,7 +341,13 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === "string") {
-          dispatch(setProfileImage(reader.result));
+          // dispatch(setProfileImage(reader.result));
+          dispatch(setProfileImage({
+            image: reader.result,
+            scale: 1,
+            position: { x: 0, y: 0 },
+            rotation: 0,
+          }));
         }
       };
       reader.readAsDataURL(file);
@@ -429,6 +435,12 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
     setPages(newPages);
     setMeasured(true);
   }, [leftSections, measured]);
+
+  useEffect(() => {
+    dispatch(hideTemplateIcons(true))
+    dispatch(hideTemplateProfile(true))
+  }, [showProfile, showIcons]);
+
   console.log(pages)
   return (
     <div
@@ -452,7 +464,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             >
               <EditableField
                 html={headerData.name}
-                onChange={(e) => handleChangeHeader(e, "name")}
+                onChange={(e: any) => handleChangeHeader(e, "name")}
                 placeholder="Name"
                 style={{
                   fontSize: scaleFont(25, currentState.fontSize),
@@ -462,7 +474,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
               />
               <EditableField
                 html={headerData.designation}
-                onChange={(e) => handleChangeHeader(e, "designation")}
+                onChange={(e: any) => handleChangeHeader(e, "designation")}
                 placeholder="designation"
                 style={{
                   fontSize: scaleFont(18, currentState.fontSize),

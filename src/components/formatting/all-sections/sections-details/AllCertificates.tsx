@@ -8,12 +8,12 @@ import {
   removeSection,
   sectionEditMode,
 } from "@/redux/slices/addSectionSlice";
-import { RiAddCircleFill, RiDeleteBin6Line } from "react-icons/ri";
-import { TiDelete } from "react-icons/ti";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import CustomDatePicker from "../../custom/CustomDatePicker";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
 import EditableField from "@/components/editor/editable-field";
 import { ImMoveDown, ImMoveUp } from "react-icons/im";
+import AiRobo from "../../aiAssistant/AiRobo";
 
 type CertificateType = {
   title: string;
@@ -35,6 +35,7 @@ type AllSummaryType = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllCertificates = ({
@@ -50,7 +51,8 @@ const AllCertificates = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllSummaryType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -177,7 +179,7 @@ const AllCertificates = ({
           certificates.map((cert, index) => (
             <div key={index} className="relative ">
               <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
-                {/* ====== Job Title ====== */}
+                {/* ====== Certificate Title ====== */}
                 <div className={`flex ${term2 || term3 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
                   <div className="w-full">
                     <EditableField
@@ -185,19 +187,23 @@ const AllCertificates = ({
                       onChange={(val) =>
                         handleInputChange(index, "title", val)
                       }
-                      placeholder="Title"
-                      className="bg-transparent"
+                      placeholder="Certificate Title"
+                      className="bg-transparent !text-[15px]"
+                      placeholderClassName="!text-[15px]"
                       style={{
                         color: textAltColor ? textAltColor : textColor,
                         fontSize: fontSize,
                         fontFamily: fontFamily,
                       }}
+                      highlightText={highlightText}
                     />
                   </div>
+
                   {/* ====== Date Picker ====== */}
                   <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 || term3 && "justify-start  mb-1"} />
                 </div>
-                {/* ====== Company Name ====== */}
+
+                {/* ====== Institute Name ====== */}
                 <div className="w-full">
                   <EditableField
                     html={cert.institutionName || ""}
@@ -205,7 +211,8 @@ const AllCertificates = ({
                       handleInputChange(index, "institutionName", val)
                     }
                     placeholder="Institution Name"
-                    className="bg-transparent"
+                    className="bg-transparent !text-[14px]"
+                    placeholderClassName="!text-[14px]"
                     style={{
                       color: textColor,
                       fontSize: fontSize,
@@ -213,6 +220,8 @@ const AllCertificates = ({
                     }}
                   />
                 </div>
+
+                {/* ====== Description ====== */}
                 <div>
                   <EditableField
                     html={cert.description || ""}
@@ -220,17 +229,34 @@ const AllCertificates = ({
                       handleInputChange(index, "description", val)
                     }
                     placeholder="Description"
-                    className="bg-transparent"
+                    className="bg-transparent !text-[14px]"
+                    placeholderClassName="!text-[14px]"
                     style={{
                       color: textColor,
                       fontSize: fontSize,
                       fontFamily: fontFamily,
                     }}
+                    highlightText={highlightText}
                   />
+
+                  {/*====== AI Assistant Button ======*/}
+                  {editable && (
+                    <AiRobo
+                      input={false}
+                      positionClass="-left-[75px] hover:-left-[159px] top-5"
+                      info={
+                        cert.title?.trim()
+                          ? "Generate ideas for new bullets."
+                          : "Please include more information in your resume and I will help you with improving and tailoring it."
+                      }
+                    />
+                  )}
                 </div>
               </div>
+
+              {/* ====== Delete Button ====== */}
               {editable && (
-                <div className={`absolute bottom-0 -right-8 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
                   {certificates?.length > 1 &&
                     <button
                       onClick={() => handleMoveUp(index)}

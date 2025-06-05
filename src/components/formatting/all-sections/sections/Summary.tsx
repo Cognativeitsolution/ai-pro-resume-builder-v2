@@ -8,6 +8,7 @@ const Summary = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSec
       id: 2,
       name: "Summary",
       description: "",
+      icon: "FaSummary"
     })
   };
 

@@ -7,6 +7,8 @@ const Certificate = ({ sectionData, handleAddSec }: { sectionData: any, handleAd
     handleAddSec({
       id: 8,
       name: "Certificate",
+      icon: "FaCertificates"
+
     })
   };
 

@@ -1,19 +1,13 @@
 "use client";
 // ============
-import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import Image from "next/image";
 // ============
-import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfileImage } from "@/redux/slices/profileImageSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
 import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
 // ============
-import * as FaIcons from "react-icons/fa";
 import { BookUser, Mail, Phone } from "lucide-react";
-// ============
-import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
 // ============
 import AllSummary from "../all-sections/sections-details/AllSummary";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
@@ -25,22 +19,11 @@ import AllLanguages from "../all-sections/sections-details/AllLanguages";
 import AllTechnicalSkills from "../all-sections/sections-details/AllTechnicalSkills";
 import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
-import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
-
 import Watermark from "@/components/common/watermark/watermark";
-import { placeHolderImage } from "@/constant/placeholder-image-base64";
+import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
+const A4_HEIGHT_PX = 1122;
 
-const A4_HEIGHT_PX = 1400; // A4 height in pixels (approx. at 96 DPI)
-const PAGE_PADDING = 60; // adjust based on your layout padding
-const CONTENT_HEIGHT_PER_PAGE = A4_HEIGHT_PX  ;
-// Define a type for a page
-type Page = {
-  left: any[];
-  right: any[];
-  currentLeftHeight: number;
-  currentRightHeight: number;
-};
 type CurrentState = {
   fontSize: any;
   fontFamily: string;
@@ -56,14 +39,11 @@ type ResumePreviewProps = {
   updateState: (newState: CurrentState) => void;
 };
 
-const Template1Copy = ({ currentState, updateState }: ResumePreviewProps) => {
+const Template1 = ({ currentState }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const { addedSections, sectionBgColor, editMode } = useSelector(
     (state: any) => state.addSection
   );
-
-   const endPageRef = useRef<HTMLDivElement>(null)
-console.log(currentState.fontSize)
   const { spellCheck, grammarCheck } = useSelector(
     (state: any) => state.ImproveText
   );
@@ -76,32 +56,20 @@ console.log(currentState.fontSize)
   const [headerEditable, setHeaderEditable] = useState<boolean>(false);
   const containerHeaderRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
-  const [pages, setPages] = useState<any[]>([]);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [measured, setMeasured] = useState(false);
 
-  const getAllText = useCallback(() => {
-    return addedSections
-      ?.map((section: any) => {
-        if (typeof section?.content === "string") return section.content;
-        if (Array.isArray(section?.content)) {
-          return section.content
-            .map((item: any) => Object.values(item).join(" "))
-            .join(" ");
-        }
-        return "";
-      })
-      .join("\n");
-  }, [addedSections]);
 
   useEffect(() => {
     setSecName("Custom Section");
   }, []);
 
+  const [pages, setPages] = useState<any[][]>([]);
   const HandleChangeSectionName = (data: any) => {
+    console.log(data);
     setSecName(data);
   };
-  const fullText = getAllText();
 
   // ===================
   useEffect(() => {
@@ -109,6 +77,38 @@ console.log(currentState.fontSize)
   }, [editMode, sectionBgColor]);
 
   //============= improve text logic
+
+  //============= all sections
+  const getAllText = () => {
+    return addedSections
+      ?.map((section: any) => {
+        // Education
+        if (section.name === "Education" && Array.isArray(section.detail)) {
+          console.log("EDUCATION DEBUG", section.detail);
+          return section.detail
+            .map((edu: any) =>
+              [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
+            )
+            .join(" ");
+        }
+
+        // Generic string description support
+        if (typeof section.description === "string") return section.description;
+
+        // Fallback for array-based description
+        if (Array.isArray(section.description)) {
+          return section.description
+            .map((item: any) => Object.values(item).join(" "))
+            .join(" ");
+        }
+
+        return "";
+      })
+      .join("\n");
+  };
+
+  const fullText = getAllText();
+
   useEffect(() => {
     const fetchCorrections = async () => {
       if (!spellCheck && !grammarCheck) return;
@@ -153,31 +153,27 @@ console.log(currentState.fontSize)
   }, [spellCheck, grammarCheck, fullText]);
 
   //============= Highlight function
-  const highlightWords = (text: string) => {
-    return text.split(/\s+/).map((word, index) => {
+
+  const highlightChange = (text: any) => {
+    console.log(text, "text======>")
+    return text.split(/\s+/).map((word: any) => {
       const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
       const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
       const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
 
-      return (
-        <span
-          key={index}
-          className={`
-           ${isSpellingMistake ? "text-red-500" : ""}  
-           ${isGrammarMistake ? "bg-blue-200 underline" : ""}
-                    `}
-        >
-          {word}{" "}
-        </span>
-      );
-    });
+      let spanClass = '';
+      if (isSpellingMistake) spanClass += 'text-red-500 ';
+      if (isGrammarMistake) spanClass += 'bg-blue-200 underline';
+
+      return `<span class="${spanClass.trim()}">${word}</span>`;
+    }).join(' ');
   };
 
   // ========== Render Sections
   const renderSection = (section: any) => {
     switch (section?.name) {
       case "Summary":
-        return <AllSummary data={section} />;
+        return <AllSummary data={section} highlightText={highlightChange} />;
       case "Soft Skills":
         return (
           <AllSoftSkills
@@ -187,6 +183,9 @@ console.log(currentState.fontSize)
             templateColor="#fff"
             editableAltBG="bg-gray-900/80"
             isPillStyle={true}
+            headerPosition="-top-[30px] -right-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Technical Skills":
@@ -198,10 +197,16 @@ console.log(currentState.fontSize)
             templateColor="#fff"
             editableAltBG="bg-gray-900/80"
             isPillStyle={true}
+            headerPosition="-top-[30px] -right-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Certificate":
-        return <AllCertificates data={section} />;
+        return <AllCertificates data={section}
+          fontSize={scaleFont(16, currentState.fontSize)}
+          fontFamily={currentState.fontFamily}
+        />;
       case "Education":
         return (
           <AllEducations
@@ -209,6 +214,9 @@ console.log(currentState.fontSize)
             textColor=""
             textAltColor=""
             templateColor=""
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
+            highlightText={highlightChange}
           />
         );
       case "Experience":
@@ -218,6 +226,8 @@ console.log(currentState.fontSize)
             textColor=""
             textAltColor=""
             templateColor=""
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Projects":
@@ -236,6 +246,9 @@ console.log(currentState.fontSize)
             textColor="#000"
             textAltColor={currentState.color}
             templateColor={currentState.color}
+            fontSize={scaleFont(16, currentState.fontSize)}
+            iconSize={scaleFont(13, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "References":
@@ -254,6 +267,11 @@ console.log(currentState.fontSize)
             textColor="#fff"
             templateColor="#3358c5"
             editableAltBG="bg-gray-900/80"
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
+            headerPosition="-top-[30px] -right-[50px]"
+            isVerticleHeader={true}
+            isDot={false}
           />
         );
       case "Custom Section":
@@ -263,10 +281,14 @@ console.log(currentState.fontSize)
             data={section}
             textColor="#000"
             templateColor="#fff"
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
+            iconSize={scaleFont(22, currentState.fontSize)}
           />
         );
       default:
-        return <p>{highlightWords(section?.content || "")}</p>;
+        // return <p>{highlightWords(section?.content || "")}</p>;
+        return <p>{highlightChange(section?.content || "")}</p>;
     }
   };
 
@@ -278,45 +300,19 @@ console.log(currentState.fontSize)
     };
     return `${base * (scaleMap[size] || 1)}px`;
   };
-
   const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
-  const leftSections = useMemo(() => {
-    return addedSections?.filter(
-      (section: any) => !rightSideSections.includes(section?.name)
-    );
-  }, [addedSections]);
+  const leftSections = addedSections?.filter(
+    (section: any) => !rightSideSections.includes(section?.name)
+  );
+  const rightSections = addedSections?.filter((section: any) =>
+    rightSideSections.includes(section?.name)
+  );
 
-  const rightSections = useMemo(() => {
-    return addedSections?.filter(
-      (section: any) => rightSideSections.includes(section?.name)
-    );
-  }, [addedSections]);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const imageSrc = useSelector((state: RootState) => state.profileImage.image);
-
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          dispatch(setProfileImage(reader.result));
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true));
   };
-
   const handleEditableSectionHeader = () => {
     setHeaderEditable(true);
     dispatch(sectionEditMode(true));
@@ -365,177 +361,185 @@ console.log(currentState.fontSize)
     setHeaderData((prev) => ({ ...prev, [key]: value }));
   };
 
-useEffect(() => {
-  const generatePages = () => {
-    const newPages: Page[] = [];
-    let currentPage: Page = {
-      left: [],
-      right: [],
-      currentLeftHeight: 0,
-      currentRightHeight: 0,
-    };
-    newPages.push(currentPage);
+  // Step 1: Measure section heights
+  useEffect(() => {
+    if (measured) return;
 
-    // Estimate header height (only on the first page)
-    const estimatedHeaderHeight = 100; // Adjust as needed, measure this accurately
-    if (newPages.length === 1) {
-      // Assuming header is in the left column or spans both but contributes to left's height for pagination
-      currentPage.currentLeftHeight += estimatedHeaderHeight;
-    }
+    const heights = sectionRefs.current.map((el) =>
+      el ? el.getBoundingClientRect().height : 0
+    );
 
-    // Function to get estimated section height (REPLACE WITH ACTUAL MEASUREMENT)
-    const getSectionHeight = (section: any) => {
-      // IMPORTANT: In a real application, you'd use a more accurate measurement
-      // (e.g., rendering off-screen and measuring with refs).
-      // These are placeholders. Adjust these values to better reflect your content.
-      if (section.name === "Summary") return 150;
-      if (section.name === "Experience" || section.name === "Education" || section.name === "Projects") return 250;
-      if (section.name === "Technical Skills" || section.name === "Soft Skills" || section.name === "Languages") return 120;
-      if (section.name === "Awards" || section.name === "References") return 100;
-      if (section.name === "Custom Section") return 150;
-      return 100; 
-    };
+    const newPages: any[][] = [];
+    let currentPage: any[] = [];
+    let currentHeight = 0;
 
-    // Combine all sections, preserving their original order and column assignment
-    const allSections = addedSections.map((section: any) => ({
-      ...section,
-      estimatedHeight: getSectionHeight(section),
-      // Assign target column for easier processing
-      targetColumn: rightSideSections.includes(section?.name) ? 'right' : 'left',
-    }));
-
-    // Temporary storage for sections that couldn't fit on the current page
-    let remainingLeftSections = [...leftSections];
-    let remainingRightSections = [...rightSections];
-
-    // Loop until all sections are placed
-    while (remainingLeftSections.length > 0 || remainingRightSections.length > 0) {
-      let pageToFill = newPages[newPages.length - 1];
-
-      let sectionAddedToCurrentPage = false;
-
-      // First, try to fill the left column as much as possible
-      for (let i = 0; i < remainingLeftSections.length; i++) {
-        const section = remainingLeftSections[i];
-        const sectionHeight = getSectionHeight(section);
-
-        if (pageToFill.currentLeftHeight + sectionHeight <= CONTENT_HEIGHT_PER_PAGE) {
-          pageToFill.left.push(section);
-          pageToFill.currentLeftHeight += sectionHeight;
-          remainingLeftSections.splice(i, 1); // Remove section after adding
-          i--; // Adjust index because we removed an element
-          sectionAddedToCurrentPage = true;
-        } else {
-          // Can't fit this left section, break and move to right or new page
-          break;
-        }
-      }
-
-      // Then, try to fill the right column with its designated sections
-      for (let i = 0; i < remainingRightSections.length; i++) {
-        const section = remainingRightSections[i];
-        const sectionHeight = getSectionHeight(section);
-
-        if (pageToFill.currentRightHeight + sectionHeight <= CONTENT_HEIGHT_PER_PAGE) {
-          pageToFill.right.push(section);
-          pageToFill.currentRightHeight += sectionHeight;
-          remainingRightSections.splice(i, 1); // Remove section after adding
-          i--; // Adjust index because we removed an element
-          sectionAddedToCurrentPage = true;
-        } else {
-          // Can't fit this right section, break and move to a new page
-          break;
-        }
-      }
-
-      // If no sections were added to the current page in this iteration (meaning both columns are full
-      // or the remaining sections are too large for the current page), create a new page.
-      if (!sectionAddedToCurrentPage && (remainingLeftSections.length > 0 || remainingRightSections.length > 0)) {
-        currentPage = {
-          left: [],
-          right: [],
-          currentLeftHeight: 0,
-          currentRightHeight: 0,
-        };
+    leftSections.forEach((section: any, i: any) => {
+      const height = heights[i];
+      if (currentHeight + height > A4_HEIGHT_PX && currentPage.length > 0) {
         newPages.push(currentPage);
-      } else if (remainingLeftSections.length === 0 && remainingRightSections.length === 0) {
-        // All sections placed, exit loop
-        break;
+        currentPage = [section];
+        currentHeight = height;
+      } else {
+        currentPage.push(section);
+        currentHeight += height;
       }
-    }
+    });
+
+    if (currentPage.length > 0) newPages.push(currentPage);
+
     setPages(newPages);
-  };
-
-  generatePages();
-}, [addedSections, headerData]); // Regenerate pages when sections or header data change
-
-
-const paginatedFunction = () =>{
-
-}
+    setMeasured(true);
+  }, [leftSections, measured]);
+  console.log(pages)
   return (
     <div
-      className="resume-container flex flex-col  items-center "
+      className="resume-container"
       id="resume-content"
       style={{
         padding: `${currentState.padding || 0}px`,
         backgroundColor: editMode ? templateBgColor : undefined,
         transition: "background-color 0.3s ease-in-out",
-        
       }}
     >
-      {pages.map((page, pageIndex) => (
+
+      <div style={{ minHeight: "297mm", width: "210mm" }} className="relative grid grid-cols-12 shadow-xl ">
+        {/* Left Column */}
+        <div className="col-span-8  pr-8" style={{ padding: "30px" }} >
+          {/* Header */}
+          <div
+            ref={containerHeaderRef}
+            className={`flex flex-col ${headerEditable && "bg-white"}`}
+            onClick={handleEditableSectionHeader}
+          >
+            <input
+              name="name"
+              placeholder="Name"
+              value={headerData.name}
+              onChange={(e) => handleChangeHeader(e, "name")}
+              className="outline-none bg-transparent font-semibold text-zinc-900"
+              style={{
+                fontSize: scaleFont(30, currentState.fontSize),
+                fontFamily: currentState.fontFamily,
+              }}
+            />
+            <input
+              name="designation"
+              value={headerData.designation}
+              placeholder="Designation"
+              onChange={(e) => handleChangeHeader(e, "designation")}
+              className="w-full rounded bg-transparent placeholder:text-lg focus:outline-none focus:ring-0 focus:border-0"
+              style={{
+                fontSize: scaleFont(18, currentState.fontSize),
+                fontFamily: currentState.fontFamily,
+                color: currentState.color,
+              }}
+            />
+          </div>
+
+          {/* Left Sections */}
+          {leftSections?.length > 0 ? (
+            leftSections.map((section: any, index: number) => (
+              <div key={index} className="pt-4 relative section-to-break">
+                <div className="border-b">
+                  {section?.name === "Custom Section" ? (
+                    <div
+                      ref={containerRef}
+                      className={`flex flex-col pt-2 ${editable && "bg-white"}`}
+                      onClick={handleEditableSection}
+                    >
+                      <input
+                        type="text"
+                        className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
+                        style={{ color: currentState.color }}
+                        value={secName}
+                        onChange={(e) =>
+                          HandleChangeSectionName(e.target.value)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <h2
+                      className="text-lg font-semibold "
+                      style={{ color: currentState.color }}
+                      dangerouslySetInnerHTML={{
+                        __html: highlightChange(section?.newSecName || section?.name),
+                      }}
+                    />
+                  )}
+                </div>
+                <div className="">{renderSection(section)}</div>
+              </div>
+            ))
+          ) : (
+            <p>No sections added yet.</p>
+          )}
+          <Watermark />
+          {loading && (
+            <p className="text-gray-500 mt-4">
+              Checking for spelling/grammar errors...
+            </p>
+          )}
+        </div>
+
+        {/* Right Column */}
         <div
-        id={`page-${pageIndex}`}
-          key={pageIndex}
-          className={`relative  grid grid-cols-12 mb-8 overflow-x-hidden  shadow-xl  ${!editMode && "bg-white"} `}
-          style={{ height: "297mm", width: "210mm", pageBreakAfter: "always" }}
+          className="col-span-4 px-2  z-10"
+          style={{ backgroundColor: currentState.color, minHeight: "297mm" }}
         >
-          {/* Left Column */}
-          <div className="col-span-8 pr-8" style={{ padding: "30px" }}>
-            {/* Header (only on the first page, or if specific header per page is desired) */}
-            {pageIndex === 0 && (
+          {/* Profile Image */}
+          <div className="p-3 py-12">
+            <TemplateProfileImg
+            // bgColor={currentState.color}
+            />
+
+            {/* Contact Info */}
+            <div className="flex flex-col gap-2">
               <div
-                ref={containerHeaderRef}
-                className={`flex flex-col ${headerEditable && "bg-white"}`}
-                onClick={handleEditableSectionHeader}
+                className="text-start text-white flex items-center gap-2"
+                style={{
+                  fontSize: scaleFont(24, currentState.fontSize),
+                  fontFamily: currentState.fontFamily,
+                }}
               >
-                <input
-                  name="name"
-                  placeholder="Name"
-                  value={headerData.name}
-                  onChange={(e) => handleChangeHeader(e, "name")}
-                  className="outline-none bg-transparent font-semibold text-zinc-900"
-                  style={{
-                    fontSize: scaleFont(30, currentState.fontSize),
-                    fontFamily: currentState.fontFamily,
-                  }}
+                <span className="text-xl">Contact Info</span>
+              </div>
+              <hr className="-mt-1" />
+              {[
+                { name: "Phone", icon: <Phone size={16} /> },
+                { name: "Email", icon: <Mail size={16} /> },
+              ].map((placeholder, idx) => (
+                <div key={idx} className="flex items-center gap-2  text-white">
+                  <div className="self-center  ">{placeholder.icon}</div>
+                  <input
+                    placeholder={placeholder.name}
+                    className="w-full  placeholder:opacity-70 text-sm placeholder-white outline-none   focus:bg-transparent bg-transparent"
+                  />
+                </div>
+              ))}
+              <div className="flex items-start gap-2 text-white">
+                <BookUser
+                  size={16}
+                  className=" self-center "
                 />
                 <input
-                  name="designation"
-                  value={headerData.designation}
-                  placeholder="Designation"
-                  onChange={(e) => handleChangeHeader(e, "designation")}
-                  className="w-full rounded bg-transparent placeholder:text-lg focus:outline-none focus:ring-0 focus:border-0"
-                  style={{
-                    fontSize: scaleFont(18, currentState.fontSize),
-                    fontFamily: currentState.fontFamily,
-                    color: currentState.color,
-                  }}
+                  placeholder="Address"
+                  className="w-full placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
                 />
               </div>
-            )}
-            {/* Left Sections */}
-            {page.left?.length > 0 ? (
-              page.left.map((section: any, index: number) => (
-                <div key={`${pageIndex}-left-${index}`} className="pt-4 relative section-to-break">
-                  <div className="border-b">
+            </div>
+          </div>
+
+          {/* Right Sections */}
+          <div className="p-3">
+            {rightSections?.length > 0 &&
+              rightSections.map((section: any, index: number) => (
+                <div key={index} className="pt-4 relative section-to-break">
+                  <div className="border-b text-white">
                     {section?.name === "Custom Section" ? (
                       <div
                         ref={containerRef}
-                        className={`flex flex-col pt-2 ${
-                          editable && "bg-white"
-                        }`}
+                        className={`flex flex-col pt-2 ${editable && "bg-white"
+                          }`}
                         onClick={handleEditableSection}
                       >
                         <input
@@ -549,132 +553,21 @@ const paginatedFunction = () =>{
                         />
                       </div>
                     ) : (
-                      <h2
-                        className="text-lg font-semibold "
-                        style={{ color: currentState.color }}
-                      >
-                        {highlightWords(section?.newSecName || section?.name)}
-                      </h2>
+                      <h2 className="text-lg font-semibold mb-1"
+                        dangerouslySetInnerHTML={{
+                          __html: highlightChange(section?.newSecName || section?.name),
+                        }}
+                      />
                     )}
                   </div>
                   <div className="">{renderSection(section)}</div>
                 </div>
-              ))
-            ) : (
-              pageIndex === 0 && <p>No sections added yet.</p> // Only show message on first page
-            )}
-              <div ref={endPageRef} ></div>
-            <Watermark />
-            {loading && (
-              <p className="text-gray-500 mt-4">
-                Checking for spelling/grammar errors...
-              </p>
-            )}
-          </div>
-
-          {/* Right Column */}
-          <div
-            className="col-span-4 px-2 z-10"
-            style={{ backgroundColor: currentState.color, height: "297mm" }}
-          >
-            {/* Profile Image (only on the first page) */}
-            {pageIndex === 0 && (
-              <div className="p-3 py-12">
-                <div className="flex justify-center mb-6 w-40 h-40 mx-auto rounded-full overflow-hidden cursor-pointer">
-                  <Image
-                    src={imageSrc || placeHolderImage}
-                    alt="Profile"
-                    width={160}
-                    height={160}
-                    className="w-full"
-                    onClick={handleImageClick}
-                  />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </div>
-
-                {/* Contact Info */}
-                <div className="flex flex-col gap-2">
-                  <div
-                    className="text-start text-white flex items-center gap-2"
-                    style={{
-                      fontSize: scaleFont(24, currentState.fontSize),
-                      fontFamily: currentState.fontFamily,
-                    }}
-                  >
-                    <span className="text-xl">Contact Info</span>
-                  </div>
-                  <hr className="" />
-                  {[
-                    { name: "Phone", icon: <Phone size={16} /> },
-                    { name: "Email", icon: <Mail size={16} /> },
-                  ].map((placeholder, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-2 text-white"
-                    >
-                      <div className="self-center ">{placeholder.icon}</div>
-                      <input
-                        placeholder={placeholder.name}
-                        className="w-full placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
-                      />
-                    </div>
-                  ))}
-                  <div className="flex items-start gap-2 text-white">
-                    <BookUser size={16} className=" self-center " />
-                    <input
-                      placeholder="Address"
-                      className="w-full placeholder:opacity-70 text-sm placeholder-white outline-none focus:bg-transparent bg-transparent"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Right Sections */}
-            <div className="p-3">
-              {page.right?.length > 0 &&
-                page.right.map((section: any, index: number) => (
-                  <div key={`${pageIndex}-right-${index}`} className="pt-4 relative section-to-break">
-                    <div className="border-b text-white">
-                      {section?.name === "Custom Section" ? (
-                        <div
-                          ref={containerRef}
-                          className={`flex flex-col pt-2 ${
-                            editable && "bg-white"
-                          }`}
-                          onClick={handleEditableSection}
-                        >
-                          <input
-                            type="text"
-                            className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
-                            style={{ color: currentState.color }}
-                            value={secName}
-                            onChange={(e) =>
-                              HandleChangeSectionName(e.target.value)
-                            }
-                          />
-                        </div>
-                      ) : (
-                        <h2 className="text-lg font-semibold mb-1">
-                          {highlightWords(section?.newSecName || section?.name)}
-                        </h2>
-                      )}
-                    </div>
-                    <div className="">{renderSection(section)}</div>
-                  </div>
-                ))}
-            </div>
+              ))}
           </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 };
 
-export default Template1Copy;
+export default Template1;

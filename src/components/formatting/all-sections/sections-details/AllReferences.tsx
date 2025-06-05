@@ -20,6 +20,8 @@ type AllSummaryType = {
   textColor?: string;
   textAltColor: string;
   templateColor: string;
+  fontSize?: any;
+  fontFamily?: any;
   dotPosition?: any;
   isVerticleHeader?: any;
   headerPosition?: any;
@@ -32,6 +34,8 @@ const AllReferences = ({
   textColor = '#fff',
   textAltColor,
   templateColor,
+  fontSize,
+  fontFamily,
   dotPosition,
   isVerticleHeader,
   headerPosition,
@@ -47,6 +51,7 @@ const AllReferences = ({
     contact: "",
   }]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [editableIndex, setEditableIndex] = useState<any>();
 
   useEffect(() => {
     if (Array.isArray(userReferences) && userReferences.length > 0) {
@@ -104,8 +109,18 @@ const AllReferences = ({
     setReferences(updated);
   };
 
+  // const handleBlur = (index: number) => {
+  //   if (references[index]?.name.trim() === '') {
+  //     const updated = references.filter((_, i) => i !== index);
+  //     setReferences(updated);
+  //   }
+  // };
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
   return (
-    <div ref={containerRef} className={`flex flex-col mt-1 ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
+    <div ref={containerRef} className={`flex flex-col mt-1`} onClick={handleEditableSection}>
       {editable && (
         <SectionToolbar
           isTextEditor={true}
@@ -123,10 +138,13 @@ const AllReferences = ({
       <div className="flex flex-col gap-1">
         {references.length > 0 && (
           references.map((cert, index) => (
-            <div key={index} className='flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative' style={{
-              color: textColor,
-              border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
-            }}
+            <div key={index}
+              onClick={() => handleEditableIndex(index)}
+              className={`${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'}  flex justify-between gap-2 rounded-sm px-2 transition-all duration-500 ease-in-out relative`}
+              style={{
+                color: textColor,
+                border: hoveredIndex === index ? `1px solid ${textColor}` : '1px solid transparent',
+              }}
               onMouseOver={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
                   setHoveredIndex(index);
@@ -142,10 +160,14 @@ const AllReferences = ({
                 <input
                   value={cert.name}
                   onChange={(e) => handleInputChange(index, 'name', e.target.value)}
-                  // onBlur={() => handleBlur(index)}
                   placeholder="Reference Name"
                   type='text'
-                  className="w-[50%] bg-transparent leading-8 text-sm  rounded  placeholder:text-gray-600 focus:outline-none focus:ring-0 focus:border-0"
+                  className="w-[50%] bg-transparent text-sm leading-8 rounded placeholder:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-0 focus:border-0"
+                  style={{
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
+                  }}
                 />
                 <div className="h-[2px] w-5" style={{
                   background: textAltColor
@@ -156,13 +178,17 @@ const AllReferences = ({
                   type="text"
                   value={cert.contact}
                   placeholder="Reference Contact"
-                  // onBlur={() => handleBlur(index)}
                   onChange={(e) => handleInputChange(index, 'contact', e.target.value)}
-                  className="w-full bg-transparent text-sm leading-8 rounded  focus:outline-none focus:ring-0 focus:border-0 placeholder:text-gray-600"
+                  className="w-full bg-transparent text-sm leading-8 rounded placeholder:text-sm placeholder:text-gray-400 focus:outline-none focus:ring-0 focus:border-0"
+                  style={{
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontFamily: fontFamily,
+                  }}
                 />
               </div>
               {editable && (
-                <div className={`absolute bottom-0 -right-8 gap-1 flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+                <div className={`absolute bottom-0 -right-9 gap-1 flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
                   <button
                     onClick={() => handleDelete(index)}
                     className="bg-red-800/15 backdrop-blur-lg rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"

@@ -1,13 +1,10 @@
 "use client";
 // ============
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 // ============
-import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfileImage } from "@/redux/slices/profileImageSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
-import { addUserHeader, sectionEditMode } from "@/redux/slices/addSectionSlice";
+import { addUserHeader, hideTemplateIcons, hideTemplateProfile, sectionEditMode, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 // ============
 import { BookUser, Mail, Phone } from "lucide-react";
 // ============
@@ -24,8 +21,18 @@ import AllReferences from "../all-sections/sections-details/AllReferences";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
 import Watermark from "@/components/common/watermark/watermark";
 import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
+import { FaSchool } from "react-icons/fa";
+import { GrUserExpert } from "react-icons/gr";
+import { GrProjects } from "react-icons/gr";
+import { GiSkills } from "react-icons/gi";
+import { PiCertificateBold } from "react-icons/pi";
+import { LiaAwardSolid } from "react-icons/lia";
+import { HiMiniLanguage } from "react-icons/hi2";
+import { VscReferences } from "react-icons/vsc";
+import { MdOutlineSummarize } from "react-icons/md";
+import { BsSignIntersectionSide } from "react-icons/bs";
+
 const A4_HEIGHT_PX = 1122;
-const PAGE_PADDING = 60; // adjust based on your layout padding
 
 type CurrentState = {
   fontSize: any;
@@ -39,21 +46,15 @@ type CurrentState = {
 
 type ResumePreviewProps = {
   currentState: CurrentState;
-  updateState: (newState: CurrentState) => void;
+  scaleFont: any;
+  highlightChange: any;
 };
 
-const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
+const Template1 = ({ currentState, scaleFont, highlightChange }: ResumePreviewProps) => {
   const dispatch = useDispatch();
-  const { addedSections, sectionBgColor, editMode } = useSelector(
+  const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
     (state: any) => state.addSection
   );
-
-  const { spellCheck, grammarCheck } = useSelector(
-    (state: any) => state.ImproveText
-  );
-  const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
-  const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [secName, setSecName] = useState("");
   const [templateBgColor, setTemplateBgColor] = useState<any>("");
   const [editable, setEditable] = useState<boolean>(false);
@@ -63,135 +64,23 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
-
-
-  useEffect(() => {
-    setSecName("Custom Section");
-  }, []);
-
   const [pages, setPages] = useState<any[][]>([]);
+
   const HandleChangeSectionName = (data: any) => {
     console.log(data);
     setSecName(data);
-  };
-
-  // ===================
-  useEffect(() => {
-    setTemplateBgColor(sectionBgColor);
-  }, [editMode, sectionBgColor]);
-
-  //============= improve text logic
-
-  //============= all sections
-  // const getAllText = () => {
-  //   return addedSections
-  //     ?.map((section: any) => {
-  //       console.log(section, "section========================>")
-  //       if (typeof section?.content === "string") return section.content;
-  //       if (Array.isArray(section?.content)) {
-  //         return section.content
-  //           .map((item: any) => Object.values(item).join(" "))
-  //           .join(" ");
-  //       }
-  //       return "";
-  //     })
-  //     .join("\n");
-  // };
-
-  const getAllText = () => {
-    return addedSections
-      ?.map((section: any) => {
-        // Education
-        if (section.name === "Education" && Array.isArray(section.detail)) {
-          console.log("EDUCATION DEBUG", section.detail);
-          return section.detail
-            .map((edu: any) =>
-              [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
-            )
-            .join(" ");
-        }
-
-        // Generic string description support
-        if (typeof section.description === "string") return section.description;
-
-        // Fallback for array-based description
-        if (Array.isArray(section.description)) {
-          return section.description
-            .map((item: any) => Object.values(item).join(" "))
-            .join(" ");
-        }
-
-        return "";
-      })
-      .join("\n");
-  };
-
-  const fullText = getAllText();
-
-  useEffect(() => {
-    const fetchCorrections = async () => {
-      if (!spellCheck && !grammarCheck) return;
-      setLoading(true);
-      try {
-        let spellingMistakes: string[] = [];
-        let grammarMistakes: string[] = [];
-
-        if (spellCheck) {
-          const spellResponse = await axios.post(
-            "https://ai.spellcheck.aiproresume.com/api/v1/spell-correction",
-            { text: fullText },
-            { headers: { "Content-Type": "application/json" } }
-          );
-          spellingMistakes =
-            spellResponse.data?.data?.map(
-              (item: any) => item?.misspelledWord
-            ) || [];
-        }
-
-        if (grammarCheck) {
-          const grammarResponse = await axios.post(
-            "https://ai.grmcheck.aiproresume.com/api/v1/grammar-correction",
-            { text: fullText },
-            { headers: { "Content-Type": "application/json" } }
-          );
-          grammarMistakes =
-            grammarResponse.data?.data?.map((item: any) => item?.wrongWords) ||
-            [];
-        }
-
-        setIncorrectWords(spellingMistakes);
-        setGrammarErrors(grammarMistakes);
-      } catch (err) {
-        console.error("Error during API call:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCorrections();
-  }, [spellCheck, grammarCheck, fullText]);
-
-  //============= Highlight function
-
-  const highlightChange = (text: string) => {
-    return text.split(/\s+/).map((word) => {
-      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
-      const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
-      const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
-
-      let spanClass = '';
-      if (isSpellingMistake) spanClass += 'text-red-500 ';
-      if (isGrammarMistake) spanClass += 'bg-blue-200 underline';
-
-      return `<span class="${spanClass.trim()}">${word}</span>`;
-    }).join(' ');
   };
 
   // ========== Render Sections
   const renderSection = (section: any) => {
     switch (section?.name) {
       case "Summary":
-        return <AllSummary data={section} highlightText={highlightChange} />;
+        return <AllSummary data={section}
+          fontSize={scaleFont(16, currentState.fontSize)}
+          fontFamily={currentState.fontFamily}
+          highlightText={highlightChange}
+          textColor=""
+        />;
       case "Soft Skills":
         return (
           <AllSoftSkills
@@ -204,6 +93,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={highlightChange}
           />
         );
       case "Technical Skills":
@@ -218,12 +108,14 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={highlightChange}
           />
         );
       case "Certificate":
         return <AllCertificates data={section}
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
+          highlightText={highlightChange}
         />;
       case "Education":
         return (
@@ -234,7 +126,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-          // highlightText={highlightChange}
+            highlightText={highlightChange}
           />
         );
       case "Experience":
@@ -246,6 +138,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            highlightText={highlightChange}
           />
         );
       case "Projects":
@@ -255,6 +148,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             textColor=""
             textAltColor=""
             templateColor=""
+            highlightText={highlightChange}
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Awards":
@@ -267,15 +163,18 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             fontSize={scaleFont(16, currentState.fontSize)}
             iconSize={scaleFont(13, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+            highlightText={highlightChange}
           />
         );
       case "References":
         return (
           <AllReferences
             data={section}
-            textColor="#000"
+            textColor=""
             templateColor={currentState.color}
             textAltColor={currentState.color}
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
           />
         );
       case "Languages":
@@ -290,6 +189,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={highlightChange}
           />
         );
       case "Custom Section":
@@ -297,45 +197,58 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
           <AllCustomSection
             secNewNames={secName}
             data={section}
-            textColor="#000"
+            textColor=""
             templateColor="#fff"
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
+            highlightText={highlightChange}
           />
         );
       default:
-        // return <p>{highlightWords(section?.content || "")}</p>;
         return <p>{highlightChange(section?.content || "")}</p>;
     }
   };
 
-  const scaleFont = (base: number, size: string) => {
-    const scaleMap: Record<string, number> = {
-      small: 0.85,
-      medium: 1,
-      large: 1.2,
-    };
-    return `${base * (scaleMap[size] || 1)}px`;
-  };
   const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
   const leftSections = addedSections?.filter(
     (section: any) => !rightSideSections.includes(section?.name)
   );
+
   const rightSections = addedSections?.filter((section: any) =>
     rightSideSections.includes(section?.name)
   );
-
 
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true));
   };
+
   const handleEditableSectionHeader = () => {
     setHeaderEditable(true);
     dispatch(sectionEditMode(true));
   };
 
+  const handleChangeHeader = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: "name" | "designation"
+  ) => {
+    const value = e.target.value;
+    setHeaderData((prev) => ({ ...prev, [key]: value }));
+  };
+  const sectionHeaderIcons: any = {
+    FaEducation: <FaSchool />,
+    FaExperience: <GrUserExpert />,
+    FaProject: <GrProjects />,
+    FaSoftSkills: <GiSkills />,
+    FaTechnicalSkills: <GiSkills />,
+    FaCertificates: <PiCertificateBold />,
+    FaAwards: <LiaAwardSolid />,
+    FaLanguages: <HiMiniLanguage />,
+    FaReferences: <VscReferences />,
+    FaCustomSection: <BsSignIntersectionSide />,
+    FaSummary: <MdOutlineSummarize />,
+  };
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -371,14 +284,6 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     dispatch(setColumn(true));
   }, [addedSections]);
 
-  const handleChangeHeader = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    key: "name" | "designation"
-  ) => {
-    const value = e.target.value;
-    setHeaderData((prev) => ({ ...prev, [key]: value }));
-  };
-
   // Step 1: Measure section heights
   useEffect(() => {
     if (measured) return;
@@ -409,6 +314,21 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
     setMeasured(true);
   }, [leftSections, measured]);
   console.log(pages)
+
+  useEffect(() => {
+    dispatch(hideTemplateIcons(false))
+    dispatch(hideTemplateProfile(false))
+  }, [showProfile, showIcons]);
+
+  useEffect(() => {
+    setSecName("Custom Section");
+  }, []);
+
+  // ===================
+  useEffect(() => {
+    setTemplateBgColor(sectionBgColor);
+  }, [editMode, sectionBgColor]);
+
   return (
     <div
       className="resume-container"
@@ -420,9 +340,9 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
       }}
     >
 
-      <div style={{ minHeight: "297mm", width: "210mm" }} className="relative grid grid-cols-12 shadow-xl ">
+      <div style={{ minHeight: "297mm", width: "235mm" }} className="relative grid grid-cols-12 shadow-xl ">
         {/* Left Column */}
-        <div className="col-span-8  pr-8" style={{ padding: "30px" }} >
+        <div className="col-span-8" style={{ padding: "30px", paddingRight: "40px" }} >
           {/* Header */}
           <div
             ref={containerHeaderRef}
@@ -462,7 +382,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                   {section?.name === "Custom Section" ? (
                     <div
                       ref={containerRef}
-                      className={`flex flex-col pt-2 ${editable && "bg-white"}`}
+                      className={`flex flex-col ${editable && "bg-white"}`}
                       onClick={handleEditableSection}
                     >
                       <input
@@ -476,13 +396,16 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                       />
                     </div>
                   ) : (
-                    <h2
-                      className="text-lg font-semibold "
-                      style={{ color: currentState.color }}
-                      dangerouslySetInnerHTML={{
-                        __html: highlightChange(section?.newSecName || section?.name),
-                      }}
-                    />
+                    <div className="flex items-center gap-1">
+                      {showIcons ? sectionHeaderIcons[section.icon] ?? "No Icon" : ""}
+                      <h2
+                        className="text-lg font-semibold "
+                        style={{ color: currentState.color }}
+                        dangerouslySetInnerHTML={{
+                          __html: highlightChange(section?.newSecName || section?.name),
+                        }}
+                      />
+                    </div>
                   )}
                 </div>
                 <div className="">{renderSection(section)}</div>
@@ -492,11 +415,11 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
             <p>No sections added yet.</p>
           )}
           <Watermark />
-          {loading && (
+          {/* {loading && (
             <p className="text-gray-500 mt-4">
               Checking for spelling/grammar errors...
             </p>
-          )}
+          )} */}
         </div>
 
         {/* Right Column */}
@@ -506,10 +429,10 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
-            <TemplateProfileImg
+            {showProfile && <TemplateProfileImg
             // bgColor={currentState.color}
             />
-
+            }
             {/* Contact Info */}
             <div className="flex flex-col gap-2">
               <div
@@ -571,11 +494,15 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
                         />
                       </div>
                     ) : (
-                      <h2 className="text-lg font-semibold mb-1"
-                        dangerouslySetInnerHTML={{
-                          __html: highlightChange(section?.newSecName || section?.name),
-                        }}
-                      />
+
+                      <div className="flex items-center gap-1">
+                        {showIcons ? sectionHeaderIcons[section.icon] ?? "No Icon" : ""}
+                        <h2 className="text-lg font-semibold mb-1"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightChange(section?.newSecName || section?.name),
+                          }}
+                        />
+                      </div>
                     )}
                   </div>
                   <div className="">{renderSection(section)}</div>
@@ -583,6 +510,7 @@ const Template1 = ({ currentState, updateState }: ResumePreviewProps) => {
               ))}
           </div>
         </div>
+
       </div>
     </div>
   );

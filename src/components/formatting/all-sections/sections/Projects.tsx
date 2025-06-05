@@ -9,7 +9,8 @@ const Projects = ({ sectionData, handleAddSec }: { sectionData: any, handleAddSe
     handleAddSec({
       id: 5,
       name: "Projects",
-      description: ""
+      description: "",
+      icon: "FaProject"
     })
   };
 

@@ -1,23 +1,20 @@
 "use client";
 // ==============
 import React, { useEffect, useRef, useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
 // ==============
-import CustomDatePicker from "../../custom/CustomDatePicker";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoLocationSharp } from "react-icons/io5";
+import { ImMoveDown, ImMoveUp } from "react-icons/im";
 // ==============
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addUserExperience,
-  removeSection,
-  sectionEditMode,
-} from "@/redux/slices/addSectionSlice";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import SectionToolbar from "../../section-toolbar/SectionToolbar";
-import EditableField from "@/components/editor/editable-field";
-import { IoLocationSharp } from "react-icons/io5";
-import { ImMoveDown, ImMoveUp } from "react-icons/im";
+import { addUserExperience, removeSection, sectionEditMode } from "@/redux/slices/addSectionSlice";
 import { moveItem } from "@/utils/moveUpDown";
+// ==============
+import AiRobo from "../../aiAssistant/AiRobo";
+import CustomDatePicker from "../../custom/CustomDatePicker";
+import EditableField from "@/components/editor/editable-field";
+import SectionToolbar from "../../section-toolbar/SectionToolbar";
 
 type ExperienceType = {
   title: string;
@@ -40,6 +37,7 @@ type AllExperienceType = {
   headerPosition?: any;
   textEditorPosition?: any;
   isDot?: any;
+  highlightText?: (text: string) => string;
 };
 
 const AllExperiences = ({
@@ -55,14 +53,16 @@ const AllExperiences = ({
   isVerticleHeader,
   headerPosition,
   textEditorPosition,
-  isDot
+  isDot,
+  highlightText
 }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userExperiences } = useSelector(
+  const { userExperiences, showIcons } = useSelector(
     (state: RootState) => state.addSection
   );
   const [editable, setEditable] = useState<boolean>(false);
+  const [editableIndex, setEditableIndex] = useState<any>();
   const [experiences, setExperiences] = useState<ExperienceType[]>([
     {
       title: "",
@@ -77,14 +77,14 @@ const AllExperiences = ({
     dispatch(sectionEditMode(true));
   };
 
-  // Sync local state with Redux store whenever userExperiences changes
+  //====== Sync local state with Redux store whenever userExperiences changes
   useEffect(() => {
     if (Array.isArray(userExperiences) && userExperiences.length > 0) {
       setExperiences(userExperiences);
     }
   }, [userExperiences]);
 
-  // Handle input changes for each field in an experience entry
+  //====== Handle input changes for each field in an experience entry
   const handleInputChange = (
     index: number,
     field: keyof ExperienceType,
@@ -95,7 +95,7 @@ const AllExperiences = ({
     setExperiences(updated);
   };
 
-  // Add a new blank experience entry
+  //====== Add a new blank experience entry
   const handleAddExperience = () => {
     setExperiences([
       ...experiences,
@@ -103,7 +103,7 @@ const AllExperiences = ({
     ]);
   };
 
-  // Remove the entire section and reset associated experiences in the Redux store
+  //====== Remove the entire section and reset associated experiences in the Redux store
   const handleRemoveSection = () => {
     if (data) {
       dispatch(removeSection(data));
@@ -116,7 +116,7 @@ const AllExperiences = ({
     }
   };
 
-  // Delete a specific experience entry by index
+  //====== Delete a specific experience entry by index
   const handleDelete = (index: number) => {
     if (experiences?.length <= 1 && index === 0) {
       handleRemoveSection();
@@ -125,7 +125,7 @@ const AllExperiences = ({
     const updated = experiences.filter((_, i) => i !== index);
     setExperiences(updated);
   };
-  // Detect click outside the component to disable editing and save data to Redux
+  //====== Detect click outside the component to disable editing and save data to Redux
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -171,10 +171,14 @@ const AllExperiences = ({
     const updated = moveItem(experiences, index, index + 1);
     setExperiences(updated);
   };
+  const handleEditableIndex = (index: number) => {
+    setEditableIndex(index);
+    dispatch(sectionEditMode(true));
+  };
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col pt-2 ${editable ? 'bg-white rounded-sm' : ''}`}
+      className={`flex flex-col pt-2`}
       onClick={handleEditableSection}
     >
       {/* ====== Add and Delete Section Buttons ====== */}
@@ -192,10 +196,14 @@ const AllExperiences = ({
           isDot={isDot}
         />
       )}
-      {/* ===== Education Box ===== */}
+
+      {/* ===== Experience Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2 ">
         {experiences.map((exp, index) => (
-          <div key={index} className={`relative `}>
+          <div key={index}
+            className={`relative ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'} transition-colors duration-300 rounded-lg p-2`}
+            onClick={() => handleEditableIndex(index)}
+          >
             <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
               {/* ====== Job Title ====== */}
               <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
@@ -206,30 +214,35 @@ const AllExperiences = ({
                       handleInputChange(index, "title", val)
                     }
                     placeholder="Title"
+                    className="bg-transparent !text-[15px]"
+                    placeholderClassName="!text-[15px]"
                     style={{
                       color: textAltColor ? textAltColor : textColor,
                       fontSize: fontSize,
                       fontFamily: fontFamily,
                     }}
-                    className="bg-transparent"
+                    highlightText={highlightText}
                   />
                 </div>
+
                 {/* ====== Date Picker ====== */}
                 {term3 ? null :
                   <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} />}
               </div>
+
               {/* ====== Location ====== */}
               <div className="w-full">
                 <div className="flex items-center justify-start gap-1 ">
                   {/* ====== Icon ====== */}
-                  <IoLocationSharp className="mb-1 text-indigo-600" size={14} />
+                  {showIcons && <IoLocationSharp className="mb-1 text-indigo-600" size={14} />}
                   <EditableField
                     html={exp.location || ""}
                     onChange={(val) =>
                       handleInputChange(index, "location", val)
                     }
                     placeholder="Location"
-                    className="bg-transparent text-left"
+                    placeholderClassName="!text-[14px]"
+                    className="bg-transparent text-left !text-[14px]"
                     style={{
                       color: textColor,
                       fontSize: fontSize,
@@ -242,59 +255,63 @@ const AllExperiences = ({
                     <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start mb-1"} />
                   </div> : null}
               </div>
+
               {/* ====== Company Name ====== */}
               <div className="flex items-center justify-between">
                 <div className="w-full">
-
                   <EditableField
                     html={exp.companyName || ""}
                     onChange={(val) =>
                       handleInputChange(index, "companyName", val)
                     }
                     placeholder="Company Name"
+                    className="bg-transparent !text-[14px]"
+                    placeholderClassName="!text-[14px]"
                     style={{
                       color: textColor,
                       fontSize: fontSize,
                       fontFamily: fontFamily,
                     }}
-                    className="bg-transparent"
                   />
                 </div>
               </div>
+
               {/* ====== Description ====== */}
               <div>
-                {/* <textarea
-                  value={exp.description}
-                  disabled={!editable}
-                  onChange={(e) =>
-                    handleInputChange(index, "description", e.target.value)
-                  }
-                  placeholder="Description"
-                  style={{
-                    color: textColor,
-                    fontSize: fontSize,
-                    fontFamily: fontFamily,
-                  }}
-                  className="w-full text-[14px] bg-transparent placeholder:text-[14px] focus:outline focus:outline-[0.1px] focus:outline-indigo-600 "
-                ></textarea> */}
                 <EditableField
                   html={exp.description || ""}
                   onChange={(val) =>
                     handleInputChange(index, "description", val)
                   }
                   placeholder="Description"
-                  className="bg-transparent"
+                  className="bg-transparent !text-[14px]"
+                  placeholderClassName="!text-[14px]"
                   style={{
                     color: textColor,
                     fontSize: fontSize,
                     fontFamily: fontFamily,
                   }}
+                  highlightText={highlightText}
                 />
+
+                {/*====== AI Assistant Button ======*/}
+                {editable && (
+                  <AiRobo
+                    input={false}
+                    positionClass="-left-[75px] hover:-left-[159px] top-8"
+                    info={
+                      exp.title?.trim()
+                        ? "Generate ideas for new bullets."
+                        : "Please include more information in your resume and I will help you with improving and tailoring it."
+                    }
+                  />
+                )}
               </div>
             </div>
+
             {/* ====== Delete Button ====== */}
             {editable && (
-              <div className={`absolute bottom-0 -right-8 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
+              <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
                 {experiences?.length > 1 &&
                   <button
                     onClick={() => handleMoveUp(index)}
