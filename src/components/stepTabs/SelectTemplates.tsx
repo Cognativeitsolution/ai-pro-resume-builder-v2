@@ -3,7 +3,7 @@ import Image from "next/image";
 import { CTA } from "@/components";
 // ===============
 import template1 from 'media/images/resume-templates/Sleek Simplicity 1.webp'
-import template2 from 'media/images/resume-templates/Professional Polished 2.webp'
+import template2Old from 'media/images/resume-templates/Professional Polished 2.webp'
 import template3 from 'media/images/resume-templates/Elegant Executive 3.webp'
 import template4 from 'media/images/resume-templates/Creative Infusion 4.webp'
 import template5 from 'media/images/resume-templates/Classic Professional 5.webp'
@@ -26,7 +26,7 @@ import template20 from 'media/images/resume-templates/Transcendent Trajectory 20
 //===== Template data
 const templates = [
     { name: "Sleek Simplicity", image: template1 },
-    { name: "Professional Polished", image: template2 },
+    { name: "Professional Polished", image: template2Old },
     { name: "Elegant Executive", image: template3 },
     { name: "Creative Infusion", image: template4 },
     { name: "Classic Professional", image: template5 },

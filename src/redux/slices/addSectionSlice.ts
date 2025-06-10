@@ -31,8 +31,8 @@ type AddSectionState = {
 
   showIcons?: any;
   showProfile?: any;
-  isTempIcons?: any;
-  isTempProfile?: any;
+  isDisableIcons?: any;
+  isDisableProfile?: any;
 };
 
 const initialState: AddSectionState = {
@@ -119,8 +119,8 @@ const initialState: AddSectionState = {
 
   showIcons: false,
   showProfile: false,
-  isTempIcons: false,
-  isTempProfile: false,
+  isDisableIcons: false,
+  isDisableProfile: false,
 };
 
 export const addSectionSlice = createSlice({
@@ -136,13 +136,13 @@ export const addSectionSlice = createSlice({
       const section = action.payload;
       state.showProfile = section;
     },
-    hideTemplateIcons: (state, action) => {
+    disableTemplateIcons: (state, action) => {
       const section = action.payload;
-      state.isTempIcons = section;
+      state.isDisableIcons = section;
     },
-    hideTemplateProfile: (state, action) => {
+    disableTemplateProfile: (state, action) => {
       const section = action.payload;
-      state.isTempProfile = section;
+      state.isDisableProfile = section;
     },
 
 
@@ -354,7 +354,7 @@ export const addSectionSlice = createSlice({
   },
 });
 
-export const { hideTemplateProfile, hideTemplateIcons, sectionShowIcons, sectionShowProfile, sectionEditMode, addUserAwards, addUserCustomSection, addUserLanguages, AddUserReferences, addNewSection, removeSection, reorderSections,
+export const { disableTemplateProfile, disableTemplateIcons, sectionShowIcons, sectionShowProfile, sectionEditMode, addUserAwards, addUserCustomSection, addUserLanguages, AddUserReferences, addNewSection, removeSection, reorderSections,
   addUserSoft_Skills, addUserTechnical_Skills, addUserProjects, addUserEducation, addUserExperience, addUserCertificates,
   addUserHeader, addUserSummary
 } =

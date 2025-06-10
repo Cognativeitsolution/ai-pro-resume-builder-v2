@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // ==============
 import Template1 from "../Template/template1";
-import Template2 from "../Template/template2";
+import Template2Old from "../Template/template2Old";
 import Template3 from "../Template/template3";
 import Template6 from "../Template/template6";
 import Template8 from "../Template/template8";
@@ -17,6 +17,8 @@ import ResumeTemplate from "../Template/template";
 import { sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 import { RootState } from "@/redux/store";
 import axios from "axios";
+import Template2 from "../Template/template2";
+import HuzaifaTemplate1 from "../Template/huzaifa-template";
 
 type CurrentState = {
   fontSize: string;
@@ -36,7 +38,7 @@ type ResumePreviewProps = {
 
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
-  const { showIcons, showProfile, isTempIcons, isTempProfile } = useSelector((state: RootState) => state.addSection);
+  const { showIcons, showProfile, isDisableIcons, isDisableProfile } = useSelector((state: RootState) => state.addSection);
   const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
   const settingsRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
@@ -157,15 +159,18 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
         return <Template1 currentState={currentState} scaleFont={scaleFont} incorrectTextChange={highlightChange} />;
       case "Template1copy":
         return <Template1Copy currentState={currentState} updateState={updateState} />;
-    
+      case "HuzaifaTemplate":
+        return <HuzaifaTemplate1 currentState={currentState} updateState={updateState} />;
       case "template2":
-        return <Template2 currentState={currentState} updateState={updateState} />;
+        return <Template2 currentState={currentState} scaleFont={scaleFont} incorrectTextChange={highlightChange} />;
+      // case "template2Old":
+      //   return <Template2Old currentState={currentState} updateState={updateState} />;
       case "templateText":
         return <ResumeTemplate />
       case "template3":
-        return <Template3 currentState={currentState} updateState={updateState} />;
+        return <Template3 incorrectTextChange={highlightChange} scaleFont={scaleFont} currentState={currentState} />;
       case "template6":
-        return <Template6 currentState={currentState} updateState={updateState} />;
+        return <Template6 currentState={currentState} scaleFont={scaleFont} incorrectTextChange={highlightChange} />;
       case "template8":
         return <Template8 currentState={currentState} updateState={updateState} />;
       case "template9":
@@ -197,9 +202,9 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   }, [shoeAllIcons, showProfilePic]);
 
   useEffect(() => {
-    setShowProfilePic(isTempProfile === true && false);
-    setShoeAllIcons(isTempIcons === true && false);
-  }, [isTempIcons, isTempProfile]);
+    setShowProfilePic(isDisableProfile === true && false);
+    setShoeAllIcons(isDisableIcons === true && false);
+  }, [isDisableIcons, isDisableProfile]);
 
   console.log(showProfile, showIcons, "showIconsshowIconsshowIconsshowIcons");
   return (
@@ -220,7 +225,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
               <CustomSwitch
                 size="sm"
                 checked={shoeAllIcons}
-                disableToogle={isTempIcons}
+                disableToogle={isDisableIcons}
                 onChange={setShoeAllIcons}
               />
             </div>
@@ -228,7 +233,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
               <CustomSwitch
                 size="sm"
                 checked={showProfilePic}
-                disableToogle={isTempProfile}
+                disableToogle={isDisableProfile}
                 onChange={setShowProfilePic}
               />
             </div>

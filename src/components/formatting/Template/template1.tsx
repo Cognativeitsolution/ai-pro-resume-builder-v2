@@ -4,9 +4,9 @@ import React, { useEffect, useRef, useState } from "react";
 // ============
 import { useDispatch, useSelector } from "react-redux";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
-import { addUserHeader, hideTemplateIcons, hideTemplateProfile, sectionEditMode, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
+import { addUserHeader, disableTemplateIcons, disableTemplateProfile, sectionEditMode, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 // ============
-import { BookUser, Mail, Phone } from "lucide-react";
+import { BookUser, LucideGraduationCap, Mail, Phone } from "lucide-react";
 // ============
 import AllSummary from "../all-sections/sections-details/AllSummary";
 import AllCertificates from "../all-sections/sections-details/AllCertificates";
@@ -26,11 +26,15 @@ import { GrUserExpert } from "react-icons/gr";
 import { GrProjects } from "react-icons/gr";
 import { GiSkills } from "react-icons/gi";
 import { PiCertificateBold } from "react-icons/pi";
-import { LiaAwardSolid } from "react-icons/lia";
+import { LiaAwardSolid, LiaLanguageSolid } from "react-icons/lia";
 import { HiMiniLanguage } from "react-icons/hi2";
 import { VscReferences } from "react-icons/vsc";
 import { MdOutlineSummarize } from "react-icons/md";
 import { BsSignIntersectionSide } from "react-icons/bs";
+import { IoMdMail } from "react-icons/io";
+import { FaAward } from "react-icons/fa6";
+import { IoDocumentText, IoPeople } from "react-icons/io5";
+import { RiContactsBook3Fill } from "react-icons/ri";
 
 const A4_HEIGHT_PX = 1122;
 
@@ -238,17 +242,17 @@ const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextCh
     setHeaderData((prev) => ({ ...prev, [key]: value }));
   };
   const sectionHeaderIcons: any = {
-    FaEducation: <FaSchool />,
-    FaExperience: <GrUserExpert />,
-    FaProject: <GrProjects />,
+    FaExperience: <IoMdMail />,
+    FaEducation: <LucideGraduationCap />,
+    FaAwards: <FaAward />,
+    FaCertificates: <FaAward />,
+    FaReferences: <IoPeople />,
     FaSoftSkills: <GiSkills />,
     FaTechnicalSkills: <GiSkills />,
-    FaCertificates: <PiCertificateBold />,
-    FaAwards: <LiaAwardSolid />,
-    FaLanguages: <HiMiniLanguage />,
-    FaReferences: <VscReferences />,
+    FaLanguages: <LiaLanguageSolid />,
+    FaSummary: <IoDocumentText />,
+    FaProject: <GrProjects />,
     FaCustomSection: <BsSignIntersectionSide />,
-    FaSummary: <MdOutlineSummarize />,
   };
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -317,15 +321,14 @@ const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextCh
   console.log(pages)
 
   useEffect(() => {
-    dispatch(hideTemplateIcons(false))
-    dispatch(hideTemplateProfile(false))
+    dispatch(disableTemplateIcons(false))
+    dispatch(disableTemplateProfile(false))
   }, []);
 
   useEffect(() => {
     setSecName("Custom Section");
   }, []);
 
-  // ===================
   useEffect(() => {
     setTemplateBgColor(sectionBgColor);
   }, [editMode, sectionBgColor]);
@@ -382,24 +385,29 @@ const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextCh
               <div key={index} className="pt-4 relative section-to-break">
                 <div className="border-b">
                   {section?.name === "Custom Section" ? (
-                    <div
-                      ref={containerRef}
-                      className={`flex flex-col ${editable && "bg-white"}`}
-                      onClick={handleEditableSection}
-                    >
-                      <input
-                        type="text"
-                        className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
-                        style={{ color: currentState.color }}
-                        value={secName}
-                        onChange={(e) =>
-                          HandleChangeSectionName(e.target.value)
-                        }
-                      />
-                    </div>
+                    <>
+                      <div className="flex items-center gap-1">
+                        {showIcons ? sectionHeaderIcons["FaCustomSection"] ?? "" : ""}
+                        <div
+                          ref={containerRef}
+                          className={`flex flex-col ${editable && "bg-white"}`}
+                          onClick={handleEditableSection}
+                        >
+                          <input
+                            type="text"
+                            className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
+                            style={{ color: currentState.color }}
+                            value={secName}
+                            onChange={(e) =>
+                              HandleChangeSectionName(e.target.value)
+                            }
+                          />
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     <div className="flex items-center gap-1">
-                      {showIcons ? sectionHeaderIcons[section.icon] ?? "No Icon" : ""}
+                      {showIcons ? sectionHeaderIcons[section.icon] ?? "" : ""}
                       <h2
                         className="text-lg font-semibold "
                         style={{ color: currentState.color }}
@@ -444,6 +452,7 @@ const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextCh
                   fontFamily: currentState.fontFamily,
                 }}
               >
+                {showIcons && <span><RiContactsBook3Fill /></span>}
                 <span className="text-xl">Contact Info</span>
               </div>
               <hr className="-mt-1" />
@@ -479,26 +488,25 @@ const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextCh
                 <div key={index} className="pt-4 relative section-to-break">
                   <div className="border-b text-white">
                     {section?.name === "Custom Section" ? (
-                      <div
-                        ref={containerRef}
-                        className={`flex flex-col pt-2 ${editable && "bg-white"
-                          }`}
-                        onClick={handleEditableSection}
-                      >
-                        <input
-                          type="text"
-                          className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
-                          style={{ color: currentState.color }}
-                          value={secName}
-                          onChange={(e) =>
-                            HandleChangeSectionName(e.target.value)
-                          }
-                        />
+                      <div className="flex items-center gap-1">
+                        {showIcons ? sectionHeaderIcons["FaCustomSection"] ?? "" : ""}
+                        <div
+                          ref={containerRef}
+                          className={`flex flex-col pt-2 ${editable && "bg-white"}`}
+                          onClick={handleEditableSection}
+                        >
+                          <input
+                            type="text"
+                            className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
+                            style={{ color: currentState.color }}
+                            value={secName}
+                            onChange={(e) => HandleChangeSectionName(e.target.value)}
+                          />
+                        </div>
                       </div>
                     ) : (
-
                       <div className="flex items-center gap-1">
-                        {showIcons ? sectionHeaderIcons[section.icon] ?? "No Icon" : ""}
+                        {showIcons ? sectionHeaderIcons[section.icon] ?? "" : ""}
                         <h2 className="text-lg font-semibold mb-1"
                           dangerouslySetInnerHTML={{
                             __html: incorrectTextChange(section?.newSecName || section?.name),

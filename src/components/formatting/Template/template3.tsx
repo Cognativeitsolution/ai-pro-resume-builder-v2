@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
 import {
   addUserHeader,
-  hideTemplateIcons,
-  hideTemplateProfile,
   sectionEditMode,
   sectionShowIcons,
   sectionShowProfile,
@@ -228,7 +226,7 @@ const Template3 = ({
     }
   };
 
-const rightSideSections = ["Summary", "Experience", "Education" , "Projects" , "Certificate", "References", "Awards", "Custom Section"];
+  const rightSideSections = ["Summary", "Experience", "Education", "Projects", "Certificate", "References", "Awards", "Custom Section"];
   const leftSections = addedSections?.filter(
     (section: any) => !rightSideSections.includes(section?.name)
   );
@@ -392,10 +390,10 @@ const rightSideSections = ["Summary", "Experience", "Education" , "Projects" , "
   }, [leftSections, measured]);
   console.log(pages);
 
-  useEffect(() => {
-    dispatch(hideTemplateIcons(false));
-    dispatch(hideTemplateProfile(false));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(hideTemplateIcons(false));
+  //   dispatch(hideTemplateProfile(false));
+  // }, []);
 
   useEffect(() => {
     setSecName("Custom Section");
@@ -418,9 +416,8 @@ const rightSideSections = ["Summary", "Experience", "Education" , "Projects" , "
     >
       <div
         style={{ minHeight: "332mm", width: "235mm" }}
-        className={`relative grid grid-cols-12  shadow-xl ${
-          editMode ? "bg-transparent" : "bg-white"
-        }`}
+        className={`relative grid grid-cols-12  shadow-xl ${editMode ? "bg-transparent" : "bg-white"
+          }`}
       >
         {/* Left Column */}
         <div
@@ -447,7 +444,7 @@ const rightSideSections = ["Summary", "Experience", "Education" , "Projects" , "
               </div>
               <hr className="-mt-1" />
               {[
-                { name: "Phone", icon: <Phone size={16}  /> },
+                { name: "Phone", icon: <Phone size={16} /> },
                 { name: "Email", icon: <Mail size={16} /> },
               ].map((placeholder, idx) => (
                 <div key={idx} className="flex items-center gap-2  text-black">
@@ -569,15 +566,14 @@ const rightSideSections = ["Summary", "Experience", "Education" , "Projects" , "
                     {section?.name === "Custom Section" ? (
                       <div
                         ref={containerRef}
-                        className={`flex flex-col pt-2 ${
-                          editable && "bg-white"
-                        }`}
+                        className={`flex flex-col pt-2 ${editable && "bg-white"
+                          }`}
                         onClick={handleEditableSection}
                       >
                         <input
                           type="text"
                           className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
-                        //   style={{ color: currentState.color }}
+                          //   style={{ color: currentState.color }}
                           value={secName}
                           onChange={(e) =>
                             HandleChangeSectionName(e.target.value)
