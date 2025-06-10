@@ -31,7 +31,6 @@ const AllSummary = ({ data = {}, textColor = "#000",
     dotPosition,
     isDot,
     highlightText,
-    correctText,
 
 }: AllSummaryType) => {
     const dispatch = useDispatch();
@@ -163,7 +162,7 @@ const AllSummary = ({ data = {}, textColor = "#000",
                 }
             </div>
 
-        
+
             {editable && (
                 <AiRobo
                     positionClass="-left-[70px] hover:-left-[154px] top-14"

@@ -16,6 +16,7 @@ type Props = {
         endDate: string | 'Present' | null;
     }) => void;
     dateAlign?: any;
+    dateColor?: any;
 };
 
 const months = [
@@ -23,7 +24,7 @@ const months = [
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
 ];
 
-const CustomDatePicker: React.FC<Props> = ({ onChange, dateAlign }) => {
+const CustomDatePicker: React.FC<Props> = ({ onChange, dateAlign, dateColor }) => {
     const [showPicker, setShowPicker] = useState(false);
     const [activeTab, setActiveTab] = useState<'from' | 'to'>('from');
     const [fromDate, setFromDate] = useState<DateType>({ year: null, month: null });
@@ -87,7 +88,9 @@ const CustomDatePicker: React.FC<Props> = ({ onChange, dateAlign }) => {
 
     return (
         <div className={`relative w-[200px] flex items-center ${dateAlign ? dateAlign : "justify-end"} gap-2`} ref={wrapperRef}>
-            <button className={`text-sm flex items-center gap-1 ${displayText === 'Date' ? 'text-gray-400' : 'text-black'}`} onClick={() => setShowPicker(!showPicker)}>
+            <button className={`text-sm flex items-center gap-1 ${displayText === 'Date' ? 'text-gray-400' : dateColor ? '' : 'text-black'}`} onClick={() => setShowPicker(!showPicker)} style={{
+                color: dateColor && dateColor
+            }}>
                 {showIcons && <FaCalendarAlt />}
                 {displayText}
             </button>
