@@ -8,8 +8,11 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  serverExternalPackages: ['puppeteer-core']
-
+   serverExternalPackages: [
+      'puppeteer-core',
+      '@sparticuz/chromium'
+    ],
+reactStrictMode:false
   
 };
 

@@ -116,6 +116,7 @@ const initialState: AddSectionState = {
   userCustomSections: [],
   sectionBgColor: '#E7E9EB',
   editMode: false,
+
   showIcons: false,
   showProfile: false,
   isTempIcons: false,

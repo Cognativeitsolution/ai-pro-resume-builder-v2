@@ -142,10 +142,10 @@ const Template2 = ({ currentState, updateState }: ResumePreviewProps) => {
     const leftSections = addedSections?.filter((section: any) => !rightSideSections.includes(section?.name));
     const rightSections = addedSections?.filter((section: any) => rightSideSections.includes(section?.name));
 
-    useEffect(() => {
-        dispatch(hideTemplateIcons(true))
-        dispatch(hideTemplateProfile(true))
-    }, []);
+    // useEffect(() => {
+    //     dispatch(hideTemplateIcons(true))
+    //     dispatch(hideTemplateProfile(true))
+    // }, []);
     console.log(isTempIcons, isTempProfile, "temp2222");
 
     return (

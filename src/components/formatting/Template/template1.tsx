@@ -319,7 +319,7 @@ const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextCh
   useEffect(() => {
     dispatch(hideTemplateIcons(false))
     dispatch(hideTemplateProfile(false))
-  }, [showProfile, showIcons]);
+  }, []);
 
   useEffect(() => {
     setSecName("Custom Section");

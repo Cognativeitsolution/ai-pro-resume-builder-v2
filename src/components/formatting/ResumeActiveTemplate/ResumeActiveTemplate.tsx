@@ -157,6 +157,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
         return <Template1 currentState={currentState} scaleFont={scaleFont} incorrectTextChange={highlightChange} />;
       case "Template1copy":
         return <Template1Copy currentState={currentState} updateState={updateState} />;
+    
       case "template2":
         return <Template2 currentState={currentState} updateState={updateState} />;
       case "templateText":
@@ -196,10 +197,11 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   }, [shoeAllIcons, showProfilePic]);
 
   useEffect(() => {
-    setShowProfilePic(showProfile);
-    setShoeAllIcons(showIcons);
-  }, [showProfile, showIcons]);
-  // console.log(showProfile, showIcons, "showIconsshowIconsshowIconsshowIcons");
+    setShowProfilePic(isTempProfile === true && false);
+    setShoeAllIcons(isTempIcons === true && false);
+  }, [isTempIcons, isTempProfile]);
+
+  console.log(showProfile, showIcons, "showIconsshowIconsshowIconsshowIcons");
   return (
     <div ref={settingsRef} className="min-h-full max-w-max mx-auto relative">
       {renderTemplate()}
@@ -214,8 +216,22 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
       {showSettings && (
         <>
           <div className="absolute top-1 z-10 right-[0px] bg-gray-900 text-sm text-white divide-y-[1px] rounded-sm p-2 w-40">
-            <div className="cursor-pointer py-2 px-1 flex justify-between items-center gap-x-2">Show Icon <CustomSwitch size="sm" checked={shoeAllIcons} disableToogle={isTempIcons} onChange={setShoeAllIcons} /></div>
-            <div className="cursor-pointer py-2 px-1 flex justify-between items-center gap-x-2">Show profile <CustomSwitch size="sm" checked={showProfilePic} disableToogle={isTempProfile} onChange={setShowProfilePic} /> </div>
+            <div className="cursor-pointer py-2 px-1 flex justify-between items-center gap-x-2">Show Icon
+              <CustomSwitch
+                size="sm"
+                checked={shoeAllIcons}
+                disableToogle={isTempIcons}
+                onChange={setShoeAllIcons}
+              />
+            </div>
+            <div className="cursor-pointer py-2 px-1 flex justify-between items-center gap-x-2">Show profile
+              <CustomSwitch
+                size="sm"
+                checked={showProfilePic}
+                disableToogle={isTempProfile}
+                onChange={setShowProfilePic}
+              />
+            </div>
           </div>
         </>
       )}

@@ -436,10 +436,11 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
     setMeasured(true);
   }, [leftSections, measured]);
 
+
   useEffect(() => {
     dispatch(hideTemplateIcons(true))
     dispatch(hideTemplateProfile(true))
-  }, [showProfile, showIcons]);
+  }, []);
 
   // console.log(pages)
 
