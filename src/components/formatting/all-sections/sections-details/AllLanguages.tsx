@@ -178,7 +178,7 @@ const AllLanguages = ({
                     )
                       :
                       <div
-                        className="text-base text-white placeholder:text-base focus:outline-none bg-transparent"
+                        className="text-base  placeholder:text-base focus:outline-none bg-transparent"
                         style={{ color: textAltColor }}
                         dangerouslySetInnerHTML={{
                           __html: highlightText ? highlightText(lang.title) : lang.title,

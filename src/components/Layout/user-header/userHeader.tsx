@@ -184,23 +184,29 @@ const UserHeader = (props: HeaderProps) => {
         </div>
       )}
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-x-hidden z-0">
-          <div className="relative bg-transparent rounded max-h-[90vh] overflow-auto overflow-x-hidden p-4 hide-scrollbar">
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 bg-indigo-200 rounded-full p-2 text-black font-bold text-xl z-50"
-            >
-              <X />
-            </button>
+     {isModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-x-hidden z-50">
+    <div className="relative bg-transparent rounded max-h-[90vh] overflow-auto overflow-x-hidden p-4 hide-scrollbar">
+      <button
+        onClick={closeModal}
+        className="absolute top-2 right-2 bg-indigo-200 rounded-full p-2 text-black font-bold text-xl z-50"
+      >
+        <X />
+      </button>
 
-            <div
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-              className="text-left"
-            />
-          </div>
-        </div>
-      )}
+      <div className="relative">
+
+        <div
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+          className="text-left "
+        />
+
+        <div className="absolute inset-0 z-40 bg-transparent " />
+      </div>
+    </div>
+  </div>
+)}
+
 
       <div className="flex items-center gap-12">
         <div>

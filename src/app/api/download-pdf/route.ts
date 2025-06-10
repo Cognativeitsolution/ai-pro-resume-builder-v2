@@ -7,26 +7,21 @@ export async function POST(req: NextRequest) {
     const { html } = await req.json(); // You pass raw HTML from the frontend
     let browser;
 
-    if (process.env.NODE_ENV === "production") {
-      // For Vercel/serverless environments
+    if (process.env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === "production") {
       browser = await puppeteer.launch({
         args: chromium.args,
-        executablePath: await chromium.executablePath(),
+        executablePath: await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v121.0.0/chromium-v121.0.0-pack.tar'),
         headless: chromium.headless,
       });
     } else {
-      // For local development
-      // Try to find an installed Chrome browser
       browser = await puppeteer.launch({
-        headless: true, // You can set this to 'new' in newer Puppeteer versions for better dev experience
+        headless: true, 
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        channel: "chrome", // Tries to find an installed Chrome
+        channel: "chrome", 
       });
     }
 
     const page = await browser?.newPage();
-
-    // Add Tailwind CDN to HTML head
     const styledHtml = `
       <!DOCTYPE html>
       <html lang="en">

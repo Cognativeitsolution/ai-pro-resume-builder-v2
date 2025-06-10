@@ -232,6 +232,8 @@ const HuzaifaTemplate1 = ({
     const rightSec = rightRef.current[pageIndex]?.getBoundingClientRect();
     const watermarkTop =
       watermarkRefs.current[pageIndex]?.getBoundingClientRect()?.top;
+      const rightOverflow = rightSec?.bottom && watermarkTop && rightSec.bottom + 100 > watermarkTop
+      const leftOverflow =   leftSec?.bottom && watermarkTop && leftSec.bottom + 100 > watermarkTop
     let pgIndex = 0;
     if (side == "left") {
       pgIndex =
@@ -252,6 +254,15 @@ const HuzaifaTemplate1 = ({
       if (!updatedPages[pgIndex]) {
         updatedPages[pgIndex] = { left: [], right: [] };
       }
+
+
+      if(leftOverflow && updatedPages[pageIndex][side].length>1){
+  const lastSec = updatedPages[pageIndex][side].pop();
+  updatedPages[pgIndex][side].unshift(lastSec!);
+   updatedPages
+
+   pgIndex = pageIndex
+}
 
       const clonedSections = [...updatedPages[pgIndex][side]];
       const sectionIndex = clonedSections.findIndex((s) => s.name === secName);

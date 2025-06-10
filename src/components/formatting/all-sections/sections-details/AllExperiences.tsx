@@ -8,7 +8,11 @@ import { ImMoveDown, ImMoveUp } from "react-icons/im";
 // ==============
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { addUserExperience, removeSection, sectionEditMode } from "@/redux/slices/addSectionSlice";
+import {
+  addUserExperience,
+  removeSection,
+  sectionEditMode,
+} from "@/redux/slices/addSectionSlice";
 import { moveItem } from "@/utils/moveUpDown";
 // ==============
 import AiRobo from "../../aiAssistant/AiRobo";
@@ -54,7 +58,7 @@ const AllExperiences = ({
   headerPosition,
   textEditorPosition,
   isDot,
-  highlightText
+  highlightText,
 }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -124,7 +128,7 @@ const AllExperiences = ({
     if (experiences?.length <= 1 && index === 0) {
       handleRemoveSection();
     }
-    experiences?.length <= 1 && index === 0 && handleRemoveSection()
+    experiences?.length <= 1 && index === 0 && handleRemoveSection();
     const updated = experiences.filter((_, i) => i !== index);
     setExperiences(updated);
   };
@@ -190,9 +194,13 @@ const AllExperiences = ({
           isTextEditor={true}
           onCopy={handleAddExperience}
           onDelete={handleRemoveSection}
-          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+          mainClass={`transition-all duration-500 ease-in-out ${
+            editable ? "block " : "hidden"
+          }`}
           isVerticleHeader={isVerticleHeader}
-          textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
+          textEditorPosition={
+            textEditorPosition ? textEditorPosition : `top-1 left-[25%] `
+          }
           headerPosition={headerPosition ? headerPosition : `top-1 right-0`}
           showDot={true}
           dotPosition={dotPosition}
@@ -203,19 +211,28 @@ const AllExperiences = ({
       {/* ===== Experience Box ===== */}
       <div className="flex flex-col gap-3 divide-y-[1px] px-1 mb-2">
         {experiences.map((exp, index) => (
-          <div key={index}
-            className={`relative ${editable && editableIndex === index ? 'bg-white rounded-sm' : 'bg-transparent'} p-2 transition-colors duration-300`}
+          <div
+            key={index}
+            className={`relative ${
+              editable && editableIndex === index
+                ? "bg-white rounded-sm"
+                : "bg-transparent"
+            } p-2 transition-colors duration-300`}
             onClick={() => handleEditableIndex(index)}
           >
-            <div className={`flex flex-col ${index === 0 ? 'mt-0' : 'mt-2'}`}>
+            <div className={`flex flex-col ${index === 0 ? "mt-0" : "mt-2"}`}>
               {/* ====== Job Title ====== */}
-              <div className={`flex ${term2 ? "flex-col items-start justify-start text-left" : "flex-row items-center justify-between"} `}>
+              <div
+                className={`flex ${
+                  term2
+                    ? "flex-col items-start justify-start text-left"
+                    : "flex-row items-center justify-between"
+                } `}
+              >
                 <div className="w-full">
                   <EditableField
                     html={exp.title || ""}
-                    onChange={(val) =>
-                      handleInputChange(index, "title", val)
-                    }
+                    onChange={(val) => handleInputChange(index, "title", val)}
                     placeholder="Title"
                     className="bg-transparent !text-[15px]"
                     placeholderClassName="!text-[15px]"
@@ -229,15 +246,24 @@ const AllExperiences = ({
                 </div>
 
                 {/* ====== Date Picker ====== */}
-                {term3 ? null :
-                  <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} />}
+                {term3 ? null : (
+                  <CustomDatePicker
+                    onChange={(dates) => console.log(dates)}
+                    dateAlign={term2 && "justify-start  mb-1"}
+                  />
+                )}
               </div>
 
               {/* ====== Location ====== */}
               <div className="w-full">
                 <div className="flex items-center justify-start gap-1 ">
                   {/* ====== Icon ====== */}
-                  {showIcons && <IoLocationSharp className="mb-1 text-indigo-600" size={14} />}
+                  {showIcons && (
+                    <IoLocationSharp
+                      className="mb-1 text-indigo-600"
+                      size={14}
+                    />
+                  )}
                   <EditableField
                     html={exp.location || ""}
                     onChange={(val) =>
@@ -253,10 +279,16 @@ const AllExperiences = ({
                     }}
                   />
                 </div>
-                {term3 ?
-                  <div className={`flex flex-col items-start justify-start text-left `}>
-                    <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term3 && "justify-start mb-1"} />
-                  </div> : null}
+                {term3 ? (
+                  <div
+                    className={`flex flex-col items-start justify-start text-left `}
+                  >
+                    <CustomDatePicker
+                      onChange={(dates) => console.log(dates)}
+                      dateAlign={term3 && "justify-start mb-1"}
+                    />
+                  </div>
+                ) : null}
               </div>
 
               {/* ====== Company Name ====== */}
@@ -314,22 +346,29 @@ const AllExperiences = ({
 
             {/* ====== Delete Button ====== */}
             {editable && editableIndex === index && (
-              <div className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? 'opacity-100 ' : 'opacity-0 '}`}>
-                {experiences?.length > 1 &&
+              <div
+                className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${
+                  editable ? "opacity-100 " : "opacity-0 "
+                }`}
+              >
+                {experiences?.length > 1 && (
                   <button
                     onClick={() => handleMoveUp(index)}
                     className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
                     title="Move up"
                   >
                     <ImMoveUp size={14} />
-                  </button>}
-                {experiences?.length > 1 && <button
-                  onClick={() => handleMoveDown(index)}
-                  className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
-                  title="Move Down"
-                >
-                  <ImMoveDown size={14} />
-                </button>}
+                  </button>
+                )}
+                {experiences?.length > 1 && (
+                  <button
+                    onClick={() => handleMoveDown(index)}
+                    className="bg-indigo-600/15 backdrop-blur-lg  rounded-full text-indigo-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
+                    title="Move Down"
+                  >
+                    <ImMoveDown size={14} />
+                  </button>
+                )}
                 <button
                   onClick={() => handleDelete(index)}
                   className="bg-red-800/15 backdrop-blur-lg rounded-full text-red-600 text-sm w-6 h-6 flex justify-center items-center hover:scale-105 transition-transform duration-300"
