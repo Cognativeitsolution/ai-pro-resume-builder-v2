@@ -137,10 +137,15 @@ const AllTechnicalSkills = ({
         {technicalskills.map((skill, index) => (
           <div
             key={index}
+            // className={`flex items-center gap-2 !h-[30px] 
+            //   ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px]  
+            //   font-medium px-3  transition-all duration-500 ease-in-out w-[170px] 
+            //   ${hoveredIndex === index ? 'max-w-[55%]' : 'max-w-[40%]'}
+            //   `}
             className={`flex items-center gap-2 !h-[30px] 
-              ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px] 
-              font-medium px-3  transition-all duration-500 ease-in-out 
-              ${hoveredIndex === index ? 'max-w-[55%]' : 'max-w-[40%]'}`}
+              ${isPillStyle && !pillRounded && "rounded-full"} opacity-75 backdrop-blur-[40px]  
+              font-medium px-3  transition-all duration-500 ease-in-out  
+              `}
             style={{
               color: textColor,
               background: isPillStyle && pillBg ? pillBg : textColor,
@@ -165,7 +170,7 @@ const AllTechnicalSkills = ({
               // onBlur={() => handleBlur(index)}
               placeholder="Tech Skill"
               placeholderClassName="text-sm mt-[6px]"
-              className="bg-transparent text-sm truncate leading-8 focus:outline-none transition-all duration-500 ease-in-out w-[75px] max-w-[85px] opacity-70"
+              className="bg-transparent text-sm leading-8 focus:outline-none transition-all duration-500 ease-in-out min-w-[75px] max-w-[250px] truncate opacity-70 "
               style={{
                 color: textAltColor,
                 fontSize: fontSize,
@@ -174,7 +179,7 @@ const AllTechnicalSkills = ({
               highlightText={highlightText}
             />
             {hoveredIndex === index && (
-              <button onClick={() => handleDeleteTechnicalSkill(index)} className="opacity-70 hover:opacity-100">
+              <button onClick={() => handleDeleteTechnicalSkill(index)} className=" opacity-70 hover:opacity-100">
                 <RiDeleteBin6Line size={18} style={{ color: textAltColor, }} />
               </button>
             )}

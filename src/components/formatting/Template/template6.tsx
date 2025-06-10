@@ -1,16 +1,14 @@
 "use client";
 // ============
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 // ============
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileImage } from "@/redux/slices/profileImageSlice";
 import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
-import { addUserHeader, hideTemplateIcons, hideTemplateProfile, sectionEditMode, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
+import { addUserHeader, disableTemplateIcons, disableTemplateProfile, sectionEditMode, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 // ============
-import * as FaIcons from "react-icons/fa";
 import { BookUser, Mail, Phone } from "lucide-react";
 // ============
 import placeHolderImg from "media/assets/reusme_placeholder_image.webp";
@@ -25,14 +23,13 @@ import AllLanguages from "../all-sections/sections-details/AllLanguages";
 import AllTechnicalSkills from "../all-sections/sections-details/AllTechnicalSkills";
 import AllAwards from "../all-sections/sections-details/AllAwards";
 import AllReferences from "../all-sections/sections-details/AllReferences";
-import IconDropdown from "../icon-dropdown/IconDropdown";
 import AllCustomSection from "../all-sections/sections-details/AllCustomSections";
-import Logo from "media/assets/logo_resume_white.svg";
 import Watermark from "@/components/common/watermark/watermark";
 import { placeHolderImage } from "@/constant/placeholder-image-base64";
 import EditableField from "@/components/editor/editable-field";
+import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
+
 const A4_HEIGHT_PX = 1122;
-const PAGE_PADDING = 60; // adjust based on your layout padding
 
 type CurrentState = {
   fontSize: any;
@@ -46,21 +43,15 @@ type CurrentState = {
 
 type ResumePreviewProps = {
   currentState: CurrentState;
-  updateState: (newState: CurrentState) => void;
+  scaleFont: any;
+  incorrectTextChange: any;
 };
 
-const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
+const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
     (state: any) => state.addSection
   );
-
-  const { spellCheck, grammarCheck } = useSelector(
-    (state: any) => state.ImproveText
-  );
-  const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
-  const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [secName, setSecName] = useState("");
   const [templateBgColor, setTemplateBgColor] = useState<any>("");
   const [editable, setEditable] = useState<boolean>(false);
@@ -70,105 +61,23 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
-  //============= all sections
-  const getAllText = () => {
-    return addedSections
-      ?.map((section: any) => {
-        if (typeof section?.content === "string") return section.content;
-        if (Array.isArray(section?.content)) {
-          return section.content
-            .map((item: any) => Object.values(item).join(" "))
-            .join(" ");
-        }
-        return "";
-      })
-      .join("\n");
-  };
-
-  useEffect(() => {
-    setSecName("Custom Section");
-  }, []);
-
   const [pages, setPages] = useState<any[][]>([]);
+
   const HandleChangeSectionName = (data: any) => {
     console.log(data);
     setSecName(data);
-  };
-  const fullText = getAllText();
-
-  // ===================
-  useEffect(() => {
-    setTemplateBgColor(sectionBgColor);
-  }, [editMode, sectionBgColor]);
-
-  //============= improve text logic
-  useEffect(() => {
-    const fetchCorrections = async () => {
-      if (!spellCheck && !grammarCheck) return;
-      setLoading(true);
-      try {
-        let spellingMistakes: string[] = [];
-        let grammarMistakes: string[] = [];
-
-        if (spellCheck) {
-          const spellResponse = await axios.post(
-            "https://ai.spellcheck.aiproresume.com/api/v1/spell-correction",
-            { text: fullText },
-            { headers: { "Content-Type": "application/json" } }
-          );
-          spellingMistakes =
-            spellResponse.data?.data?.map(
-              (item: any) => item?.misspelledWord
-            ) || [];
-        }
-
-        if (grammarCheck) {
-          const grammarResponse = await axios.post(
-            "https://ai.grmcheck.aiproresume.com/api/v1/grammar-correction",
-            { text: fullText },
-            { headers: { "Content-Type": "application/json" } }
-          );
-          grammarMistakes =
-            grammarResponse.data?.data?.map((item: any) => item?.wrongWords) ||
-            [];
-        }
-
-        setIncorrectWords(spellingMistakes);
-        setGrammarErrors(grammarMistakes);
-      } catch (err) {
-        console.error("Error during API call:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCorrections();
-  }, [spellCheck, grammarCheck, fullText]);
-
-  //============= Highlight function
-  const highlightWords = (text: string) => {
-    return text.split(/\s+/).map((word, index) => {
-      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
-      const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
-      const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
-
-      return (
-        <span
-          key={index}
-          className={`${isSpellingMistake ? "text-red-500" : ""}
-                        ${isGrammarMistake ? "bg-blue-200 underline" : ""}`}
-        >
-          {word}{" "}
-        </span>
-      );
-    });
   };
 
   // ========== Render Sections
   const renderSection = (section: any) => {
     switch (section?.name) {
       case "Summary":
-        return <AllSummary data={section} />;
+        return <AllSummary
+          data={section}
+          fontSize={scaleFont(16, currentState.fontSize)}
+          fontFamily={currentState.fontFamily}
+          highlightText={incorrectTextChange}
+        />;
       case "Soft Skills":
         return (
           <AllSoftSkills
@@ -180,6 +89,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -left-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={incorrectTextChange}
           />
         );
       case "Technical Skills":
@@ -193,6 +103,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -left-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={incorrectTextChange}
           />
         );
       case "Certificate":
@@ -203,21 +114,24 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
           textEditorPosition='top-1 right-0'
           isVerticleHeader={true}
           isDot={false}
+          highlightText={incorrectTextChange}
         />;
       case "Education":
         return (
           <AllEducations
             data={section}
             textColor=""
-            textAltColor=""
+            textAltColor={currentState?.color}
+            dateColor="#B1B7C1"
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
             term2={true}
-            headerPosition="top-[30px] -left-[50px]"
+            headerPosition="top-[20px] -left-[50px]"
             textEditorPosition='top-1 right-0'
             isVerticleHeader={true}
             isDot={false}
+            highlightText={incorrectTextChange}
           />
         );
       case "Experience":
@@ -234,6 +148,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textEditorPosition='top-1 right-0'
             isVerticleHeader={true}
             isDot={false}
+            highlightText={incorrectTextChange}
           />
         );
       case "Projects":
@@ -248,6 +163,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textEditorPosition='top-1 right-0'
             isVerticleHeader={true}
             isDot={false}
+            highlightText={incorrectTextChange}
           />
         );
       case "Awards":
@@ -264,6 +180,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textEditorPosition='top-1 right-0'
             isVerticleHeader={true}
             isDot={false}
+            highlightText={incorrectTextChange}
           />
         );
       case "References":
@@ -291,6 +208,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             headerPosition="-top-[30px] -left-[50px]"
             isVerticleHeader={true}
             isDot={false}
+            highlightText={incorrectTextChange}
           />
         );
       case "Custom Section":
@@ -307,21 +225,14 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             textEditorPosition='top-1 right-0'
             isVerticleHeader={true}
             isDot={false}
+            highlightText={incorrectTextChange}
           />
         );
       default:
-        return <p>{highlightWords(section?.content || "")}</p>;
+        return <p>{incorrectTextChange(section?.content || "")}</p>;
     }
   };
 
-  const scaleFont = (base: number, size: string) => {
-    const scaleMap: Record<string, number> = {
-      small: 0.85,
-      medium: 1,
-      large: 1.2,
-    };
-    return `${base * (scaleMap[size] || 1)}px`;
-  };
   const rightSideSections = ["Summary", "Certificate", "References", "Awards", "Custom Section"];
   const leftSections = addedSections?.filter(
     (section: any) => !rightSideSections.includes(section?.name)
@@ -330,37 +241,21 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
     rightSideSections.includes(section?.name)
   );
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const imageSrc = useSelector((state: RootState) => state.profileImage.image);
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          // dispatch(setProfileImage(reader.result));
-          dispatch(setProfileImage({
-            image: reader.result,
-            scale: 1,
-            position: { x: 0, y: 0 },
-            rotation: 0,
-          }));
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true));
   };
+
   const handleEditableSectionHeader = () => {
     setHeaderEditable(true);
     dispatch(sectionEditMode(true));
+  };
+
+  const handleChangeHeader = (
+    value: string,
+    key: "name" | "designation"
+  ) => {
+    setHeaderData((prev) => ({ ...prev, [key]: value }));
   };
 
   useEffect(() => {
@@ -398,14 +293,6 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
     dispatch(setColumn(true));
   }, [addedSections]);
 
-  const handleChangeHeader = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    key: "name" | "designation"
-  ) => {
-    const value = e.target.value;
-    setHeaderData((prev) => ({ ...prev, [key]: value }));
-  };
-
   // Step 1: Measure section heights
   useEffect(() => {
     if (measured) return;
@@ -435,14 +322,24 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
     setPages(newPages);
     setMeasured(true);
   }, [leftSections, measured]);
+  console.log(pages)
 
 
   useEffect(() => {
-    dispatch(hideTemplateIcons(true))
-    dispatch(hideTemplateProfile(true))
+    dispatch(disableTemplateIcons(true))
+    dispatch(sectionShowProfile(true))
+    dispatch(disableTemplateProfile(true))
   }, []);
 
-  // console.log(pages)
+  useEffect(() => {
+    setSecName("Custom Section");
+  }, []);
+
+
+  // ===================
+  useEffect(() => {
+    setTemplateBgColor(sectionBgColor);
+  }, [editMode, sectionBgColor]);
 
   console.log(showProfile, showIcons, "Temp2 showProfile, showIcons");
 
@@ -460,7 +357,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
       <div style={{ minHeight: "297mm", width: "210mm" }} className="relative  shadow-xl p-[30px]">
         <div className="grid grid-cols-12">
           {/* Header Left Column */}
-          <div className="col-span-8 py-[15px]  border" >
+          <div className="col-span-8 " style={{ padding: "15px 0px" }}>
             <div
               ref={containerHeaderRef}
               className={`flex flex-col ${headerEditable && "bg-white"}`}
@@ -468,28 +365,32 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
             >
               <EditableField
                 html={headerData.name}
-                onChange={(e: any) => handleChangeHeader(e, "name")}
+                onChange={(value) => handleChangeHeader(value, "name")}
                 placeholder="Name"
                 style={{
                   fontSize: scaleFont(25, currentState.fontSize),
                   fontFamily: currentState.fontFamily,
                 }}
-                className="bg-transparent"
+                className="bg-transparent text-black"
               />
               <EditableField
                 html={headerData.designation}
-                onChange={(e: any) => handleChangeHeader(e, "designation")}
+                onChange={(value) => handleChangeHeader(value, "designation")}
                 placeholder="designation"
                 style={{
                   fontSize: scaleFont(18, currentState.fontSize),
                   fontFamily: currentState.fontFamily,
+                  color: currentState?.color
+
                 }}
-                className="bg-transparent"
+                className="bg-transparent "
               />
-              <div className="flex flex-wrap gap-y-2 pt-2">
+              <div className="flex flex-wrap gap-y-2 pt-2" style={{
+
+              }}>
                 {[
-                  { name: "Phone", icon: <Phone size={16} /> },
-                  { name: "Email", icon: <Mail size={16} /> },
+                  { name: "Phone", icon: <Phone size={16} color={currentState.color} /> },
+                  { name: "Email", icon: <Mail size={16} color={currentState.color} /> },
                 ].map((placeholder, idx) => (
                   <div key={idx} className="flex items-center gap-2  text-black w-[50%]">
                     <div className="self-center  ">{placeholder.icon}</div>
@@ -503,6 +404,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
                   <BookUser
                     size={16}
                     className=" self-center "
+                    color={currentState.color}
                   />
                   <input
                     placeholder="Address"
@@ -516,10 +418,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
           </div>
 
           {/* Header Right Column */}
-          <div className="col-span-4 border">
+          <div className="col-span-4 ">
             {/* Profile Image */}
             <div className="px-3  ">
-              <div className="flex justify-center w-40 h-40 mx-auto rounded-full overflow-hidden cursor-pointer">
+              {/* <div className="flex justify-center w-40 h-40 mx-auto rounded-full overflow-hidden cursor-pointer">
 
                 <Image
                   src={imageSrc || placeHolderImage}
@@ -536,7 +438,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
                   onChange={handleFileChange}
                   className="hidden"
                 />
-              </div>
+              </div> */}
+              {showProfile && <TemplateProfileImg
+              // bgColor={currentState.color}
+              />}
             </div>
           </div>
         </div>
@@ -557,7 +462,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
                         <input
                           type="text"
                           className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
-                          style={{ color: currentState.color }}
+                          // style={{ color: currentState.color }}
                           value={secName}
                           onChange={(e) =>
                             HandleChangeSectionName(e.target.value)
@@ -567,10 +472,10 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
                     ) : (
                       <h2
                         className="text-lg font-semibold "
-                        style={{ color: currentState.color }}
-                      >
-                        {highlightWords(section?.newSecName || section?.name)}
-                      </h2>
+                        dangerouslySetInnerHTML={{
+                          __html: incorrectTextChange(section?.newSecName || section?.name),
+                        }}
+                      />
                     )}
                   </div>
                   <div className="">{renderSection(section)}</div>
@@ -580,11 +485,11 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
               <p>No sections added yet.</p>
             )}
             <Watermark />
-            {loading && (
+            {/* {loading && (
               <p className="text-gray-500 mt-4">
                 Checking for spelling/grammar errors...
               </p>
-            )}
+            )} */}
           </div>
           {/* Right Column */}
           <div className="col-span-6 ">
@@ -602,7 +507,7 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
                         <input
                           type="text"
                           className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
-                          style={{ color: currentState.color }}
+                          // style={{ color: currentState.color }}
                           value={secName}
                           onChange={(e) =>
                             HandleChangeSectionName(e.target.value)
@@ -612,10 +517,9 @@ const Template6 = ({ currentState, updateState }: ResumePreviewProps) => {
                     ) : (
                       <h2
                         className="text-lg font-semibold "
-                        style={{ color: currentState.color }}
-                      >
-                        {highlightWords(section?.newSecName || section?.name)}
-                      </h2>
+                        dangerouslySetInnerHTML={{
+                          __html: incorrectTextChange(section?.newSecName || section?.name),
+                        }} />
                     )}
                   </div>
                   <div className="">{renderSection(section)}</div>

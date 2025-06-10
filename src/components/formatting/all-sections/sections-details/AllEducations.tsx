@@ -25,6 +25,8 @@ type AllEducationType = {
   data?: any;
   textColor?: string;
   textAltColor?: string;
+  titleColor?: string;
+  dateColor?: string;
   templateColor?: string;
   fontSize?: any;
   fontFamily?: any;
@@ -42,6 +44,8 @@ const AllEducation = ({
   data = {},
   textColor = "#000",
   textAltColor,
+  titleColor,
+  dateColor,
   templateColor,
   fontSize,
   fontFamily,
@@ -201,7 +205,7 @@ const AllEducation = ({
                         className="bg-transparent !text-[15px]"
                         placeholderClassName="!text-[15px]"
                         style={{
-                          color: textAltColor ? textAltColor : textColor,
+                          color: textAltColor || titleColor ? textAltColor || titleColor : textColor,
                           fontSize: fontSize,
                           fontFamily: fontFamily,
                         }}
@@ -211,7 +215,7 @@ const AllEducation = ({
 
                     {/* ====== Date Picker ====== */}
                     {term3 ? null :
-                      <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} />}
+                      <CustomDatePicker onChange={(dates) => console.log(dates)} dateAlign={term2 && "justify-start  mb-1"} dateColor={dateColor} />}
                   </div>
 
                   {/* ====== Location ====== */}
