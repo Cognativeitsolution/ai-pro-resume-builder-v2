@@ -38,7 +38,7 @@ import TemplateImage30 from 'media/assets/resume_template_images/template_30.web
 const templateData = [
     { id: 'template1', name: 'Sleek Simplicity', image: TemplateImage1 },
     // { id: 'Template1copy', name: 'Sleek Simplicity Copy', image: TemplateImage1 },
-    // { id: 'HuzaifaTemplate', name: 'Huzaifa Template', image: TemplateImage1 },
+    { id: 'HuzaifaTemplate', name: 'Huzaifa Template', image: TemplateImage1 },
     { id: 'template2', name: 'Professional Polished', image: TemplateImage2 },
     { id: 'template3', name: 'Elegant Executive', image: TemplateImage3 },
     // { id: 'template2Old', name: 'Professional Polished old', image: TemplateImage2 },

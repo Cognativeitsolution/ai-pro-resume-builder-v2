@@ -160,6 +160,7 @@ const HuzaifaTemplate1 = ({
       const updatedSideSections = page[side].filter(
         (sec) => sec.name !== sectionToRemove
       );
+      
       updatedPages[pageIndex] = {
         ...page,
         [side]: updatedSideSections,
