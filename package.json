@@ -25,6 +25,7 @@
     "lucide-react": "^0.487.0",
     "next": "^15.2.4",
     "next-auth": "^4.24.11",
+    "pagedjs": "^0.4.3",
     "puppeteer": "^24.10.0",
     "puppeteer-core": "^24.9.0",
     "react": "^19.0.0",

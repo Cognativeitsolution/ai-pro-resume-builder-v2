@@ -40,7 +40,18 @@ export async function POST(req: NextRequest) {
 <link href="https://fonts.googleapis.com/css2?family=Chivo&display=swap" rel="stylesheet">
 
 <link href="https://fonts.googleapis.com/css2?family=Volkhov&display=swap" rel="stylesheet">
-
+ <style>
+            body, html {
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              height: 100%;
+            }
+            .resume-container {
+              width: 100%;
+              height: 100%;
+            }
+          </style>
         </head>
         <body>
           ${html}
@@ -50,7 +61,16 @@ export async function POST(req: NextRequest) {
 
     await page?.setContent(styledHtml, { waitUntil: "networkidle0" });
 
-    const pdfBuffer = await page?.pdf({ format: "A4", printBackground: true });
+    const pdfBuffer = await page?.pdf({ format: "A4", printBackground: true , 
+        margin: {
+    top: '0mm',
+    right: '0mm',
+    bottom: '0mm',
+    left: '0mm',
+  },
+  scale:1,
+  preferCSSPageSize:true
+    });
     await browser?.close();
 
     return new Response(pdfBuffer, {

@@ -119,3 +119,40 @@ body {
     transform: rotateX(240deg) rotateY(45deg) rotateZ(360deg);
   }
 }
+
+
+.resume-container {
+  page-break-after: auto;
+  page-break-inside: avoid;
+}
+
+.section-to-break {
+  page-break-inside: avoid;
+}
+
+/* Ensure the container takes full height */
+.relative.grid.grid-cols-12.shadow-xl {
+  min-height: 100%;
+}
+
+/* Add in your styles or global.css */
+.resume-page {
+  height: 297mm;
+  width: 210mm;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  page-break-after: always;
+}
+
+.resume-left {
+  width: 66.66%;
+  padding: 30px;
+  overflow: hidden;
+}
+
+.resume-right {
+  width: 33.33%;
+  background-color: var(--template-color);
+  padding: 20px;
+}
