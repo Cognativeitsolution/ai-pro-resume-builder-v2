@@ -37,17 +37,19 @@ type ResumePreviewProps = {
 };
 
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
-  const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
-  const { showIcons, showProfile, isDisableIcons, isDisableProfile } = useSelector((state: RootState) => state.addSection);
-  const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
-  const settingsRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
-
+  const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
+  const { userEducation, showIcons, showProfile, isDisableIcons, isDisableProfile } = useSelector((state: RootState) => state.addSection);
+  const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfilePic, setShowProfilePic] = useState(false);
   const [shoeAllIcons, setShoeAllIcons] = useState(false);
   const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
   const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
+  const [enableSpell, setEnableSpell] = useState<boolean>(false);
+
+  const settingsRef = useRef<HTMLDivElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
 
   // font size 
   const scaleFont = (base: number, size: string) => {
@@ -61,14 +63,24 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
 
   // improve Text 
   const getAllText = () => {
-    return addedSections
+    return userEducation
       ?.map((section: any) => {
+        console.log(addedSections, "sssssssssssss");
+
         // Education
         if (section.name === "Education" && Array.isArray(section.detail)) {
           console.log("EDUCATION DEBUG", section.detail);
           return section.detail
             .map((edu: any) =>
               [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
+            )
+            .join(" ");
+        }
+        if (section.name === "Experience" && Array.isArray(section.detail)) {
+          console.log("EXPERIENCE DEBUG", section.detail);
+          return section.detail
+            .map((edu: any) =>
+              [edu.title, edu.description].filter(Boolean).join(" ")
             )
             .join(" ");
         }
@@ -85,10 +97,34 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
 
         return "";
       })
-      .join("\n");
+      .join("abc");
   };
 
   const fullText = getAllText();
+
+  function enablePopup() {
+    setEnableSpell(true);
+  }
+
+  //============= Highlight function
+  const highlightChange = (text: string) => {
+    return text.split(/\s+/).map((word, index) => {
+      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
+      const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
+      const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
+
+      let spanClass = '';
+      if (isSpellingMistake) spanClass += 'text-red-500 bg-red-100';
+      if (isGrammarMistake) spanClass += 'bg-blue-200 underline';
+
+      if (isSpellingMistake || isGrammarMistake) {
+        return `<span class="${spanClass.trim()}" data-highlighted="true" data-word="${word}" key="${index}">${word}</span>`;
+      } else {
+        return word;
+      }
+    }).join(' ');
+  };
+
 
   useEffect(() => {
     const fetchCorrections = async () => {
@@ -133,24 +169,43 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     fetchCorrections();
   }, [spellCheck, grammarCheck, fullText]);
 
-  //============= Highlight function
-  const highlightChange = (text: string) => {
-    return text.split(/\s+/).map((word) => {
-      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
-      const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
-      const isGrammarMistake = grammarCheck && grammarErrors.includes(cleaned);
 
-      let spanClass = '';
-      if (isSpellingMistake) spanClass += 'text-red-500 ';
-      if (isGrammarMistake) spanClass += 'bg-blue-200 underline';
-
-      if (isSpellingMistake || isGrammarMistake) {
-        return `<span class="${spanClass.trim()}">${word}</span>`;
-      } else {
-        return word;
+  // ==================== Detect highlighted word clicks
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target?.dataset?.highlighted === "true") {
+        enablePopup(); // Open popup if highlighted word clicked
       }
-    }).join(' ');
-  };
+    };
+
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  // ==================== Outside click to close popup
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as Node;
+
+      // If not clicking on popup or highlighted word
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(target) &&
+        !(target as HTMLElement)?.dataset?.highlighted
+      ) {
+        setEnableSpell(false); // ✅ Close popup
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
 
   // template redering
   const renderTemplate = () => {
@@ -170,7 +225,12 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
       case "template3":
         return <Template3 incorrectTextChange={highlightChange} scaleFont={scaleFont} currentState={currentState} />;
       case "template6":
-        return <Template6 currentState={currentState} scaleFont={scaleFont} incorrectTextChange={highlightChange} />;
+        return <Template6
+          currentState={currentState}
+          scaleFont={scaleFont}
+          incorrectTextChange={highlightChange}
+          enableSpellCorrection={enableSpell}
+          popupRef2={popupRef} />;
       case "template8":
         return <Template8 currentState={currentState} updateState={updateState} />;
       case "template9":

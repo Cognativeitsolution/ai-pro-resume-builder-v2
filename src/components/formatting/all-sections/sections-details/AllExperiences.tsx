@@ -19,6 +19,8 @@ import AiRobo from "../../aiAssistant/AiRobo";
 import CustomDatePicker from "../../custom/CustomDatePicker";
 import EditableField from "@/components/editor/editable-field";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
+import BotPopup from '../../aiAssistant/BotPopup';
+import { useSpellCorrection } from '@/app/configs/store/useSpellCorrection';
 
 type ExperienceType = {
   title: string;
@@ -42,6 +44,8 @@ type AllExperienceType = {
   textEditorPosition?: any;
   isDot?: any;
   highlightText?: (text: string) => string;
+  popupRef2?: any;
+  enableSpellCorrection?: boolean;
 };
 
 const AllExperiences = ({
@@ -59,9 +63,14 @@ const AllExperiences = ({
   textEditorPosition,
   isDot,
   highlightText,
+  popupRef2,
+  enableSpellCorrection = false,
 }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const { correctedText, correctedWords } = useSpellCorrection(data?.description || '');
+
   const { userExperiences, showIcons } = useSelector(
     (state: RootState) => state.addSection
   );
@@ -75,10 +84,17 @@ const AllExperiences = ({
       location: "",
     },
   ]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showSpellCorrection, setShowSpellCorrection] = useState(enableSpellCorrection); // ✅ local state
 
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true));
+  };
+
+  const handleSpellingCorrection = () => {
+    setShowPopup(false);
+    setShowSpellCorrection(false);
   };
 
   //====== Sync local state with Redux store whenever userExperiences changes
@@ -132,7 +148,36 @@ const AllExperiences = ({
     const updated = experiences.filter((_, i) => i !== index);
     setExperiences(updated);
   };
-  //====== Detect click outside the component to disable editing and save data to Redux
+
+  const highlightCorrectedWords = (text: string): string => {
+    return text.split(/\s+/).map(word => {
+      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
+      if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
+        return `<span class="text-blue-500">${word}</span>`;
+      }
+      return word;
+    }).join(" ");
+  };
+
+
+  // Close AI popup
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        setShowPopup(false);
+      }
+    };
+    if (showPopup) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showPopup]);
+
+  // Close on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -147,6 +192,7 @@ const AllExperiences = ({
             detail: experiences,
           })
         );
+        console.log("Dispatching experiences to Redux:", experiences); // ✅ log here
       }
     };
 
@@ -156,17 +202,7 @@ const AllExperiences = ({
     };
   }, [experiences, dispatch, data?.id]);
 
-  const handleAddFirstExperience = (value: string) => {
-    const newSkill = {
-      title: value.trim(),
-      description: "",
-      companyName: "",
-      location: "",
-    };
-    if (newSkill.title !== "") {
-      setExperiences([newSkill]);
-    }
-  };
+
   const handleMoveUp = (index: number) => {
     if (index <= 0) return;
     const updated = moveItem(experiences, index, index - 1);
@@ -182,6 +218,11 @@ const AllExperiences = ({
     setEditableIndex(index);
     dispatch(sectionEditMode(true));
   };
+
+  useEffect(() => {
+    setShowSpellCorrection(enableSpellCorrection);
+  }, [enableSpellCorrection]);
+
   return (
     <div
       ref={containerRef}
@@ -194,9 +235,8 @@ const AllExperiences = ({
           isTextEditor={true}
           onCopy={handleAddExperience}
           onDelete={handleRemoveSection}
-          mainClass={`transition-all duration-500 ease-in-out ${
-            editable ? "block " : "hidden"
-          }`}
+          mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"
+            }`}
           isVerticleHeader={isVerticleHeader}
           textEditorPosition={
             textEditorPosition ? textEditorPosition : `top-1 left-[25%] `
@@ -213,21 +253,19 @@ const AllExperiences = ({
         {experiences.map((exp, index) => (
           <div
             key={index}
-            className={`relative ${
-              editable && editableIndex === index
-                ? "bg-white rounded-sm"
-                : "bg-transparent"
-            } p-2 transition-colors duration-300`}
+            className={`relative ${editable && editableIndex === index
+              ? "bg-white rounded-sm"
+              : "bg-transparent"
+              } p-2 transition-colors duration-300`}
             onClick={() => handleEditableIndex(index)}
           >
             <div className={`flex flex-col ${index === 0 ? "mt-0" : "mt-2"}`}>
               {/* ====== Job Title ====== */}
               <div
-                className={`flex ${
-                  term2
-                    ? "flex-col items-start justify-start text-left"
-                    : "flex-row items-center justify-between"
-                } `}
+                className={`flex ${term2
+                  ? "flex-col items-start justify-start text-left"
+                  : "flex-row items-center justify-between"
+                  } `}
               >
                 <div className="w-full">
                   <EditableField
@@ -330,7 +368,7 @@ const AllExperiences = ({
                 />
 
                 {/*====== AI Assistant Button ======*/}
-                {editable && editableIndex === index && (
+                {/* {editable && editableIndex === index && (
                   <AiRobo
                     input={false}
                     positionClass="-left-[75px] hover:-left-[159px] top-8"
@@ -340,16 +378,15 @@ const AllExperiences = ({
                         : "Please include more information in your resume and I will help you with improving and tailoring it."
                     }
                   />
-                )}
+                )} */}
               </div>
             </div>
 
             {/* ====== Delete Button ====== */}
             {editable && editableIndex === index && (
               <div
-                className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${
-                  editable ? "opacity-100 " : "opacity-0 "
-                }`}
+                className={`absolute bottom-0 -right-9 gap-1 flex flex-col transition-all duration-300 ease-in-out ${editable ? "opacity-100 " : "opacity-0 "
+                  }`}
               >
                 {experiences?.length > 1 && (
                   <button
@@ -381,6 +418,32 @@ const AllExperiences = ({
           </div>
         ))}
       </div>
+
+      {editable && (
+        <div ref={popupRef}>
+          <AiRobo
+            positionClass="-left-[70px] hover:-left-[154px] top-14"
+            info="Lorem Ipsum is simply dummy text of the printing and typesetting industry..."
+            popupTitle="AI Assistant"
+            popupTitleBtn="Generate"
+          />
+        </div>
+      )}
+
+      {showSpellCorrection && correctedText && (
+        <div ref={popupRef2}>
+          <BotPopup
+            info={highlightCorrectedWords(correctedText) || "No spell mistake found"}
+            popupTitle="Spelling Correction"
+            popupTitleBtn="Apply"
+            popupTheme="red"
+            onClickPopup={handleSpellingCorrection}
+            popupWidth="w-full"
+            popupPosition="top-[110%] -left-[25%]"
+          />
+        </div>
+      )}
+
     </div>
   );
 };

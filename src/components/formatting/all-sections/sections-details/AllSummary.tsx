@@ -5,8 +5,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import SectionToolbar from '../../section-toolbar/SectionToolbar';
 import AiRobo from '../../aiAssistant/AiRobo';
-import axios from 'axios';
-
+import BotPopup from '../../aiAssistant/BotPopup';
+import { useSpellCorrection } from '@/app/configs/store/useSpellCorrection';
 
 type AllSummaryType = {
     data?: any;
@@ -20,9 +20,13 @@ type AllSummaryType = {
     isDot?: any;
     highlightText?: (text: string) => string;
     correctText?: (text: string) => string;
+    popupRef2?: any;
+    enableSpellCorrection?: boolean;
 };
 
-const AllSummary = ({ data = {}, textColor = "#000",
+const AllSummary = ({
+    data = {},
+    textColor = "#000",
     textAltColor = "#000",
     templateColor,
     fontSize,
@@ -31,28 +35,33 @@ const AllSummary = ({ data = {}, textColor = "#000",
     dotPosition,
     isDot,
     highlightText,
-
+    popupRef2,
+    enableSpellCorrection = false,
 }: AllSummaryType) => {
     const dispatch = useDispatch();
     const containerRef = useRef<HTMLDivElement>(null);
+    const popupRef = useRef<HTMLDivElement | null>(null);
+    const { correctedText, correctedWords } = useSpellCorrection(data?.description || '');
+
     const [inputData, setInputData] = useState<string>('');
-    const [inputData2, setInputData2] = useState<string>('');
     const [editable, setEditable] = useState<boolean>(false);
-    const [correctedWords, setCorrectedWords] = useState<string[]>([])
+    const [showPopup, setShowPopup] = useState(false);
+    const [showSpellCorrection, setShowSpellCorrection] = useState(enableSpellCorrection); // ✅ local state
 
-    const handleDataChange = (e: any) => {
-        setInputData(e.target.value);
-    }
-
+    const handleDataChange = (val: string) => {
+        setInputData(val);
+        console.log(val + " aaaaaaaaaaaaaaaaaa");
+    };
 
     const handleEditableSection = () => {
         setEditable(true);
-        dispatch(sectionEditMode(true))
-    }
+        dispatch(sectionEditMode(true));
+    };
 
     const handleSpellingCorrection = () => {
-        setInputData(inputData2);
-        setInputData2("");
+        setInputData(correctedText);
+        setShowPopup(false);
+        setShowSpellCorrection(false);
     };
 
     const highlightCorrectedWords = (text: string): string => {
@@ -65,12 +74,29 @@ const AllSummary = ({ data = {}, textColor = "#000",
         }).join(" ");
     };
 
+    // Close AI popup
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+                setShowPopup(false);
+            }
+        };
+        if (showPopup) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showPopup]);
 
+    // Close on outside click
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setEditable(false);
-                dispatch(sectionEditMode(false))
+                dispatch(sectionEditMode(false));
                 dispatch(addUserSummary({
                     sectionId: data.id,
                     detail: inputData
@@ -90,64 +116,43 @@ const AllSummary = ({ data = {}, textColor = "#000",
     }, [data?.description]);
 
     useEffect(() => {
-        if (data?.description) {
-            const runSpellCorrection = async () => {
-                try {
-                    const res = await axios.post('https://ai.spellcheck.aiproresume.com/api/v1/spell-correction', {
-                        text: data.description
-                    });
-
-                    const correctedData = res.data?.data;
-                    let newText = data.description;
-                    const corrected: string[] = [];
-
-                    correctedData.forEach(({ misspelledWord, correctedWord }: any) => {
-                        const regex = new RegExp(`\\b${misspelledWord}\\b`, 'gi');
-                        newText = newText.replace(regex, correctedWord);
-                        corrected.push(correctedWord);
-                    });
-
-                    setCorrectedWords(corrected);
-                    setInputData2(newText);
-                } catch (err) {
-                    console.error("Initial spell correction error:", err);
-                }
-            };
-
-            runSpellCorrection();
-        }
-    }, [data?.description]);
-
+        setShowSpellCorrection(enableSpellCorrection);
+    }, [enableSpellCorrection]);
 
     return (
-        <div ref={containerRef} className={`p-1 flex flex-col ${editable && 'bg-white rounded-sm'}`} onClick={handleEditableSection}>
+        <div
+            ref={containerRef}
+            className={`p-1 flex flex-col ${editable && 'bg-white rounded-sm'}`}
+            onClick={handleEditableSection}
+        >
             {editable && (
                 <SectionToolbar
                     isTextEditor={true}
-                    mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
+                    mainClass={`transition-all duration-500 ease-in-out ${editable ? "block" : "hidden"}`}
                     isVerticleHeader="hidden"
-                    textEditorPosition={textEditorPosition ? textEditorPosition : `top-1 left-[25%] `}
+                    textEditorPosition={textEditorPosition || "top-1 left-[25%]"}
                     isHeader={false}
                     showDot={true}
                     dotPosition={dotPosition}
                     isDot={isDot}
                 />
             )}
+
             <div className="flex flex-wrap gap-2">
-                {editable ?
-                    <EditableField
-                        html={inputData}
-                        onChange={handleDataChange}
-                        placeholder="Description"
-                        className="bg-transparent"
-                        style={{
-                            color: textColor,
-                            fontSize: fontSize,
-                            fontFamily: fontFamily,
-                        }}
-                        highlightText={highlightText}
-                    />
-                    :
+                {/* {editable ? ( */}
+                <EditableField
+                    html={inputData}
+                    onChange={handleDataChange}
+                    placeholder="Description"
+                    className="bg-transparent"
+                    style={{
+                        color: textColor,
+                        fontSize: fontSize,
+                        fontFamily: fontFamily,
+                    }}
+                    highlightText={highlightText}
+                />
+                {/* ) : (
                     <p
                         className="w-full rounded focus:outline-none focus:ring-0 focus:border-0"
                         style={{
@@ -159,22 +164,35 @@ const AllSummary = ({ data = {}, textColor = "#000",
                             __html: highlightText ? highlightText(inputData) : inputData,
                         }}
                     />
-                }
+                )} */}
             </div>
 
-
             {editable && (
-                <AiRobo
-                    positionClass="-left-[70px] hover:-left-[154px] top-14"
-                    info={highlightCorrectedWords(inputData2) !== "" ? highlightCorrectedWords(inputData2) : "no spell mistake found"}
-                    popupTitle={highlightText ? "Spelling Correction" : "AI Assistant"}
-                    popupTitleBtn="Apply"
-                    popupTheme="red"
-                    onClickPopup={handleSpellingCorrection}
-                />
+                <div ref={popupRef}>
+                    <AiRobo
+                        positionClass="-left-[70px] hover:-left-[154px] top-14"
+                        info="Lorem Ipsum is simply dummy text of the printing and typesetting industry..."
+                        popupTitle="AI Assistant"
+                        popupTitleBtn="Generate"
+                    />
+                </div>
+            )}
+
+            {showSpellCorrection && correctedText && (
+                <div ref={popupRef2}>
+                    <BotPopup
+                        info={highlightCorrectedWords(correctedText) || "No spell mistake found"}
+                        popupTitle="Spelling Correction"
+                        popupTitleBtn="Apply"
+                        popupTheme="red"
+                        onClickPopup={handleSpellingCorrection}
+                        popupWidth="w-full"
+                        popupPosition="top-[110%] -left-[25%]"
+                    />
+                </div>
             )}
         </div>
-    )
+    );
 };
 
-export default AllSummary; 
+export default AllSummary;

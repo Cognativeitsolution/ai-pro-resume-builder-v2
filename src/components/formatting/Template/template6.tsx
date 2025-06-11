@@ -45,9 +45,11 @@ type ResumePreviewProps = {
   currentState: CurrentState;
   scaleFont: any;
   incorrectTextChange: any;
+  enableSpellCorrection: boolean;
+  popupRef2: any
 };
 
-const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePreviewProps) => {
+const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCorrection, popupRef2 }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
     (state: any) => state.addSection
@@ -71,13 +73,7 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
   // ========== Render Sections
   const renderSection = (section: any) => {
     switch (section?.name) {
-      case "Summary":
-        return <AllSummary
-          data={section}
-          fontSize={scaleFont(16, currentState.fontSize)}
-          fontFamily={currentState.fontFamily}
-          highlightText={incorrectTextChange}
-        />;
+
       case "Soft Skills":
         return (
           <AllSoftSkills
@@ -149,8 +145,18 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
             isVerticleHeader={true}
             isDot={false}
             highlightText={incorrectTextChange}
+            popupRef2={popupRef2}
           />
         );
+      case "Summary":
+        return <AllSummary
+          data={section}
+          fontSize={scaleFont(16, currentState.fontSize)}
+          fontFamily={currentState.fontFamily}
+          highlightText={incorrectTextChange}
+          enableSpellCorrection={enableSpellCorrection}
+          popupRef2={popupRef2}
+        />;
       case "Projects":
         return (
           <AllProjects
@@ -421,26 +427,8 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
           <div className="col-span-4 ">
             {/* Profile Image */}
             <div className="px-3  ">
-              {/* <div className="flex justify-center w-40 h-40 mx-auto rounded-full overflow-hidden cursor-pointer">
 
-                <Image
-                  src={imageSrc || placeHolderImage}
-                  alt="Profile"
-                  width={160}
-                  height={160}
-                  className="w-full"
-                  onClick={handleImageClick}
-                />
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-              </div> */}
               {showProfile && <TemplateProfileImg
-              // bgColor={currentState.color}
               />}
             </div>
           </div>
@@ -485,11 +473,6 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
               <p>No sections added yet.</p>
             )}
             <Watermark />
-            {/* {loading && (
-              <p className="text-gray-500 mt-4">
-                Checking for spelling/grammar errors...
-              </p>
-            )} */}
           </div>
           {/* Right Column */}
           <div className="col-span-6 ">
