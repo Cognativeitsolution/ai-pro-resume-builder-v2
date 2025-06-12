@@ -39,6 +39,7 @@ import AllLanguages from "../formatting/all-sections/sections-details/AllLanguag
 import AllCustomSection from "../formatting/all-sections/sections-details/AllCustomSections";
 
 const A4_HEIGHT_PX = 1122;
+// ===========
 
 type CurrentState = {
     fontSize: any;
