@@ -231,7 +231,7 @@ const handleAddVariantToSection = (
     let sectionPageIndex = -1;
     let sectionIndex = -1;
 
-    // Find the target section
+    // Find the target section within the pages
     for (let i = 0; i < updatedPages.length; i++) {
       const page = updatedPages[i];
       const index = page[side].findIndex((sec) => sec.name === secName);
@@ -246,7 +246,7 @@ const handleAddVariantToSection = (
 
     const section = updatedPages[sectionPageIndex][side][sectionIndex];
 
-    // New variant based on section type
+    // Define a new variant item based on section name
     let newDetailItem: any = {};
     switch (secName) {
       case "Education":
@@ -294,10 +294,8 @@ const handleAddVariantToSection = (
         newDetailItem = {};
     }
 
-    // Add the new variant
     section?.detail?.push(newDetailItem);
-
-    // Check for overflow
+console.log(sectionPageIndex)
     const ref = side === "left" ? leftRef : rightRef;
     const pageRef = ref.current[sectionPageIndex]?.getBoundingClientRect();
     const watermarkTop =
@@ -306,6 +304,7 @@ const handleAddVariantToSection = (
     const isOverflow =
       pageRef?.bottom && watermarkTop && pageRef.bottom + 100 > watermarkTop;
 
+    // If overflow occurs, move to the next page
     if (isOverflow) {
       const nextPageIndex = sectionPageIndex + 1;
       if (!updatedPages[nextPageIndex]) {
@@ -315,49 +314,30 @@ const handleAddVariantToSection = (
       const currentPageSections = updatedPages[sectionPageIndex][side];
       const nextPageSections = updatedPages[nextPageIndex][side];
 
-      // Check if there's a section below the current one
-      const belowSections = currentPageSections.slice(sectionIndex + 1);
-      if (belowSections.length > 0) {
-        const firstBelow = belowSections[0];
+      // Move section variants or entire section to the next page
+      const lastSection = currentPageSections[currentPageSections.length - 1];
 
-        // If that section has multiple variants, move one variant
-        if (firstBelow.detail?.length! > 1) {
-          const movedDetail = firstBelow?.detail?.pop();
+      if (lastSection?.detail?.length > 1) {
+        // Move one variant to the next page
+        const movedDetail = lastSection?.detail?.pop(); // Remove the last variant from the current section
 
-          // Check if section exists on next page
-          const nextPageSection = nextPageSections.find(
-            (s) => s.name === firstBelow.name
-          );
-
-          if (nextPageSection) {
-            nextPageSection?.detail?.push(movedDetail);
-          } else {
-            nextPageSections.push({
-              ...firstBelow,
-              detail: [movedDetail],
-            });
-          }
-        } else {
-          // Move entire below section
-          const removed = currentPageSections.splice(sectionIndex + 1, 1)[0];
-          nextPageSections.push(removed);
-        }
-      } else {
-
-        const movedVariant = section?.detail?.pop();
-
+        // Check if this section already exists on the next page
         const nextPageSection = nextPageSections.find(
-          (s) => s.name === section.name
+          (s) => s.name === lastSection.name
         );
 
         if (nextPageSection) {
-          nextPageSection?.detail?.unshift(movedVariant);
+          nextPageSection?.detail?.unshift(movedDetail); // Add the moved detail to the next page's section
         } else {
           nextPageSections.unshift({
-            ...section,
-            detail: [movedVariant],
+            ...lastSection,
+            detail: [movedDetail],
           });
         }
+      } else {
+        // Move entire section to the next page
+        const removed = currentPageSections.pop();
+        nextPageSections.unshift(removed!);
       }
     }
 
@@ -367,11 +347,14 @@ const handleAddVariantToSection = (
 
 
 
+
+
 const handleAddSectionToPages = (
   secName: string,
   pageIndex: number,
   side: "left" | "right"
 ) => {
+  console.log(pageIndex)
   setPages((prevPages) => {
     let pgIndex = prevPages.length - 1;
     const leftSec = leftRef.current[pgIndex]?.getBoundingClientRect();
