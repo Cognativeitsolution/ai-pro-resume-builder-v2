@@ -222,128 +222,221 @@ const HuzaifaTemplate1 = ({
 
   };
 
+const handleAddVariantToSection = (
+  secName: string,
+  side: "left" | "right"
+) => {
+  setPages((prevPages) => {
+    const updatedPages = [...prevPages];
+    let sectionPageIndex = -1;
+    let sectionIndex = -1;
 
-  const handleAddSectionToPages = (
-    secName: string,
-    pageIndex: number,
-    side: "left" | "right"
-  ) => {
-    const leftSec = leftRef.current[pageIndex]?.getBoundingClientRect();
-    const rightSec = rightRef.current[pageIndex]?.getBoundingClientRect();
-    const watermarkTop =
-      watermarkRefs.current[pageIndex]?.getBoundingClientRect()?.top;
-      const rightOverflow = rightSec?.bottom && watermarkTop && rightSec.bottom + 100 > watermarkTop
-      const leftOverflow =   leftSec?.bottom && watermarkTop && leftSec.bottom + 100 > watermarkTop
-    let pgIndex = 0;
-    if (side == "left") {
-      pgIndex =
-        leftSec?.bottom && watermarkTop && leftSec.bottom + 120 > watermarkTop
-          ? pageIndex + 1
-          : pageIndex;
-    }
-    if (side == "right") {
-      pgIndex =
-        rightSec?.bottom && watermarkTop && rightSec.bottom + 120 > watermarkTop
-          ? pageIndex + 1
-          : pageIndex;
+    // Find the target section within the pages
+    for (let i = 0; i < updatedPages.length; i++) {
+      const page = updatedPages[i];
+      const index = page[side].findIndex((sec) => sec.name === secName);
+      if (index !== -1) {
+        sectionPageIndex = i;
+        sectionIndex = index;
+        break;
+      }
     }
 
-    setPages((prevPages) => {
-      const updatedPages = [...prevPages];
+    if (sectionPageIndex === -1 || sectionIndex === -1) return prevPages;
 
-      if (!updatedPages[pgIndex]) {
-        updatedPages[pgIndex] = { left: [], right: [] };
-      }
+    const section = updatedPages[sectionPageIndex][side][sectionIndex];
 
-
-      if(leftOverflow && updatedPages[pageIndex][side].length>1){
-  const lastSec = updatedPages[pageIndex][side].pop();
-  updatedPages[pgIndex][side].unshift(lastSec!);
-   updatedPages
-
-   pgIndex = pageIndex
-}
-
-      const clonedSections = [...updatedPages[pgIndex][side]];
-      const sectionIndex = clonedSections.findIndex((s) => s.name === secName);
-      console.log(sectionIndex, clonedSections);
-
-      let newDetailItem: any = {};
-      switch (secName) {
-        case "Education":
-          newDetailItem = { degree: "", schoolName: "", location: "" };
-          break;
-        case "Experience":
-          newDetailItem = {
-            title: "",
-            description: "",
-            companyName: "",
-            location: "",
-          };
-          break;
-        case "Certificate":
-          newDetailItem = {
-            description: "",
-            institutionName: "",
-            title: "",
-          };
-          break;
-        case "Awards":
-          newDetailItem = { title: "" };
-          break;
-        case "References":
-          newDetailItem = { name: "", contact: "" };
-          break;
-        case "Custom Section":
-          newDetailItem = {
-            companyName: "",
-            description: "",
-            title: "",
-            location: "",
-            icon: "",
-          };
-          break;
-        case "Projects":
-          newDetailItem = {
-            description: "",
-            projectName: "",
-            projectUrl: "",
-            location: "",
-          };
-          break;
-        case "Soft Skills":
-        case "Technical Skills":
-        case "Languages":
-          newDetailItem = {};
-          break;
-        default:
-          newDetailItem = {};
-      }
-
-      if (sectionIndex !== -1) {
-
-        const section = clonedSections[sectionIndex];
-        const existingDetail = Array.isArray(section.detail)
-          ? section.detail
-          : [];
-
-        clonedSections[sectionIndex] = {
-          ...section,
-          detail: [...existingDetail, newDetailItem],
+    // Define a new variant item based on section name
+    let newDetailItem: any = {};
+    switch (secName) {
+      case "Education":
+        newDetailItem = { degree: "", schoolName: "", location: "" };
+        break;
+      case "Experience":
+        newDetailItem = {
+          title: "",
+          description: "",
+          companyName: "",
+          location: "",
         };
-      } else {
- 
-        clonedSections.push({
-          id: Date.now(),
-          name: secName,
-          detail: [newDetailItem],
-        });
+        break;
+      case "Certificate":
+        newDetailItem = {
+          description: "",
+          institutionName: "",
+          title: "",
+        };
+        break;
+      case "Awards":
+        newDetailItem = { title: "" };
+        break;
+      case "References":
+        newDetailItem = { name: "", contact: "" };
+        break;
+      case "Custom Section":
+        newDetailItem = {
+          companyName: "",
+          description: "",
+          title: "",
+          location: "",
+          icon: "",
+        };
+        break;
+      case "Projects":
+        newDetailItem = {
+          description: "",
+          projectName: "",
+          projectUrl: "",
+          location: "",
+        };
+        break;
+      default:
+        newDetailItem = {};
+    }
+
+    section?.detail?.push(newDetailItem);
+console.log(sectionPageIndex)
+    const ref = side === "left" ? leftRef : rightRef;
+    const pageRef = ref.current[sectionPageIndex]?.getBoundingClientRect();
+    const watermarkTop =
+      watermarkRefs.current[sectionPageIndex]?.getBoundingClientRect()?.top;
+
+    const isOverflow =
+      pageRef?.bottom && watermarkTop && pageRef.bottom + 100 > watermarkTop;
+
+    // If overflow occurs, move to the next page
+    if (isOverflow) {
+      const nextPageIndex = sectionPageIndex + 1;
+      if (!updatedPages[nextPageIndex]) {
+        updatedPages[nextPageIndex] = { left: [], right: [] };
       }
 
-      updatedPages[pgIndex][side] = clonedSections;
-      return updatedPages;
+      const currentPageSections = updatedPages[sectionPageIndex][side];
+      const nextPageSections = updatedPages[nextPageIndex][side];
+
+      // Move section variants or entire section to the next page
+      const lastSection = currentPageSections[currentPageSections.length - 1];
+
+      if (lastSection?.detail?.length > 1) {
+        // Move one variant to the next page
+        const movedDetail = lastSection?.detail?.pop(); // Remove the last variant from the current section
+
+        // Check if this section already exists on the next page
+        const nextPageSection = nextPageSections.find(
+          (s) => s.name === lastSection.name
+        );
+
+        if (nextPageSection) {
+          nextPageSection?.detail?.unshift(movedDetail); // Add the moved detail to the next page's section
+        } else {
+          nextPageSections.unshift({
+            ...lastSection,
+            detail: [movedDetail],
+          });
+        }
+      } else {
+        // Move entire section to the next page
+        const removed = currentPageSections.pop();
+        nextPageSections.unshift(removed!);
+      }
+    }
+
+    return updatedPages;
+  });
+};
+
+
+
+
+
+const handleAddSectionToPages = (
+  secName: string,
+  pageIndex: number,
+  side: "left" | "right"
+) => {
+  console.log(pageIndex)
+  setPages((prevPages) => {
+    let pgIndex = prevPages.length - 1;
+    const leftSec = leftRef.current[pgIndex]?.getBoundingClientRect();
+    const rightSec = rightRef.current[pgIndex]?.getBoundingClientRect();
+    const watermarkTop =
+      watermarkRefs.current[pgIndex]?.getBoundingClientRect()?.top;
+
+    const rightOverflow =
+      rightSec?.bottom && watermarkTop && rightSec.bottom + 100 > watermarkTop;
+    const leftOverflow =
+      leftSec?.bottom && watermarkTop && leftSec.bottom + 100 > watermarkTop;
+
+    if (side === "left" && leftOverflow) pgIndex += 1;
+    if (side === "right" && rightOverflow) pgIndex += 1;
+
+    const updatedPages = [...prevPages];
+    if (!updatedPages[pgIndex]) {
+      updatedPages[pgIndex] = { left: [], right: [] };
+    }
+
+    updatedPages.forEach((page) => {
+      page[side] = page[side].filter((section) => section.name !== secName);
     });
-  };
+
+    let newDetailItem: any = {};
+    switch (secName) {
+      case "Education":
+        newDetailItem = { degree: "", schoolName: "", location: "" };
+        break;
+      case "Experience":
+        newDetailItem = {
+          title: "",
+          description: "",
+          companyName: "",
+          location: "",
+        };
+        break;
+      case "Certificate":
+        newDetailItem = {
+          description: "",
+          institutionName: "",
+          title: "",
+        };
+        break;
+      case "Awards":
+        newDetailItem = { title: "" };
+        break;
+      case "References":
+        newDetailItem = { name: "", contact: "" };
+        break;
+      case "Custom Section":
+        newDetailItem = {
+          companyName: "",
+          description: "",
+          title: "",
+          location: "",
+          icon: "",
+        };
+        break;
+      case "Projects":
+        newDetailItem = {
+          description: "",
+          projectName: "",
+          projectUrl: "",
+          location: "",
+        };
+        break;
+      default:
+        newDetailItem = {};
+    }
+
+    const newSection = {
+      id: Date.now(),
+      name: secName,
+      detail: [newDetailItem],
+    };
+
+    updatedPages[pgIndex][side].push(newSection);
+
+    return updatedPages;
+  });
+};
 
   useEffect(() => {
     setPages((prevPages) => {
@@ -501,6 +594,7 @@ const HuzaifaTemplate1 = ({
             isPillStyle={true}
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
+            onAddVar = {()=>handleAddVariantToSection(section.name , "right")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "right")
             }
@@ -522,6 +616,7 @@ const HuzaifaTemplate1 = ({
             isPillStyle={true}
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
+            onAddVar = {()=>handleAddVariantToSection(section.name , "right")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "right")
             }
@@ -541,6 +636,7 @@ const HuzaifaTemplate1 = ({
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
+             onAddVar = {()=>handleAddVariantToSection(section.name , "right")}
             onDelete={() => handleDelSection(section.name, pageIndex, "left")}
             term3={true}
             onRemove={() =>
@@ -555,6 +651,7 @@ const HuzaifaTemplate1 = ({
             onRemove={() =>
               handleRemoveSection(section.name, pageIndex, "left")
             }
+            onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -575,6 +672,7 @@ const HuzaifaTemplate1 = ({
             textAltColor=""
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
+              onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -594,6 +692,7 @@ const HuzaifaTemplate1 = ({
             textAltColor=""
             templateColor=""
             term3={true}
+             onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -613,6 +712,7 @@ const HuzaifaTemplate1 = ({
             fontSize={scaleFont(16, currentState.fontSize)}
             iconSize={scaleFont(13, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+             onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -629,6 +729,7 @@ const HuzaifaTemplate1 = ({
             textColor="#000"
             templateColor={currentState.color}
             textAltColor={currentState.color}
+             onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -647,6 +748,7 @@ const HuzaifaTemplate1 = ({
             editableAltBG="bg-gray-900/80"
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
+             onAddVar = {()=>handleAddVariantToSection(section.name , "right")}
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
@@ -670,6 +772,7 @@ const HuzaifaTemplate1 = ({
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
             term3={true}
+             onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }

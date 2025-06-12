@@ -27,6 +27,7 @@ type ExperienceType = {
 type AllExperienceType = {
   data: {id:number ; name:string; detail:ExperienceType[]};
    onRemove: () => void;
+   onAddVar: () => void;
   onDelete: () => void;
   onAdd: () => void;
   textColor?: string;
@@ -46,6 +47,7 @@ type AllExperienceType = {
 const AllExperiences = ({
   data ,
   onRemove,
+  onAddVar,
   onDelete,
   onAdd,
   textColor = "#000",
@@ -183,7 +185,7 @@ if(data.detail.length ==0 ){
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={()=>onAdd()}
+          onCopy={()=>onAddVar()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
