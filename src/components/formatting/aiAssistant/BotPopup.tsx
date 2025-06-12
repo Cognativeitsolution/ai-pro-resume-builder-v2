@@ -1,4 +1,7 @@
 import React from 'react'
+import { LuDot } from "react-icons/lu";
+import { BiCheckDouble } from "react-icons/bi";
+import { TiDeleteOutline } from "react-icons/ti";
 
 type BotPopupProps = {
     input?: boolean;
@@ -7,9 +10,13 @@ type BotPopupProps = {
     popupTitle?: string;
     popupTheme?: 'indigo' | 'green' | 'red' | 'blue';
     popupTitleBtn?: string;
+    popupTitleBtn2?: string;
     popupWidth?: string;
     popupPosition?: string;
     onClickPopup?: () => void;
+    onClickPopup2?: () => void;
+    btnBackground?: string;
+    btnBackgroundHover?: string
 }
 
 const themeStyles = {
@@ -39,7 +46,7 @@ const themeStyles = {
     },
 };
 
-const BotPopup = ({ input, list, info, popupTitle, popupTheme = 'indigo', popupTitleBtn, popupWidth, popupPosition, onClickPopup }: BotPopupProps) => {
+const BotPopup = ({ input, list, info, popupTitle, popupTheme = 'indigo', popupTitleBtn, popupTitleBtn2, popupWidth, popupPosition, onClickPopup, onClickPopup2, btnBackground, btnBackgroundHover }: BotPopupProps) => {
     const theme = themeStyles[popupTheme];
     return (
         <div className={`w-full h-full absolute z-10 ${popupPosition ? popupPosition : "top-[110%] -left-[45%]"}`}>
@@ -58,20 +65,40 @@ const BotPopup = ({ input, list, info, popupTitle, popupTheme = 'indigo', popupT
                         className={`p-1 bg-transparent w-full ring-[1.5px] ${theme.ring} rounded-sm focus:outline-none`}
                     />
                 )}
-                <ul className="list-disc pl-5 text-sm text-zinc-700">
+                <ul className="list-none pl-2 text-sm text-zinc-700">
                     {Array.isArray(list) && list.length > 0 ? (
                         list.map((item: any, idx: number) => (
-                            <li key={idx}>{item}</li>
+                            <li key={idx} className="mb-1 last:mb-0">
+                                <div className='flex gap-2 items-start'>
+                                    <div className='bg-[#8B8B8F] h-[0.7px] w-4 mt-[8px]'></div>
+                                    {item}
+                                    <BiCheckDouble className=' h-5 w-8' />
+                                    <TiDeleteOutline className=' h-5 w-8' />
+                                </div>
+                            </li>
                         ))
                     ) : (
                         list && <li>{list}</li> // for when `list` is a single string or value
                     )}
                 </ul>
-                <button className={`w-max h-[35px] px-4 rounded-sm flex items-center justify-center ${theme.background} ${theme.backgroundHover} text-white mt-2 transition-all duration-300`}
-                    onClick={onClickPopup}
-                >
-                    {popupTitleBtn}
-                </button>
+                <div className='flex gap-2'>
+                    {popupTitleBtn && (
+                        <button
+                            className={`w-max h-[35px] px-4 rounded-sm flex items-center justify-center ${theme.background} ${theme.backgroundHover} text-white mt-2 transition-all duration-300`}
+                            onClick={onClickPopup}
+                        >
+                            {popupTitleBtn}
+                        </button>
+                    )}
+                    {popupTitleBtn2 && (
+                        <button
+                            className={`w-max h-[35px] px-4 rounded-sm flex items-center justify-center ${btnBackground} ${btnBackgroundHover} text-white mt-2 transition-all duration-300`}
+                            onClick={onClickPopup2}
+                        >
+                            {popupTitleBtn2}
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     )

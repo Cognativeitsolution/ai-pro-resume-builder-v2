@@ -19,6 +19,7 @@ import { RootState } from "@/redux/store";
 import axios from "axios";
 import Template2 from "../Template/template2";
 import HuzaifaTemplate1 from "../Template/huzaifa-template";
+import { setAllGrammarErrors, setAllIncorrectWords } from "@/redux/slices/improveTextSlice";
 
 type CurrentState = {
   fontSize: string;
@@ -39,7 +40,7 @@ type ResumePreviewProps = {
 const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const selectedTemplate = useSelector((state: any) => state.template.selectedTemplate);
-  const { userEducation, showIcons, showProfile, isDisableIcons, isDisableProfile } = useSelector((state: RootState) => state.addSection);
+  const { userSummary, userEducation, userExperiences, userProjects, userCertificates, userLanguages, userAwards, userReferences, userSoft_Skills, userTechnical_Skills, userCustomSections, showIcons, showProfile, isDisableIcons, isDisableProfile } = useSelector((state: RootState) => state.addSection);
   const { spellCheck, grammarCheck } = useSelector((state: any) => state.ImproveText);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfilePic, setShowProfilePic] = useState(false);
@@ -61,49 +62,105 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     return `${base * (scaleMap[size] || 1)}px`;
   };
 
-  // improve Text 
   const getAllText = () => {
-    return userEducation
-      ?.map((section: any) => {
-        console.log(addedSections, "sssssssssssss");
+    let allText = "";
 
-        // Education
-        if (section.name === "Education" && Array.isArray(section.detail)) {
-          console.log("EDUCATION DEBUG", section.detail);
-          return section.detail
-            .map((edu: any) =>
-              [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
-            )
-            .join(" ");
-        }
-        if (section.name === "Experience" && Array.isArray(section.detail)) {
-          console.log("EXPERIENCE DEBUG", section.detail);
-          return section.detail
-            .map((edu: any) =>
-              [edu.title, edu.description].filter(Boolean).join(" ")
-            )
-            .join(" ");
-        }
+    // Summary
+    if (typeof userSummary === "string") {
+      allText += userSummary + " ";
+    }
 
-        // Generic string description support
-        if (typeof section.description === "string") return section.description;
+    // Education
+    if (Array.isArray(userEducation)) {
+      allText += userEducation
+        .map((edu: any) =>
+          [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
+        )
+        .join(" ") + " ";
+    }
 
-        // Fallback for array-based description
-        if (Array.isArray(section.description)) {
-          return section.description
-            .map((item: any) => Object.values(item).join(" "))
-            .join(" ");
-        }
+    // Experience
+    if (Array.isArray(userExperiences)) {
+      allText += userExperiences
+        .map((exp: any) =>
+          [exp.title, exp.companyName, exp.description, exp.location].filter(Boolean).join(" ")
+        )
+        .join(" ") + " ";
+    }
 
-        return "";
-      })
-      .join("abc");
+    // Projects
+    if (Array.isArray(userProjects)) {
+      allText += userProjects
+        .map((proj: any) =>
+          [proj.projectName, proj.description, proj.projectUrl, proj.location].filter(Boolean).join(" ")
+        )
+        .join(" ") + " ";
+    }
+
+    // Certificates
+    if (Array.isArray(userCertificates)) {
+      allText += userCertificates
+        .map((cert: any) =>
+          [cert.title, cert.description, cert.institutionName].filter(Boolean).join(" ")
+        )
+        .join(" ") + " ";
+    }
+
+    // Languages
+    if (Array.isArray(userLanguages)) {
+      allText += userLanguages.join(" ") + " ";
+    }
+
+    // Awards
+    if (Array.isArray(userAwards)) {
+      allText += userAwards
+        .map((award: any) =>
+          Object.values(award).join(" ")
+        )
+        .join(" ") + " ";
+    }
+
+    // References
+    if (Array.isArray(userReferences)) {
+      allText += userReferences
+        .map((ref: any) =>
+          Object.values(ref).join(" ")
+        )
+        .join(" ") + " ";
+    }
+
+    // Soft Skills
+    if (Array.isArray(userSoft_Skills)) {
+      allText += userSoft_Skills.join(" ") + " ";
+    }
+
+    // Technical Skills
+    if (Array.isArray(userTechnical_Skills)) {
+      allText += userTechnical_Skills
+        .map((skill: any) =>
+          typeof skill === 'string' ? skill : skill.title
+        )
+        .join(" ") + " ";
+    }
+
+    // Custom Sections
+    if (Array.isArray(userCustomSections)) {
+      allText += userCustomSections
+        .map((custom: any) =>
+          [custom.title, custom.description, custom.companyName].filter(Boolean).join(" ")
+        )
+        .join(" ") + " ";
+    }
+
+    return allText.trim();
   };
 
   const fullText = getAllText();
+  console.log("🔍 fullText value:", `"${fullText}"`);
 
   function enablePopup() {
-    setEnableSpell(true);
+    setEnableSpell(!enableSpell);
+    console.log(enableSpell, "showSpellCorrection3")
   }
 
   //============= Highlight function
@@ -145,6 +202,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
               (item: any) => item?.misspelledWord
             ) || [];
         }
+        dispatch(setAllIncorrectWords(spellingMistakes));
 
         if (grammarCheck) {
           const grammarResponse = await axios.post(
@@ -155,7 +213,9 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
           grammarMistakes =
             grammarResponse.data?.data?.map((item: any) => item?.wrongWords) ||
             [];
+
         }
+        dispatch(setAllGrammarErrors(grammarMistakes));
 
         setIncorrectWords(spellingMistakes);
         setGrammarErrors(grammarMistakes);
@@ -168,7 +228,6 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
 
     fetchCorrections();
   }, [spellCheck, grammarCheck, fullText]);
-
 
   // ==================== Detect highlighted word clicks
   useEffect(() => {
@@ -230,7 +289,7 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
           scaleFont={scaleFont}
           incorrectTextChange={highlightChange}
           enableSpellCorrection={enableSpell}
-          popupRef2={popupRef} />;
+          popupRefSummary={popupRef} />;
       case "template8":
         return <Template8 currentState={currentState} updateState={updateState} />;
       case "template9":

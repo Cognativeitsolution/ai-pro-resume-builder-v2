@@ -44,7 +44,7 @@ type AllExperienceType = {
   textEditorPosition?: any;
   isDot?: any;
   highlightText?: (text: string) => string;
-  popupRef2?: any;
+  popupRefSummary?: any;
   enableSpellCorrection?: boolean;
 };
 
@@ -63,7 +63,7 @@ const AllExperiences = ({
   textEditorPosition,
   isDot,
   highlightText,
-  popupRef2,
+  popupRefSummary,
   enableSpellCorrection = false,
 }: AllExperienceType) => {
   const dispatch = useDispatch();
@@ -431,7 +431,7 @@ const AllExperiences = ({
       )}
 
       {showSpellCorrection && correctedText && (
-        <div ref={popupRef2}>
+        <div ref={popupRefSummary}>
           <BotPopup
             info={highlightCorrectedWords(correctedText) || "No spell mistake found"}
             popupTitle="Spelling Correction"

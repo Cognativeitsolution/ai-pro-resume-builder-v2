@@ -7,6 +7,7 @@ import SectionToolbar from '../../section-toolbar/SectionToolbar';
 import AiRobo from '../../aiAssistant/AiRobo';
 import BotPopup from '../../aiAssistant/BotPopup';
 import { useSpellCorrection } from '@/app/configs/store/useSpellCorrection';
+import axios from 'axios';
 
 type AllSummaryType = {
     data?: any;
@@ -20,12 +21,12 @@ type AllSummaryType = {
     isDot?: any;
     highlightText?: (text: string) => string;
     correctText?: (text: string) => string;
-    popupRef2?: any;
+    popupRefSummary?: any;
     enableSpellCorrection?: boolean;
 };
 
 const AllSummary = ({
-    data = {},
+    data,
     textColor = "#000",
     textAltColor = "#000",
     templateColor,
@@ -35,22 +36,23 @@ const AllSummary = ({
     dotPosition,
     isDot,
     highlightText,
-    popupRef2,
+    popupRefSummary,
     enableSpellCorrection = false,
 }: AllSummaryType) => {
     const dispatch = useDispatch();
     const containerRef = useRef<HTMLDivElement>(null);
     const popupRef = useRef<HTMLDivElement | null>(null);
-    const { correctedText, correctedWords } = useSpellCorrection(data?.description || '');
-
+    // const [correctedText, setCorrectedText] = useState("");
+    // const [correctedWords, setCorrectedWords] = useState<string[]>([]);
+    const description = typeof data === 'string' ? data : data?.description || '';
+    const { correctedText, correctedWords } = useSpellCorrection(description);
     const [inputData, setInputData] = useState<string>('');
     const [editable, setEditable] = useState<boolean>(false);
     const [showPopup, setShowPopup] = useState(false);
     const [showSpellCorrection, setShowSpellCorrection] = useState(enableSpellCorrection); // ✅ local state
-
+    console.log(data, "data of summary")
     const handleDataChange = (val: string) => {
         setInputData(val);
-        console.log(val + " aaaaaaaaaaaaaaaaaa");
     };
 
     const handleEditableSection = () => {
@@ -64,7 +66,26 @@ const AllSummary = ({
         setShowSpellCorrection(false);
     };
 
+    // const handleSpellingCorrection = () => {
+    //     if (inputData) {
+    //         setInputData(inputData);
+    //         dispatch(addUserSummary({
+    //             sectionId: data.id,
+    //             detail: inputData
+    //         }));
+    //         setInputData("");
+    //         setCorrectedText("");
+    //         setCorrectedWords([]);
+    //         setShowPopup(false);
+    //     }
+    // };
+
+
     const highlightCorrectedWords = (text: string): string => {
+        console.log("highlightCorrectedWords INPUT:", text);
+        console.log("Corrected Words:", correctedWords);
+        if (!text || !correctedWords || correctedWords.length === 0) return text;
+
         return text.split(/\s+/).map(word => {
             const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
             if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
@@ -73,6 +94,17 @@ const AllSummary = ({
             return word;
         }).join(" ");
     };
+
+    // const highlightCorrectedWords = (text: string): string => {
+    //     if (!text) return "";
+    //     return text.split(/\s+/).map(word => {
+    //         const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
+    //         if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
+    //             return `<span class="text-blue-500">${word}</span>`;
+    //         }
+    //         return word;
+    //     }).join(" ");
+    // };
 
     // Close AI popup
     useEffect(() => {
@@ -110,14 +142,53 @@ const AllSummary = ({
     }, [data?.id, dispatch, inputData]);
 
     useEffect(() => {
-        if (data?.description) {
-            setInputData(data.description);
+        if (description) {
+            setInputData(description);
         }
-    }, [data?.description]);
+    }, [description]);
 
+    // Sync props to local state (optional but recommended)
     useEffect(() => {
         setShowSpellCorrection(enableSpellCorrection);
     }, [enableSpellCorrection]);
+
+
+    // Run spell correction
+    // useEffect(() => {
+    //     console.log(data?.description, "data?.description")
+    //     if (data?.description) {
+    //         const runSpellCorrection = async () => {
+    //             try {
+    //                 const res = await axios.post('https://ai.spellcheck.aiproresume.com/api/v1/spell-correction', {
+    //                     text: data.description
+    //                 });
+
+    //                 const correctedData = res.data?.data;
+    //                 let newText = data.description;
+    //                 const corrected: string[] = [];
+
+    //                 correctedData.forEach(({ misspelledWord, correctedWord }: any) => {
+    //                     const regex = new RegExp(`\\b${misspelledWord}\\b`, 'gi');
+    //                     newText = newText.replace(regex, correctedWord);
+    //                     corrected.push(correctedWord);
+    //                 });
+
+    //                 setCorrectedWords(corrected);
+    //                 setInputData(newText);
+    //                 setCorrectedText(newText);
+    //                 if (corrected.length > 0) {
+    //                     setShowPopup(true);
+    //                 }
+    //             } catch (err) {
+    //                 console.error("Spell correction error:", err);
+    //             }
+    //         };
+
+    //         runSpellCorrection();
+    //     }
+    // }, [data?.description]);
+
+
 
     return (
         <div
@@ -152,19 +223,6 @@ const AllSummary = ({
                     }}
                     highlightText={highlightText}
                 />
-                {/* ) : (
-                    <p
-                        className="w-full rounded focus:outline-none focus:ring-0 focus:border-0"
-                        style={{
-                            color: textColor,
-                            fontSize: fontSize,
-                            fontFamily: fontFamily,
-                        }}
-                        dangerouslySetInnerHTML={{
-                            __html: highlightText ? highlightText(inputData) : inputData,
-                        }}
-                    />
-                )} */}
             </div>
 
             {editable && (
@@ -179,7 +237,7 @@ const AllSummary = ({
             )}
 
             {showSpellCorrection && correctedText && (
-                <div ref={popupRef2}>
+                <div ref={popupRefSummary}>
                     <BotPopup
                         info={highlightCorrectedWords(correctedText) || "No spell mistake found"}
                         popupTitle="Spelling Correction"

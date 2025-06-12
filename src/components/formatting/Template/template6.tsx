@@ -46,14 +46,14 @@ type ResumePreviewProps = {
   scaleFont: any;
   incorrectTextChange: any;
   enableSpellCorrection: boolean;
-  popupRef2: any
+  popupRefSummary: any
 };
 
-const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCorrection, popupRef2 }: ResumePreviewProps) => {
+const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCorrection, popupRefSummary }: ResumePreviewProps) => {
   const dispatch = useDispatch();
-  const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
-    (state: any) => state.addSection
-  );
+  const { sectionBgColor, editMode, addedSections, userSummary, userEducation, userExperiences, userProjects, userCertificates, userLanguages, userAwards, userReferences, userSoft_Skills, userTechnical_Skills, userCustomSections, showIcons, showProfile, isDisableIcons, isDisableProfile } = useSelector((state: any) => state.addSection);
+
+  console.log(userSummary, "userSummary")
   const [secName, setSecName] = useState("");
   const [templateBgColor, setTemplateBgColor] = useState<any>("");
   const [editable, setEditable] = useState<boolean>(false);
@@ -72,6 +72,7 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
 
   // ========== Render Sections
   const renderSection = (section: any) => {
+    console.log(section, "section")
     switch (section?.name) {
 
       case "Soft Skills":
@@ -145,17 +146,17 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
             isVerticleHeader={true}
             isDot={false}
             highlightText={incorrectTextChange}
-            popupRef2={popupRef2}
+            popupRefSummary={popupRefSummary}
           />
         );
       case "Summary":
         return <AllSummary
-          data={section}
+          data={userSummary}
           fontSize={scaleFont(16, currentState.fontSize)}
           fontFamily={currentState.fontFamily}
           highlightText={incorrectTextChange}
           enableSpellCorrection={enableSpellCorrection}
-          popupRef2={popupRef2}
+          popupRefSummary={popupRefSummary}
         />;
       case "Projects":
         return (
@@ -330,7 +331,6 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
   }, [leftSections, measured]);
   console.log(pages)
 
-
   useEffect(() => {
     dispatch(disableTemplateIcons(true))
     dispatch(sectionShowProfile(true))
@@ -340,7 +340,6 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
   useEffect(() => {
     setSecName("Custom Section");
   }, []);
-
 
   // ===================
   useEffect(() => {
