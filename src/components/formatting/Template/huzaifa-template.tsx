@@ -237,13 +237,13 @@ const HuzaifaTemplate1 = ({
     let pgIndex = 0;
     if (side == "left") {
       pgIndex =
-        leftSec?.bottom && watermarkTop && leftSec.bottom + 120 > watermarkTop
+        leftSec?.bottom && watermarkTop && leftSec.bottom + 100 > watermarkTop
           ? pageIndex + 1
           : pageIndex;
     }
     if (side == "right") {
       pgIndex =
-        rightSec?.bottom && watermarkTop && rightSec.bottom + 120 > watermarkTop
+        rightSec?.bottom && watermarkTop && rightSec.bottom + 100 > watermarkTop
           ? pageIndex + 1
           : pageIndex;
     }
@@ -261,7 +261,7 @@ const HuzaifaTemplate1 = ({
   updatedPages[pgIndex][side].unshift(lastSec!);
    updatedPages
 
-   pgIndex = pageIndex
+  //  pgIndex = pageIndex
 }
 
       const clonedSections = [...updatedPages[pgIndex][side]];

@@ -56,10 +56,12 @@ const Template1 = ({ currentState }: ResumePreviewProps) => {
   const [headerEditable, setHeaderEditable] = useState<boolean>(false);
   const containerHeaderRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const watermarkRef = useRef<HTMLDivElement>(null);
+  const leftRef = useRef<HTMLDivElement>(null);
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
-
+  const [containerHeight , setContainerHeight] = useState(297)
 
   useEffect(() => {
     setSecName("Custom Section");
@@ -390,6 +392,24 @@ const Template1 = ({ currentState }: ResumePreviewProps) => {
     setPages(newPages);
     setMeasured(true);
   }, [leftSections, measured]);
+
+
+  useEffect(() => {
+    const leftSec = leftRef.current?.getBoundingClientRect().bottom;
+   const waterSec = watermarkRef.current?.getBoundingClientRect().top;
+  const checkOverflowAndGrow = () => {
+  if(leftSec!> waterSec!){
+    setContainerHeight(prev=>prev+containerHeight)
+  }  
+  
+  };
+
+  // Give DOM time to render before measuring
+  const timeout = setTimeout(checkOverflowAndGrow, 100);
+
+  return () => clearTimeout(timeout);
+}, [leftSections, rightSections]); // watch containerHeight too
+
   console.log(pages)
   return (
     <div
@@ -402,9 +422,10 @@ const Template1 = ({ currentState }: ResumePreviewProps) => {
       }}
     >
 
-      <div style={{ minHeight: "297mm", width: "210mm" }} className="relative grid grid-cols-12 shadow-xl ">
+      <div style={{ minHeight: `${containerHeight}mm`, width: "210mm" }} className={`relative grid grid-cols-12 shadow-xl ${!editMode && "bg-white"} `}>
         {/* Left Column */}
-        <div className="col-span-8  pr-8" style={{ padding: "30px" }} >
+       
+        <div className="col-span-8  pr-8" style={{ padding: "30px" ,  height: "297mm" }} >
           {/* Header */}
           <div
             ref={containerHeaderRef}
@@ -435,7 +456,7 @@ const Template1 = ({ currentState }: ResumePreviewProps) => {
               }}
             />
           </div>
-
+ <div className="border" ref={leftRef}>
           {/* Left Sections */}
           {leftSections?.length > 0 ? (
             leftSections.map((section: any, index: number) => (
@@ -473,6 +494,7 @@ const Template1 = ({ currentState }: ResumePreviewProps) => {
           ) : (
             <p>No sections added yet.</p>
           )}
+          <div ref={watermarkRef} className="absolute left-0 bottom-14 border w-full" />
           <Watermark />
           {loading && (
             <p className="text-gray-500 mt-4">
@@ -480,11 +502,12 @@ const Template1 = ({ currentState }: ResumePreviewProps) => {
             </p>
           )}
         </div>
+        </div>
 
         {/* Right Column */}
         <div
           className="col-span-4 px-2  z-10"
-          style={{ backgroundColor: currentState.color, minHeight: "297mm" }}
+          style={{ backgroundColor: currentState.color,height: `${containerHeight}mm` }}
         >
           {/* Profile Image */}
           <div className="p-3 py-12">
