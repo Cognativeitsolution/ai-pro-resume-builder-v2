@@ -76,6 +76,15 @@ const page = ({ sectionData }: { sectionData?: any }) => {
         togglePopup(true);
     };
 
+    const scaleFont = (base: number, size: string) => {
+        const scaleMap: Record<string, number> = {
+            small: 0.85,
+            medium: 1,
+            large: 1.2,
+        };
+        return `${base * (scaleMap[size] || 1)}px`;
+    };
+
     return (
         <TabProvider>
             {popup && <Popup handleAddSec={handleAddSection} sectionData={sectionData} />}
@@ -94,7 +103,7 @@ const page = ({ sectionData }: { sectionData?: any }) => {
                     <TextEditor currentState={currentState} updateState={updateState} />
                 </div>
                 <div className="col-span-8">
-                    <ResumeBuilder />
+                    <ResumeBuilder currentState={currentState} scaleFont={scaleFont} />
                 </div>
             </div>
         </TabProvider>
