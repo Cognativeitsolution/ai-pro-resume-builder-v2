@@ -45,13 +45,15 @@ type ResumePreviewProps = {
   currentState: CurrentState;
   scaleFont: any;
   incorrectTextChange: any;
+  enableSpellCorrection: boolean;
+  popupRefSummary: any
 };
 
-const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePreviewProps) => {
+const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCorrection, popupRefSummary }: ResumePreviewProps) => {
   const dispatch = useDispatch();
-  const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
-    (state: any) => state.addSection
-  );
+  const { sectionBgColor, editMode, addedSections, userSummary, userEducation, userExperiences, userProjects, userCertificates, userLanguages, userAwards, userReferences, userSoft_Skills, userTechnical_Skills, userCustomSections, showIcons, showProfile, isDisableIcons, isDisableProfile } = useSelector((state: any) => state.addSection);
+
+  console.log(userSummary, "userSummary")
   const [secName, setSecName] = useState("");
   const [templateBgColor, setTemplateBgColor] = useState<any>("");
   const [editable, setEditable] = useState<boolean>(false);
@@ -70,14 +72,9 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
 
   // ========== Render Sections
   const renderSection = (section: any) => {
+    console.log(section, "section")
     switch (section?.name) {
-      case "Summary":
-        return <AllSummary
-          data={section}
-          fontSize={scaleFont(16, currentState.fontSize)}
-          fontFamily={currentState.fontFamily}
-          highlightText={incorrectTextChange}
-        />;
+
       case "Soft Skills":
         return (
           <AllSoftSkills
@@ -149,8 +146,18 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
             isVerticleHeader={true}
             isDot={false}
             highlightText={incorrectTextChange}
+            popupRefSummary={popupRefSummary}
           />
         );
+      case "Summary":
+        return <AllSummary
+          data={userSummary}
+          fontSize={scaleFont(16, currentState.fontSize)}
+          fontFamily={currentState.fontFamily}
+          highlightText={incorrectTextChange}
+          enableSpellCorrection={enableSpellCorrection}
+          popupRefSummary={popupRefSummary}
+        />;
       case "Projects":
         return (
           <AllProjects
@@ -324,7 +331,6 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
   }, [leftSections, measured]);
   console.log(pages)
 
-
   useEffect(() => {
     dispatch(disableTemplateIcons(true))
     dispatch(sectionShowProfile(true))
@@ -334,7 +340,6 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
   useEffect(() => {
     setSecName("Custom Section");
   }, []);
-
 
   // ===================
   useEffect(() => {
@@ -421,26 +426,8 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
           <div className="col-span-4 ">
             {/* Profile Image */}
             <div className="px-3  ">
-              {/* <div className="flex justify-center w-40 h-40 mx-auto rounded-full overflow-hidden cursor-pointer">
 
-                <Image
-                  src={imageSrc || placeHolderImage}
-                  alt="Profile"
-                  width={160}
-                  height={160}
-                  className="w-full"
-                  onClick={handleImageClick}
-                />
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-              </div> */}
               {showProfile && <TemplateProfileImg
-              // bgColor={currentState.color}
               />}
             </div>
           </div>
@@ -485,11 +472,6 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange }: ResumePrevi
               <p>No sections added yet.</p>
             )}
             <Watermark />
-            {/* {loading && (
-              <p className="text-gray-500 mt-4">
-                Checking for spelling/grammar errors...
-              </p>
-            )} */}
           </div>
           {/* Right Column */}
           <div className="col-span-6 ">
