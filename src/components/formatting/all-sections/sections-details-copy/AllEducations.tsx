@@ -23,6 +23,7 @@ type AllEducationType = {
   data: { id: number; name: string; detail: EducationDetail[] };
 
   onRemove: () => void;
+  onAddVar: () => void;
   onDelete: () => void;
   onAdd: () => void;
   textColor?: string;
@@ -41,7 +42,7 @@ type AllEducationType = {
 
 const AllEducation = ({
   data,
-
+onAddVar,
   onRemove,
   onDelete,
   onAdd,
@@ -120,7 +121,7 @@ useEffect(() => {
     onAdd();
   }
 }, []);
-
+console.log(data)
   return (
     <div
       ref={containerRef}
@@ -131,7 +132,7 @@ useEffect(() => {
       <SectionToolbar
         isTextEditor={true}
         onCopy={() => {
-          onAdd();
+          onAddVar();
         }}
         onDelete={handleDel}
         mainClass={`transition-all duration-500 ease-in-out ${

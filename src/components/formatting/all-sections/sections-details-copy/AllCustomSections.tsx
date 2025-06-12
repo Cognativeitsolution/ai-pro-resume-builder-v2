@@ -28,6 +28,7 @@ type AllCustomSectionType = {
   onRemove:()=>void;
   onDelete:()=>void;
   onAdd:()=>void;
+  onAddVar:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -49,6 +50,7 @@ const AllCustomSection = ({
   onRemove,
   onDelete,
   onAdd,
+  onAddVar,
   data = {},
   textColor = "#000",
   fontSize,
@@ -190,7 +192,7 @@ useEffect(() => {
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={()=>onAdd()}
+          onCopy={()=>onAddVar()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}

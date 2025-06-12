@@ -30,6 +30,7 @@ type AllProjectsType = {
     onRemove: () => void;
   onDelete: () => void;
   onAdd: () => void;
+  onAddVar: () => void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -46,6 +47,7 @@ const AllProjects = ({
   data,
   onRemove,
   onAdd,
+  onAddVar,
   onDelete,
   textColor = "#000",
   textAltColor = "",
@@ -164,7 +166,7 @@ useEffect(() => {
       {editable && (
         <SectionToolbar
           isTextEditor={true}
-          onCopy={()=>onAdd()}
+          onCopy={()=>onAddVar()}
           onDelete={handleRemoveSection}
           mainClass={`transition-all duration-500 ease-in-out ${editable ? "block " : "hidden"}`}
           isVerticleHeader={isVerticleHeader}
