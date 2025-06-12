@@ -1,0 +1,11 @@
+.floatLabelInput {
+    margin:8px 0 16px 0;     
+ }
+
+.floatLabelInput:focus-within label,
+  .floatLabelInput input:not(:placeholder-shown) + label {
+    transform: translateY(-1.5rem) scale(0.75);
+    background-color: white;
+}
+
+

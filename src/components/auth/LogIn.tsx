@@ -1,6 +1,10 @@
 import Image from 'next/image'
 import React from 'react'
 import img from 'media/images/giffs/loopcv-animation.gif'
+import { H1 } from '../typography'
+import GoogleLogin from '@/components/socialLogins/googleLogin'
+import FBLogin from '@/components/socialLogins/facebookLogin'
+import LinkedInLogin from '@/components/socialLogins/linkedInLogin'
 
 const LogIn = () => {
   return (
@@ -17,7 +21,27 @@ const LogIn = () => {
           </div>
         </div>
         <div className="rightContainer col-span-7 bg-slate-900">
-          dd
+          <div className='border'>
+            <H1 className='text-primaryBlue mb-5'>CREATE ACCOUNT</H1>
+
+            <div className='grid space-y-3 text-white'>
+              <div>
+                {/* <GoogleLogin /> */}
+                sssss
+              </div>
+
+              <div>
+                {/* <FBLogin /> */}
+                ss
+              </div>
+
+              <div>
+                {/* <LinkedInLogin /> */}
+                sss
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
