@@ -238,7 +238,7 @@ const handleAddVariantToSection = (
       if (index !== -1) {
         sectionPageIndex = i;
         sectionIndex = index;
-        break;
+        // break;
       }
     }
 
@@ -295,7 +295,7 @@ const handleAddVariantToSection = (
     }
 
     section?.detail?.push(newDetailItem);
-console.log(sectionPageIndex)
+
     const ref = side === "left" ? leftRef : rightRef;
     const pageRef = ref.current[sectionPageIndex]?.getBoundingClientRect();
     const watermarkTop =
@@ -304,7 +304,7 @@ console.log(sectionPageIndex)
     const isOverflow =
       pageRef?.bottom && watermarkTop && pageRef.bottom + 100 > watermarkTop;
 
-    // If overflow occurs, move to the next page
+
     if (isOverflow) {
       const nextPageIndex = sectionPageIndex + 1;
       if (!updatedPages[nextPageIndex]) {
@@ -314,20 +314,17 @@ console.log(sectionPageIndex)
       const currentPageSections = updatedPages[sectionPageIndex][side];
       const nextPageSections = updatedPages[nextPageIndex][side];
 
-      // Move section variants or entire section to the next page
       const lastSection = currentPageSections[currentPageSections.length - 1];
 
-      if (lastSection?.detail?.length > 1) {
-        // Move one variant to the next page
-        const movedDetail = lastSection?.detail?.pop(); // Remove the last variant from the current section
-
-        // Check if this section already exists on the next page
+      if (lastSection?.detail?.length! > 1) {
+    
+        const movedDetail = lastSection?.detail?.pop();  
         const nextPageSection = nextPageSections.find(
           (s) => s.name === lastSection.name
         );
 
         if (nextPageSection) {
-          nextPageSection?.detail?.unshift(movedDetail); // Add the moved detail to the next page's section
+          nextPageSection?.detail?.unshift(movedDetail); 
         } else {
           nextPageSections.unshift({
             ...lastSection,
