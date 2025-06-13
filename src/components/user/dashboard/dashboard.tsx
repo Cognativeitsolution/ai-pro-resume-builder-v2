@@ -1,12 +1,12 @@
 import React from 'react'
-import DashboardLayout from '../userDashboard/dashboardLayout'
+import OverviewCards from './overviewCards';
 
 const Dashboard = () => {
   return (
-   <>
-   heyy
-   </>
-  )
-}
+<div>
+<OverviewCards/>
+  </div>
+  );
+};
 
-export default Dashboard
+export default Dashboard;

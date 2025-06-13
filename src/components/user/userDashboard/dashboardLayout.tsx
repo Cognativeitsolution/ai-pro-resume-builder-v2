@@ -35,7 +35,7 @@ const DashboardLayout = () => {
   return (
     <div className="flex">
       <UserDashboard activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="flex-1 ml-48 lg:ml-72 min-h-screen bg-white">
+      <div className="flex-1 ml-48 lg:ml-72 min-h-screen bg-gray-100/80">
         <UserHeader />
         <div className="p-5">
           {renderComponent()}
