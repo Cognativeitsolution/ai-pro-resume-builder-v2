@@ -18,7 +18,8 @@ import AllReferences from "../all-sections/sections-details-copy/AllReferences";
 import AllCustomSection from "../all-sections/sections-details-copy/AllCustomSections";
 import Watermark from "@/components/common/watermark/watermark";
 import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
-
+import { RootState } from "@/redux/store";
+import { addSectionToPage, addVariantToSection, removeSectionFromPage, removeVariantFromSection, setPages } from "@/redux/slices/pageSlice";
 type CurrentState = {
   fontSize: any;
   fontFamily: string;
@@ -128,13 +129,7 @@ const HuzaifaTemplate1 = ({ currentState }: ResumePreviewProps) => {
   const leftRef = useRef<(HTMLDivElement | null)[]>([]);
   const rightRef = useRef<(HTMLDivElement | null)[]>([]);
   const watermarkRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [pages, setPages] = useState<Page[]>([
-    {
-      left: [],
-      right: [],
-    },
-  ]);
-
+  const { pages } = useSelector((state: RootState) => state.pages); 
   const [activePageIndex, setActivePageIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -231,335 +226,344 @@ const HuzaifaTemplate1 = ({ currentState }: ResumePreviewProps) => {
   });
 };
 
+ const handleRemoveSection = (
+  sectionToRemove: string,
+  _pageIndex: number,
+  side: "left" | "right"
+) => {
+  
+  const prevPages = pages; 
 
-  const handleRemoveSection = (
-    sectionToRemove: string,
-    _pageIndex: number,
-    side: "left" | "right"
-  ) => {
-    setPages((prevPages) => {
-      const newPages = prevPages.map((pg) => ({ ...pg }));
+  const newPages = prevPages.map((pg) => ({
+    left: [...pg.left],
+    right: [...pg.right],
+  }));
 
-      const removeOneOrSection = (sections: any[]) => {
-        return sections
-          .map((sec) => {
-            if (sec.name !== sectionToRemove) return sec;
-            if (Array.isArray(sec.detail) && sec.detail.length > 1) {
-              return { ...sec, detail: sec.detail.slice(0, -1) };
-            }
-            return null;
-          })
-          .filter(Boolean);
-      };
-      const active = newPages[activePageIndex!];
-      if (!active) return prevPages;
+  const removeOneOrSection = (sections: any[]) => {
+    return sections
+      .map((sec) => {
+        if (sec.name !== sectionToRemove) return sec;
+        if (Array.isArray(sec.detail) && sec.detail.length > 1) {
+          return { ...sec, detail: sec.detail.slice(0, -1) };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  };
 
-      if (side === "left") {
-        active.left = removeOneOrSection(active.left);
+  const active = newPages[activePageIndex!];
+  if (!active) return;
+
+  if (side === "left") {
+    active.left = removeOneOrSection(active.left);
+  } else {
+    active.right = removeOneOrSection(active.right);
+  }
+
+  for (let i = activePageIndex!; i < newPages.length - 1; i++) {
+    const currentPage = newPages[i];
+    const nextPage = newPages[i + 1];
+    if (!currentPage || !nextPage) continue;
+
+    const ref = side === "left" ? leftRef.current[i] : rightRef.current[i];
+    const watermark = watermarkRefs.current[i];
+    if (!ref || !watermark) continue;
+
+    const currentBottom = ref.getBoundingClientRect().bottom;
+    const watermarkTop = watermark.getBoundingClientRect().top;
+    const hasSpace = watermarkTop > currentBottom;
+    if (!hasSpace) break;
+
+    const fromSections = nextPage[side];
+    const toSections = currentPage[side];
+
+    const foundIdx = fromSections.findIndex(
+      (sec) => Array.isArray(sec.detail) && sec.detail.length > 0
+    );
+    if (foundIdx === -1) continue;
+
+    const fromSec = fromSections[foundIdx];
+    const toSecIdx = toSections.findIndex((sec) => sec.name === fromSec.name);
+
+    if (fromSec.detail.length > 1) {
+      const movedVariant = fromSec.detail[0];
+      fromSec.detail = fromSec.detail.slice(1);
+
+      if (toSecIdx !== -1) {
+        toSections[toSecIdx].detail.push(movedVariant);
       } else {
-        active.right = removeOneOrSection(active.right);
+        toSections.push({
+          ...fromSec,
+          detail: [movedVariant],
+        });
       }
-      for (let i = activePageIndex!; i < newPages.length - 1; i++) {
-        const currentPage = newPages[i];
-        const nextPage = newPages[i + 1];
-        if (!currentPage || !nextPage) continue;
-
-        const ref = side === "left" ? leftRef.current[i] : null;
-        const watermark = watermarkRefs.current[i];
-        if (!ref || !watermark) continue;
-
-        const currentBottom = ref.getBoundingClientRect().bottom;
-        const watermarkTop = watermark.getBoundingClientRect().top;
-        const hasSpace = watermarkTop  > currentBottom;
-        if (!hasSpace) break;
-
-        const fromSections = nextPage[side];
-        const toSections = currentPage[side];
-
-        const foundIdx = fromSections.findIndex(
-          (sec) => Array.isArray(sec.detail) && sec.detail.length > 0
-        );
-        if (foundIdx === -1) continue;
-
-        const fromSec = fromSections[foundIdx];
-        const toSecIdx = toSections.findIndex(
-          (sec) => sec.name === fromSec.name
-        );
-
-        if (fromSec?.detail?.length! > 1) {
-          // Move one variant
-          const movedVariant = fromSec?.detail?.[0];
-          fromSec.detail = fromSec?.detail?.slice(1);
-
-          if (toSecIdx !== -1) {
-            toSections[toSecIdx]?.detail?.push(movedVariant);
-          } else {
-            toSections.push({
-              ...fromSec,
-              detail: [movedVariant],
-            });
-          }
-        } else {
-          // Move entire section
-          if (toSecIdx !== -1) {
-            toSections[toSecIdx].detail?.push(...fromSec.detail!);
-          } else {
-            toSections.push(fromSec);
-          }
-          fromSections.splice(foundIdx, 1);
-        }
-
-        // 3. If next page is now empty, remove it
-        const nextLeftEmpty = nextPage.left.length === 0;
-        const nextRightEmpty = nextPage.right.length === 0;
-
-        if (nextLeftEmpty && nextRightEmpty) {
-          newPages.splice(i + 1, 1);
-        }
+    } else {
+      if (toSecIdx !== -1) {
+        toSections[toSecIdx].detail.push(...fromSec.detail);
+      } else {
+        toSections.push(fromSec);
       }
+      fromSections.splice(foundIdx, 1);
+    }
 
-      return newPages;
-    });
-  };
+    const nextLeftEmpty = nextPage.left.length === 0;
+    const nextRightEmpty = nextPage.right.length === 0;
+    if (nextLeftEmpty && nextRightEmpty) {
+      newPages.splice(i + 1, 1);
+    }
+  }
 
-  const handleAddVariantToSection = (
-    secName: string,
-    side: "left" | "right"
-  ) => {
-    setPages((prevPages) => {
-      const updatedPages = [...prevPages];
-      let sectionPageIndex = -1;
-      let sectionIndex = -1;
+  dispatch(setPages(newPages));
+};
 
-      for (let i = 0; i < updatedPages.length; i++) {
-        const page = updatedPages[i];
-        const index = page[side].findIndex((sec) => sec.name === secName);
-        if (index !== -1) {
-          sectionPageIndex = i;
-          sectionIndex = index;
-          // break;
-        }
+ 
+const handleAddVariantToSection = (secName: string, side: "left" | "right") => {
+
+  const updatedPages = JSON.parse(JSON.stringify(pages)); 
+  let sectionPageIndex = -1;
+  let sectionIndex = -1;
+
+  for (let i = 0; i < updatedPages.length; i++) {
+    const page = updatedPages[i];
+    const index = page[side].findIndex((sec:any) => sec.name === secName);
+    if (index !== -1) {
+      sectionPageIndex = i;
+      sectionIndex = index;
+    }
+  }
+
+  if (sectionPageIndex === -1 || sectionIndex === -1) return;
+
+  const section = updatedPages[sectionPageIndex][side][sectionIndex];
+
+  let newDetailItem: any = {};
+  switch (secName) {
+    case "Education":
+      newDetailItem = { degree: "", schoolName: "", location: "" };
+      break;
+    case "Experience":
+      newDetailItem = {
+        title: "",
+        description: "",
+        companyName: "",
+        location: "",
+      };
+      break;
+    case "Certificate":
+      newDetailItem = {
+        description: "",
+        institutionName: "",
+        title: "",
+      };
+      break;
+    case "Awards":
+      newDetailItem = { title: "" };
+      break;
+    case "References":
+      newDetailItem = { name: "", contact: "" };
+      break;
+    case "Custom Section":
+      newDetailItem = {
+        companyName: "",
+        description: "",
+        title: "",
+        location: "",
+        icon: "",
+      };
+      break;
+    case "Projects":
+      newDetailItem = {
+        description: "",
+        projectName: "",
+        projectUrl: "",
+        location: "",
+      };
+      break;
+    default:
+      newDetailItem = {};
+  }
+
+  section?.detail?.push(newDetailItem);
+
+  const ref = side === "left" ? leftRef : rightRef;
+  const pageRef = ref.current[sectionPageIndex]?.getBoundingClientRect();
+  const watermarkTop =
+    watermarkRefs.current[sectionPageIndex]?.getBoundingClientRect()?.top;
+
+  const isOverflow =
+    pageRef?.bottom && watermarkTop && pageRef.bottom + 100 > watermarkTop;
+
+  if (isOverflow) {
+    const nextPageIndex = sectionPageIndex + 1;
+    if (!updatedPages[nextPageIndex]) {
+      updatedPages[nextPageIndex] = { left: [], right: [] };
+    }
+
+    const currentPageSections = updatedPages[sectionPageIndex][side];
+    const nextPageSections = updatedPages[nextPageIndex][side];
+
+    const lastSection = currentPageSections[currentPageSections.length - 1];
+
+    if (lastSection?.detail?.length > 1) {
+      const movedDetail = lastSection.detail.pop();
+      const nextPageSection = nextPageSections.find(
+        (s:any) => s.name === lastSection.name
+      );
+
+      if (nextPageSection) {
+        nextPageSection.detail.unshift(movedDetail);
+      } else {
+        nextPageSections.unshift({
+          ...lastSection,
+          detail: [movedDetail],
+        });
       }
+    } else {
+      const removed = currentPageSections.pop();
+      nextPageSections.unshift(removed!);
+    }
+  }
 
-      if (sectionPageIndex === -1 || sectionIndex === -1) return prevPages;
+  dispatch(setPages(updatedPages));
+};
 
-      const section = updatedPages[sectionPageIndex][side][sectionIndex];
 
-      let newDetailItem: any = {};
-      switch (secName) {
-        case "Education":
-          newDetailItem = { degree: "", schoolName: "", location: "" };
-          break;
-        case "Experience":
-          newDetailItem = {
-            title: "",
-            description: "",
-            companyName: "",
-            location: "",
-          };
-          break;
-        case "Certificate":
-          newDetailItem = {
-            description: "",
-            institutionName: "",
-            title: "",
-          };
-          break;
-        case "Awards":
-          newDetailItem = { title: "" };
-          break;
-        case "References":
-          newDetailItem = { name: "", contact: "" };
-          break;
-        case "Custom Section":
-          newDetailItem = {
-            companyName: "",
-            description: "",
-            title: "",
-            location: "",
-            icon: "",
-          };
-          break;
-        case "Projects":
-          newDetailItem = {
-            description: "",
-            projectName: "",
-            projectUrl: "",
-            location: "",
-          };
-          break;
-        default:
-          newDetailItem = {};
-      }
-
-      section?.detail?.push(newDetailItem);
-
-      const ref = side === "left" ? leftRef : rightRef;
-      const pageRef = ref.current[sectionPageIndex]?.getBoundingClientRect();
-      const watermarkTop =
-        watermarkRefs.current[sectionPageIndex]?.getBoundingClientRect()?.top;
-
-      const isOverflow =
-        pageRef?.bottom && watermarkTop && pageRef.bottom + 100 > watermarkTop;
-
-      if (isOverflow) {
-        const nextPageIndex = sectionPageIndex + 1;
-        if (!updatedPages[nextPageIndex]) {
-          updatedPages[nextPageIndex] = { left: [], right: [] };
-        }
-
-        const currentPageSections = updatedPages[sectionPageIndex][side];
-        const nextPageSections = updatedPages[nextPageIndex][side];
-
-        const lastSection = currentPageSections[currentPageSections.length - 1];
-
-        if (lastSection?.detail?.length! > 1) {
-          const movedDetail = lastSection?.detail?.pop();
-          const nextPageSection = nextPageSections.find(
-            (s) => s.name === lastSection.name
-          );
-
-          if (nextPageSection) {
-            nextPageSection?.detail?.unshift(movedDetail);
-          } else {
-            nextPageSections.unshift({
-              ...lastSection,
-              detail: [movedDetail],
-            });
-          }
-        } else {
-          const removed = currentPageSections.pop();
-          nextPageSections.unshift(removed!);
-        }
-      }
-
-      return updatedPages;
-    });
-  };
-
-  const handleAddSectionToPages = (
+const handleAddSectionToPages = (
   secName: string,
   _pageIndex: number,
   side: "left" | "right"
 ) => {
-  setPages((prevPages) => {
-    const updatedPages = [...prevPages];
 
-    let targetPageIndex = -1;
-    for (let i = 0; i < updatedPages.length; i++) {
-      const ref = side === "left" ? leftRef.current[i] : rightRef.current[i];
-      const watermark = watermarkRefs.current[i];
-      if (!ref || !watermark) continue;
 
-      const secBottom = ref.getBoundingClientRect()?.bottom;
-      const watermarkTop = watermark.getBoundingClientRect()?.top;
+  let targetPageIndex = -1;
+  for (let i = 0; i < pages.length; i++) {
+    const ref = side === "left" ? leftRef.current[i] : rightRef.current[i];
+    const watermark = watermarkRefs.current[i];
+    if (!ref || !watermark) continue;
 
-      if (secBottom && watermarkTop && secBottom < watermarkTop) {
-        targetPageIndex = i;
-        break;
-      }
+    const secBottom = ref.getBoundingClientRect()?.bottom;
+    const watermarkTop = watermark.getBoundingClientRect()?.top;
+
+    if (secBottom && watermarkTop && secBottom < watermarkTop) {
+      targetPageIndex = i;
+      break;
     }
-    if (targetPageIndex === -1) {
-      targetPageIndex = updatedPages.length;
-      updatedPages[targetPageIndex] = { left: [], right: [] };
-    }
+  }
 
-    updatedPages.forEach((page) => {
-      page[side] = page[side].filter((section) => section.name !== secName);
+  if (targetPageIndex === -1) {
+    targetPageIndex = pages.length;
+
+    dispatch({
+      type: 'pages/setPages',
+      payload: [
+        ...pages,
+        { left: [], right: [] }
+      ]
     });
+  }
 
-    let newDetailItem: any = {};
-    switch (secName) {
-      case "Education":
-        newDetailItem = { degree: "", schoolName: "", location: "" };
-        break;
-      case "Experience":
-        newDetailItem = {
-          title: "",
-          description: "",
-          companyName: "",
-          location: "",
-        };
-        break;
-      case "Certificate":
-        newDetailItem = {
-          description: "",
-          institutionName: "",
-          title: "",
-        };
-        break;
-      case "Awards":
-        newDetailItem = { title: "" };
-        break;
-      case "References":
-        newDetailItem = { name: "", contact: "" };
-        break;
-      case "Custom Section":
-        newDetailItem = {
-          companyName: "",
-          description: "",
-          title: "",
-          location: "",
-          icon: "",
-        };
-        break;
-      case "Projects":
-        newDetailItem = {
-          description: "",
-          projectName: "",
-          projectUrl: "",
-          location: "",
-        };
-        break;
-      default:
-        newDetailItem = {};
-    }
-
-    const newSection = {
-      id: Date.now(),
-      name: secName,
-      detail: [newDetailItem],
-    };
-
-    updatedPages[targetPageIndex][side].push(newSection);
-
-    return updatedPages;
+  pages.forEach((_, pageIndex) => {
+    dispatch(removeSectionFromPage({
+      sectionName: secName,
+      pageIndex,
+      side,
+    }));
   });
+
+  let newDetailItem: any = {};
+  switch (secName) {
+    case "Education":
+      newDetailItem = { degree: "", schoolName: "", location: "" };
+      break;
+    case "Experience":
+      newDetailItem = {
+        title: "",
+        description: "",
+        companyName: "",
+        location: "",
+      };
+      break;
+    case "Certificate":
+      newDetailItem = {
+        description: "",
+        institutionName: "",
+        title: "",
+      };
+      break;
+    case "Awards":
+      newDetailItem = { title: "" };
+      break;
+    case "References":
+      newDetailItem = { name: "", contact: "" };
+      break;
+    case "Custom Section":
+      newDetailItem = {
+        companyName: "",
+        description: "",
+        title: "",
+        location: "",
+        icon: "",
+      };
+      break;
+    case "Projects":
+      newDetailItem = {
+        description: "",
+        projectName: "",
+        projectUrl: "",
+        location: "",
+      };
+      break;
+    default:
+      newDetailItem = {};
+  }
+
+  const newSection = {
+    id: Date.now(),
+    name: secName,
+    detail: [newDetailItem],
+  };
+
+  dispatch(addSectionToPage({
+    section: newSection,
+    pageIndex: targetPageIndex,
+    side,
+  }));
 };
 
-  useEffect(() => {
-    setPages((prevPages) => {
-      const updatedPages = [...prevPages];
 
-      const existingSectionNames = new Set(
-        updatedPages.flatMap((page) =>
-          [...page.left, ...page.right].map((sec) => sec.name)
-        )
-      );
+useEffect(() => {
+  if (!addedSections?.length) return;
 
-      const newSections = addedSections.filter(
-        (section: any) => !existingSectionNames.has(section.name)
-      );
+  const existingSectionNames = new Set(
+    pages.flatMap((page) =>
+      [...page.left, ...page.right].map((sec) => sec.name)
+    )
+  );
 
-      if (newSections.length === 0) return prevPages;
+  const newSections = addedSections.filter(
+    (section: any) => !existingSectionNames.has(section.name)
+  );
 
-      newSections.forEach((section: any) => {
-        const side = rightSideSections.includes(section.name)
-          ? "right"
-          : "left";
-        const firstPage = updatedPages[0];
+  if (newSections.length === 0) return;
 
-        const sectionData = {
-          ...section,
-          detail: Array.isArray(section.detail) ? section.detail : [],
-        };
+  newSections.forEach((section: any) => {
+    const side = rightSideSections.includes(section.name) ? "right" : "left";
+    const sectionData = {
+      ...section,
+      detail: Array.isArray(section.detail) ? section.detail : [],
+    };
 
-        firstPage[side].push(sectionData);
-      });
+    dispatch(
+      addSectionToPage({
+        section: sectionData,
+        pageIndex: 0,
+        side,
+      })
+    );
+  });
+}, [addedSections, pages, dispatch]);
 
-      return updatedPages;
-    });
-  }, [addedSections]);
+
 
   const HandleChangeSectionName = (data: any) => {
     setSecName(data);

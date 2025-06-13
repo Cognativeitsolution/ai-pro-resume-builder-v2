@@ -23,9 +23,11 @@ type RightSection =
   | { id: 6; name: "Soft Skills"; detail: any[] }
   | { id: 7; name: "Technical Skills"; detail: any[] };
 
+  type Section = {id:number; name:string; detail? : any[]}
+
 interface Page {
-  left: LeftSection[];
-  right: RightSection[];
+  left: Section[];
+  right: Section[];
 }
 
 interface PagesState {
@@ -33,7 +35,7 @@ interface PagesState {
 }
 
 interface AddSectionPayload {
-  section: LeftSection | RightSection;
+  section:  Section;
   pageIndex: number;
   side: "left" | "right";
 }
@@ -54,7 +56,7 @@ const initialState: PagesState = {
   ],
 };
 
-const pagesSlice = createSlice({
+export const pagesSlice = createSlice({
   name: 'pages',
   initialState,
   reducers: {
@@ -78,12 +80,12 @@ const pagesSlice = createSlice({
       if (side === 'left') {
         const section = page.left.find((sec) => sec.name === sectionName);
         if (section) {
-          section.detail.push(newVariant);
+          section.detail?.push(newVariant);
         }
       } else {
         const section = page.right.find((sec) => sec.name === sectionName);
         if (section) {
-          section.detail.push(newVariant);
+          section.detail?.push(newVariant);
         }
       }
     },
@@ -104,13 +106,13 @@ const pagesSlice = createSlice({
 
       if (side === 'left') {
         const section = page.left.find((sec) => sec.name === sectionName);
-        if (section && section?.detail.length > variantIndex) {
-          section.detail.splice(variantIndex, 1);
+        if (section && section?.detail?.length! > variantIndex) {
+          section.detail?.splice(variantIndex, 1);
         }
       } else {
         const section = page.right.find((sec) => sec.name === sectionName);
-        if (section && section.detail.length > variantIndex) {
-          section.detail.splice(variantIndex, 1);
+        if (section && section.detail?.length! > variantIndex) {
+          section.detail?.splice(variantIndex, 1);
         }
       }
     },
