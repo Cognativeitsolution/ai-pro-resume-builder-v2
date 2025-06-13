@@ -347,7 +347,7 @@ const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextCh
       <div style={{ minHeight: "332mm", width: "235mm" }}
         className={`relative grid grid-cols-12  shadow-xl ${editMode ? "bg-transparent" : "bg-white"}`}>
         {/* Left Column */}
-        <div className="col-span-8" style={{ padding: "30px", paddingRight: "40px" }} >
+        <div className="col-span-8 p-[30px] pr-10">
           {/* Header */}
           <div
             ref={containerHeaderRef}
@@ -434,11 +434,11 @@ const Template1 = ({ currentState, scaleFont, incorrectTextChange, correctTextCh
 
         {/* Right Column */}
         <div
-          className="col-span-4 px-2  z-10"
+          className="col-span-4 px-2 pt-[30px] z-10"
           style={{ backgroundColor: currentState.color, minHeight: "297mm" }}
         >
           {/* Profile Image */}
-          <div className="p-3 py-12">
+          <div className="px-3 pb-12">
             {showProfile && <TemplateProfileImg
             // bgColor={currentState.color}
             />

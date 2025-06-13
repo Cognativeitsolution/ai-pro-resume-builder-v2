@@ -7,10 +7,6 @@ import { setColumn, setList } from "@/redux/slices/rearrangeSlice";
 import { addUserHeader, disableTemplateIcons, disableTemplateProfile, sectionEditMode, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 // ============
 import { BookUser, LucideGraduationCap, Mail, Phone } from "lucide-react";
-// ============
-
-import Watermark from "@/components/common/watermark/watermark";
-import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
 import { FaSchool } from "react-icons/fa";
 import { GrUserExpert } from "react-icons/gr";
 import { GrProjects } from "react-icons/gr";
@@ -25,22 +21,24 @@ import { IoMdMail } from "react-icons/io";
 import { FaAward } from "react-icons/fa6";
 import { IoDocumentText, IoPeople } from "react-icons/io5";
 import { RiContactsBook3Fill } from "react-icons/ri";
+// ============
 import ResumePage from "./ResumePage";
-import AllSummary from "../formatting/all-sections/sections-details/AllSummary";
-import AllSoftSkills from "../formatting/all-sections/sections-details/AllSoftSkills";
-import AllTechnicalSkills from "../formatting/all-sections/sections-details/AllTechnicalSkills";
-import AllCertificates from "../formatting/all-sections/sections-details/AllCertificates";
-import AllEducations from "../formatting/all-sections/sections-details/AllEducations";
-import AllExperiences from "../formatting/all-sections/sections-details/AllExperiences";
-import AllProjects from "../formatting/all-sections/sections-details/AllProjects";
+import Watermark from "@/components/common/watermark/watermark";
 import AllAwards from "../formatting/all-sections/sections-details/AllAwards";
-import AllReferences from "../formatting/all-sections/sections-details/AllReferences";
+import AllSummary from "../formatting/all-sections/sections-details/AllSummary";
+import AllProjects from "../formatting/all-sections/sections-details/AllProjects";
 import AllLanguages from "../formatting/all-sections/sections-details/AllLanguages";
+import AllSoftSkills from "../formatting/all-sections/sections-details/AllSoftSkills";
+import AllEducations from "../formatting/all-sections/sections-details/AllEducations";
+import AllReferences from "../formatting/all-sections/sections-details/AllReferences";
+import AllExperiences from "../formatting/all-sections/sections-details/AllExperiences";
+import AllCertificates from "../formatting/all-sections/sections-details/AllCertificates";
 import AllCustomSection from "../formatting/all-sections/sections-details/AllCustomSections";
+import AllTechnicalSkills from "../formatting/all-sections/sections-details/AllTechnicalSkills";
+// ============
+import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
 
-const A4_HEIGHT_PX = 1122;
 // ===========
-
 type CurrentState = {
     fontSize: any;
     fontFamily: string;
@@ -50,14 +48,14 @@ type CurrentState = {
     padding: number;
     text: any;
 };
-
+// ===========
 type ResumePreviewProps = {
     currentState: CurrentState;
     scaleFont: any;
     incorrectTextChange?: any;
     correctTextChange?: any;
 }
-
+// ===========
 type ResumeSectionData = {
     type: string;
     entries: string[];
@@ -66,9 +64,7 @@ type ResumeSectionData = {
 export default function ResumeBuilder({ currentState, scaleFont, incorrectTextChange, correctTextChange }: ResumePreviewProps) {
 
     const dispatch = useDispatch();
-    const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector(
-        (state: any) => state.addSection
-    );
+    const { addedSections, sectionBgColor, editMode, showProfile, showIcons } = useSelector((state: any) => state.addSection);
     const [secName, setSecName] = useState("");
     const [templateBgColor, setTemplateBgColor] = useState<any>("");
     const [editable, setEditable] = useState<boolean>(false);
@@ -78,12 +74,11 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
     const [headerData, setHeaderData] = useState({ name: "", designation: "" });
     const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [measured, setMeasured] = useState(false);
-
+    // ===========
     const HandleChangeSectionName = (data: any) => {
         console.log(data);
         setSecName(data);
     };
-
     // ========== Render Sections
     const renderSection = (section: any) => {
         switch (section?.name) {
@@ -220,26 +215,26 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
                 return <p>{("")}</p>;
         }
     };
-
+    // ===========
     const rightSideSections = ["Technical Skills", "Soft Skills", "Languages"];
     const leftSections = addedSections?.filter(
         (section: any) => !rightSideSections.includes(section?.name)
     );
-
+    // ===========
     const rightSections = addedSections?.filter((section: any) =>
         rightSideSections.includes(section?.name)
     );
-
+    // ===========
     const handleEditableSection = () => {
         setEditable(true);
         dispatch(sectionEditMode(true));
     };
-
+    // ===========
     const handleEditableSectionHeader = () => {
         setHeaderEditable(true);
         dispatch(sectionEditMode(true));
     };
-
+    // ===========
     const handleChangeHeader = (
         e: React.ChangeEvent<HTMLInputElement>,
         key: "name" | "designation"
@@ -247,6 +242,7 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
         const value = e.target.value;
         setHeaderData((prev) => ({ ...prev, [key]: value }));
     };
+    // ===========
     const sectionHeaderIcons: any = {
         FaExperience: <IoMdMail />,
         FaEducation: <LucideGraduationCap />,
@@ -260,6 +256,7 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
         FaProject: <GrProjects />,
         FaCustomSection: <BsSignIntersectionSide />,
     };
+    // ===========
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -288,63 +285,33 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [editable, headerData]);
-
-    // rearrange
+    //=========== rearrange
     useEffect(() => {
         dispatch(setList(rightSideSections));
         dispatch(setColumn(true));
     }, [addedSections]);
-
-    // Step 1: Measure section heights
-
+    // =========== Measure section heights
     useEffect(() => {
         dispatch(disableTemplateIcons(false))
         dispatch(disableTemplateProfile(false))
     }, []);
-
+    // ===========
     useEffect(() => {
         setSecName("Custom Section");
     }, []);
-
+    // ===========
     useEffect(() => {
         setTemplateBgColor(sectionBgColor);
     }, [editMode, sectionBgColor]);
-
-
-    const [sections, setSections] = useState<ResumeSectionData[]>([
-        {
-            type: "Experience",
-            entries: [
-                "Software Engineer @ ABC (2020–2022)",
-                "Developer @ XYZ (2018–2020)",
-            ],
-        },
-        {
-            type: "Education",
-            entries: [
-                "Intermediate - 2014",
-                "Bachelor's - 2018",
-                "Master's - 2021",
-            ],
-        },
-        {
-            type: "Projects",
-            entries: [
-                "Portfolio Website – React, Tailwind",
-                "Task Manager App – Next.js, MongoDB",
-            ],
-        },
-    ]);
-
-    const [pages, setPages] = useState<ResumeSectionData[][]>([]);
-
+    // ===========
+    const [pages, setPages] = useState<any[][]>([]);
     useEffect(() => {
         paginateSections();
-    }, [sections]);
-
+    }, [addedSections]);
+    // ===========
     const paginateSections = () => {
-        const tempPages: ResumeSectionData[][] = [];
-        let currentPage: ResumeSectionData[] = [];
+        const tempPages = [];
+        let currentPage: any[] = [];
         let currentHeight = 0;
         const PAGE_LIMIT = 1150;
 
@@ -357,41 +324,30 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
         tempDiv.style.boxSizing = "border-box";
         document.body.appendChild(tempDiv);
 
-        sections.forEach((section) => {
-            let sectionBuffer: ResumeSectionData = {
-                type: section.type,
-                entries: [],
-            };
+        addedSections.forEach((section: { name: any; fields: any[]; }) => {
+            let sectionHeight = 0;
 
-            section.entries.forEach((entry) => {
-                // Measure entry height
-                tempDiv.innerHTML = `<div class="p-2 text-base"> <li>${entry}</li> </div>`;
+            // Measure section name
+            tempDiv.innerHTML = `<div class="p-2 text-base font-semibold">${section.name}</div>`;
+            sectionHeight += tempDiv.offsetHeight + 80; // Add buffer for section name
 
-                const entryHeight = tempDiv.offsetHeight + 4;
-
-                // If entry will overflow page, push current buffer and start new page
-                if (currentHeight + entryHeight > PAGE_LIMIT) {
-                    if (sectionBuffer.entries.length > 0) {
-                        currentPage.push(sectionBuffer);
-                    }
-
-                    tempPages.push(currentPage);
-                    currentPage = [];
-                    currentHeight = 0;
-
-                    sectionBuffer = {
-                        type: section.type,
-                        entries: [],
-                    };
-                }
-
-                sectionBuffer.entries.push(entry);
-                currentHeight += entryHeight;
-            });
-
-            if (sectionBuffer.entries.length > 0) {
-                currentPage.push(sectionBuffer);
+            // Check if the section has fields and measure their height
+            if (section.fields && Array.isArray(section.fields)) {
+                section.fields.forEach((field) => {
+                    tempDiv.innerHTML = `<div class="p-2">${field.content || ''}</div>`; // Adjust for the actual field structure
+                    sectionHeight += tempDiv.offsetHeight + 10; // Add buffer for each field's height
+                });
             }
+
+            // Check if the section exceeds the page height limit
+            if (currentHeight + sectionHeight > PAGE_LIMIT) {
+                tempPages.push(currentPage);
+                currentPage = [];
+                currentHeight = 0;
+            }
+
+            currentPage.push(section);
+            currentHeight += sectionHeight;
         });
 
         if (currentPage.length > 0) {
@@ -399,45 +355,18 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
         }
 
         document.body.removeChild(tempDiv);
-        setPages(tempPages);
+        setPages(tempPages); // Update pages with the new pagination
     };
 
-    const addEntryToSection = (sectionType: string, defaultEntry: string) => {
-        setSections((prev) =>
-            prev.map((s) =>
-                s.type === sectionType
-                    ? {
-                        ...s,
-                        entries: [...s.entries, `${defaultEntry} ${s.entries.length + 1}`],
-                    }
-                    : s
-            )
-        );
-    };
-
-    const addNewSection = () => {
-        const newIndex = sections.length + 1;
-        setSections((prev) => [
-            ...prev,
-            {
-                type: `New Section ${newIndex}`,
-                entries: [
-                    "Software Engineer @ ABC (2020–2022)",
-                    "Developer @ XYZ (2018–2020)",
-                    "Intern @ LMN (2017)"
-                ]
-            },
-        ]);
-    };
 
     return (
         <div className="flex flex-col items-center gap-6">
             {pages.map((sectionGroup, pageIndex) => (
                 <ResumePage key={pageIndex}>
                     <div className={`relative grid grid-cols-12 shadow-xl ${editMode ? "bg-transparent" : "bg-white"}`}>
-                        {/* Left Column */}
+                        {/*===== Left Column =====*/}
                         <div className="col-span-8" style={{ padding: "30px", paddingRight: "40px" }} >
-                            {/* Header */}
+                            {/*===== Header =====*/}
                             <div
                                 ref={containerHeaderRef}
                                 className={`flex flex-col ${headerEditable && "bg-white"}`}
@@ -468,62 +397,26 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
                                 />
                             </div>
 
-                            {/* Left Sections */}
-                            {leftSections?.length > 0 ? (
-                                leftSections.map((section: any, index: number) => (
-                                    <div key={index} className="pt-4 relative section-to-break">
-                                        <div className="border-b">
-                                            {section?.name === "Custom Section" ? (
-                                                <>
-                                                    <div className="flex items-center gap-1">
-                                                        {showIcons ? sectionHeaderIcons["FaCustomSection"] ?? "" : ""}
-                                                        <div
-                                                            ref={containerRef}
-                                                            className={`flex flex-col ${editable && "bg-white"}`}
-                                                            onClick={handleEditableSection}
-                                                        >
-                                                            <input
-                                                                type="text"
-                                                                className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
-                                                                style={{ color: currentState.color }}
-                                                                value={secName}
-                                                                onChange={(e) =>
-                                                                    HandleChangeSectionName(e.target.value)
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <div className="flex items-center gap-1">
-                                                    {showIcons ? sectionHeaderIcons[section.icon] ?? "" : ""}
-                                                    <h2
-                                                        className="text-lg font-semibold mb-1"
-                                                        style={{ color: currentState.color }}
-                                                    >
-                                                        {section.name}
-                                                    </h2>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="">{renderSection(section)}</div>
+                            {/*===== Left Sections =====*/}
+                            {sectionGroup
+                                .filter((section) => !rightSideSections.includes(section.name))
+                                .map((section, index) => (
+                                    <div key={index} className="pt-4 relative">
+                                        {renderSection(section)}
                                     </div>
                                 ))
-                            ) : (
-                                <p>No sections added yet.</p>
-                            )}
+                            }
+                            {/*===== WaterMark =====*/}
                             <Watermark />
                         </div>
 
-                        {/* Right Column */}
+                        {/*===== Right Column =====*/}
                         <div className="col-span-4 px-2 z-10" style={{ backgroundColor: currentState.color, minHeight: "297mm" }} >
-                            {/* Profile Image */}
+                            {/*===== Profile Image =====*/}
                             <div className="p-3 py-12">
-                                {showProfile && <TemplateProfileImg
-                                // bgColor={currentState.color}
-                                />
+                                {showProfile && <TemplateProfileImg />
                                 }
-                                {/* Contact Info */}
+                                {/*===== Contact Info =====*/}
                                 <div className="flex flex-col gap-2">
                                     <div
                                         className="text-start text-white flex items-center gap-2"
@@ -560,46 +453,15 @@ export default function ResumeBuilder({ currentState, scaleFont, incorrectTextCh
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Right Sections */}
-                            <div className="p-3">
-                                {rightSections?.length > 0 &&
-                                    rightSections.map((section: any, index: number) => (
-                                        <div key={index} className="pt-4 relative section-to-break">
-                                            <div className="border-b text-white">
-                                                {section?.name === "Custom Section" ? (
-                                                    <div className="flex items-center gap-1">
-                                                        {showIcons ? sectionHeaderIcons["FaCustomSection"] ?? "" : ""}
-                                                        <div
-                                                            ref={containerRef}
-                                                            className={`flex flex-col pt-2 ${editable && "bg-white"}`}
-                                                            onClick={handleEditableSection}
-                                                        >
-                                                            <input
-                                                                type="text"
-                                                                className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
-                                                                style={{ color: currentState.color }}
-                                                                value={secName}
-                                                                onChange={(e) => HandleChangeSectionName(e.target.value)}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <div className="flex items-center gap-1">
-                                                        {showIcons ? sectionHeaderIcons[section.icon] ?? "" : ""}
-                                                        <h2
-                                                            className="text-lg font-semibold mb-1"
-                                                            style={{ color: "#fff" }}
-                                                        >
-                                                            {section.name}
-                                                        </h2>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="">{renderSection(section)}</div>
-                                        </div>
-                                    ))}
-                            </div>
+                            {/*===== Right Sections =====*/}
+                            {sectionGroup
+                                .filter((section) => rightSideSections.includes(section.name))
+                                .map((section, index) => (
+                                    <div key={index} className="pt-4">
+                                        {renderSection(section)}
+                                    </div>
+                                ))
+                            }
                         </div>
                     </div>
                 </ResumePage>

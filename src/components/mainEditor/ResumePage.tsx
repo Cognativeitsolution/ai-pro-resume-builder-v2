@@ -5,7 +5,7 @@ type Props = {
 export default function ResumePage({ children }: Props) {
     return (
         <div
-            className="bg-white w-[210mm] h-[297mm] shadow-md overflow-hidden"
+            className="bg-white border border-gray-300 w-[210mm] h-[297mm] shadow-md overflow-hidden"
             style={{
                 pageBreakAfter: "always",
             }}
