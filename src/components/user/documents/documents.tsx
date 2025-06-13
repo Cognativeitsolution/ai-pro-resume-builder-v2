@@ -80,7 +80,7 @@ const documents = [
 const tabs = ['All Documents', 'My Resume', 'My Cover Letter'];
 
 const Documents = () => {
-    const [showOptions, setShowOptions] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
 
   const toggleOptions = () => {
     setShowOptions(prev => !prev);
@@ -123,36 +123,36 @@ const Documents = () => {
           ))}
 
         </ul>
-      <div className="relative inline-block">
-      {/* Main Button */}
-      <button
-        onClick={toggleOptions}
-        className="flex items-center gap-2 px-3 py-2 bg-hamzaPrimary text-white rounded-t-md shadow hover:shadow-md transition duration-300 font-medium"
-      >
-        <IoIosAdd className={`text-2xl transition-transform duration-300 ${showOptions ? 'rotate-45' : ''}`} />
-        Create New
-      </button>
+        <div className="relative inline-block">
+          {/* Main Button */}
+          <button
+            onClick={toggleOptions}
+            className="flex items-center gap-2 px-3 py-2 bg-hamzaPrimary text-white rounded-t-md shadow hover:shadow-md transition duration-300 font-medium"
+          >
+            <IoIosAdd className={`text-2xl transition-transform duration-300 ${showOptions ? 'rotate-45' : ''}`} />
+            Create New
+          </button>
 
-      {/* Dropdown Options */}
-      {showOptions && (
-        <div className="absolute top-full -left-5 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg">
-          <button
-            onClick={() => alert('New Resume')}
-            className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm text-primarySlate"
-          >
-            <FaRegFileAlt className="text-hamzaPrimary" />
-            New Resume
-          </button>
-          <button
-            onClick={() => alert('New Cover Letter')}
-            className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm text-primarySlate"
-          >
-            <MdOutlineMarkEmailRead className="text-hamzaPrimary" />
-            New Cover Letter
-          </button>
+          {/* Dropdown Options */}
+          {showOptions && (
+            <div className="absolute top-full -left-5 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg">
+              <button
+                onClick={() => alert('New Resume')}
+                className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm text-primarySlate"
+              >
+                <FaRegFileAlt className="text-hamzaPrimary" />
+                New Resume
+              </button>
+              <button
+                onClick={() => alert('New Cover Letter')}
+                className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm text-primarySlate"
+              >
+                <MdOutlineMarkEmailRead className="text-hamzaPrimary" />
+                New Cover Letter
+              </button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
       </div>
 
       {/* Document Cards */}

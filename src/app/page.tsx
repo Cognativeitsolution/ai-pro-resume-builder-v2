@@ -7,7 +7,7 @@ export default function Page() {
   return (
     <>
       {/* <MainBanner {...BannerData} /> */}
-<DashboardLayout/>
+      <DashboardLayout />
     </>
   );
 }
