@@ -107,7 +107,7 @@ export default function ImproveText() {
                 <BotPopup
                     // info={highlightCorrectedWords(correctedText) || "No spell mistake found"}
                     list={list}
-                    popupTitle="Spelling Correction"
+                    popupTitle="All Template Spelling Correction"
                     popupTitleBtn="Apply All"
                     popupTitleBtn2="Remove All"
                     btnBackground="bg-indigo-500"

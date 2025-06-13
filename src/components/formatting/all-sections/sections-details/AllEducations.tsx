@@ -209,7 +209,6 @@ const AllEducation = ({
                           fontSize: fontSize,
                           fontFamily: fontFamily,
                         }}
-                        highlightText={highlightText}
                       />
                     </div>
 

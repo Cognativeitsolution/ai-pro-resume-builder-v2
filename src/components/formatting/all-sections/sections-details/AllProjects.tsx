@@ -4,8 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 // ==============
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { IoLocationSharp } from "react-icons/io5";
-import { ImMoveUp } from 'react-icons/im';
-import { ImMoveDown } from 'react-icons/im';
+import { ImMoveUp, ImMoveDown } from 'react-icons/im';
 // ==============
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +15,8 @@ import AiRobo from "../../aiAssistant/AiRobo";
 import CustomDatePicker from "../../custom/CustomDatePicker";
 import EditableField from "@/components/editor/editable-field";
 import SectionToolbar from "../../section-toolbar/SectionToolbar";
+import BotPopup from '../../aiAssistant/BotPopup';
+import { useSpellCorrection } from '@/app/configs/store/useSpellCorrection';
 
 type ProjectType = {
   projectName: string;
@@ -39,6 +40,10 @@ type AllProjectsType = {
   textEditorPosition?: any;
   isDot?: any;
   highlightText?: (text: string) => string;
+  popupRefSummary?: any;
+  enableSpellCorrection?: boolean;
+  AiRoboPosition?: string;
+  BotPopupPosition?: string;
 };
 
 const AllProjects = ({
@@ -55,14 +60,22 @@ const AllProjects = ({
   headerPosition,
   textEditorPosition,
   isDot,
-  highlightText
+  highlightText,
+  popupRefSummary,
+  enableSpellCorrection = false,
+  AiRoboPosition,
+  BotPopupPosition
 }: AllProjectsType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { userProjects, showIcons } = useSelector((state: RootState) => state.addSection);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const { correctedText, correctedWords } = useSpellCorrection(data?.description || '');
+
+  const { userProjects, showIcons } = useSelector(
+    (state: RootState) => state.addSection
+  );
   const [editable, setEditable] = useState<boolean>(false);
   const [editableIndex, setEditableIndex] = useState<any>();
-
   const [projects, setProjects] = useState<ProjectType[]>([
     {
       description: "",
@@ -71,10 +84,17 @@ const AllProjects = ({
       location: "",
     },
   ]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showSpellCorrection, setShowSpellCorrection] = useState(enableSpellCorrection); // ✅ local state
 
   const handleEditableSection = () => {
     setEditable(true);
     dispatch(sectionEditMode(true));
+  };
+
+  const handleSpellingCorrection = () => {
+    setShowPopup(false);
+    setShowSpellCorrection(false);
   };
 
   //====== Sync local state with Redux store when userProjects changes
@@ -122,11 +142,35 @@ const AllProjects = ({
     const updated = projects.filter((_, i) => i !== index);
     setProjects(updated);
   };
-  const handleRearrange = (index: number) => {
-    console.log(index, "pppppppppppppppppppppppppppp");
+
+  const highlightCorrectedWords = (text: string): string => {
+    return text.split(/\s+/).map(word => {
+      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
+      if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
+        return `<span class="text-blue-500">${word}</span>`;
+      }
+      return word;
+    }).join(" ");
   };
 
-  //====== Handle clicks outside the component to exit edit mode and save data to Redux
+  // Close AI popup
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        setShowPopup(false);
+      }
+    };
+    if (showPopup) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showPopup]);
+
+  // Close on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -149,17 +193,6 @@ const AllProjects = ({
     };
   }, [projects, dispatch, data?.id]);
 
-  const handleAddFirstSoftSkill = (value: string) => {
-    const newSkill = {
-      projectName: value.trim(),
-      description: "",
-      projectUrl: "",
-      location: "",
-    };
-    if (newSkill.projectName !== "") {
-      setProjects([newSkill]);
-    }
-  };
 
   const handleMoveUp = (index: number) => {
     if (index <= 0) return;
@@ -176,6 +209,10 @@ const AllProjects = ({
     setEditableIndex(index);
     dispatch(sectionEditMode(true));
   };
+
+  useEffect(() => {
+    setShowSpellCorrection(enableSpellCorrection);
+  }, [enableSpellCorrection]);
 
   return (
     <div
@@ -300,7 +337,7 @@ const AllProjects = ({
             {editable && editableIndex === index && (
               <AiRobo
                 input={false}
-                positionClass="-left-[75px] hover:-left-[159px] top-8"
+                positionClass={AiRoboPosition ? AiRoboPosition : "-left-[75px] hover:-left-[159px] top-8"}
                 info={
                   project.projectName?.trim()
                     ? "Generate ideas for new bullets."
@@ -339,6 +376,31 @@ const AllProjects = ({
           </div>
         ))}
       </div>
+
+      {/* {editable && (
+        <div ref={popupRef}>
+          <AiRobo
+            positionClass="-left-[70px] hover:-left-[154px] top-14"
+            info="Lorem Ipsum is simply dummy text of the printing and typesetting industry..."
+            popupTitle="AI Assistant"
+            popupTitleBtn="Generate"
+          />
+        </div>
+      )} */}
+
+      {showSpellCorrection && correctedText && (
+        <div ref={popupRefSummary}>
+          <BotPopup
+            info={highlightCorrectedWords(correctedText) || "No spell mistake found"}
+            popupTitle="Spelling Correction"
+            popupTitleBtn="Apply"
+            popupTheme="red"
+            onClickPopup={handleSpellingCorrection}
+            popupWidth="w-full"
+            popupPosition={BotPopupPosition ? BotPopupPosition : "top-[110%] -left-[25%]"}
+          />
+        </div>
+      )}
     </div>
   );
 };

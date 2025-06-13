@@ -44,7 +44,7 @@ type AllExperienceType = {
   textEditorPosition?: any;
   isDot?: any;
   highlightText?: (text: string) => string;
-  popupRefSummary?: any;
+  popupRefExperience?: any;
   enableSpellCorrection?: boolean;
 };
 
@@ -63,14 +63,15 @@ const AllExperiences = ({
   textEditorPosition,
   isDot,
   highlightText,
-  popupRefSummary,
+  popupRefExperience,
   enableSpellCorrection = false,
 }: AllExperienceType) => {
   const dispatch = useDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
+  const popupRefSpell = useRef<HTMLDivElement | null>(null);
   const { correctedText, correctedWords } = useSpellCorrection(data?.description || '');
-
+  console.log(correctedText, "correctedText Experience")
   const { userExperiences, showIcons } = useSelector(
     (state: RootState) => state.addSection
   );
@@ -85,7 +86,8 @@ const AllExperiences = ({
     },
   ]);
   const [showPopup, setShowPopup] = useState(false);
-  const [showSpellCorrection, setShowSpellCorrection] = useState(enableSpellCorrection); // ✅ local state
+  const [showPopupSpell, setShowPopupSpell] = useState(false);
+  // const [showSpellCorrection, setShowSpellCorrection] = useState(enableSpellCorrection); // ✅ local state
 
   const handleEditableSection = () => {
     setEditable(true);
@@ -94,7 +96,7 @@ const AllExperiences = ({
 
   const handleSpellingCorrection = () => {
     setShowPopup(false);
-    setShowSpellCorrection(false);
+    setShowPopupSpell(false);
   };
 
   //====== Sync local state with Redux store whenever userExperiences changes
@@ -150,6 +152,8 @@ const AllExperiences = ({
   };
 
   const highlightCorrectedWords = (text: string): string => {
+    // console.log(text, "Experience text");
+
     return text.split(/\s+/).map(word => {
       const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
       if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
@@ -177,6 +181,23 @@ const AllExperiences = ({
     };
   }, [showPopup]);
 
+  // Close AI popup
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRefSpell.current && !popupRefSpell.current.contains(event.target as Node)) {
+        setShowPopup(false);
+      }
+    };
+    if (showPopupSpell) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showPopupSpell]);
+
   // Close on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -202,6 +223,26 @@ const AllExperiences = ({
     };
   }, [experiences, dispatch, data?.id]);
 
+  // Inside your AllExperiences component
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRefExperience.current && !popupRefExperience.current.contains(event.target as Node)) {
+        setShowPopup(false);
+      }
+    };
+
+    if (showPopup) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showPopup]);
+
+
 
   const handleMoveUp = (index: number) => {
     if (index <= 0) return;
@@ -219,9 +260,9 @@ const AllExperiences = ({
     dispatch(sectionEditMode(true));
   };
 
-  useEffect(() => {
-    setShowSpellCorrection(enableSpellCorrection);
-  }, [enableSpellCorrection]);
+  // useEffect(() => {
+  //   setShowSpellCorrection(enableSpellCorrection);
+  // }, [enableSpellCorrection]);
 
   return (
     <div
@@ -430,19 +471,19 @@ const AllExperiences = ({
         </div>
       )}
 
-      {showSpellCorrection && correctedText && (
-        <div ref={popupRefSummary}>
-          <BotPopup
-            info={highlightCorrectedWords(correctedText) || "No spell mistake found"}
-            popupTitle="Spelling Correction"
-            popupTitleBtn="Apply"
-            popupTheme="red"
-            onClickPopup={handleSpellingCorrection}
-            popupWidth="w-full"
-            popupPosition="top-[110%] -left-[25%]"
-          />
-        </div>
-      )}
+      {/* {showSpellCorrection && correctedText && ( */}
+      {/* <div ref={popupRefSpell}>
+        <BotPopup
+          info={highlightCorrectedWords(correctedText) || "No spell mistake found"}
+          popupTitle="Spelling Correction"
+          popupTitleBtn="Apply"
+          popupTheme="blue"
+          onClickPopup={handleSpellingCorrection}
+          popupWidth="w-full"
+          popupPosition="top-[100%] -left-[5%]"
+        />
+      </div> */}
+      {/* )} */}
 
     </div>
   );
