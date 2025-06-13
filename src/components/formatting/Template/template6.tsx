@@ -28,6 +28,8 @@ import Watermark from "@/components/common/watermark/watermark";
 import { placeHolderImage } from "@/constant/placeholder-image-base64";
 import EditableField from "@/components/editor/editable-field";
 import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
+import BotPopup from "../aiAssistant/BotPopup";
+import { useSpellCorrection } from "@/app/configs/store/useSpellCorrection";
 
 const A4_HEIGHT_PX = 1122;
 
@@ -45,11 +47,12 @@ type ResumePreviewProps = {
   currentState: CurrentState;
   scaleFont: any;
   incorrectTextChange: any;
-  enableSpellCorrection: boolean;
-  popupRefSummary: any
+  enableSpellCorrection?: boolean;
+  popupRef: any
+  handlePopupDisplay?: any
 };
 
-const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCorrection, popupRefSummary }: ResumePreviewProps) => {
+const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCorrection, popupRef, handlePopupDisplay }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const { sectionBgColor, editMode, addedSections, userSummary, userEducation, userExperiences, userProjects, userCertificates, userLanguages, userAwards, userReferences, userSoft_Skills, userTechnical_Skills, userCustomSections, showIcons, showProfile, isDisableIcons, isDisableProfile } = useSelector((state: any) => state.addSection);
 
@@ -64,6 +67,8 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
   const [pages, setPages] = useState<any[][]>([]);
+  // const { correctedText, correctedWords } = useSpellCorrection(data?.description || '');
+  // console.log(correctedText, "correctedText Experience")
 
   const HandleChangeSectionName = (data: any) => {
     console.log(data);
@@ -116,7 +121,7 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
       case "Education":
         return (
           <AllEducations
-            data={section}
+            data={userEducation}
             textColor=""
             textAltColor={currentState?.color}
             dateColor="#B1B7C1"
@@ -128,40 +133,45 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
             textEditorPosition='top-1 right-0'
             isVerticleHeader={true}
             isDot={false}
-            highlightText={incorrectTextChange}
           />
         );
       case "Experience":
         return (
-          <AllExperiences
-            data={section}
-            textColor=""
-            textAltColor=""
-            templateColor=""
-            fontSize={scaleFont(16, currentState.fontSize)}
-            fontFamily={currentState.fontFamily}
-            term2={true}
-            headerPosition="top-[30px] -left-[50px]"
-            textEditorPosition='top-1 right-0'
-            isVerticleHeader={true}
-            isDot={false}
-            highlightText={incorrectTextChange}
-            popupRefSummary={popupRefSummary}
-          />
+          <>
+            <AllExperiences
+              data={userExperiences}
+              textColor=""
+              textAltColor=""
+              templateColor=""
+              fontSize={scaleFont(16, currentState.fontSize)}
+              fontFamily={currentState.fontFamily}
+              term2={true}
+              headerPosition="top-[30px] -left-[50px]"
+              textEditorPosition='top-1 right-0'
+              isVerticleHeader={true}
+              isDot={false}
+              highlightText={incorrectTextChange}
+            />
+            {/* Displaying the popup for the Experience section */}
+            {/* {handlePopupDisplay("Experience")} */}
+          </>
         );
       case "Summary":
-        return <AllSummary
-          data={userSummary}
-          fontSize={scaleFont(16, currentState.fontSize)}
-          fontFamily={currentState.fontFamily}
-          highlightText={incorrectTextChange}
-          enableSpellCorrection={enableSpellCorrection}
-          popupRefSummary={popupRefSummary}
-        />;
+        return <>
+          <AllSummary
+            data={userSummary}
+            fontSize={scaleFont(16, currentState.fontSize)}
+            fontFamily={currentState.fontFamily}
+            highlightText={incorrectTextChange}
+            enableSpellCorrection={enableSpellCorrection}
+          />
+          {/* Displaying the popup for the Summary section */}
+          {/* {handlePopupDisplay("Summary")} */}
+        </>
       case "Projects":
         return (
           <AllProjects
-            data={section}
+            data={userProjects}
             textColor=""
             textAltColor=""
             templateColor=""
@@ -171,6 +181,7 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
             isVerticleHeader={true}
             isDot={false}
             highlightText={incorrectTextChange}
+            AiRoboPosition="-left-[55px] hover:-left-[159px] top-28"
           />
         );
       case "Awards":

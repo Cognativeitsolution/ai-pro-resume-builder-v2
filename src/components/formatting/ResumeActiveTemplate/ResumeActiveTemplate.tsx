@@ -14,12 +14,14 @@ import { IoSettingsOutline } from "react-icons/io5";
 import CustomSwitch from "@/components/common/switch/switch";
 import Template1Copy from "../Template/template1copy";
 import ResumeTemplate from "../Template/template";
-import { sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
+import { addUserExperience, addUserSummary, sectionShowIcons, sectionShowProfile } from "@/redux/slices/addSectionSlice";
 import { RootState } from "@/redux/store";
 import axios from "axios";
 import Template2 from "../Template/template2";
 import HuzaifaTemplate1 from "../Template/huzaifa-template";
 import { setAllGrammarErrors, setAllIncorrectWords } from "@/redux/slices/improveTextSlice";
+import BotPopup from "../aiAssistant/BotPopup";
+import { useSpellCorrection } from "@/app/configs/store/useSpellCorrection";
 
 type CurrentState = {
   fontSize: string;
@@ -47,7 +49,6 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   const [shoeAllIcons, setShoeAllIcons] = useState(false);
   const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
   const [grammarErrors, setGrammarErrors] = useState<string[]>([]);
-  const [enableSpell, setEnableSpell] = useState<boolean>(false);
 
   const settingsRef = useRef<HTMLDivElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -70,14 +71,14 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
       allText += userSummary + " ";
     }
 
-    // Education
-    if (Array.isArray(userEducation)) {
-      allText += userEducation
-        .map((edu: any) =>
-          [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
-        )
-        .join(" ") + " ";
-    }
+    // // Education
+    // if (Array.isArray(userEducation)) {
+    //   allText += userEducation
+    //     .map((edu: any) =>
+    //       [edu.degree, edu.schoolName, edu.location].filter(Boolean).join(" ")
+    //     )
+    //     .join(" ") + " ";
+    // }
 
     // Experience
     if (Array.isArray(userExperiences)) {
@@ -155,16 +156,72 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     return allText.trim();
   };
 
+  // const { correctedText, correctedWords } = useSpellCorrection(getAllText());
+  // const [enableSpell, setEnableSpell] = useState<boolean>(false); console.log(correctedText, "correctedText Experience")
   const fullText = getAllText();
   console.log("🔍 fullText value:", `"${fullText}"`);
 
-  function enablePopup() {
-    setEnableSpell(!enableSpell);
-    console.log(enableSpell, "showSpellCorrection3")
-  }
+
+  // function enablePopup() {
+  //   setEnableSpell(!enableSpell);
+  // }
+
+  // const handlePopupDisplay = (section: string) => {
+  //   console.log(section, "section xyz")
+  //   if (section === "Summary") {
+  //     return (
+  //       <BotPopup
+  //         info={highlightCorrectedWords("Summary", correctedText) || "No spell mistake found"}
+  //         popupTitle="Spelling Correction"
+  //         popupTitleBtn="Apply"
+  //         popupTheme="blue"
+  //         onClickPopup={() => handleSpellCorrection("Summary", correctedText)}
+  //         popupWidth="w-full"
+  //         popupPosition="top-[110%] -left-[25%]"
+  //       />
+  //     );
+  //   } else if (section === "Experience") {
+  //     return (
+  //       <BotPopup
+  //         info={highlightCorrectedWords("Experience", correctedText) || "No spell mistake found"}
+  //         popupTitle="Spelling Correction"
+  //         popupTitleBtn="Apply"
+  //         popupTheme="green"
+  //         onClickPopup={() => handleSpellCorrection("Experience", correctedText)}
+  //         popupWidth="w-full"
+  //         popupPosition="top-[110%] -left-[25%]"
+  //       />
+  //     );
+  //   }
+  //   return null;
+  // };
+
+  // const handleSpellCorrection = (section: string, correctedText: string) => {
+  //   switch (section) {
+  //     case 'Summary':
+  //       dispatch(addUserSummary({ sectionId: 2, detail: correctedText }));
+  //       break;
+  //     case 'Experience':
+  //       dispatch(addUserExperience({ sectionId: 4, detail: correctedText }));
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   setEnableSpell(false); // Close the popup after applying
+  // };
+
+  // const highlightCorrectedWords = (section: string, text: string): string => {
+  //   return text.split(/\s+/).map(word => {
+  //     const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
+  //     if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
+  //       return `<span class="text-blue-500">${word}</span>`;
+  //     }
+  //     return word;
+  //   }).join(" ");
+  // };
 
   //============= Highlight function
-  const highlightChange = (text: string) => {
+  const highlightChange = (text: string, section: string) => {
     return text.split(/\s+/).map((word, index) => {
       const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
       const isSpellingMistake = spellCheck && incorrectWords.includes(cleaned);
@@ -181,6 +238,22 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
       }
     }).join(' ');
   };
+
+  // useEffect(() => {
+  //   const handleClick = (e: MouseEvent) => {
+  //     const target = e.target as HTMLElement;
+  //     if (target?.dataset?.highlighted === "true") {
+  //       enablePopup(); // Open popup if highlighted word clicked
+  //     }
+  //   };
+
+  //   document.addEventListener("click", handleClick);
+  //   return () => {
+  //     document.removeEventListener("click", handleClick);
+  //   };
+  // }, []);
+
+
 
 
   useEffect(() => {
@@ -229,41 +302,26 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     fetchCorrections();
   }, [spellCheck, grammarCheck, fullText]);
 
-  // ==================== Detect highlighted word clicks
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target?.dataset?.highlighted === "true") {
-        enablePopup(); // Open popup if highlighted word clicked
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, []);
-
   // ==================== Outside click to close popup
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      const target = e.target as Node;
+  // useEffect(() => {
+  //   const handleOutsideClick = (e: MouseEvent) => {
+  //     const target = e.target as Node;
 
-      // If not clicking on popup or highlighted word
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(target) &&
-        !(target as HTMLElement)?.dataset?.highlighted
-      ) {
-        setEnableSpell(false); // ✅ Close popup
-      }
-    };
+  //     // If not clicking on popup or highlighted word
+  //     if (
+  //       popupRef.current &&
+  //       !popupRef.current.contains(target) &&
+  //       !(target as HTMLElement)?.dataset?.highlighted
+  //     ) {
+  //       setEnableSpell(false); // ✅ Close popup
+  //     }
+  //   };
 
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
+  //   document.addEventListener("mousedown", handleOutsideClick);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleOutsideClick);
+  //   };
+  // }, []);
 
 
   // template redering
@@ -288,8 +346,10 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
           currentState={currentState}
           scaleFont={scaleFont}
           incorrectTextChange={highlightChange}
-          enableSpellCorrection={enableSpell}
-          popupRefSummary={popupRef} />;
+          // enableSpellCorrection={enableSpell}
+          popupRef={popupRef}
+        // handlePopupDisplay={handlePopupDisplay} 
+        />;
       case "template8":
         return <Template8 currentState={currentState} updateState={updateState} />;
       case "template9":
