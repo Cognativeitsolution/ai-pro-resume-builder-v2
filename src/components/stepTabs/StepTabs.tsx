@@ -9,6 +9,52 @@ import aiLogo from 'media/images/aiLogo.webp'
 import SelectTemplates from './SelectTemplates'
 // ===========
 import UploadParser from './UploadParser'
+// ===============
+import template1 from 'media/images/resume-templates/Sleek Simplicity 1.webp'
+import template2Old from 'media/images/resume-templates/Professional Polished 2.webp'
+import template3 from 'media/images/resume-templates/Elegant Executive 3.webp'
+import template4 from 'media/images/resume-templates/Creative Infusion 4.webp'
+import template5 from 'media/images/resume-templates/Classic Professional 5.webp'
+import template6 from 'media/images/resume-templates/Career Catalyst 6.webp'
+import template7 from 'media/images/resume-templates/Innovative Edge 7.webp'
+import template8 from 'media/images/resume-templates/Dynamic Designer 8.webp'
+import template9 from 'media/images/resume-templates/Bold Statement 9.webp'
+import template10 from 'media/images/resume-templates/Fresher Resume 10.webp'
+import template11 from 'media/images/resume-templates/Bright Future 11.webp'
+import template12 from 'media/images/resume-templates/Stylish Standard 12.webp'
+import template13 from 'media/images/resume-templates/Artistic Flair 13.webp'
+import template14 from 'media/images/resume-templates/Graphical Genius 14.webp'
+import template15 from 'media/images/resume-templates/Chic and Simple 15.webp'
+import template16 from 'media/images/resume-templates/Executive Envision 16.webp'
+import template17 from 'media/images/resume-templates/Chromatic Currere 17.webp'
+import template18 from 'media/images/resume-templates/Synergistic Synapse 18.webp'
+import template19 from 'media/images/resume-templates/Paradigm Pivot 19.webp'
+import template20 from 'media/images/resume-templates/Transcendent Trajectory 20.webp'
+
+
+//===== Template data
+const templates = [
+  { name: "Sleek Simplicity", image: template1 },
+  { name: "Professional Polished", image: template2Old },
+  { name: "Elegant Executive", image: template3 },
+  { name: "Creative Infusion", image: template4 },
+  { name: "Classic Professional", image: template5 },
+  { name: "Career Catalyst", image: template6 },
+  { name: "Innovative Edge", image: template7 },
+  { name: "Dynamic Designer", image: template8 },
+  { name: "Bold Statement", image: template9 },
+  { name: "Fresher Resume", image: template10 },
+  { name: "Bright Future", image: template11 },
+  { name: "Stylish Standard", image: template12 },
+  { name: "Artistic Flair", image: template13 },
+  { name: "Graphical Genius", image: template14 },
+  { name: "Chic and Simple", image: template15 },
+  { name: "Executive Envision", image: template16 },
+  { name: "Chromatic Currere", image: template17 },
+  { name: "Synergistic Synapse", image: template18 },
+  { name: "Paradigm Pivot", image: template19 },
+  { name: "Transcendent Trajectory", image: template20 },
+];
 
 const StepTabs = ({ currentStep = 1, onTemplateSelect }: { currentStep: number, onTemplateSelect: () => void }) => {
   const [step, setStep] = useState(currentStep)
@@ -114,8 +160,8 @@ const StepTabs = ({ currentStep = 1, onTemplateSelect }: { currentStep: number, 
       </div>
 
       {step === 2 && userChoice === 'yes' && <UploadParser onComplete={() => setStep(3)} />}
-      {step === 2 && userChoice === 'no' && <SelectTemplates onTemplateSelect={onTemplateSelect} />}
-      {step === 3 && userChoice === 'yes' && <SelectTemplates onTemplateSelect={onTemplateSelect} />}
+      {step === 2 && userChoice === 'no' && <SelectTemplates templates={templates} onTemplateSelect={onTemplateSelect} />}
+      {step === 3 && userChoice === 'yes' && <SelectTemplates templates={templates} onTemplateSelect={onTemplateSelect} />}
     </div>
   )
 }

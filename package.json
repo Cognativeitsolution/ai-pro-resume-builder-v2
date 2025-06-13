@@ -17,6 +17,8 @@
     "@sparticuz/chromium": "^133.0.0",
     "@sparticuz/chromium-min": "^133.0.0",
     "axios": "^1.7.9",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "docx": "^9.5.0",
     "embla-carousel-auto-scroll": "^8.5.2",
     "embla-carousel-autoplay": "^8.5.2",
@@ -41,6 +43,7 @@
     "react-redux": "^9.2.0",
     "suneditor-react": "^3.6.1",
     "sweetalert2": "^11.6.13",
+    "tailwind-merge": "^3.3.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
