@@ -96,7 +96,7 @@ const initialState: AddSectionState = {
     {
       id: 2,
       name: "Summary",
-      description: "Briefly expln why yu're a great fit for the role - use the AI assistant to tailor this summary for each job posting.",
+      description: "",
       locked: true,
       icon: "FaSummary"
     },

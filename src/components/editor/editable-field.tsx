@@ -37,6 +37,8 @@ export default function EditableField({
     setIsFocused(false);
     if (ref.current) {
       const plainText = ref.current.innerText.trim();
+      console.log(plainText, "plainTextplainText");
+
       onChange(plainText);
     }
   };
@@ -61,7 +63,7 @@ export default function EditableField({
       )}
 
       {/*====== Editable Div ======*/}
-      <div
+      {/* <div
         ref={ref}
         contentEditable
         suppressContentEditableWarning
@@ -73,7 +75,29 @@ export default function EditableField({
         role="textbox"
         aria-label={placeholder}
         spellCheck={true}
+      /> */}
+      <div
+        ref={ref}
+        contentEditable
+        suppressContentEditableWarning
+        onFocus={() => setIsFocused(true)}
+        onBlur={handleBlur}
+        onPaste={handlePaste}
+        onInput={() => {
+          if (ref.current) {
+            const plainText = ref.current.innerText.trim();
+            onChange(plainText);
+          }
+        }}
+        className={`w-full transition-all duration-500 ease-in-out focus:outline focus:outline-[0.1px] rounded-sm ${className}`}
+        style={style}
+        role="textbox"
+        aria-label={placeholder}
+        spellCheck={true}
       />
+
     </div>
+
+
   );
 }

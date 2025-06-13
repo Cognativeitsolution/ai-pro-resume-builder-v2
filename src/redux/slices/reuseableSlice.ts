@@ -30,8 +30,8 @@ const reuseableSlice = createSlice({
                 state.countriesLoading = true;
             })
             .addCase(useCountries.fulfilled, (state, action) => {
-                 state.countriesLoading = false;
-                 state.countries = action?.payload;
+                state.countriesLoading = false;
+                state.countries = action?.payload;
             })
             .addCase(useCountries.rejected, (state, action) => {
                 state.countriesLoading = false;
