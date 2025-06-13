@@ -20,6 +20,7 @@ type AllSoftSkillsProps = {
   data: {  id: number; name: string; detail: any[]  };
   onRemove:()=>void;
   onAdd:()=>void;
+  onAddVar:()=>void;
   onDelete:()=>void;
   textColor?: string;
   textAltColor?: string;
@@ -38,6 +39,7 @@ const AllSoftSkills = ({
   data ,
   onRemove,
   onAdd,
+  onAddVar,
   onDelete,
   textColor = "#fff",
   textAltColor,
@@ -160,7 +162,7 @@ const AllSoftSkills = ({
       {editable && (
         <SectionToolbar
           isTextEditor={false}
-          onCopy={handleAddSoftSkill}
+          onCopy={()=>onAddVar()}
           onDelete={handleRemoveSection}
           isVerticleHeader={isVerticleHeader}
           headerPosition={headerPosition}

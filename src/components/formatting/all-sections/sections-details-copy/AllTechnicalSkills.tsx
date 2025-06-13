@@ -15,6 +15,7 @@ type TechnicalSkillType = {
 type AllTechnicalSkillsProps = {
   data: { id: number; name:string; detail:TechnicalSkillType[] };
   onRemove:()=>void
+  onAddVar:()=>void
   onDelete:()=>void
   onAdd:()=>void
   textColor?: string; 
@@ -33,6 +34,7 @@ type AllTechnicalSkillsProps = {
 const AllTechnicalSkills = ({
   data,
   onRemove,
+  onAddVar,
   onDelete,
   onAdd,
   textColor = '#fff',
@@ -106,8 +108,8 @@ const AllTechnicalSkills = ({
   };
 
   const handleRemoveSection = () => {
-    dispatch(removeSection(data));
     onDelete()
+    dispatch(removeSection(data));
     dispatch(addUserTechnical_Skills({ sectionId: data.id, detail: [] }));
   };
 
@@ -139,7 +141,7 @@ const AllTechnicalSkills = ({
       {editable && (
         <SectionToolbar
           isTextEditor={false}
-          onCopy={()=>onAdd()}
+          onCopy={()=>onAddVar()}
           onDelete={handleRemoveSection}
           isVerticleHeader={isVerticleHeader}
           headerPosition={headerPosition}

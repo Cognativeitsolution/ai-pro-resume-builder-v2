@@ -92,7 +92,7 @@ onAddVar,
       })
     );
   };
-  // When user clicks outside this section, persist all details to Redux
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -164,7 +164,7 @@ console.log(data)
               >
                 <div className="w-full">
                   <EditableField
-                    html={exp.degree}
+                    html={userEducation.degree}
                     onChange={(val) => {
                       const updated = [...data.detail];
                       updated[index] = { ...updated[index], degree: val };
@@ -258,7 +258,7 @@ console.log(data)
             </div>
 
             {/* Delete Button for this entry */}
-            {editable && (
+            {editable && data.detail.length >1 && (
               <div
                 className={`absolute bottom-0 -right-8 transition-all duration-300 ease-in-out ${
                   editable ? "opacity-100" : "opacity-0"

@@ -17,6 +17,7 @@ type AllLanguagesProps = {
   onRemove:()=>void;
   onDelete:()=>void;
   onAdd:()=>void;
+  onAddVar:()=>void;
   textColor?: string;
   textAltColor?: string;
   templateColor?: string;
@@ -33,6 +34,7 @@ const AllLanguages = ({
   data ,
   onRemove,
   onDelete,
+  onAddVar,
   onAdd,
   textColor = '#fff',
   textAltColor,
@@ -144,7 +146,7 @@ const AllLanguages = ({
       {editable && (
         <SectionToolbar
           isTextEditor={false}
-          onCopy={()=>onAdd()}
+          onCopy={()=>onAddVar()}
           onDelete={handleRemoveSection}
           isVerticleHeader={isVerticleHeader}
           headerPosition={headerPosition}
