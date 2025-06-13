@@ -21,9 +21,9 @@ const ConditionalLayout = ({ children }: any) => {
   return (
     <PopupProvider value={{ popup, togglePopup, imagePopup, toggleImagePopup }}>
       <>
-        {pathname === "/create-resume" || pathname === "/onboarding" || pathname === "/auth/login" || pathname === "/auth/register" ? null : <NewHeader />}
+        {pathname === "/create-resume" || pathname === "/onboarding" || pathname === "/auth/login" || pathname === "/auth/register" || pathname === "/auth/forget-password" || pathname === "/auth/reset-password" || pathname === "/auth/verify-user"  ? null : <NewHeader />}
         {children}
-        {pathname === "/onboarding" || pathname === "/auth/login" || pathname === "/auth/register" ? null : <NewFooter />}
+        {pathname === "/onboarding" || pathname === "/auth/login" || pathname === "/auth/register" || pathname === "/auth/forget-password" || pathname === "/auth/reset-password"  || pathname === "/auth/verify-user" ? null : <NewFooter />}
       </>
     </PopupProvider>
   );
