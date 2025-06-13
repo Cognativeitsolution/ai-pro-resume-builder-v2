@@ -9,6 +9,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { IoIosAdd } from "react-icons/io";
 import { FaRegFileAlt } from "react-icons/fa";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
+import SelectTemplates from '@/components/stepTabs/SelectTemplates';
 
 // Sample document data
 const documents = [
@@ -156,8 +157,9 @@ const Documents = () => {
       </div>
 
       {/* Document Cards */}
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
-        {filteredDocs.map((doc) => (
+      {/* <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6"> */}
+      <SelectTemplates templates={filteredDocs} isContainer={false} />
+      {/* {filteredDocs.map((doc) => (
           <div key={doc.id} className="bg-white border rounded-md shadow-sm p-4 flex flex-col items-center">
             <div className="text-sm font-medium mb-1">{doc.name}</div>
             <div className="text-xs text-gray-400 mb-2">{doc.date}</div>
@@ -181,8 +183,8 @@ const Documents = () => {
               </button>
             </div>
           </div>
-        ))}
-      </div>
+        ))} */}
+      {/* </div> */}
     </div>
   );
 };
