@@ -8,6 +8,7 @@ import addSectionReducer from "@/redux/slices/addSectionSlice";
 import templateReducer from "@/redux/slices/template";
 import profileImageReducer from './slices/profileImageSlice';
 import rearrangeReducer from "./slices/rearrangeSlice";
+import  pagesSlice  from "./slices/pageSlice";
 
 
 export const store = configureStore({
@@ -20,7 +21,8 @@ export const store = configureStore({
         addSection: addSectionReducer,
         template: templateReducer,
         profileImage: profileImageReducer,
-        rearrange: rearrangeReducer
+        rearrange: rearrangeReducer,
+        pages: pagesSlice
     },
 });
 

@@ -18,7 +18,8 @@ import AllReferences from "../all-sections/sections-details-copy/AllReferences";
 import AllCustomSection from "../all-sections/sections-details-copy/AllCustomSections";
 import Watermark from "@/components/common/watermark/watermark";
 import TemplateProfileImg from "@/components/profileImg/TemplateProfileImg";
-
+import { RootState } from "@/redux/store";
+import { addSectionToPage, addVariantToSection, removeSectionFromPage, removeVariantFromSection, setPages } from "@/redux/slices/pageSlice";
 type CurrentState = {
   fontSize: any;
   fontFamily: string;
@@ -102,9 +103,7 @@ type Page = {
   right: ResumeSection[];
 };
 
-const HuzaifaTemplate1 = ({
-  currentState,
-}: ResumePreviewProps) => {
+const HuzaifaTemplate1 = ({ currentState }: ResumePreviewProps) => {
   const dispatch = useDispatch();
   const { addedSections, sectionBgColor, editMode } = useSelector(
     (state: any) => state.addSection
@@ -129,348 +128,442 @@ const HuzaifaTemplate1 = ({
   const [headerData, setHeaderData] = useState({ name: "", designation: "" });
   const leftRef = useRef<(HTMLDivElement | null)[]>([]);
   const rightRef = useRef<(HTMLDivElement | null)[]>([]);
-  const watermarkRefs = useRef<(HTMLDivElement | null)[]>([]); 
-  const [pages, setPages] = useState<Page[]>([
-    {
-      left: [],
-      right: [],
-    },
-  ]);
+  const watermarkRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const { pages } = useSelector((state: RootState) => state.pages); 
+  const [activePageIndex, setActivePageIndex] = useState<number | null>(null);
 
   useEffect(() => {
     setSecName("Custom Section");
   }, []);
 
-  useEffect(() => {
-    if (pages.length > 1) {
-    }
-  }, []);
-
-  const handleDelSection = (
-    sectionToRemove: string,
-    pageIndex: number,
-    side: "left" | "right"
-  ) => {
-    setPages((prev) => {
-      const updatedPages = [...prev];
-      const page = updatedPages[pageIndex];
-
-      if (!page) return prev;
-
-      const updatedSideSections = page[side].filter(
-        (sec) => sec.name !== sectionToRemove
-      );
-      updatedPages[pageIndex] = {
-        ...page,
-        [side]: updatedSideSections,
-      };
-      if (
-        pageIndex > 0 &&
-        updatedPages[pageIndex].left.length +
-          updatedPages[pageIndex].right.length <=
-          1
-      ) {
-        updatedPages.splice(pageIndex, 1);
-      }
-
-      return updatedPages;
-    });
-  };
-
-  const handleRemoveSection = (
-    sectionToRemove: string,
-    pageIndex: number,
-    side: "left" | "right"
-  ) => {
-    setPages((prevPages) => {
-      const newPages = prevPages.map((pg) => ({ ...pg }));
-      const page = newPages[pageIndex];
-      if (!page) return prevPages;
-
-      const removeOneOrSection = (sections: any[]) => {
-        return sections
-          .map((sec) => {
-            if (sec.name !== sectionToRemove) {
-              return sec;
-            }
-
-            if (
-              Array.isArray((sec as any).detail) &&
-              (sec as any).detail.length > 1
-            ) {
-              return {
-                ...sec,
-                detail: (sec as any).detail.slice(
-                  0,
-                  (sec as any).detail.length - 1
-                ),
-              };
-            }
-            return null;
-          })
-          .filter((sec) => sec !== null);
-      };
-
-      if (side === "left") {
-        page.left = removeOneOrSection(page.left);
-      } else {
-        page.right = removeOneOrSection(page.right);
-      }
-
-      return newPages;
-    });
-
-  };
-
-const handleAddVariantToSection = (
-  secName: string,
+ const handleDelSection = (
+  sectionToRemove: string,
+  pageIndex: number,
   side: "left" | "right"
 ) => {
-  setPages((prevPages) => {
-    const updatedPages = [...prevPages];
-    let sectionPageIndex = -1;
-    let sectionIndex = -1;
+  setPages((prev) => {
+    const updatedPages = [...prev];
 
-    // Find the target section within the pages
-    for (let i = 0; i < updatedPages.length; i++) {
-      const page = updatedPages[i];
-      const index = page[side].findIndex((sec) => sec.name === secName);
-      if (index !== -1) {
-        sectionPageIndex = i;
-        sectionIndex = index;
-        break;
-      }
-    }
+    const page = updatedPages[pageIndex];
+    if (!page) return prev;
 
-    if (sectionPageIndex === -1 || sectionIndex === -1) return prevPages;
+    // 1. Remove the section
+    const updatedSideSections = page[side].filter(
+      (sec) => sec.name !== sectionToRemove
+    );
+    updatedPages[pageIndex] = {
+      ...page,
+      [side]: updatedSideSections,
+    };
 
-    const section = updatedPages[sectionPageIndex][side][sectionIndex];
+    // 2. Try pulling up section detail(s) from the next pages
+    for (let i = pageIndex; i < updatedPages.length - 1; i++) {
+      const currentPage = updatedPages[i];
+      const nextPage = updatedPages[i + 1];
+      if (!nextPage) break;
 
-    // Define a new variant item based on section name
-    let newDetailItem: any = {};
-    switch (secName) {
-      case "Education":
-        newDetailItem = { degree: "", schoolName: "", location: "" };
-        break;
-      case "Experience":
-        newDetailItem = {
-          title: "",
-          description: "",
-          companyName: "",
-          location: "",
-        };
-        break;
-      case "Certificate":
-        newDetailItem = {
-          description: "",
-          institutionName: "",
-          title: "",
-        };
-        break;
-      case "Awards":
-        newDetailItem = { title: "" };
-        break;
-      case "References":
-        newDetailItem = { name: "", contact: "" };
-        break;
-      case "Custom Section":
-        newDetailItem = {
-          companyName: "",
-          description: "",
-          title: "",
-          location: "",
-          icon: "",
-        };
-        break;
-      case "Projects":
-        newDetailItem = {
-          description: "",
-          projectName: "",
-          projectUrl: "",
-          location: "",
-        };
-        break;
-      default:
-        newDetailItem = {};
-    }
+      const ref = side === "left" ? leftRef.current[i] : rightRef.current[i];
+      const watermark = watermarkRefs.current[i];
+      if (!ref || !watermark) continue;
 
-    section?.detail?.push(newDetailItem);
-console.log(sectionPageIndex)
-    const ref = side === "left" ? leftRef : rightRef;
-    const pageRef = ref.current[sectionPageIndex]?.getBoundingClientRect();
-    const watermarkTop =
-      watermarkRefs.current[sectionPageIndex]?.getBoundingClientRect()?.top;
+      const currentBottom = ref.getBoundingClientRect().bottom;
+      const watermarkTop = watermark.getBoundingClientRect().top;
 
-    const isOverflow =
-      pageRef?.bottom && watermarkTop && pageRef.bottom + 100 > watermarkTop;
+      const hasSpace = watermarkTop - currentBottom > 50;
+      if (!hasSpace) break;
 
-    // If overflow occurs, move to the next page
-    if (isOverflow) {
-      const nextPageIndex = sectionPageIndex + 1;
-      if (!updatedPages[nextPageIndex]) {
-        updatedPages[nextPageIndex] = { left: [], right: [] };
-      }
+      const fromSections = nextPage[side];
+      const toSections = currentPage[side];
 
-      const currentPageSections = updatedPages[sectionPageIndex][side];
-      const nextPageSections = updatedPages[nextPageIndex][side];
+      const foundIdx = fromSections.findIndex(
+        (sec) => Array.isArray(sec.detail) && sec.detail.length > 0
+      );
 
-      // Move section variants or entire section to the next page
-      const lastSection = currentPageSections[currentPageSections.length - 1];
+      if (foundIdx === -1) break;
 
-      if (lastSection?.detail?.length > 1) {
-        // Move one variant to the next page
-        const movedDetail = lastSection?.detail?.pop(); // Remove the last variant from the current section
+      const fromSec = fromSections[foundIdx];
+      const toSecIdx = toSections.findIndex((sec) => sec.name === fromSec.name);
 
-        // Check if this section already exists on the next page
-        const nextPageSection = nextPageSections.find(
-          (s) => s.name === lastSection.name
-        );
+      if (fromSec?.detail?.length! > 1) {
+        const movedDetail = fromSec?.detail?.shift(); // remove first variant
 
-        if (nextPageSection) {
-          nextPageSection?.detail?.unshift(movedDetail); // Add the moved detail to the next page's section
+        if (toSecIdx !== -1) {
+          toSections[toSecIdx].detail?.push(movedDetail);
         } else {
-          nextPageSections.unshift({
-            ...lastSection,
+          toSections.push({
+            ...fromSec,
             detail: [movedDetail],
           });
         }
       } else {
-        // Move entire section to the next page
-        const removed = currentPageSections.pop();
-        nextPageSections.unshift(removed!);
+        // move the whole section
+        if (toSecIdx !== -1) {
+          toSections[toSecIdx].detail?.push(...fromSec?.detail!);
+        } else {
+          toSections.push(fromSec);
+        }
+        fromSections.splice(foundIdx, 1);
       }
+
+      // Remove nextPage if it becomes empty
+      const isEmpty =
+        nextPage.left.length === 0 && nextPage.right.length === 0;
+      if (isEmpty) {
+        updatedPages.splice(i + 1, 1);
+        break; // Stop after removal to avoid indexing issues
+      }
+    }
+
+    // 3. Remove this page if it becomes empty and not the first page
+    const isCurrentPageEmpty =
+      updatedPages[pageIndex].left.length === 0 &&
+      updatedPages[pageIndex].right.length === 0;
+    if (pageIndex > 0 && isCurrentPageEmpty) {
+      updatedPages.splice(pageIndex, 1);
     }
 
     return updatedPages;
   });
 };
 
+ const handleRemoveSection = (
+  sectionToRemove: string,
+  _pageIndex: number,
+  side: "left" | "right"
+) => {
+  
+  const prevPages = pages; 
 
+  const newPages = prevPages.map((pg) => ({
+    left: [...pg.left],
+    right: [...pg.right],
+  }));
 
+  const removeOneOrSection = (sections: any[]) => {
+    return sections
+      .map((sec) => {
+        if (sec.name !== sectionToRemove) return sec;
+        if (Array.isArray(sec.detail) && sec.detail.length > 1) {
+          return { ...sec, detail: sec.detail.slice(0, -1) };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  };
+
+  const active = newPages[activePageIndex!];
+  if (!active) return;
+
+  if (side === "left") {
+    active.left = removeOneOrSection(active.left);
+  } else {
+    active.right = removeOneOrSection(active.right);
+  }
+
+  for (let i = activePageIndex!; i < newPages.length - 1; i++) {
+    const currentPage = newPages[i];
+    const nextPage = newPages[i + 1];
+    if (!currentPage || !nextPage) continue;
+
+    const ref = side === "left" ? leftRef.current[i] : rightRef.current[i];
+    const watermark = watermarkRefs.current[i];
+    if (!ref || !watermark) continue;
+
+    const currentBottom = ref.getBoundingClientRect().bottom;
+    const watermarkTop = watermark.getBoundingClientRect().top;
+    const hasSpace = watermarkTop > currentBottom;
+    if (!hasSpace) break;
+
+    const fromSections = nextPage[side];
+    const toSections = currentPage[side];
+
+    const foundIdx = fromSections.findIndex(
+      (sec) => Array.isArray(sec.detail) && sec.detail.length > 0
+    );
+    if (foundIdx === -1) continue;
+
+    const fromSec = fromSections[foundIdx];
+    const toSecIdx = toSections.findIndex((sec) => sec.name === fromSec.name);
+
+    if (fromSec.detail.length > 1) {
+      const movedVariant = fromSec.detail[0];
+      fromSec.detail = fromSec.detail.slice(1);
+
+      if (toSecIdx !== -1) {
+        toSections[toSecIdx].detail.push(movedVariant);
+      } else {
+        toSections.push({
+          ...fromSec,
+          detail: [movedVariant],
+        });
+      }
+    } else {
+      if (toSecIdx !== -1) {
+        toSections[toSecIdx].detail.push(...fromSec.detail);
+      } else {
+        toSections.push(fromSec);
+      }
+      fromSections.splice(foundIdx, 1);
+    }
+
+    const nextLeftEmpty = nextPage.left.length === 0;
+    const nextRightEmpty = nextPage.right.length === 0;
+    if (nextLeftEmpty && nextRightEmpty) {
+      newPages.splice(i + 1, 1);
+    }
+  }
+
+  dispatch(setPages(newPages));
+};
+
+ 
+const handleAddVariantToSection = (secName: string, side: "left" | "right") => {
+
+  const updatedPages = JSON.parse(JSON.stringify(pages)); 
+  let sectionPageIndex = -1;
+  let sectionIndex = -1;
+
+  for (let i = 0; i < updatedPages.length; i++) {
+    const page = updatedPages[i];
+    const index = page[side].findIndex((sec:any) => sec.name === secName);
+    if (index !== -1) {
+      sectionPageIndex = i;
+      sectionIndex = index;
+    }
+  }
+
+  if (sectionPageIndex === -1 || sectionIndex === -1) return;
+
+  const section = updatedPages[sectionPageIndex][side][sectionIndex];
+
+  let newDetailItem: any = {};
+  switch (secName) {
+    case "Education":
+      newDetailItem = { degree: "", schoolName: "", location: "" };
+      break;
+    case "Experience":
+      newDetailItem = {
+        title: "",
+        description: "",
+        companyName: "",
+        location: "",
+      };
+      break;
+    case "Certificate":
+      newDetailItem = {
+        description: "",
+        institutionName: "",
+        title: "",
+      };
+      break;
+    case "Awards":
+      newDetailItem = { title: "" };
+      break;
+    case "References":
+      newDetailItem = { name: "", contact: "" };
+      break;
+    case "Custom Section":
+      newDetailItem = {
+        companyName: "",
+        description: "",
+        title: "",
+        location: "",
+        icon: "",
+      };
+      break;
+    case "Projects":
+      newDetailItem = {
+        description: "",
+        projectName: "",
+        projectUrl: "",
+        location: "",
+      };
+      break;
+    default:
+      newDetailItem = {};
+  }
+
+  section?.detail?.push(newDetailItem);
+
+  const ref = side === "left" ? leftRef : rightRef;
+  const pageRef = ref.current[sectionPageIndex]?.getBoundingClientRect();
+  const watermarkTop =
+    watermarkRefs.current[sectionPageIndex]?.getBoundingClientRect()?.top;
+
+  const isOverflow =
+    pageRef?.bottom && watermarkTop && pageRef.bottom + 100 > watermarkTop;
+
+  if (isOverflow) {
+    const nextPageIndex = sectionPageIndex + 1;
+    if (!updatedPages[nextPageIndex]) {
+      updatedPages[nextPageIndex] = { left: [], right: [] };
+    }
+
+    const currentPageSections = updatedPages[sectionPageIndex][side];
+    const nextPageSections = updatedPages[nextPageIndex][side];
+
+    const lastSection = currentPageSections[currentPageSections.length - 1];
+
+    if (lastSection?.detail?.length > 1) {
+      const movedDetail = lastSection.detail.pop();
+      const nextPageSection = nextPageSections.find(
+        (s:any) => s.name === lastSection.name
+      );
+
+      if (nextPageSection) {
+        nextPageSection.detail.unshift(movedDetail);
+      } else {
+        nextPageSections.unshift({
+          ...lastSection,
+          detail: [movedDetail],
+        });
+      }
+    } else {
+      const removed = currentPageSections.pop();
+      nextPageSections.unshift(removed!);
+    }
+  }
+
+  dispatch(setPages(updatedPages));
+};
 
 
 const handleAddSectionToPages = (
   secName: string,
-  pageIndex: number,
+  _pageIndex: number,
   side: "left" | "right"
 ) => {
-  console.log(pageIndex)
-  setPages((prevPages) => {
-    let pgIndex = prevPages.length - 1;
-    const leftSec = leftRef.current[pgIndex]?.getBoundingClientRect();
-    const rightSec = rightRef.current[pgIndex]?.getBoundingClientRect();
-    const watermarkTop =
-      watermarkRefs.current[pgIndex]?.getBoundingClientRect()?.top;
 
-    const rightOverflow =
-      rightSec?.bottom && watermarkTop && rightSec.bottom + 100 > watermarkTop;
-    const leftOverflow =
-      leftSec?.bottom && watermarkTop && leftSec.bottom + 100 > watermarkTop;
 
-    if (side === "left" && leftOverflow) pgIndex += 1;
-    if (side === "right" && rightOverflow) pgIndex += 1;
+  let targetPageIndex = -1;
+  for (let i = 0; i < pages.length; i++) {
+    const ref = side === "left" ? leftRef.current[i] : rightRef.current[i];
+    const watermark = watermarkRefs.current[i];
+    if (!ref || !watermark) continue;
 
-    const updatedPages = [...prevPages];
-    if (!updatedPages[pgIndex]) {
-      updatedPages[pgIndex] = { left: [], right: [] };
+    const secBottom = ref.getBoundingClientRect()?.bottom;
+    const watermarkTop = watermark.getBoundingClientRect()?.top;
+
+    if (secBottom && watermarkTop && secBottom < watermarkTop) {
+      targetPageIndex = i;
+      break;
     }
+  }
 
-    updatedPages.forEach((page) => {
-      page[side] = page[side].filter((section) => section.name !== secName);
+  if (targetPageIndex === -1) {
+    targetPageIndex = pages.length;
+
+    dispatch({
+      type: 'pages/setPages',
+      payload: [
+        ...pages,
+        { left: [], right: [] }
+      ]
     });
+  }
 
-    let newDetailItem: any = {};
-    switch (secName) {
-      case "Education":
-        newDetailItem = { degree: "", schoolName: "", location: "" };
-        break;
-      case "Experience":
-        newDetailItem = {
-          title: "",
-          description: "",
-          companyName: "",
-          location: "",
-        };
-        break;
-      case "Certificate":
-        newDetailItem = {
-          description: "",
-          institutionName: "",
-          title: "",
-        };
-        break;
-      case "Awards":
-        newDetailItem = { title: "" };
-        break;
-      case "References":
-        newDetailItem = { name: "", contact: "" };
-        break;
-      case "Custom Section":
-        newDetailItem = {
-          companyName: "",
-          description: "",
-          title: "",
-          location: "",
-          icon: "",
-        };
-        break;
-      case "Projects":
-        newDetailItem = {
-          description: "",
-          projectName: "",
-          projectUrl: "",
-          location: "",
-        };
-        break;
-      default:
-        newDetailItem = {};
-    }
-
-    const newSection = {
-      id: Date.now(),
-      name: secName,
-      detail: [newDetailItem],
-    };
-
-    updatedPages[pgIndex][side].push(newSection);
-
-    return updatedPages;
+  pages.forEach((_, pageIndex) => {
+    dispatch(removeSectionFromPage({
+      sectionName: secName,
+      pageIndex,
+      side,
+    }));
   });
+
+  let newDetailItem: any = {};
+  switch (secName) {
+    case "Education":
+      newDetailItem = { degree: "", schoolName: "", location: "" };
+      break;
+    case "Experience":
+      newDetailItem = {
+        title: "",
+        description: "",
+        companyName: "",
+        location: "",
+      };
+      break;
+    case "Certificate":
+      newDetailItem = {
+        description: "",
+        institutionName: "",
+        title: "",
+      };
+      break;
+    case "Awards":
+      newDetailItem = { title: "" };
+      break;
+    case "References":
+      newDetailItem = { name: "", contact: "" };
+      break;
+    case "Custom Section":
+      newDetailItem = {
+        companyName: "",
+        description: "",
+        title: "",
+        location: "",
+        icon: "",
+      };
+      break;
+    case "Projects":
+      newDetailItem = {
+        description: "",
+        projectName: "",
+        projectUrl: "",
+        location: "",
+      };
+      break;
+    default:
+      newDetailItem = {};
+  }
+
+  const newSection = {
+    id: Date.now(),
+    name: secName,
+    detail: [newDetailItem],
+  };
+
+  dispatch(addSectionToPage({
+    section: newSection,
+    pageIndex: targetPageIndex,
+    side,
+  }));
 };
 
-  useEffect(() => {
-    setPages((prevPages) => {
-      const updatedPages = [...prevPages];
 
-      const existingSectionNames = new Set(
-        updatedPages.flatMap((page) =>
-          [...page.left, ...page.right].map((sec) => sec.name)
-        )
-      );
+useEffect(() => {
+  if (!addedSections?.length) return;
 
-      const newSections = addedSections.filter(
-        (section: any) => !existingSectionNames.has(section.name)
-      );
+  const existingSectionNames = new Set(
+    pages.flatMap((page) =>
+      [...page.left, ...page.right].map((sec) => sec.name)
+    )
+  );
 
-      if (newSections.length === 0) return prevPages;
+  const newSections = addedSections.filter(
+    (section: any) => !existingSectionNames.has(section.name)
+  );
 
-      newSections.forEach((section: any) => {
-        const side = rightSideSections.includes(section.name)
-          ? "right"
-          : "left";
-        const firstPage = updatedPages[0];
+  if (newSections.length === 0) return;
 
-        const sectionData = {
-          ...section,
-          detail: Array.isArray(section.detail) ? section.detail : [],
-        };
+  newSections.forEach((section: any) => {
+    const side = rightSideSections.includes(section.name) ? "right" : "left";
+    const sectionData = {
+      ...section,
+      detail: Array.isArray(section.detail) ? section.detail : [],
+    };
 
-        firstPage[side].push(sectionData);
-      });
+    dispatch(
+      addSectionToPage({
+        section: sectionData,
+        pageIndex: 0,
+        side,
+      })
+    );
+  });
+}, [addedSections, pages, dispatch]);
 
-      return updatedPages;
-    });
-  }, [addedSections]);
+
 
   const HandleChangeSectionName = (data: any) => {
     setSecName(data);
@@ -573,8 +666,9 @@ const handleAddSectionToPages = (
   const renderSection = (
     section: leftSection | rightSection,
     pageIndex: number,
-    registerVariantRef?: (variantEl: HTMLElement, variantIndex: number) => void
+ 
   ) => {
+   
     switch (section?.name) {
       case "Summary":
         return (
@@ -594,7 +688,7 @@ const handleAddSectionToPages = (
             isPillStyle={true}
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
-            onAddVar = {()=>handleAddVariantToSection(section.name , "right")}
+            onAddVar={() => handleAddVariantToSection(section.name, "right")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "right")
             }
@@ -616,7 +710,7 @@ const handleAddSectionToPages = (
             isPillStyle={true}
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
-            onAddVar = {()=>handleAddVariantToSection(section.name , "right")}
+            onAddVar={() => handleAddVariantToSection(section.name, "right")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "right")
             }
@@ -636,7 +730,7 @@ const handleAddSectionToPages = (
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
-             onAddVar = {()=>handleAddVariantToSection(section.name , "right")}
+            onAddVar={() => handleAddVariantToSection(section.name, "left")}
             onDelete={() => handleDelSection(section.name, pageIndex, "left")}
             term3={true}
             onRemove={() =>
@@ -651,7 +745,7 @@ const handleAddSectionToPages = (
             onRemove={() =>
               handleRemoveSection(section.name, pageIndex, "left")
             }
-            onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
+            onAddVar={() => handleAddVariantToSection(section.name, "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -672,7 +766,7 @@ const handleAddSectionToPages = (
             textAltColor=""
             templateColor=""
             fontSize={scaleFont(16, currentState.fontSize)}
-              onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
+            onAddVar={() => handleAddVariantToSection(section.name, "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -692,7 +786,7 @@ const handleAddSectionToPages = (
             textAltColor=""
             templateColor=""
             term3={true}
-             onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
+            onAddVar={() => handleAddVariantToSection(section.name, "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -712,7 +806,7 @@ const handleAddSectionToPages = (
             fontSize={scaleFont(16, currentState.fontSize)}
             iconSize={scaleFont(13, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-             onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
+            onAddVar={() => handleAddVariantToSection(section.name, "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -729,7 +823,7 @@ const handleAddSectionToPages = (
             textColor="#000"
             templateColor={currentState.color}
             textAltColor={currentState.color}
-             onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
+            onAddVar={() => handleAddVariantToSection(section.name, "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -748,7 +842,7 @@ const handleAddSectionToPages = (
             editableAltBG="bg-gray-900/80"
             fontSize={scaleFont(16, currentState.fontSize)}
             fontFamily={currentState.fontFamily}
-             onAddVar = {()=>handleAddVariantToSection(section.name , "right")}
+            onAddVar={() => handleAddVariantToSection(section.name, "right")}
             headerPosition="-top-[30px] -right-[50px]"
             isVerticleHeader={true}
             isDot={false}
@@ -772,7 +866,7 @@ const handleAddSectionToPages = (
             fontFamily={currentState.fontFamily}
             iconSize={scaleFont(22, currentState.fontSize)}
             term3={true}
-             onAddVar = {()=>handleAddVariantToSection(section.name , "left")}
+            onAddVar={() => handleAddVariantToSection(section.name, "left")}
             onAdd={() =>
               handleAddSectionToPages(section.name, pageIndex, "left")
             }
@@ -786,7 +880,6 @@ const handleAddSectionToPages = (
         return null;
     }
   };
-
   const scaleFont = (base: number, size: string) => {
     const scaleMap: Record<string, number> = {
       small: 0.85,
@@ -904,51 +997,47 @@ const handleAddSectionToPages = (
               </div>
             )}
 
-            {section.left?.length > 0 ? (
-              section.left.map((leftSec: any, index: number) => (
-                <div key={index} className="pt-4 relative section-to-break">
-                  <div className="border-b">
-                    {leftSec?.name === "Custom Section" ? (
-                      <div
-                        ref={containerRef}
-                        className={`flex flex-col pt-2 ${
-                          editable && "bg-white"
-                        }`}
-                        onClick={handleEditableSection}
-                      >
-                        <input
-                          type="text"
-                          className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
+            {section.left?.length > 0
+              ? section.left.map((leftSec: any, index: number) => (
+                  <div
+                    key={index}
+                    onClick={() => setActivePageIndex(idx)}
+                    className="pt-4 relative section-to-break"
+                  >
+                    <div className="border-b">
+                      {leftSec?.name === "Custom Section" ? (
+                        <div
+                          ref={containerRef}
+                          className={`flex flex-col pt-2 ${
+                            editable && "bg-white"
+                          }`}
+                          onClick={handleEditableSection}
+                        >
+                          <input
+                            type="text"
+                            className="text-lg bg-transparent focus:outline-none font-semibold mb-1"
+                            style={{ color: currentState.color }}
+                            value={secName}
+                            onChange={(e) =>
+                              HandleChangeSectionName(e.target.value)
+                            }
+                          />
+                        </div>
+                      ) : (
+                        <h2
+                          className="text-lg font-semibold"
                           style={{ color: currentState.color }}
-                          value={secName}
-                          onChange={(e) =>
-                            HandleChangeSectionName(e.target.value)
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <h2
-                        className="text-lg font-semibold"
-                        style={{ color: currentState.color }}
-                      >
-                        {highlightWords(leftSec?.newSecName || leftSec?.name)}
-                      </h2>
-                    )}
+                        >
+                          {highlightWords(leftSec?.newSecName || leftSec?.name)}
+                        </h2>
+                      )}
+                    </div>
+                    <div>
+                      {renderSection(leftSec, idx)}
+                    </div>
                   </div>
-                  <div>
-                    {renderSection(leftSec, idx, (variantEl) => {
-                      if (!variantRefs.current[idx])
-                        variantRefs.current[idx] = {};
-                      if (!variantRefs.current[idx][index])
-                        variantRefs.current[idx][index] = [];
-                      variantRefs.current[idx][index].push(variantEl);
-                    })}
-                  </div>
-                </div>
-              ))
-            ) : (
-            null
-            )}
+                ))
+              : null}
             <div
               ref={(el) => void (watermarkRefs.current[idx] = el)}
               className="absolute bottom-14 left-0  w-full border border-red-400"

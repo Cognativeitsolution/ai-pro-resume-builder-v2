@@ -54,34 +54,63 @@ const UserHeader = (props: HeaderProps) => {
     setIsModalOpen(false);
   };
 
-  const downloadPDF = async () => {
-    const resumeElement = document.getElementById("resume-content");
-    if (!resumeElement) return;
-    setLoader(true);
-    const html = resumeElement.innerHTML;
+ const downloadPDF = async () => {
+  const resumeElement = document.getElementById("resume-content");
+  if (!resumeElement) return;
 
-    const res = await fetch("/api/download-pdf", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ html }),
-    });
+  const html = resumeElement.innerHTML;
+  setLoader(true);
 
-    if (!res.ok) {
-      console.error("Failed to generate PDF");
-      return;
+  const maxRetries = 2;
+  const retryDelay = 1500;
+
+  let attempt = 0;
+  let success = false;
+  let blob: Blob | null = null;
+
+  while (attempt <= maxRetries && !success) {
+    try {
+      const res = await fetch("/api/download-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html }),
+      });
+
+      if (res.ok) {
+        blob = await res.blob();
+        success = true;
+        break;
+      } else if (res.status === 504 && attempt < maxRetries) {
+        console.warn(`504 error, retrying... attempt ${attempt + 1}`);
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+        attempt++;
+      } else {
+        throw new Error(`Failed with status ${res.status}`);
+      }
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error);
+      if (attempt >= maxRetries) {
+        alert("Failed to generate PDF after multiple attempts.");
+        setLoader(false);
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, retryDelay));
+      attempt++;
     }
-    if (res.ok) {
-      setLoader(false);
-    }
+  }
 
-    const blob = await res.blob();
+  setLoader(false);
+
+  if (blob) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = `${resumeTitle || "resume"}.pdf`;
     a.click();
     window.URL.revokeObjectURL(url);
-  };
+  }
+};
+
 
   const downloadDOCX = async () => {
     const resumeElement = document.getElementById("resume-content");
