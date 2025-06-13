@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import UserDashboard from './userDashboard';
-import UserHeader from './header';
+import UserHeader from './header/header';
 
 import Dashboard from '../dashboard/dashboard';
 import Documents from '../documents/documents';
