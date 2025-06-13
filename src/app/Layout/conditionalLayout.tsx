@@ -24,7 +24,6 @@ const ConditionalLayout = ({ children }: any) => {
         {pathname === "/create-resume" || pathname === "/" || pathname === "/onboarding" || pathname === "/auth/login" || pathname === "/auth/register" ? null : <NewHeader />}
         {children}
         {pathname === "/" || pathname === "/onboarding" || pathname === "/auth/login" || pathname === "/auth/register" ? null : <NewFooter />}
-        {children}
       </>
     </PopupProvider>
   );
