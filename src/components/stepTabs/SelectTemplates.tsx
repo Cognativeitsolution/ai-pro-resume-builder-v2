@@ -1,70 +1,74 @@
 import Image from "next/image";
 // ===============
 import { CTA } from "@/components";
-// ===============
-import template1 from 'media/images/resume-templates/Sleek Simplicity 1.webp'
-import template2Old from 'media/images/resume-templates/Professional Polished 2.webp'
-import template3 from 'media/images/resume-templates/Elegant Executive 3.webp'
-import template4 from 'media/images/resume-templates/Creative Infusion 4.webp'
-import template5 from 'media/images/resume-templates/Classic Professional 5.webp'
-import template6 from 'media/images/resume-templates/Career Catalyst 6.webp'
-import template7 from 'media/images/resume-templates/Innovative Edge 7.webp'
-import template8 from 'media/images/resume-templates/Dynamic Designer 8.webp'
-import template9 from 'media/images/resume-templates/Bold Statement 9.webp'
-import template10 from 'media/images/resume-templates/Fresher Resume 10.webp'
-import template11 from 'media/images/resume-templates/Bright Future 11.webp'
-import template12 from 'media/images/resume-templates/Stylish Standard 12.webp'
-import template13 from 'media/images/resume-templates/Artistic Flair 13.webp'
-import template14 from 'media/images/resume-templates/Graphical Genius 14.webp'
-import template15 from 'media/images/resume-templates/Chic and Simple 15.webp'
-import template16 from 'media/images/resume-templates/Executive Envision 16.webp'
-import template17 from 'media/images/resume-templates/Chromatic Currere 17.webp'
-import template18 from 'media/images/resume-templates/Synergistic Synapse 18.webp'
-import template19 from 'media/images/resume-templates/Paradigm Pivot 19.webp'
-import template20 from 'media/images/resume-templates/Transcendent Trajectory 20.webp'
+import { BiDuplicate, BiSolidEdit } from "react-icons/bi";
+import { MdDeleteOutline, MdOutlineFileDownload } from "react-icons/md";
+import { FaWandMagicSparkles } from "react-icons/fa6";
+import { useState } from "react";
 
-//===== Template data
-const templates = [
-    { name: "Sleek Simplicity", image: template1 },
-    { name: "Professional Polished", image: template2Old },
-    { name: "Elegant Executive", image: template3 },
-    { name: "Creative Infusion", image: template4 },
-    { name: "Classic Professional", image: template5 },
-    { name: "Career Catalyst", image: template6 },
-    { name: "Innovative Edge", image: template7 },
-    { name: "Dynamic Designer", image: template8 },
-    { name: "Bold Statement", image: template9 },
-    { name: "Fresher Resume", image: template10 },
-    { name: "Bright Future", image: template11 },
-    { name: "Stylish Standard", image: template12 },
-    { name: "Artistic Flair", image: template13 },
-    { name: "Graphical Genius", image: template14 },
-    { name: "Chic and Simple", image: template15 },
-    { name: "Executive Envision", image: template16 },
-    { name: "Chromatic Currere", image: template17 },
-    { name: "Synergistic Synapse", image: template18 },
-    { name: "Paradigm Pivot", image: template19 },
-    { name: "Transcendent Trajectory", image: template20 },
-];
 
 type SelectTemplatesProps = {
     onTemplateSelect?: () => void;
+    templates: any[];
+    isContainer?: boolean
 };
 
-const SelectTemplates: React.FC<SelectTemplatesProps> = ({ onTemplateSelect }) => {
+const hoverActions = [
+    { icon: <BiSolidEdit className="text-2xl" />, label: "Edit" },
+    { icon: <MdDeleteOutline className="text-2xl" />, label: "Delete" },
+    { icon: <FaWandMagicSparkles className="text-2xl" />, label: "Tailor for a job" },
+];
+
+
+const SelectTemplates = (props: SelectTemplatesProps) => {
+    const { onTemplateSelect, templates, isContainer } = props
+
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [editedName, setEditedName] = useState('');
+
     return (
         <section className="my-5 md:my-10">
-            <div className="container">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                    {templates.map((template, index) => (
-                        <div key={index} className="flex flex-col gap-5 p-3 rounded-lg bg-indigo-200/20 backdrop-blur-none border-2 border-hamzaPrimary cursor-pointer transition-all duration-700 group">
-                            <div className="flex items-center justify-center">
+            <div className={isContainer === false ? "" : "container"}>
+                <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${isContainer === false ? 'gap-3' : 'gap-5'}`}>
+                    {templates.map((template: any, index: any) => (
+                        <div key={index} className={`flex flex-col p-3 cursor-pointer transition-all duration-700 ${template.date ? 'bg-white border-gray-200 shadow-md flex flex-col items-center border gap-2 rounded-md' : 'bg-indigo-200/20 backdrop-blur-none border-2 border-hamzaPrimary group gap-5  rounded-lg'}`}>
+                            {!template.date && <div className="flex items-center justify-center">
                                 <p className="text-[16px] lg:text-[18px] font-medium text-zinc-800">
                                     {template.name}
                                 </p>
-                            </div>
+                            </div>}
 
-                            <div className="ring-2 ring-zinc-500/20 rounded-lg shadow-lg overflow-hidden relative">
+                            {template.date && <div className="flex items-center justify-center gap-2">
+                                {editingIndex === index ? (
+                                    <input
+                                        type="text"
+                                        value={editedName}
+                                        onChange={(e) => setEditedName(e.target.value)}
+                                        onBlur={() => setEditingIndex(null)} // Optional: exit edit mode on blur
+                                        className="border border-gray-300 rounded px-2 py-1 text-sm text-black"
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <>
+                                        <p className="text-[16px] lg:text-[18px] font-medium text-zinc-800">
+                                            {template.name}
+                                        </p>
+                                        <button
+                                            onClick={() => {
+                                                setEditingIndex(index);
+                                                setEditedName(template.name);
+                                            }}
+                                            className="text-primarySlate/80 hover:text-black"
+                                        >
+                                            <BiSolidEdit className="text-lg ml-1" />
+                                        </button>
+                                    </>
+                                )}
+                            </div>}
+
+                            {template.date && <div className="text-sm text-primarySlate/80 font-medium">{template.date}</div>}
+
+                            <div className={`relative ring-2 ring-zinc-500/20 rounded-lg overflow-hidden ${template.date ? 'group shadow-md' : 'shadow-lg'}`}>
                                 {/*======= Template Image =======*/}
                                 <Image
                                     src={template.image}
@@ -75,8 +79,8 @@ const SelectTemplates: React.FC<SelectTemplatesProps> = ({ onTemplateSelect }) =
                                 />
 
                                 {/*======= Overlay CTA =======*/}
-                                <div className="flex items-center justify-center w-full h-full bg-slate-800/90 absolute top-0 left-0 z-20 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                                    <div className="translate-y-56 group-hover:-translate-y-0 transition-all duration-700">
+                                {!template.date && <div className="flex items-center justify-center w-full h-full bg-slate-800/90 absolute top-0 left-0 z-20 opacity-0 transition-all duration-700 group-hover:opacity-100">
+                                    <div className="translate-y-56  transition-all duration-700 group-hover:-translate-y-0">
                                         <CTA
                                             btn
                                             text="Use This Template"
@@ -86,8 +90,46 @@ const SelectTemplates: React.FC<SelectTemplatesProps> = ({ onTemplateSelect }) =
                                             handleClick={onTemplateSelect}
                                         />
                                     </div>
-                                </div>
+                                </div>}
+
+                                {template.date && (
+                                    <div className="absolute inset-0 bg-slate-800/90 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300 z-10">
+                                        <div className="flex gap-2">
+                                            {hoverActions.map((action, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="overflow-x-visible relative w-8 h-[3.3rem] overflow-y-clip group/icon text-center"
+                                                >
+                                                    <div
+                                                        className="flex justify-center items-center w-8 h-8 p-[4px] rounded-full bg-white/20 border border-white/30 transition-all duration-300 absolute top-0 group-hover/icon:scale-[.80] group-hover/icon:origin-top text-white"
+                                                    >
+                                                        {action.icon}
+                                                    </div>
+                                                    <div
+                                                        className="absolute text-white font-medium -bottom-10 left-1/2 text-xs text-center whitespace-nowrap transition-all duration-300 transform -translate-x-1/2 group-hover/icon:bottom-0"
+                                                    >
+                                                        {action.label}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+
                             </div>
+
+                            {/* ======== Template Icons ======= */}
+                            {template.date && <div className="flex gap-3 mt-2">
+                                <button className="text-sm text-primarySlate/80 hover:text-black flex items-center duration-200">
+                                    Duplicate <BiDuplicate className='w-4 h-4 ml-1' />
+                                </button>
+                                <div className='h-6 w-[1.1px] bg-primaryGray/50'>
+                                </div>
+                                <button className="text-sm text-primarySlate/80 hover:text-black flex items-center duration-200">
+                                    Download <MdOutlineFileDownload className='w-5 h-5 ml-1' />
+                                </button>
+                            </div>}
                         </div>
                     ))}
                 </div>
