@@ -67,8 +67,6 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [measured, setMeasured] = useState(false);
   const [pages, setPages] = useState<any[][]>([]);
-  // const { correctedText, correctedWords } = useSpellCorrection(data?.description || '');
-  // console.log(correctedText, "correctedText Experience")
 
   const HandleChangeSectionName = (data: any) => {
     console.log(data);
@@ -153,7 +151,7 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
               highlightText={incorrectTextChange}
             />
             {/* Displaying the popup for the Experience section */}
-            {/* {handlePopupDisplay("Experience")} */}
+            {handlePopupDisplay("Experience")}
           </>
         );
       case "Summary":
@@ -166,7 +164,7 @@ const Template6 = ({ currentState, scaleFont, incorrectTextChange, enableSpellCo
             enableSpellCorrection={enableSpellCorrection}
           />
           {/* Displaying the popup for the Summary section */}
-          {/* {handlePopupDisplay("Summary")} */}
+          {handlePopupDisplay("Summary")}
         </>
       case "Projects":
         return (

@@ -1,18 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface SectionCorrection {
+    originalText: string;
+    correctedText: string;
+    correctedWords: string[];
+    incorrectWords: string[];
+    totalLength: number;
+}
+
 interface ImproveTextState {
     grammarCheck: boolean;
     spellCheck: boolean;
-    incorrectWords: string[];  // Typing as string[]
-    grammarErrors: string[];    // Typing as string[]
-    summary: {
-        correctedText: string;
-        correctedWords: string[]; // Typing as string[]
-    };
-    experience: {
-        correctedText: string;
-        correctedWords: string[]; // Typing as string[]
-    };
+    incorrectWords: string[];
+    grammarErrors: string[];
+    sections: Record<string, SectionCorrection>;
 }
 
 const initialState: ImproveTextState = {
@@ -20,14 +21,7 @@ const initialState: ImproveTextState = {
     spellCheck: false,
     incorrectWords: [],
     grammarErrors: [],
-    summary: {
-        correctedText: '',
-        correctedWords: [],
-    },
-    experience: {
-        correctedText: '',
-        correctedWords: [],
-    },
+    sections: {}
 };
 
 const improveTextSlice = createSlice({
@@ -40,30 +34,43 @@ const improveTextSlice = createSlice({
         setSpellCheck(state, action: PayloadAction<boolean>) {
             state.spellCheck = action.payload;
         },
-        setAllIncorrectWords: (state, action) => {
+        setAllIncorrectWords(state, action: PayloadAction<string[]>) {
             state.incorrectWords = action.payload;
-            console.log(action.payload)
         },
-        setAllGrammarErrors: (state, action) => {
+        setAllGrammarErrors(state, action: PayloadAction<string[]>) {
             state.grammarErrors = action.payload;
         },
-        setCorrectedSection: (state, action: PayloadAction<{ section: string, correctedText: string, correctedWords: string[] }>) => {
-            const { section, correctedText, correctedWords } = action.payload;
-            if (section === "summary") {
-                state.summary.correctedText = correctedText;
-                state.summary.correctedWords = correctedWords;
-            } else if (section === "experience") {
-                state.experience.correctedText = correctedText;
-                state.experience.correctedWords = correctedWords;
-            }
-        },
-    },
+
+        // ✅ Dynamic section correction handler
+        setCorrectedSection: (
+            state,
+            action: PayloadAction<{
+                section: string;
+                originalText: string;
+                correctedText: string;
+                correctedWords: string[];
+                incorrectWords: string[];
+                totalLength: number;
+            }>
+        ) => {
+            const { section, originalText, correctedText, correctedWords, incorrectWords, totalLength } = action.payload;
+            state.sections[section] = {
+                originalText,
+                correctedText,
+                correctedWords,
+                incorrectWords,
+                totalLength
+            };
+        }
+    }
 });
 
-export const { setGrammarCheck,
+export const {
+    setGrammarCheck,
     setSpellCheck,
     setAllIncorrectWords,
     setAllGrammarErrors,
     setCorrectedSection
 } = improveTextSlice.actions;
+
 export default improveTextSlice.reducer;

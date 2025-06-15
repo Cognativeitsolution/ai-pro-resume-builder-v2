@@ -156,69 +156,69 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     return allText.trim();
   };
 
-  // const { correctedText, correctedWords } = useSpellCorrection(getAllText());
-  // const [enableSpell, setEnableSpell] = useState<boolean>(false); console.log(correctedText, "correctedText Experience")
+  const { correctedText, correctedWords } = useSpellCorrection(getAllText());
+  const [enableSpell, setEnableSpell] = useState<boolean>(false); console.log(correctedText, "correctedText Experience")
   const fullText = getAllText();
   console.log("🔍 fullText value:", `"${fullText}"`);
 
 
-  // function enablePopup() {
-  //   setEnableSpell(!enableSpell);
-  // }
+  function enablePopup() {
+    setEnableSpell(!enableSpell);
+  }
 
-  // const handlePopupDisplay = (section: string) => {
-  //   console.log(section, "section xyz")
-  //   if (section === "Summary") {
-  //     return (
-  //       <BotPopup
-  //         info={highlightCorrectedWords("Summary", correctedText) || "No spell mistake found"}
-  //         popupTitle="Spelling Correction"
-  //         popupTitleBtn="Apply"
-  //         popupTheme="blue"
-  //         onClickPopup={() => handleSpellCorrection("Summary", correctedText)}
-  //         popupWidth="w-full"
-  //         popupPosition="top-[110%] -left-[25%]"
-  //       />
-  //     );
-  //   } else if (section === "Experience") {
-  //     return (
-  //       <BotPopup
-  //         info={highlightCorrectedWords("Experience", correctedText) || "No spell mistake found"}
-  //         popupTitle="Spelling Correction"
-  //         popupTitleBtn="Apply"
-  //         popupTheme="green"
-  //         onClickPopup={() => handleSpellCorrection("Experience", correctedText)}
-  //         popupWidth="w-full"
-  //         popupPosition="top-[110%] -left-[25%]"
-  //       />
-  //     );
-  //   }
-  //   return null;
-  // };
+  const handlePopupDisplay = (section: string) => {
+    console.log(section, "section xyz")
+    if (section === "Summary") {
+      return (
+        <BotPopup
+          info={highlightCorrectedWords("Summary", correctedText) || "No spell mistake found"}
+          popupTitle="Spelling Correction"
+          popupTitleBtn="Apply"
+          popupTheme="blue"
+          onClickPopup={() => handleSpellCorrection("Summary", correctedText)}
+          popupWidth="w-full"
+          popupPosition="top-[110%] -left-[25%]"
+        />
+      );
+    } else if (section === "Experience") {
+      return (
+        <BotPopup
+          info={highlightCorrectedWords("Experience", correctedText) || "No spell mistake found"}
+          popupTitle="Spelling Correction"
+          popupTitleBtn="Apply"
+          popupTheme="green"
+          onClickPopup={() => handleSpellCorrection("Experience", correctedText)}
+          popupWidth="w-full"
+          popupPosition="top-[110%] -left-[25%]"
+        />
+      );
+    }
+    return null;
+  };
 
-  // const handleSpellCorrection = (section: string, correctedText: string) => {
-  //   switch (section) {
-  //     case 'Summary':
-  //       dispatch(addUserSummary({ sectionId: 2, detail: correctedText }));
-  //       break;
-  //     case 'Experience':
-  //       dispatch(addUserExperience({ sectionId: 4, detail: correctedText }));
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   setEnableSpell(false); // Close the popup after applying
-  // };
+  const handleSpellCorrection = (section: string, correctedText: string) => {
+    switch (section) {
+      case 'Summary':
+        dispatch(addUserSummary({ sectionId: 2, detail: correctedText }));
+        break;
+      case 'Experience':
+        dispatch(addUserExperience({ sectionId: 4, detail: correctedText }));
+        break;
+      default:
+        break;
+    }
+    setEnableSpell(false); // Close the popup after applying
+  };
 
-  // const highlightCorrectedWords = (section: string, text: string): string => {
-  //   return text.split(/\s+/).map(word => {
-  //     const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
-  //     if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
-  //       return `<span class="text-blue-500">${word}</span>`;
-  //     }
-  //     return word;
-  //   }).join(" ");
-  // };
+  const highlightCorrectedWords = (section: string, text: string): string => {
+    return text.split(/\s+/).map(word => {
+      const cleaned = word.replace(/[.,!?]/g, "").toLowerCase();
+      if (correctedWords.map(w => w.toLowerCase()).includes(cleaned)) {
+        return `<span class="text-blue-500">${word}</span>`;
+      }
+      return word;
+    }).join(" ");
+  };
 
   //============= Highlight function
   const highlightChange = (text: string, section: string) => {
@@ -239,19 +239,19 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
     }).join(' ');
   };
 
-  // useEffect(() => {
-  //   const handleClick = (e: MouseEvent) => {
-  //     const target = e.target as HTMLElement;
-  //     if (target?.dataset?.highlighted === "true") {
-  //       enablePopup(); // Open popup if highlighted word clicked
-  //     }
-  //   };
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target?.dataset?.highlighted === "true") {
+        enablePopup(); // Open popup if highlighted word clicked
+      }
+    };
 
-  //   document.addEventListener("click", handleClick);
-  //   return () => {
-  //     document.removeEventListener("click", handleClick);
-  //   };
-  // }, []);
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
 
 
 
@@ -303,25 +303,25 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
   }, [spellCheck, grammarCheck, fullText]);
 
   // ==================== Outside click to close popup
-  // useEffect(() => {
-  //   const handleOutsideClick = (e: MouseEvent) => {
-  //     const target = e.target as Node;
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as Node;
 
-  //     // If not clicking on popup or highlighted word
-  //     if (
-  //       popupRef.current &&
-  //       !popupRef.current.contains(target) &&
-  //       !(target as HTMLElement)?.dataset?.highlighted
-  //     ) {
-  //       setEnableSpell(false); // ✅ Close popup
-  //     }
-  //   };
+      // If not clicking on popup or highlighted word
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(target) &&
+        !(target as HTMLElement)?.dataset?.highlighted
+      ) {
+        setEnableSpell(false); // ✅ Close popup
+      }
+    };
 
-  //   document.addEventListener("mousedown", handleOutsideClick);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleOutsideClick);
-  //   };
-  // }, []);
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
 
   // template redering
@@ -346,9 +346,9 @@ const ResumeActiveTemplate = ({ currentState, updateState, addedSections }: Resu
           currentState={currentState}
           scaleFont={scaleFont}
           incorrectTextChange={highlightChange}
-          // enableSpellCorrection={enableSpell}
+          enableSpellCorrection={enableSpell}
           popupRef={popupRef}
-        // handlePopupDisplay={handlePopupDisplay} 
+        handlePopupDisplay={handlePopupDisplay} 
         />;
       case "template8":
         return <Template8 currentState={currentState} updateState={updateState} />;

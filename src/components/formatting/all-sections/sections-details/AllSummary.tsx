@@ -7,6 +7,7 @@ import AiRobo from '../../aiAssistant/AiRobo';
 import BotPopup from '../../aiAssistant/BotPopup';
 import { useSpellCorrection } from '@/app/configs/store/useSpellCorrection';
 import { RootState } from '@/redux/store';
+import { setCorrectedSection } from '@/redux/slices/improveTextSlice';
 
 type AllSummaryType = {
     data?: any;
@@ -45,7 +46,13 @@ const AllSummary = ({
     const popupRef = useRef<HTMLDivElement | null>(null);
     const popupRefSpell = useRef<HTMLDivElement | null>(null);
 
-    const summaryText = useSelector((state: RootState) => state.ImproveText.summary.correctedText);
+    // const summaryText = useSelector((state: RootState) => state.ImproveText.summary.correctedText);
+    const summaryData = useSelector((state: RootState) => state.ImproveText.sections["summary"]);
+
+    if (summaryData) {
+        console.log(summaryData.correctedWords, 'yelo'); // ['alwayz', 'libary']
+        console.log(summaryData.totalLength, 'yelo'); // 120
+    }
     const description = typeof data === 'string' ? data : data?.description || '';
     const { correctedText, correctedWords } = useSpellCorrection(description);
 
@@ -158,6 +165,19 @@ const AllSummary = ({
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showPopupSpell]);
+
+    useEffect(() => {
+        if (description && correctedText && correctedWords) {
+            dispatch(setCorrectedSection({
+                section: "summary",
+                originalText: description,
+                correctedText,
+                correctedWords,
+                incorrectWords: [], // if you're not using yet, leave empty
+                totalLength: description.length,
+            }));
+        }
+    }, [description, correctedText, correctedWords, dispatch]);
 
     return (
         <div
